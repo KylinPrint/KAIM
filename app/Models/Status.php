@@ -8,4 +8,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class Status extends Model
 {
-	use HasDateTimeFormatter;    }
+	use HasDateTimeFormatter;    
+
+	protected $table = 'statuses';
+
+	protected $fillable = 
+	[
+		'name',
+		'parent',
+	];
+
+	public function peripherals()
+    {
+        return $this->hasMany(Peripheral::class);
+    }
+}

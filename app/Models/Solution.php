@@ -8,4 +8,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class Solution extends Model
 {
-	use HasDateTimeFormatter;    }
+	use HasDateTimeFormatter;  
+	
+	protected $table = 'solutions';
+
+	protected $fillable = 
+	[
+		'name',
+		'details',
+		'source',
+	];
+
+	public function peripherals()
+    {
+        return $this->hasMany(Peripheral::class);
+    }
+
+}

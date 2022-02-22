@@ -8,4 +8,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class Release extends Model
 {
-	use HasDateTimeFormatter;    }
+	use HasDateTimeFormatter; 
+
+	protected $table = 'releases';
+
+	protected $fillable = 
+	[
+		'name',
+		'abbr',
+		'release_date',
+		'eosl_date',
+	];
+
+	public function peripherals()
+    {
+        return $this->hasMany(Peripheral::class);
+    }
+}

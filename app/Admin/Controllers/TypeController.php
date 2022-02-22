@@ -7,6 +7,7 @@ use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
 use Dcat\Admin\Http\Controllers\AdminController;
+use Illuminate\Http\Request;
 
 class TypeController extends AdminController
 {
@@ -20,7 +21,9 @@ class TypeController extends AdminController
         return Grid::make(new Type(), function (Grid $grid) {
             $grid->column('id')->sortable();
             $grid->column('name');
-            $grid->column('parent');
+            $grid->column('parent')->display(function($parent){
+                return Type::where('id',$parent)->pluck('name')->first();
+            });
             $grid->column('created_at');
             $grid->column('updated_at')->sortable();
         
@@ -58,11 +61,19 @@ class TypeController extends AdminController
     {
         return Form::make(new Type(), function (Form $form) {
             $form->display('id');
-            $form->text('name');
-            $form->text('parent');
+            $form->select('parent')->options(Type::where('parent','=',null)->pluck('name','id'))->load('name','/api/type');
+            $form->select('name');
         
             $form->display('created_at');
             $form->display('updated_at');
         });
     }
+
+    public function getName(Request $request)
+    {
+        $provinceId = $request->get('q')?:0;
+        return Type::where('parent', $provinceId)->get(['id', \Illuminate\Support\Facades\DB::raw('name as text')])->toArray();
+        
+    }
+
 }

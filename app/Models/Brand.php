@@ -8,4 +8,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class Brand extends Model
 {
-	use HasDateTimeFormatter;    }
+	use HasDateTimeFormatter;    
+
+	protected $table = 'brands';
+
+	protected $fillable = 
+	[
+		'name',
+		'alias',
+		'manufactors_id'
+	];
+
+	public function peripherals()
+    {
+        return $this->hasMany(Peripheral::class);
+    }
+}

@@ -14,6 +14,7 @@ class CreatePbindsTable extends Migration
     public function up()
     {
         Schema::create('pbinds', function (Blueprint $table) {
+            $table->id();
             $table->foreignId('peripherals_id')
                   ->comment('外设ID')
                   ->constrained();
@@ -27,7 +28,7 @@ class CreatePbindsTable extends Migration
                   ->comment('解决方案ID')
                   ->constrained();
             
-            $table->foreignId('status_id')
+            $table->foreignId('statuses_id')
                   ->comment('适配状态ID')
                   ->constrained();
             $table->string('class')->nullable()->comment('兼容等级');
@@ -35,7 +36,7 @@ class CreatePbindsTable extends Migration
 
             $table->timestamps();
 
-            $table->primary(['peripherals_id', 'releases_id', 'chips_id', 'solutions_id']);
+            $table->unique(['peripherals_id', 'releases_id', 'chips_id', 'solutions_id']);
         });
     }
 

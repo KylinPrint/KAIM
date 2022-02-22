@@ -20,6 +20,7 @@ class SolutionController extends AdminController
         return Grid::make(new Solution(), function (Grid $grid) {
             $grid->column('id')->sortable();
             $grid->column('name');
+            $grid->column('source');
             $grid->column('details');
             $grid->column('created_at');
             $grid->column('updated_at')->sortable();
@@ -43,6 +44,7 @@ class SolutionController extends AdminController
         return Show::make($id, new Solution(), function (Show $show) {
             $show->field('id');
             $show->field('name');
+            $show->field('source');
             $show->field('details');
             $show->field('created_at');
             $show->field('updated_at');
@@ -59,8 +61,8 @@ class SolutionController extends AdminController
         return Form::make(new Solution(), function (Form $form) {
             $form->display('id');
             $form->text('name');
-            $form->text('details');
-        
+            $form->text('source');
+            $form->editor('details');
             $form->display('created_at');
             $form->display('updated_at');
         });

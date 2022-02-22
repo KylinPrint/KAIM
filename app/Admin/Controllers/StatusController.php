@@ -7,6 +7,7 @@ use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
 use Dcat\Admin\Http\Controllers\AdminController;
+use Illuminate\Http\Request;
 
 class StatusController extends AdminController
 {
@@ -20,7 +21,9 @@ class StatusController extends AdminController
         return Grid::make(new Status(), function (Grid $grid) {
             $grid->column('id')->sortable();
             $grid->column('name');
-            $grid->column('parent');
+            $grid->column('parent')->display(function($parent){
+                return Status::where('id',$parent)->pluck('name')->first();
+            });
             $grid->column('created_at');
             $grid->column('updated_at')->sortable();
         
@@ -58,11 +61,23 @@ class StatusController extends AdminController
     {
         return Form::make(new Status(), function (Form $form) {
             $form->display('id');
+            $form->select('parent')
+            ->options(Status::where('parent','=',null)
+            ->pluck('name','id'))
+            #->load('name','/api/status')
+            ;
             $form->text('name');
-            $form->text('parent');
         
             $form->display('created_at');
             $form->display('updated_at');
         });
+
     }
+
+    // public function getName(Request $request)
+    // {
+    //     $provinceId = $request->get('q')?:0;
+    //     return Status::where('parent', $provinceId)->get(['id', \Illuminate\Support\Facades\DB::raw('name as text')])->toArray();
+        
+    // }
 }
