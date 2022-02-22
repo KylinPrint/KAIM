@@ -8,4 +8,27 @@ use Illuminate\Database\Eloquent\Model;
 
 class Peripheral extends Model
 {
-	use HasDateTimeFormatter;    }
+	use HasDateTimeFormatter;
+	
+	protected $table = 'peripherals';
+
+	protected $fillable = 
+	[
+		'name',
+		'brands_id',
+		'types_id',
+		'release_date',
+		'eosl_data',
+	];
+
+	public function brands()
+    {
+        return $this->belongsTo(Brand::class);
+    }
+
+	public function types()
+    {
+        return $this->belongsTo(Type::class);
+    }
+
+}

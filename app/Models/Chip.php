@@ -8,4 +8,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class Chip extends Model
 {
-	use HasDateTimeFormatter;    }
+	use HasDateTimeFormatter;    
+
+	protected $table = 'chips';
+
+	protected $fillable = 
+	[
+		'name',
+		'arch',
+	];
+
+	public function peripherals()
+    {
+        return $this->hasMany(Peripheral::class);
+    }
+}

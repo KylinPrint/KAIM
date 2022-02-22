@@ -8,4 +8,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class Type extends Model
 {
-	use HasDateTimeFormatter;    }
+	use HasDateTimeFormatter;    
+
+	protected $table = 'types';
+
+	protected $fillable = 
+	[
+		'name',
+		'parent',
+	];
+
+	public function peripherals()
+    {
+        return $this->hasMany(Peripheral::class);
+    }
+}
