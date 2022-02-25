@@ -7,6 +7,7 @@ use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
 use Dcat\Admin\Http\Controllers\AdminController;
+use Dcat\Admin\Widgets\Card;
 
 class SolutionController extends AdminController
 {
@@ -21,7 +22,10 @@ class SolutionController extends AdminController
             $grid->column('id')->sortable();
             $grid->column('name');
             $grid->column('source');
-            $grid->column('details');
+            $grid->column('details')->display('详情')->expand(function (){
+                $card = new Card(null, $this->details);
+                return "<div style='padding:10px 10px 0'>$card</div>";
+            });
             $grid->column('created_at');
             $grid->column('updated_at')->sortable();
         

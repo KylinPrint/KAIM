@@ -28,13 +28,13 @@ class PbindController extends AdminController
             $grid->column('peripherals.name',__('型号'));
             $grid->column('releases.name',__('版本'));
             $grid->column('chips.name',__('芯片'));
-            $grid->column('solutions', __('解决方案'))->modal(function ($modal){
-                $modal->title('解决方案');
-                $a = $this->row;
-                $modal->xl();
-                $modal->value('详情');
-                return SolutionTable::make(['id'=>$this->id]);
-            }); 
+            $grid->column('solutions', __('解决方案'))
+                ->modal(function ($modal){
+                    $modal->title('解决方案');
+                    $modal->xl();
+                    $modal->value('详情');
+                    return SolutionTable::make();
+                }); 
             $grid->column('statuses.name',__('状态'));
             $grid->column('class');
             $grid->column('comment');
@@ -42,7 +42,21 @@ class PbindController extends AdminController
             $grid->column('updated_at')->sortable();
         
             $grid->filter(function (Grid\Filter $filter) {
-                $filter->equal('id');
+                $filter->like('peripherals.name','设备名');
+                $filter->in('releases.id','系统版本')
+                    ->multipleSelect([
+                        '1' => '银河麒麟操作系统V10(桌面版)',
+                        '2' => '银河麒麟操作系统V10sp1(桌面版)'
+                    ]);
+                $filter->in('chips.id','芯片')
+                    ->multipleSelect([
+                        '1' => 'FT-2000/4',
+                    ]);
+                $filter->like('solutions.name','解决方案');
+                $filter->in('statuses.id','状态')
+                    ->select([
+                        '1' => '未适配',
+                    ]);
             });
         });
     }

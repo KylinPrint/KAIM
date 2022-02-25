@@ -20,10 +20,10 @@ class TypeController extends AdminController
     {
         return Grid::make(new Type(), function (Grid $grid) {
             $grid->column('id')->sortable();
-            $grid->column('name');
             $grid->column('parent')->display(function($parent){
                 return Type::where('id',$parent)->pluck('name')->first();
             });
+            $grid->column('name');
             $grid->column('created_at');
             $grid->column('updated_at')->sortable();
         
