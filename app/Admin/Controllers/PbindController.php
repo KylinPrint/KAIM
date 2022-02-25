@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Actions\Modal\PbindModal;
 use App\Models\Chip;
 use App\Models\Pbind;
 use App\Models\Peripheral;
@@ -13,6 +14,8 @@ use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
 use Dcat\Admin\Http\Controllers\AdminController;
 use App\Admin\Renderable\SolutionTable;
+use App\Admin\Renderable\ReleaseTable;
+use App\Admin\Renderable\ChipTable;
 
 class PbindController extends AdminController
 {
@@ -25,8 +28,13 @@ class PbindController extends AdminController
     {
         return Grid::make(Pbind::with(['peripherals','releases','chips','solutions','statuses']), function (Grid $grid) {
 
-            $grid->column('peripherals.name',__('型号'));
-            $grid->column('releases.name',__('版本'));
+            $grid->tools(function  (Grid\Tools  $tools)  { 
+                //Excel导入
+                $tools->append(new PbindModal()); 
+            });
+
+            $grid->column('peripherals.name',__('外设型号'));
+            $grid->column('releases.name',__('操作系统版本'));
             $grid->column('chips.name',__('芯片'));
             $grid->column('solutions', __('解决方案'))
                 ->modal(function ($modal){
@@ -35,28 +43,26 @@ class PbindController extends AdminController
                     $modal->value('详情');
                     return SolutionTable::make();
                 }); 
-            $grid->column('statuses.name',__('状态'));
+            $grid->column('statuses.name',__('适配状态'));
             $grid->column('class');
             $grid->column('comment');
-            $grid->column('created_at');
+            // $grid->column('created_at');
             $grid->column('updated_at')->sortable();
         
             $grid->filter(function (Grid\Filter $filter) {
+                $filter->panel();
                 $filter->like('peripherals.name','设备名');
-                $filter->in('releases.id','系统版本')
-                    ->multipleSelect([
-                        '1' => '银河麒麟操作系统V10(桌面版)',
-                        '2' => '银河麒麟操作系统V10sp1(桌面版)'
-                    ]);
-                $filter->in('chips.id','芯片')
-                    ->multipleSelect([
-                        '1' => 'FT-2000/4',
-                    ]);
                 $filter->like('solutions.name','解决方案');
-                $filter->in('statuses.id','状态')
-                    ->select([
-                        '1' => '未适配',
-                    ]);
+                $filter->equal('releases.id', '操作系统版本')
+                    ->multipleSelectTable(ReleaseTable::make(['id' => 'name']))
+                    ->title('弹窗标题')
+                    ->dialogWidth('50%')
+                    ->model(Release::class, 'id', 'name');
+                $filter->equal('chips.id', '芯片')
+                    ->multipleSelectTable(ChipTable::make(['id' => 'name']))
+                    ->title('弹窗标题')
+                    ->dialogWidth('50%')
+                    ->model(Chip::class, 'id', 'name');
             });
         });
     }
