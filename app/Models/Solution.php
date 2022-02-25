@@ -19,9 +19,11 @@ class Solution extends Model
 		'source',
 	];
 
-	public function peripherals()
+	public function pbinds()
     {
-        return $this->hasMany(Peripheral::class);
+        return $this->hasMany(Pbind::class);
     }
+
+
 
 }

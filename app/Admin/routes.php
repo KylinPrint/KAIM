@@ -26,5 +26,7 @@ Route::group([
     $router->resource('releases',ReleaseController::class);
     $router->resource('chips',ChipController::class);
     $router->resource('statuses',StatusController::class);
+    $router->resource('specifications',SpecificationController::class);
+    $router->resource('values',ValueController::class);
 
 });

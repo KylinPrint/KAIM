@@ -31,4 +31,9 @@ class Peripheral extends Model
         return $this->belongsTo(Type::class);
     }
 
+	public function values()
+    {
+        return $this->hasMany(Value::class, 'peripherals_id');
+    }
+
 }
