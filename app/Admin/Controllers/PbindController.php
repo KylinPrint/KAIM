@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Actions\Exports\PbindExport;
 use App\Admin\Actions\Modal\PbindModal;
 use App\Models\Chip;
 use App\Models\Pbind;
@@ -29,9 +30,20 @@ class PbindController extends AdminController
         return Grid::make(Pbind::with(['peripherals','releases','chips','solutions','statuses']), function (Grid $grid) {
 
             $grid->tools(function  (Grid\Tools  $tools)  { 
-                //Excel导入
                 $tools->append(new PbindModal()); 
             });
+
+            $grid->export(new PbindExport());
+
+            $curPbindArr = Pbind::where([['peripherals_id','=','1'],])
+                ->with('peripherals','releases','chips','solutions','statuses')
+                ->get();
+            
+            foreach($curPbindArr as $curPbind)
+            {
+                $a = $curPbind->chips->name;
+                $b = $curPbind->solutions->name;
+            }
 
             $grid->column('peripherals.name',__('外设型号'));
             $grid->column('releases.name',__('操作系统版本'));

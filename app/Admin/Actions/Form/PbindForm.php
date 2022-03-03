@@ -15,9 +15,7 @@ class PbindForm extends Form
     public function handle(array $input)
     {
         try {
-            //上传文件位置，这里默认是在storage中，如有修改请对应替换
             $file = storage_path('app/public/' . $input['file']);
-
 
             Excel::import(new PbindImport(),$file);
 
