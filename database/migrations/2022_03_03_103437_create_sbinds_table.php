@@ -22,23 +22,27 @@ class CreateSbindsTable extends Migration
             $table->foreignId('releases_id')
                   ->comment('操作系统')
                   ->constrained();
+            $table->string('os_subversion')->nullable()->comment('操作系统小版本号');
             $table->foreignId('chips_id')
                   ->comment('芯片')
                   ->constrained();
+            $table->string('adapt_source')
+                  ->comment('引入来源[厂商主动申请,BD主动拓展,行业营销中心引入,区域营销中心引入,最终客户反馈,产品经理引入,厂商合作事业本部引入,渠道部引入,相关机构反馈,其他方式引入]');
+            $table->boolean('adapted_before')->comment('是否适配过国产CPU');
             $table->foreignId('statuses_id')
-                  ->comment('状态')
+                  ->comment('当前适配状态')
+                  ->constrained();
+            $table->foreignId('admin_users_id')
+                  ->comment('当前适配状态责任人')
                   ->constrained();
             $table->string('softname')->comment('软件包名');
-            $table->string('crossover')->nullable()->comment('crossover版本');
-            $table->string('box86')->nullable()->comment('box86版本');
-            $table->boolean('appstore')->nullable()->comment('是否上架软件商店');
-            $table->string('filename')->comment('文件名');
-            $table->string('source')->comment('安装包来源');
-            $table->string('kernel_version')->nullable()->comment('内核引用版本');
-            $table->string('kernel_test')->nullable()->comment('内核项测试结果');
-            $table->string('apptype')->nullable()->comment('适配类型');
-            $table->string('class')->comment('兼容等级');
-            $table->boolean('kylineco')->comment('是否上传到生态官网');
+            $table->string('solution')->nullable()->comment('适配方案');
+            $table->string('class')->comment('兼容等级[READY,CERTIFICATION,VALIDATION,PM]');
+            $table->string('adaption_type')->comment('适配类型[原生适配,自研适配,开源适配,项目适配]');
+            $table->string('test_type')->comment('测试方式[厂商自测,视频复测,远程测试,麒麟适配测试]');
+            $table->boolean('kylineco')->comment('是否上传生态网站');
+            $table->boolean('appstore')->comment('是否上架软件商店');
+            $table->boolean('iscert')->comment('是否互认证');
             $table->string('comment')->nullable()->comment('备注');
             
             $table->timestamps();
