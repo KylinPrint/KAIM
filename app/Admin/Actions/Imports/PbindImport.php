@@ -37,8 +37,8 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
 
         foreach($rows as $row)
         {
-            $curBrand = Brand::where('name',$row['厂商名称'])->first();
-            if(empty($curBrand))
+            $curBrandId = Brand::where('name',$row['厂商名称'])->pluck('id')->first();
+            if(empty($curBrandId))
             {
                 $brandInsert = 
                 [
@@ -48,12 +48,12 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
                     'created_at' => date('Y-M-D H:i:s'),
                     'updated_at' => date('Y-M-D H:i:s'),
                 ];
-                DB::table('brands')->insert($brandInsert);
+                $curBrandId = DB::table('brands')->insertGetId($brandInsert);
             }
-            $curBrandId = DB::getPdo()->lastInsertId();
+            
 
-            $curPeripheral = Peripheral::where('name',$row['产品名称'])->first();
-            if(empty($curBrand))
+            $curPeripheralId = Peripheral::where('name',$row['产品名称'])->pluck('id')->first();
+            if(empty($curPeripheralId))
             {
                 $peripheralInsert = 
                 [
@@ -65,12 +65,11 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
                     'created_at' => date('Y-M-D H:i:s'),
                     'updated_at' => date('Y-M-D H:i:s'),
                 ];
-                DB::table('peripherals')->insert($peripheralInsert);
+                $curPeripheralId = DB::table('peripherals')->insertGetId($peripheralInsert);
             }
-            $curPeripheralId = DB::getPdo()->lastInsertId();
 
-            $curSolution = Solution::where('name',$row['安装包名称'])->first();
-            if(empty($curSolution))
+            $curSolutionId = Solution::where('name',$row['安装包名称'])->pluck('id')->first();
+            if(empty($curSolutionId))
             {
                 $solutionInsert = 
                 [
@@ -80,14 +79,13 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
                     'created_at' => date('Y-M-D H:i:s'),
                     'updated_at' => date('Y-M-D H:i:s'),
                 ];
-                DB::table('solutions')->insert($solutionInsert);
+                $curSolutionId = DB::table('solutions')->insertGetId($solutionInsert);
             }
-            $solution = DB::getPdo()->lastInsertId();
 
             $pbindInsert =
             [
                 'peripherals_id' => $curPeripheralId,
-                'solutions_id' => $solution,
+                'solutions_id' => $curSolutionId,
                 'chips_id' => $row['芯片'],
                 'releases_id' => $row['适配系统'],
                 'status_id' => $row['适配状态'],
@@ -99,7 +97,7 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
             $pbindInsertUnique = 
             [
                 'peripherals_id' => $curPeripheralId,
-                'solutions_id' => $solution,
+                'solutions_id' => $curSolutionId,
                 'chips_id' => $row['芯片'],
                 'releases_id' => $row['适配系统'],
             ];

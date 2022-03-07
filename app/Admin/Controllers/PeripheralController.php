@@ -23,7 +23,7 @@ class PeripheralController extends AdminController
      */
     protected function grid()
     {
-        return Grid::make(Peripheral::with(['brands','types']), function (Grid $grid){
+        return Grid::make(Peripheral::with(['brands','types','manufactors']), function (Grid $grid){
 
             $urlArr = explode('type=',URL::full());
             $param = end($urlArr);
@@ -32,10 +32,12 @@ class PeripheralController extends AdminController
             {
                 $grid->column('id')->sortable();
                 $grid->column('name');
+                $grid->column('manufactors.name',__('厂商'));
                 $grid->column('brands.name', __('品牌'));
                 $grid->column('types.name', __('类型'));
                 $grid->column('release_date');
                 $grid->column('eosl_date');
+                $grid->column('comment');
 
                 $grid->column('created_at');
                 $grid->column('updated_at')->sortable();

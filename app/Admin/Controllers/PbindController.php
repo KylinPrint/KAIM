@@ -35,16 +35,6 @@ class PbindController extends AdminController
 
             $grid->export(new PbindExport());
 
-            $curPbindArr = Pbind::where([['peripherals_id','=','1'],])
-                ->with('peripherals','releases','chips','solutions','statuses')
-                ->get();
-            
-            foreach($curPbindArr as $curPbind)
-            {
-                $a = $curPbind->chips->name;
-                $b = $curPbind->solutions->name;
-            }
-
             $grid->column('peripherals.name',__('外设型号'));
             $grid->column('releases.name',__('操作系统版本'));
             $grid->column('chips.name',__('芯片'));

@@ -49,13 +49,23 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection parent_id
      * @property Grid\Column|Collection alias
      * @property Grid\Column|Collection manufactors_id
-     * @property Grid\Column|Collection type
      * @property Grid\Column|Collection version
+     * @property Grid\Column|Collection types_id
+     * @property Grid\Column|Collection type
      * @property Grid\Column|Collection detail
+     * @property Grid\Column|Collection softwares_id
+     * @property Grid\Column|Collection softname
+     * @property Grid\Column|Collection crossover
+     * @property Grid\Column|Collection box86
+     * @property Grid\Column|Collection appstore
+     * @property Grid\Column|Collection filename
+     * @property Grid\Column|Collection kernel_version
+     * @property Grid\Column|Collection kernel_test
+     * @property Grid\Column|Collection apptype
+     * @property Grid\Column|Collection kylineco
      * @property Grid\Column|Collection path
      * @property Grid\Column|Collection specifications_id
      * @property Grid\Column|Collection brands_id
-     * @property Grid\Column|Collection types_id
      * @property Grid\Column|Collection username
      * @property Grid\Column|Collection password
      * @property Grid\Column|Collection avatar
@@ -112,13 +122,23 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection parent_id(string $label = null)
      * @method Grid\Column|Collection alias(string $label = null)
      * @method Grid\Column|Collection manufactors_id(string $label = null)
-     * @method Grid\Column|Collection type(string $label = null)
      * @method Grid\Column|Collection version(string $label = null)
+     * @method Grid\Column|Collection types_id(string $label = null)
+     * @method Grid\Column|Collection type(string $label = null)
      * @method Grid\Column|Collection detail(string $label = null)
+     * @method Grid\Column|Collection softwares_id(string $label = null)
+     * @method Grid\Column|Collection softname(string $label = null)
+     * @method Grid\Column|Collection crossover(string $label = null)
+     * @method Grid\Column|Collection box86(string $label = null)
+     * @method Grid\Column|Collection appstore(string $label = null)
+     * @method Grid\Column|Collection filename(string $label = null)
+     * @method Grid\Column|Collection kernel_version(string $label = null)
+     * @method Grid\Column|Collection kernel_test(string $label = null)
+     * @method Grid\Column|Collection apptype(string $label = null)
+     * @method Grid\Column|Collection kylineco(string $label = null)
      * @method Grid\Column|Collection path(string $label = null)
      * @method Grid\Column|Collection specifications_id(string $label = null)
      * @method Grid\Column|Collection brands_id(string $label = null)
-     * @method Grid\Column|Collection types_id(string $label = null)
      * @method Grid\Column|Collection username(string $label = null)
      * @method Grid\Column|Collection password(string $label = null)
      * @method Grid\Column|Collection avatar(string $label = null)
@@ -180,13 +200,23 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection parent_id
      * @property Show\Field|Collection alias
      * @property Show\Field|Collection manufactors_id
-     * @property Show\Field|Collection type
      * @property Show\Field|Collection version
+     * @property Show\Field|Collection types_id
+     * @property Show\Field|Collection type
      * @property Show\Field|Collection detail
+     * @property Show\Field|Collection softwares_id
+     * @property Show\Field|Collection softname
+     * @property Show\Field|Collection crossover
+     * @property Show\Field|Collection box86
+     * @property Show\Field|Collection appstore
+     * @property Show\Field|Collection filename
+     * @property Show\Field|Collection kernel_version
+     * @property Show\Field|Collection kernel_test
+     * @property Show\Field|Collection apptype
+     * @property Show\Field|Collection kylineco
      * @property Show\Field|Collection path
      * @property Show\Field|Collection specifications_id
      * @property Show\Field|Collection brands_id
-     * @property Show\Field|Collection types_id
      * @property Show\Field|Collection username
      * @property Show\Field|Collection password
      * @property Show\Field|Collection avatar
@@ -243,13 +273,23 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection parent_id(string $label = null)
      * @method Show\Field|Collection alias(string $label = null)
      * @method Show\Field|Collection manufactors_id(string $label = null)
-     * @method Show\Field|Collection type(string $label = null)
      * @method Show\Field|Collection version(string $label = null)
+     * @method Show\Field|Collection types_id(string $label = null)
+     * @method Show\Field|Collection type(string $label = null)
      * @method Show\Field|Collection detail(string $label = null)
+     * @method Show\Field|Collection softwares_id(string $label = null)
+     * @method Show\Field|Collection softname(string $label = null)
+     * @method Show\Field|Collection crossover(string $label = null)
+     * @method Show\Field|Collection box86(string $label = null)
+     * @method Show\Field|Collection appstore(string $label = null)
+     * @method Show\Field|Collection filename(string $label = null)
+     * @method Show\Field|Collection kernel_version(string $label = null)
+     * @method Show\Field|Collection kernel_test(string $label = null)
+     * @method Show\Field|Collection apptype(string $label = null)
+     * @method Show\Field|Collection kylineco(string $label = null)
      * @method Show\Field|Collection path(string $label = null)
      * @method Show\Field|Collection specifications_id(string $label = null)
      * @method Show\Field|Collection brands_id(string $label = null)
-     * @method Show\Field|Collection types_id(string $label = null)
      * @method Show\Field|Collection username(string $label = null)
      * @method Show\Field|Collection password(string $label = null)
      * @method Show\Field|Collection avatar(string $label = null)

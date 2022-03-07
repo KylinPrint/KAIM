@@ -90,11 +90,28 @@ class PbindExport extends BaseExport implements WithMapping, WithHeadings, FromC
 
         $ExportArr = array();
         $curPbindsArr = Pbind::with('releases','chips','solutions','statuses')->find($row['id']);
+
+        //这两条查询应该能写成一条
         $curPeripheralArr = Peripheral::with('brands','types')->find($row['peripherals_id']);
+        $curPeripheralIndustryArr = 
+            Peripheral::with('peripheral_industry')
+            ->whereHas('peripheral_industry',function($query) use ($curPeripheralArr){
+                $query->with('industries')->where('peripheral',$curPeripheralArr->id);
+            })->get();
+        $curIndustryArr = array();
+        foreach($curPeripheralIndustryArr[0]->peripheral_industry as $value)
+        {
+            $curIndustry = $value->industries->name;
+            array_push($curIndustryArr,$curIndustry);
+        }
+        $curIndustryStr = implode(',',$curIndustryArr);
+
+
         $curParentTypeName = Type::where('id',$curPeripheralArr->types->name)->pluck('name')->first();
         preg_match('/[0-9a-zA-Z]+/',$curPbindsArr->releases->name,$curSmallReleas);
         
         $ExportArr['产品ID'] = '';
+        $ExportArr['厂商名称'] = $curPeripheralArr->brands->name;
         $ExportArr['产品名称'] = $curPeripheralArr->name;
         $ExportArr['分类1'] = $curParentTypeName;
         $ExportArr['分类2'] = $curPeripheralArr->types->name;
@@ -108,9 +125,9 @@ class PbindExport extends BaseExport implements WithMapping, WithHeadings, FromC
         $ExportArr['下载地址'] = $curPbindsArr->solutions->details;
         $ExportArr['产品描述'] = '';         //peripheral待增字段
         $ExportArr['小版本号'] = $curSmallReleas;
-        $ExportArr['备注'] = $row['comment']?$row['comment']:'';
+        $ExportArr['备注'] = $row['comment']?:'';
         $ExportArr['是否计划适配产品'] = '';  //muji
-        $ExportArr['行业'] = '';            //怎么有个一对多字段
+        $ExportArr['行业'] = $curIndustryStr;
         $ExportArr['适配类型'] = $curPbindsArr->solutions->source;
 
 
