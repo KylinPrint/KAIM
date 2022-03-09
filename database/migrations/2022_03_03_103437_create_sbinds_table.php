@@ -15,16 +15,15 @@ class CreateSbindsTable extends Migration
     {
         Schema::create('sbinds', function (Blueprint $table) {
             $table->id();
-
             $table->foreignId('softwares_id')
-                  ->comment('软件名')
+                  ->comment('软件ID')
                   ->constrained();
             $table->foreignId('releases_id')
-                  ->comment('操作系统')
+                  ->comment('操作系统版本ID')
                   ->constrained();
             $table->string('os_subversion')->nullable()->comment('操作系统小版本号');
             $table->foreignId('chips_id')
-                  ->comment('芯片')
+                  ->comment('芯片ID')
                   ->constrained();
             $table->string('adapt_source')
                   ->comment('引入来源[厂商主动申请,BD主动拓展,行业营销中心引入,区域营销中心引入,最终客户反馈,产品经理引入,厂商合作事业本部引入,渠道部引入,相关机构反馈,其他方式引入]');
@@ -46,6 +45,8 @@ class CreateSbindsTable extends Migration
             $table->string('comment')->nullable()->comment('备注');
             
             $table->timestamps();
+
+            $table->unique(['softwares_id', 'releases_id', 'chips_id']);
         });
     }
 
