@@ -19,6 +19,8 @@ class Pbind extends Model
 		'chips_id',
 		'solutions_id',
 		'statuses_id',
+		'source',
+		'local_history',
 		'class',
 		'comment',
 	];

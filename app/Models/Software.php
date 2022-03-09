@@ -15,13 +15,25 @@ class Software extends Model
         'name',
         'manufactors_id',
         'version',
-        'types_id'
+        'types_id',
+        'kernel_version',
+        'crossover_version',
+        'box86_version',
+        'bd',
+        'am',
+        'tsm',
+        'comment',
     ];
 
     public function manufactors()
     {
         return $this->belongsTo(Manufactor::class);
-    }    
+    }  
+    
+    public function types()
+    {
+        return $this->belongsTo(Type::class);
+    } 
 
     public function sbinds()
     {

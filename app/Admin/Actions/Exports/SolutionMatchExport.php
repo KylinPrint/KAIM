@@ -8,6 +8,7 @@ use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use App\Models\Brand;
+use App\Models\Manufactor;
 use App\Models\Peripheral;
 use App\Models\Type;
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
@@ -85,19 +86,20 @@ class SolutionMatchExport implements FromCollection, WithHeadings
                 continue;
             }
 
-            $curBrandId = (Brand::where('name',$curInput['厂商'])->pluck('id')->first())?:(Brand::where('alias',$curInput['厂商'])->pluck('id')->first());
-            $curTypeId = Type::where('name',$curInput['分类2'])->pluck('id')->first();
-            
-            if(empty($curBrandId)){
-                $curMatchArr[$i]['匹配型号结果'] = '请核实产品品牌或添加新品牌';
-                ++$i;
-                continue;
-            }
-
-            preg_match('/\d+/',$curInput['型号'],$InputNum);
-
             if($curInput['分类1'] == '外设')
             {
+    
+                $curBrandId = (Brand::where('name',$curInput['厂商'])->pluck('id')->first())?:(Brand::where('alias',$curInput['厂商'])->pluck('id')->first());
+                $curTypeId = Type::where('name',$curInput['分类2'])->pluck('id')->first();
+                
+                if(empty($curBrandId)){
+                    $curMatchArr[$i]['匹配型号结果'] = '请核实产品品牌或添加新品牌';
+                    ++$i;
+                    continue;
+                }
+
+                preg_match('/\d+/',$curInput['型号'],$InputNum);
+
                 $curDeviceModelArr = Peripheral::where([
                     ['model','like','%'.$InputNum[0].'%'],
                     ['brands_id',$curBrandId],
@@ -109,10 +111,19 @@ class SolutionMatchExport implements FromCollection, WithHeadings
                 ++$i;
             }
 
-            if($curInput['分类1'] == '软件')
-            {
-                //...
-            }
+            // if($curInput['分类1'] == '软件')
+            // {
+            //     $curManufactorId = (Manufactor::where('name',$curInput['厂商'])->pluck('id')->first())?:(Manufactor::where('alias',$curInput['厂商'])->pluck('id')->first());
+            //     $curTypeId = Type::where('name',$curInput['分类2'])->pluck('id')->first();
+                
+            //     if(empty($curManufactorId)){
+            //         $curMatchArr[$i]['匹配型号结果'] = '请核实产品品牌或添加新品牌';
+            //         ++$i;
+            //         continue;
+            //     }
+
+            //     //软件型号怎么筛
+            // }
             
         }
 

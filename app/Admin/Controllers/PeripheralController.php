@@ -11,6 +11,7 @@ use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
 use Dcat\Admin\Http\Controllers\AdminController;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 
 
@@ -186,11 +187,11 @@ class PeripheralController extends AdminController
                 
 
                 $form->confirm('?','content');
-                // $form->saved(function (Form $form){
-                //     $types_id = $form->input('types_id');
-                //     $b = $this->id; //自增id  得去数据库拿-。-
-                //     return $form->response()->redirect('values/create?typy='.$types_id.'&peripherals_id='.$this->id);
-                // });
+                $form->saved(function (Form $form){
+                    $types_id = $form->input('types_id');
+                    $peripherals_id = DB::getPdo()->lastInsertId();
+                    return $form->response()->redirect('values/create?typy='.$types_id.'&peripherals_id='.$peripherals_id);
+                });
             }    
         });
     }

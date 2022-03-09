@@ -51,18 +51,26 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection manufactors_id
      * @property Grid\Column|Collection version
      * @property Grid\Column|Collection types_id
+     * @property Grid\Column|Collection kernel_version
+     * @property Grid\Column|Collection crossover_version
+     * @property Grid\Column|Collection box86_version
+     * @property Grid\Column|Collection bd
+     * @property Grid\Column|Collection am
+     * @property Grid\Column|Collection tsm
      * @property Grid\Column|Collection type
      * @property Grid\Column|Collection detail
      * @property Grid\Column|Collection softwares_id
+     * @property Grid\Column|Collection os_subversion
+     * @property Grid\Column|Collection adapt_source
+     * @property Grid\Column|Collection adapted_before
+     * @property Grid\Column|Collection admin_users_id
      * @property Grid\Column|Collection softname
-     * @property Grid\Column|Collection crossover
-     * @property Grid\Column|Collection box86
-     * @property Grid\Column|Collection appstore
-     * @property Grid\Column|Collection filename
-     * @property Grid\Column|Collection kernel_version
-     * @property Grid\Column|Collection kernel_test
-     * @property Grid\Column|Collection apptype
+     * @property Grid\Column|Collection solution
+     * @property Grid\Column|Collection adaption_type
+     * @property Grid\Column|Collection test_type
      * @property Grid\Column|Collection kylineco
+     * @property Grid\Column|Collection appstore
+     * @property Grid\Column|Collection iscert
      * @property Grid\Column|Collection path
      * @property Grid\Column|Collection specifications_id
      * @property Grid\Column|Collection brands_id
@@ -124,18 +132,26 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection manufactors_id(string $label = null)
      * @method Grid\Column|Collection version(string $label = null)
      * @method Grid\Column|Collection types_id(string $label = null)
+     * @method Grid\Column|Collection kernel_version(string $label = null)
+     * @method Grid\Column|Collection crossover_version(string $label = null)
+     * @method Grid\Column|Collection box86_version(string $label = null)
+     * @method Grid\Column|Collection bd(string $label = null)
+     * @method Grid\Column|Collection am(string $label = null)
+     * @method Grid\Column|Collection tsm(string $label = null)
      * @method Grid\Column|Collection type(string $label = null)
      * @method Grid\Column|Collection detail(string $label = null)
      * @method Grid\Column|Collection softwares_id(string $label = null)
+     * @method Grid\Column|Collection os_subversion(string $label = null)
+     * @method Grid\Column|Collection adapt_source(string $label = null)
+     * @method Grid\Column|Collection adapted_before(string $label = null)
+     * @method Grid\Column|Collection admin_users_id(string $label = null)
      * @method Grid\Column|Collection softname(string $label = null)
-     * @method Grid\Column|Collection crossover(string $label = null)
-     * @method Grid\Column|Collection box86(string $label = null)
-     * @method Grid\Column|Collection appstore(string $label = null)
-     * @method Grid\Column|Collection filename(string $label = null)
-     * @method Grid\Column|Collection kernel_version(string $label = null)
-     * @method Grid\Column|Collection kernel_test(string $label = null)
-     * @method Grid\Column|Collection apptype(string $label = null)
+     * @method Grid\Column|Collection solution(string $label = null)
+     * @method Grid\Column|Collection adaption_type(string $label = null)
+     * @method Grid\Column|Collection test_type(string $label = null)
      * @method Grid\Column|Collection kylineco(string $label = null)
+     * @method Grid\Column|Collection appstore(string $label = null)
+     * @method Grid\Column|Collection iscert(string $label = null)
      * @method Grid\Column|Collection path(string $label = null)
      * @method Grid\Column|Collection specifications_id(string $label = null)
      * @method Grid\Column|Collection brands_id(string $label = null)
@@ -202,18 +218,26 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection manufactors_id
      * @property Show\Field|Collection version
      * @property Show\Field|Collection types_id
+     * @property Show\Field|Collection kernel_version
+     * @property Show\Field|Collection crossover_version
+     * @property Show\Field|Collection box86_version
+     * @property Show\Field|Collection bd
+     * @property Show\Field|Collection am
+     * @property Show\Field|Collection tsm
      * @property Show\Field|Collection type
      * @property Show\Field|Collection detail
      * @property Show\Field|Collection softwares_id
+     * @property Show\Field|Collection os_subversion
+     * @property Show\Field|Collection adapt_source
+     * @property Show\Field|Collection adapted_before
+     * @property Show\Field|Collection admin_users_id
      * @property Show\Field|Collection softname
-     * @property Show\Field|Collection crossover
-     * @property Show\Field|Collection box86
-     * @property Show\Field|Collection appstore
-     * @property Show\Field|Collection filename
-     * @property Show\Field|Collection kernel_version
-     * @property Show\Field|Collection kernel_test
-     * @property Show\Field|Collection apptype
+     * @property Show\Field|Collection solution
+     * @property Show\Field|Collection adaption_type
+     * @property Show\Field|Collection test_type
      * @property Show\Field|Collection kylineco
+     * @property Show\Field|Collection appstore
+     * @property Show\Field|Collection iscert
      * @property Show\Field|Collection path
      * @property Show\Field|Collection specifications_id
      * @property Show\Field|Collection brands_id
@@ -275,18 +299,26 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection manufactors_id(string $label = null)
      * @method Show\Field|Collection version(string $label = null)
      * @method Show\Field|Collection types_id(string $label = null)
+     * @method Show\Field|Collection kernel_version(string $label = null)
+     * @method Show\Field|Collection crossover_version(string $label = null)
+     * @method Show\Field|Collection box86_version(string $label = null)
+     * @method Show\Field|Collection bd(string $label = null)
+     * @method Show\Field|Collection am(string $label = null)
+     * @method Show\Field|Collection tsm(string $label = null)
      * @method Show\Field|Collection type(string $label = null)
      * @method Show\Field|Collection detail(string $label = null)
      * @method Show\Field|Collection softwares_id(string $label = null)
+     * @method Show\Field|Collection os_subversion(string $label = null)
+     * @method Show\Field|Collection adapt_source(string $label = null)
+     * @method Show\Field|Collection adapted_before(string $label = null)
+     * @method Show\Field|Collection admin_users_id(string $label = null)
      * @method Show\Field|Collection softname(string $label = null)
-     * @method Show\Field|Collection crossover(string $label = null)
-     * @method Show\Field|Collection box86(string $label = null)
-     * @method Show\Field|Collection appstore(string $label = null)
-     * @method Show\Field|Collection filename(string $label = null)
-     * @method Show\Field|Collection kernel_version(string $label = null)
-     * @method Show\Field|Collection kernel_test(string $label = null)
-     * @method Show\Field|Collection apptype(string $label = null)
+     * @method Show\Field|Collection solution(string $label = null)
+     * @method Show\Field|Collection adaption_type(string $label = null)
+     * @method Show\Field|Collection test_type(string $label = null)
      * @method Show\Field|Collection kylineco(string $label = null)
+     * @method Show\Field|Collection appstore(string $label = null)
+     * @method Show\Field|Collection iscert(string $label = null)
      * @method Show\Field|Collection path(string $label = null)
      * @method Show\Field|Collection specifications_id(string $label = null)
      * @method Show\Field|Collection brands_id(string $label = null)

@@ -2,15 +2,20 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Actions\Exports\SbindExport;
+use App\Admin\Actions\Modal\SbindModal;
 use App\Models\Chip;
 use App\Models\Release;
 use App\Models\Sbind;
 use App\Models\Software;
 use App\Models\Status;
+use Dcat\Admin\Admin;
 use Dcat\Admin\Form;
+use Dcat\Admin\Form\Events\Saving;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
 use Dcat\Admin\Http\Controllers\AdminController;
+use Illuminate\Support\Facades\DB;
 
 class SbindController extends AdminController
 {
@@ -21,26 +26,52 @@ class SbindController extends AdminController
      */
     protected function grid()
     {
-        return Grid::make(Sbind::with(['softwares','releases','chips','solutions','statuses']), function (Grid $grid) {
+        return Grid::make(Sbind::with('softwares','releases','chips','admin_users','statuses'), function (Grid $grid) {
+
+            $grid->tools(function  (Grid\Tools  $tools)  { 
+                $tools->append(new SbindModal()); 
+            });
+
+            $grid->export(new SbindExport());
+
             $grid->column('id')->sortable();
-            $grid->column('softwares.name');
-            $grid->column('releases.name');
-            $grid->column('chips.name');
-            $grid->column('statuses.name');
+            $grid->column('softwares.name',__('软件名'))->width('15%');
+            $grid->column('releases.name',__('操作系统版本'))->width('15%');
+            $grid->column('os_subversion');
+            $grid->column('chips.name',__('芯片'));
+            $grid->column('adapt_source');
+            $grid->column('adapted_before')->display(function ($value) {
+                if ($value == '1')  { return '是'; }
+                else                { return '否'; }
+            })->hide();
+            $grid->column('statuses.name',__('当前适配状态'));
+            $grid->column('admin_users.username',__('当前适配状态责任人'));
             $grid->column('softname');
-            $grid->column('crossover');
-            $grid->column('box86');
-            $grid->column('appstore');
-            $grid->column('filename');
-            $grid->column('source');
-            $grid->column('kernel_version');
-            $grid->column('kernel_test');
-            $grid->column('apptype');
+            $grid->column('solution');
             $grid->column('class');
-            $grid->column('kylineco');
-            $grid->column('comment');
-            $grid->column('created_at');
-            $grid->column('updated_at')->sortable();
+            $grid->column('adaption_type')->hide();
+            $grid->column('test_type')->hide();
+            $grid->column('kylineco')->display(function ($value) {
+                if ($value == '1')  { return '是'; }
+                else                { return '否'; }
+            });
+            $grid->column('appstore')->display(function ($value) {
+                if ($value == '1')  { return '是'; }
+                else                { return '否'; }
+            });
+            $grid->column('iscert')->display(function ($value) {
+                if ($value == '1')  { return '是'; }
+                else                { return '否'; }
+            });
+            $grid->column('comment')->limit()->hide();
+            $grid->column('created_at')->hide();
+            $grid->column('updated_at')->sortable()->hide();
+
+
+            $grid->scrollbarX();
+            $grid->addTableClass(['table-text-center']);
+            $grid->withBorder();
+            $grid->showColumnSelector();
         
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->equal('id');
@@ -58,23 +89,24 @@ class SbindController extends AdminController
      */
     protected function detail($id)
     {
-        return Show::make($id, Sbind::with(['softwares','releases','chips','solutions','statuses']), function (Show $show) {
+        return Show::make($id, new Sbind(), function (Show $show) {
             $show->field('id');
-            $show->field('softwares.name');
-            $show->field('releases.name');
-            $show->field('chips.name');
-            $show->field('statuses.name');
+            $show->field('softwares_id');
+            $show->field('releases_id');
+            $show->field('os_subversion');
+            $show->field('chips_id');
+            $show->field('adapt_source');
+            $show->field('adapted_before');
+            $show->field('statuses_id');
+            $show->field('admin_users_id');
             $show->field('softname');
-            $show->field('crossover');
-            $show->field('box86');
-            $show->field('appstore');
-            $show->field('filename');
-            $show->field('source');
-            $show->field('kernel_version');
-            $show->field('kernel_test');
-            $show->field('apptype');
+            $show->field('solution');
             $show->field('class');
+            $show->field('adaption_type');
+            $show->field('test_type');
             $show->field('kylineco');
+            $show->field('appstore');
+            $show->field('iscert');
             $show->field('comment');
             $show->field('created_at');
             $show->field('updated_at');
@@ -88,27 +120,59 @@ class SbindController extends AdminController
      */
     protected function form()
     {
-        return Form::make(Sbind::with(['softwares','releases','chips','solutions','statuses']), function (Form $form) {
+        return Form::make(Sbind::with('softwares','releases','chips'), function (Form $form) {
             $form->display('id');
-            $form->select('softwares_id',__('型号'))->options(Software::all()->pluck('name','id'));
-            $form->select('releases_id',__('版本'))->options(Release::all()->pluck('name','id'));
-            $form->select('chips_id',__('芯片'))->options(Chip::all()->pluck('name','id'));
-            $form->select('statuses_id',__('状态'))->options(Status::where('parent','!=',null)->pluck('name','id'));
+            $form->select('softwares_id')->options(Software::all()->pluck('name','id'));
+            $form->select('releases_id')->options(Release::all()->pluck('name','id'));
+            $form->text('os_subversion');
+            $form->select('chips_id')->options(Chip::all()->pluck('name','id'));
+            $form->select('adapt_source')
+                 ->options([
+                     '厂商主动申请' => '厂商主动申请',
+                     'BD主动拓展' => 'BD主动拓展',
+                     '行业营销中心引入' => '行业营销中心引入',
+                     '区域营销中心引入' => '区域营销中心引入',
+                     '最终客户反馈' => '最终客户反馈',
+                     '产品经理引入' => '产品经理引入',
+                     '厂商合作事业本部引入' => '厂商合作事业本部引入',
+                     '渠道部引入' => '渠道部引入',
+                     '相关机构反馈' => '相关机构反馈',
+                     '其他方式引入' => '其他方式引入'
+                    ]);
+            $form->select('adapted_before')->options([0 => '否',1 => '是']);
+            $form->select('statuses_id')->options(Status::where('parent','!=',null)->pluck('name','id'));
+            $form->hidden('admin_users_id')->default(Admin::user()->id);
             $form->text('softname');
-            $form->text('crossover');
-            $form->text('box86');
-            $form->text('appstore');
-            $form->text('filename');
-            $form->text('source');
-            $form->text('kernel_version');
-            $form->text('kernel_test');
-            $form->text('apptype');
-            $form->text('class');
-            $form->text('kylineco');
+            $form->text('solution');
+            $form->select('class')
+                 ->options([
+                    'READY' => 'READY',
+                    'CERTIFICATION' => 'CERTIFICATION',
+                    'VALIDATION' => 'VALIDATION',
+                    'PM' => 'PM'
+                    ]);
+            $form->select('adaption_type')
+                 ->options([
+                    '原生适配' => '原生适配',
+                    '自研适配' => '自研适配',
+                    '开源适配' => '开源适配',
+                    '项目适配' => '项目适配'
+                    ]);
+            $form->select('test_type')
+                 ->options([
+                    '厂商自测' => '厂商自测',
+                    '视频复测' => '视频复测',
+                    '远程测试' => '远程测试',
+                    '麒麟适配测试' => '麒麟适配测试'
+                    ]);
+            $form->select('kylineco')->options([0 => '否',1 => '是']);
+            $form->select('appstore')->options([0 => '否',1 => '是']);
+            $form->select('iscert')->options([0 => '否',1 => '是']);
             $form->text('comment');
         
             $form->display('created_at');
             $form->display('updated_at');
+            
         });
     }
 }

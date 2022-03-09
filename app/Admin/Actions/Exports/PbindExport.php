@@ -34,7 +34,8 @@ class PbindExport extends BaseExport implements WithMapping, WithHeadings, FromC
 
     public function __construct()
     {
-        $this->fileName = $this->fileName.'_'.Str::random(6).'.xlsx';//拼接下载文件名称
+        $this->fileName = $this->fileName.'_'.date('ymd_Hi').'.xlsx';//拼接下载文件名称
+
         $this->titles = 
         [   
             '产品ID',
@@ -96,7 +97,7 @@ class PbindExport extends BaseExport implements WithMapping, WithHeadings, FromC
         $curPeripheralIndustryArr = 
             Peripheral::with('peripheral_industry')
             ->whereHas('peripheral_industry',function($query) use ($curPeripheralArr){
-                $query->with('industries')->where('peripheral',$curPeripheralArr->id);
+                $query->with('industries')->where('peripherals_id',$curPeripheralArr->id);
             })->get();
         $curIndustryArr = array();
         foreach($curPeripheralIndustryArr[0]->peripheral_industry as $value)
@@ -120,11 +121,11 @@ class PbindExport extends BaseExport implements WithMapping, WithHeadings, FromC
         $ExportArr['体系架构'] = $curPbindsArr->chips->arch;
         $ExportArr['兼容等级'] = $curPbindsArr->class?$curPbindsArr->class:'';
         $ExportArr['测试时间'] = '';         //muji
-        $ExportArr['适配状态'] = $curPbindsArr->statues->name;
+        $ExportArr['适配状态'] = $curPbindsArr->statuses->name;
         $ExportArr['安装包名称'] = $curPbindsArr->solutions->name;
         $ExportArr['下载地址'] = $curPbindsArr->solutions->details;
         $ExportArr['产品描述'] = '';         //peripheral待增字段
-        $ExportArr['小版本号'] = $curSmallReleas;
+        $ExportArr['小版本号'] = $curSmallReleas[0];
         $ExportArr['备注'] = $row['comment']?:'';
         $ExportArr['是否计划适配产品'] = '';  //muji
         $ExportArr['行业'] = $curIndustryStr;

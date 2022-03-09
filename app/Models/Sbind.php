@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Sbind extends Model
 {
-	use HasDateTimeFormatter;  
+	use HasDateTimeFormatter;   
 	
 	protected $table = 'sbinds';
 
@@ -17,19 +17,19 @@ class Sbind extends Model
 		'softwares_id',
 		'releases_id',
 		'chips_id',
-		'solutions_id',
+		'adapt_source',
+		'adapted_before',
 		'statuses_id',
-		'crossover',
-		'box86',
-		'appstore',
-		'filename',
-		'source',
-		'kernel_version',
-		'kernel_test',
-		'apptype',
+		'admin_users_id',
+		'softname',
+		'solution',
 		'class',
+		'adaption_type',
+		'test_type',
 		'kylineco',
-		'comment'
+		'appstore',
+		'iscert',
+		'comment',
 	];
 
 	public function softwares()
@@ -47,13 +47,14 @@ class Sbind extends Model
 		return $this->belongsTo(Chip::class);
 	}
 
-	public function solutions()
-	{
-		return $this->belongsTo(Solution::class);
-	}
-
 	public function statuses()
 	{
 		return $this->belongsTo(Status::class);
 	}
+
+	public function admin_users()
+	{
+		return $this->belongsTo((AdminUser::class));
+	}
+	
 }

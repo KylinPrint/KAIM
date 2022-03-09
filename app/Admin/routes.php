@@ -31,5 +31,6 @@ Route::group([
     $router->resource('solution_matches',SolutionMatchController::class);
     $router->resource('sbinds', SbindController::class);
     $router->resource('softwares', SoftwareController::class);
+    $router->resource('manufactors',ManufactorController::class);
 
 });

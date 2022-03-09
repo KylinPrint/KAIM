@@ -17,6 +17,7 @@ use Dcat\Admin\Http\Controllers\AdminController;
 use App\Admin\Renderable\SolutionTable;
 use App\Admin\Renderable\ReleaseTable;
 use App\Admin\Renderable\ChipTable;
+use Dcat\Admin\Admin;
 
 class PbindController extends AdminController
 {
@@ -29,11 +30,27 @@ class PbindController extends AdminController
     {
         return Grid::make(Pbind::with(['peripherals','releases','chips','solutions','statuses']), function (Grid $grid) {
 
-            $grid->tools(function  (Grid\Tools  $tools)  { 
-                $tools->append(new PbindModal()); 
-            });
+            if(Admin::user()->can('pbinds-import'))
+            {
+                $grid->tools(function  (Grid\Tools  $tools)  { 
+                    $tools->append(new PbindModal()); 
+                });
+            }
 
-            $grid->export(new PbindExport());
+            if(!Admin::user()->can('pbinds-creat'))
+            {
+                $grid->disableCreateButton();
+            }
+
+            if(Admin::user()->can('pbinds-export'))
+            {
+                $grid->export(new PbindExport());
+            }
+
+            if(!Admin::user()->can('pbinds-action'))
+            {
+                $grid->disableActions();
+            }
 
             $grid->column('peripherals.name',__('外设型号'));
             $grid->column('releases.name',__('操作系统版本'));
