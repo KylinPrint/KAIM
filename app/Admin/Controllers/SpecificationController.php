@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Models\Specification;
+use App\Models\Type;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
@@ -58,11 +59,11 @@ class SpecificationController extends AdminController
      */
     protected function form()
     {
-        return Form::make(new Specification(), function (Form $form) {
+        return Form::make(Specification::with('types'), function (Form $form) {
             $form->display('id');
             $form->text('name');
-            $form->text('types_id');
-            $form->text('isrequired');
+            $form->select('types_id', __('类型'))->options(Type::where('parent','!=',null)->pluck('name','id'));
+            $form->select('isrequired')->options([0 => '否',1 => '是']);
         
             $form->display('created_at');
             $form->display('updated_at');

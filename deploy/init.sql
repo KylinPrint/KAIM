@@ -21,7 +21,7 @@ INSERT INTO `admin_menu` VALUES (22, 13, 26, 'Specifications', 'fa-wrench', 'spe
 INSERT INTO `admin_menu` VALUES (24, 0, 29, 'Requirements', 'fa-bicycle', '', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
 INSERT INTO `admin_menu` VALUES (25, 0, 2, 'Softwares_Management', 'fa-laptop', NULL, '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
 INSERT INTO `admin_menu` VALUES (26, 8, 7, 'Printers', 'fa-print', 'peripherals?type=5', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `admin_menu` VALUES (27, 0, 36, '小工具', 'fa-wrench', NULL, '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `admin_menu` VALUES (27, 0, 36, 'Tools', 'fa-wrench', NULL, '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
 INSERT INTO `admin_menu` VALUES (28, 27, 37, 'Solution_Query', 'fa-wrench', '/solution_matches', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
 INSERT INTO `admin_menu` VALUES (29, 25, 3, 'Software_Adaptions', 'fa-wrench', '/sbinds', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
 INSERT INTO `admin_menu` VALUES (30, 25, 4, 'Softwares', 'fa-wrench', '/softwares', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
