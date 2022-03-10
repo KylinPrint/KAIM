@@ -31,9 +31,9 @@ class CreatePbindsTable extends Migration
             $table->foreignId('statuses_id')
                   ->comment('当前适配状态')
                   ->constrained();
-            $table->foreignId('admin_users_id')
-                  ->comment('当前适配状态责任人')
-                  ->constrained();
+            // $table->foreignId('admin_users_id')
+            //       ->comment('当前适配状态责任人')
+            //       ->constrained();
             $table->foreignId('solutions_id')
                   ->comment('解决方案ID')
                   ->constrained();
