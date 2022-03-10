@@ -19,6 +19,8 @@ class Pbind extends Model
 		'chips_id',
 		'solutions_id',
 		'statuses_id',
+		'source',
+		'local_history',
 		'class',
 		'comment',
 	];
@@ -46,5 +48,15 @@ class Pbind extends Model
 	public function statuses()
 	{
 		return $this->belongsTo(Status::class);
+	}
+
+	public function admin_users()
+	{
+		return $this->belongsTo((AdminUser::class));
+	}
+
+	public function histories()
+	{
+		return $this->hasMany(PbindHistory::class);
 	}
 }

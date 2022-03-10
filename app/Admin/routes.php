@@ -28,5 +28,9 @@ Route::group([
     $router->resource('statuses',StatusController::class);
     $router->resource('specifications',SpecificationController::class);
     $router->resource('values',ValueController::class);
+    $router->resource('solution_matches',SolutionMatchController::class);
+    $router->resource('sbinds', SbindController::class);
+    $router->resource('softwares', SoftwareController::class);
+    $router->resource('manufactors',ManufactorController::class);
 
 });

@@ -5,7 +5,7 @@ return [
         'specification' => '参数',
     ],
     'fields' => [
-        'name' => '参数',
+        'name' => '参数名',
         'types_id' => '分类',
         'isrequired' => '必填',
     ],

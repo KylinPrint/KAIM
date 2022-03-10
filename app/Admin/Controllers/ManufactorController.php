@@ -20,7 +20,11 @@ class ManufactorController extends AdminController
         return Grid::make(new Manufactor(), function (Grid $grid) {
             $grid->column('id')->sortable();
             $grid->column('name');
-            $grid->column('isconnected');
+            $grid->column('isconnected')->display(function ($isconnected) {
+                if     ($isconnected == '0')  { return '否'; }
+                elseif ($isconnected == '1') { return '是'; }
+                else                             { return '否'; }
+            });
             $grid->column('created_at');
             $grid->column('updated_at')->sortable();
         
@@ -59,7 +63,7 @@ class ManufactorController extends AdminController
         return Form::make(new Manufactor(), function (Form $form) {
             $form->display('id');
             $form->text('name');
-            $form->text('isconnected');
+            $form->select('isconnected')->options([0 => '否',1 => '是']);
         
             $form->display('created_at');
             $form->display('updated_at');

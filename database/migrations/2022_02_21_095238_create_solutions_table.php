@@ -18,6 +18,7 @@ class CreateSolutionsTable extends Migration
             $table->string('name')->comment('解决方案名称');
 
             $table->string('details')->comment('解决方案描述');
+            // 太短了
             $table->string('source')->comment('解决方案来源');
 
             $table->timestamps();

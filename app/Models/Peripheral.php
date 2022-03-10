@@ -15,11 +15,18 @@ class Peripheral extends Model
 	protected $fillable = 
 	[
 		'name',
+		'manufactors_id',
 		'brands_id',
 		'types_id',
 		'release_date',
 		'eosl_data',
+		'comment'
 	];
+
+	public function manufactors()
+	{
+		return $this->belongsTo(Manufactor::class);
+	}
 
 	public function brands()
     {
@@ -34,6 +41,25 @@ class Peripheral extends Model
 	public function values()
     {
         return $this->hasMany(Value::class, 'peripherals_id');
+    }
+
+	public function pbinds()
+	{
+		return $this->hasMany(Pbind::class, 'peripherals_id');
+	}
+
+	public function peripheral_industry()
+	{
+		return $this->hasMany(PeripheralIndustry::class, 'peripherals_id');
+	}
+
+	public function industries()
+    {
+        $pivotTable = 'peripheral_industry'; // 中间表
+
+        $relatedModel = Industry::class; // 关联模型类名
+
+        return $this->belongsToMany($relatedModel, $pivotTable, 'peripherals_id', 'industries_id')->withTimestamps();
     }
 
 }

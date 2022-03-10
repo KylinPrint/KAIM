@@ -11,6 +11,7 @@ use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
 use Dcat\Admin\Http\Controllers\AdminController;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 
 
@@ -23,7 +24,7 @@ class PeripheralController extends AdminController
      */
     protected function grid()
     {
-        return Grid::make(Peripheral::with(['brands','types']), function (Grid $grid){
+        return Grid::make(Peripheral::with(['brands','types','manufactors']), function (Grid $grid){
 
             $urlArr = explode('type=',URL::full());
             $param = end($urlArr);
@@ -32,10 +33,12 @@ class PeripheralController extends AdminController
             {
                 $grid->column('id')->sortable();
                 $grid->column('name');
+                $grid->column('manufactors.name',__('厂商'));
                 $grid->column('brands.name', __('品牌'));
                 $grid->column('types.name', __('类型'));
                 $grid->column('release_date');
                 $grid->column('eosl_date');
+                $grid->column('comment');
 
                 $grid->column('created_at');
                 $grid->column('updated_at')->sortable();
@@ -94,11 +97,34 @@ class PeripheralController extends AdminController
             $show->field('name');
             $show->field('brands.name', __('品牌'));
             $show->field('types.name', __('类型'));
-            // $show->html(function ($show){
-            //     return view(, ['types_id' => $this->types_id]);
-            // });
+
             $show->field('release_date');
             $show->field('eosl_date');
+
+            $show->binds(__('参数'), function ($model) {
+                $grid = new Grid(Value::with(['peripherals','specifications']));
+    
+                $grid->setActionClass(Grid\Displayers\Actions::class);
+    
+                $grid->model()->where('peripherals_id', $model->id);
+                $grid->disableFilter();
+                $grid->disableCreateButton();
+                
+                $grid->column('specifications.name', __('参数名'));
+                $grid->column('value', __('参数'));
+                $grid->disableActions();
+                // $grid->actions(function ($actions) {
+                //     $actions->disableDelete();
+                //     $actions->disableEdit();     
+                //     $actions->disableView();
+                //     $curStr = '<a href = "/admin/values/'.$actions->row['solutions_id'].'">详情</a>';
+                //     $actions->append($curStr);
+                //     //$actions->append(new JumpInfo($actions->row['id']));
+    
+                // });	
+                return $grid;
+            });
+
             $show->field('created_at');
             $show->field('updated_at');
 
@@ -120,23 +146,21 @@ class PeripheralController extends AdminController
                 $typesID = $form->model()->types_id;
                 $form->text('name');
                 $form->select('brands_id', __('品牌'))->options(Brand::all()->pluck('name','id'));
-                $form->select('types_id', __('类型'))->options(Type::where('parent','!=',null)->pluck('name','id'));
+                $form->select('types_id', __('类型'))->options(Type::where('parent','!=',null)->pluck('name','id'))->disable();
                 $form->date('release_date')->format('YYYY-MM-DD');
                 $form->date('eosl_date')->format('YYYY-MM-DD');
 
-                if($typesID == 2)
-                {
-                    $form->hasMany('values', '参数', function (Form\NestedForm $form){
+                
+                $form->hasMany('values', '参数', function (Form\NestedForm $form) use ($typesID){
 
-                        $form->select('specifications_id',__('specifications name'))
-                            ->options(Specification::where('types_id','2')
-                            ->pluck('name', 'id'))
-                            ->disable();
-                        $form->text('value');
+                    $form->select('specifications_id',__('specifications name'))
+                        ->options(Specification::where('types_id',$typesID)
+                        ->pluck('name', 'id'))
+                        ->disable();
+                    $form->text('value');
 
-                    })->useTable();
-                }
-
+                })->useTable();
+                
             }    
             
             elseif($form->isCreating()){
@@ -146,17 +170,16 @@ class PeripheralController extends AdminController
                 $form->display('id');
                 $form->text('name');
                 $form->select('brands_id', __('品牌'))->options(Brand::all()->pluck('name','id'));
-                $form->select('types_id', __('类型'))->options(Type::where('parent','!=',null)->pluck('name','id'));
+                $form->hidden('types_id')->default($param);
                 $form->date('release_date')->format('YYYY-MM-DD');
                 $form->date('eosl_date')->format('YYYY-MM-DD');
 
-                $spcificArr = Specification::where('types_id','2')->pluck('name','id');  //获取对应type的specification数据，格式为键名为id，键值为name的数组
-
+                $spcificArr = Specification::where('types_id',$param)->pluck('name','id');  //获取对应type的specification数据，格式为键名为id，键值为name的数组
                 
-                $form->hasMany('values', '参数', function (Form\NestedForm $form) {
+                $form->hasMany('values', '参数', function (Form\NestedForm $form) use ($param) {
 
                     $form->select('specifications_id',__('specifications name'))
-                        ->options(Specification::where('types_id','2')
+                        ->options(Specification::where('types_id',$param)
                         ->pluck('name', 'id'));
                     $form->text('value');
 
@@ -164,11 +187,11 @@ class PeripheralController extends AdminController
                 
 
                 $form->confirm('?','content');
-                // $form->saved(function (Form $form){
-                //     $types_id = $form->input('types_id');
-                //     $b = $this->id; //自增id  得去数据库拿-。-
-                //     return $form->response()->redirect('values/create?typy='.$types_id.'&peripherals_id='.$this->id);
-                // });
+                $form->saved(function (Form $form){
+                    $types_id = $form->input('types_id');
+                    $peripherals_id = DB::getPdo()->lastInsertId();
+                    return $form->response()->redirect('values/create?typy='.$types_id.'&peripherals_id='.$peripherals_id);
+                });
             }    
         });
     }

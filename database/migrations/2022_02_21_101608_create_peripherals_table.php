@@ -15,16 +15,21 @@ class CreatePeripheralsTable extends Migration
     {
         Schema::create('peripherals', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->comment('外设名称');
+            $table->string('name')->comment('外设型号');
 
+            $table->foreignId('manufactors_id')
+                  ->nullable()
+                  ->comment('外设厂商')
+                  ->constrained();
             $table->foreignId('brands_id')
                   ->comment('外设品牌')
                   ->constrained();
             $table->foreignId('types_id')
-                  ->comment('外设分类')
+                  ->comment('外设类型')
                   ->constrained();
             $table->date('release_date')->nullable()->comment('发布日期');
             $table->date('eosl_date')->nullable()->comment('服务终止日期');
+            $table->string('comment')->nullable()->comment('外设描述');
 
             $table->timestamps();
         });
