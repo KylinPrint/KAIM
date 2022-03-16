@@ -89,6 +89,8 @@ class PbindExport extends BaseExport implements WithMapping, WithHeadings, FromC
         $PbindRow = new Fluent($row);
         $ids = $PbindRow->id;
 
+        $curIndustryStr = '';  //行业
+
         $ExportArr = array();
         $curPbindsArr = Pbind::with('releases','chips','solutions','statuses')->find($row['id']);
 
@@ -99,16 +101,22 @@ class PbindExport extends BaseExport implements WithMapping, WithHeadings, FromC
             ->whereHas('peripheral_industry',function($query) use ($curPeripheralArr){
                 $query->with('industries')->where('peripherals_id',$curPeripheralArr->id);
             })->get();
-        $curIndustryArr = array();
-        foreach($curPeripheralIndustryArr[0]->peripheral_industry as $value)
+        
+        if($curPeripheralIndustryArr->count())
         {
-            $curIndustry = $value->industries->name;
-            array_push($curIndustryArr,$curIndustry);
+            $curPeripheralIndustryArr = array();
+
+            foreach($curPeripheralIndustryArr[0]->peripheral_industry as $value)
+            {
+                $curIndustry = $value->industries->name;
+                array_push($curIndustryArr,$curIndustry);
+            }
+            $curIndustryStr = implode(',',$curIndustryArr);
         }
-        $curIndustryStr = implode(',',$curIndustryArr);
+        
 
 
-        $curParentTypeName = Type::where('id',$curPeripheralArr->types->name)->pluck('name')->first();
+        $curParentTypeName = Type::where('id',$curPeripheralArr->types->parent)->pluck('name')->first();
         preg_match('/[0-9a-zA-Z]+/',$curPbindsArr->releases->name,$curSmallReleas);
         
         $ExportArr['产品ID'] = '';
@@ -119,12 +127,12 @@ class PbindExport extends BaseExport implements WithMapping, WithHeadings, FromC
         $ExportArr['适配系统'] = $curPbindsArr->releases->name;
         $ExportArr['芯片'] = $curPbindsArr->chips->name;
         $ExportArr['体系架构'] = $curPbindsArr->chips->arch;
-        $ExportArr['兼容等级'] = $curPbindsArr->class?$curPbindsArr->class:'';
+        $ExportArr['兼容等级'] = $curPbindsArr->class?:'';
         $ExportArr['测试时间'] = '';         //muji
         $ExportArr['适配状态'] = $curPbindsArr->statuses->name;
         $ExportArr['安装包名称'] = $curPbindsArr->solutions->name;
         $ExportArr['下载地址'] = $curPbindsArr->solutions->details;
-        $ExportArr['产品描述'] = '';         //peripheral待增字段
+        $ExportArr['产品描述'] = $curPeripheralArr->comment?:'';
         $ExportArr['小版本号'] = $curSmallReleas[0];
         $ExportArr['备注'] = $row['comment']?:'';
         $ExportArr['是否计划适配产品'] = '';  //muji
