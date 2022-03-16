@@ -173,6 +173,28 @@ class SbindController extends AdminController
             $form->display('created_at');
             $form->display('updated_at');
             
+            $form->saving(function (Form $form) {
+                // 判断是否是修改操作
+                if ($form->isEditing()) {
+                    $status_coming = $form->statuses_id;
+                    $id = $form->getKey();
+                    $timestamp = date("Y-m-d H:i:s");
+                    
+                    // 取当前状态
+                    $status_current = DB::table('sbinds')->where('id', $id)->value('statuses_id');
+                    if ($status_coming != $status_current) {
+                        DB::table('sbind_histories')->insert([
+                            'pbinds_id' => $id,
+                            'statuses_old' => $status_current,
+                            'statuses_new' => $status_coming,
+                            'admin_users_id' => Admin::user()->id,
+                            'created_at' => $timestamp,
+                            'updated_at' => $timestamp,
+                        ]);
+                    }
+                }
+            });
+
         });
     }
 }
