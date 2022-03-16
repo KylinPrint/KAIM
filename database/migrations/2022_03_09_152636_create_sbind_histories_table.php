@@ -19,9 +19,12 @@ class CreateSbindHistoriesTable extends Migration
             $table->foreignId('pbinds_id')
                 ->comment('PBind表ID')
                 ->constrained();
-            $table->foreignId('statuses_id')
-                ->comment('当前适配状态')
-                ->constrained();
+            $table->foreignId('statuses_old')
+                ->comment('修改前适配状态')
+                ->constrained('statuses', 'id');
+            $table->foreignId('statuses_new')
+                ->comment('修改后适配状态')
+                ->constrained('statuses', 'id');
             // $table->foreignId('admin_users_id')
             //     ->comment('当前适配状态责任人')
             //     ->constrained();
