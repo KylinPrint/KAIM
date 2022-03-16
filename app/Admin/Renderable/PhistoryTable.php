@@ -13,12 +13,13 @@ class PhistoryTable extends LazyRenderable
         $id = $this->key;
         
         $data = PbindHistory::where('pbind_id', $id)
-            ->get(['pbind_id', 'statuses_id', 'updated_at'])
+            ->get(['admin_user_id', 'status_old','status_new', 'updated_at'])
             ->toArray();
         
         $title = [
             '处理人',
-            '状态',
+            '修改前状态',
+            '修改后状态',
             '更新时间',
         ];
 

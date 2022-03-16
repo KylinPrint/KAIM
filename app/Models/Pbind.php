@@ -10,21 +10,6 @@ class Pbind extends Model
 {
 	use HasDateTimeFormatter;    
 
-	protected $table = 'pbinds';
-
-	protected $fillable = 
-	[
-		'peripherals_id',
-		'releases_id',
-		'chips_id',
-		'solutions_id',
-		'statuses_id',
-		'source',
-		'local_history',
-		'class',
-		'comment',
-	];
-
 	public function peripherals()
     {
         return $this->belongsTo(Peripheral::class);

@@ -46,7 +46,7 @@ class PbindController extends AdminController
     {
         return Grid::make(Pbind::with(['peripherals','releases','chips','solutions','statuses']), function (Grid $grid) {
 
-            if(Admin::user()->can('pbinds-impor t'))
+            if(Admin::user()->can('pbinds-import'))
             {
                 $grid->tools(function  (Grid\Tools  $tools)  { 
                     $tools->append(new PbindModal()); 
@@ -228,10 +228,10 @@ class PbindController extends AdminController
                     $status_current = DB::table('pbinds')->where('id', $id)->value('statuses_id');
                     if ($status_coming != $status_current) {
                         DB::table('pbind_histories')->insert([
-                            'pbinds_id' => $id,
-                            'statuses_old' => $status_current,
-                            'statuses_new' => $status_coming,
-                            'admin_users_id' => Admin::user()->id,
+                            'pbind_id' => $id,
+                            'status_old' => $status_current,
+                            'status_new' => $status_coming,
+                            'admin_user_id' => Admin::user()->id,
                             'created_at' => $timestamp,
                             'updated_at' => $timestamp,
                         ]);

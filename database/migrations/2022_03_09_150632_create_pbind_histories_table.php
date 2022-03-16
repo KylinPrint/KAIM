@@ -16,16 +16,16 @@ class CreatePbindHistoriesTable extends Migration
         Schema::create('pbind_histories', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('pbinds_id')
+            $table->foreignId('pbind_id')
                 ->comment('PBind表ID')
                 ->constrained();
-            $table->foreignId('statuses_old')
+            $table->foreignId('status_old')
                 ->comment('修改前适配状态')
                 ->constrained('statuses', 'id');
-            $table->foreignId('statuses_new')
+            $table->foreignId('status_new')
                 ->comment('修改后适配状态')
                 ->constrained('statuses', 'id');
-            // $table->foreignId('admin_users_id')
+            // $table->foreignId('admin_user_id')
             //     ->comment('当前适配状态责任人')
             //     ->constrained();
 
