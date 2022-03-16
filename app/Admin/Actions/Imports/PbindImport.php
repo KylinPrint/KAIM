@@ -2,6 +2,7 @@
 
 namespace App\Admin\Actions\Imports;
 
+use App\Exceptions\RequiredNotFoundException;
 use App\Models\Brand;
 use App\Models\Chip;
 use App\Models\Industry;
@@ -44,8 +45,29 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
 
         $IndustryArr = Industry::all()->pluck('name','id')->toArray();
 
-        foreach($rows as $row)
+        foreach($rows as $key => $row)
         {
+            if
+            ( 
+                !($row['厂商']&&
+                $row['品牌']&&
+                $row['外设型号']&&
+                $row['外设类型一']&&
+                $row['外设类型二']&&
+                $row['行业分类']&&
+                $row['操作系统版本']&&
+                $row['芯片']&&
+                $row['架构']&&
+                $row['引入来源']&&
+                $row['当前适配状态']&&
+                $row['当前细分适配状态']&&
+                $row['当前适配状态责任人']&&
+                $row['是否上传生态网站']&&
+                $row['是否上架软件商店']&&
+                $row['是否互认证'])
+            ){
+                throw new RequiredNotFoundException($key);
+            }
             
             if($row['厂商'] != '')
             {

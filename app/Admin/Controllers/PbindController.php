@@ -19,6 +19,7 @@ use App\Admin\Renderable\SolutionTable;
 use App\Admin\Renderable\ReleaseTable;
 use App\Admin\Renderable\ChipTable;
 use App\Admin\Renderable\PhistoryTable;
+use App\Exceptions\RequiredNotFoundException;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Layout\Content;
 
@@ -43,7 +44,7 @@ class PbindController extends AdminController
 
     protected function grid()
     {
-        return Grid::make(Pbind::with(['peripherals','releases','chips','solutions','statuses']), function (Grid $grid) {
+        return Grid::make(Pbind::with(['peripherals','releases','chips','solutions','statuses','admin_users']), function (Grid $grid) {
 
             if(Admin::user()->can('pbinds-impor t'))
             {
@@ -75,7 +76,7 @@ class PbindController extends AdminController
                 ->modal(function ($modal){
                     $modal->title('解决方案');
                     $modal->xl();
-                    // $modal->value('详情');
+                    $modal->value('详情');
                     return SolutionTable::make();
                 }); 
             $grid->column('statuses.name',__('适配状态'));
@@ -107,11 +108,11 @@ class PbindController extends AdminController
             $grid->column('comment');
 
             $grid->column('admin_users.username',__('当前适配状态责任人'));
-            $grid->column('histories')
-            ->display('查看')
-            ->modal(function ($modal) {
-                return PhistoryTable::make();
-            });
+            // $grid->column('histories')
+            // ->display('查看')
+            // ->modal(function ($modal) {
+            //     return PhistoryTable::make();
+            // });
             
             // $grid->column('created_at');
             $grid->column('updated_at')->sortable();
@@ -170,7 +171,6 @@ class PbindController extends AdminController
             $form->select('chips_id',__('芯片'))->options(Chip::all()->pluck('name','id'));
             $form->select('solutions_id',__('解决方案'))->options(Solution::all()->pluck('name','id'));
             $form->select('statuses_id',__('状态'))->options(Status::where('parent','!=',null)->pluck('name','id'));
-            $form->select('class')->options(['READY' => 'READY','CERTIFICATION' => 'CERTIFICATION']);
             $form->select('adapt_source')
                  ->options([
                      '厂商主动申请' => '厂商主动申请',
@@ -185,7 +185,6 @@ class PbindController extends AdminController
                      '其他方式引入' => '其他方式引入'
                     ]);
             $form->select('adapted_before')->options([0 => '否',1 => '是']);
-            $form->select('statuses_id')->options(Status::where('parent','!=',null)->pluck('name','id'));
             $form->hidden('admin_users_id')->default(Admin::user()->id);
             $form->select('class')
                  ->options([

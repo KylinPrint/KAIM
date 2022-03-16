@@ -16,10 +16,7 @@ class RequiredNotFoundException extends Exception
 
     public function render(Request $request)
     {
-        if($request->expectsJson())
-        {
-            return response()->json(['msg' => $this->message],$this->code);
-        }
-        return view('error',['msg' => $this->message]);
+        $str = '第'.$this->getMessage().'行有未填必填项！';
+        return response($str ?: '真有问题了');
     }
 }
