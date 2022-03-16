@@ -49,4 +49,14 @@ class Pbind extends Model
 	{
 		return $this->belongsTo(Status::class);
 	}
+
+	public function admin_users()
+	{
+		return $this->belongsTo((AdminUser::class));
+	}
+
+	public function histories()
+	{
+		return $this->hasMany(PbindHistory::class);
+	}
 }

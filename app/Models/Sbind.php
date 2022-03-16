@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Dcat\Admin\Models\Administrator;
 use Dcat\Admin\Traits\HasDateTimeFormatter;
 
 use Illuminate\Database\Eloquent\Model;
@@ -54,7 +55,11 @@ class Sbind extends Model
 
 	public function admin_users()
 	{
-		return $this->belongsTo((AdminUser::class));
+		return $this->belongsTo((Administrator::class));
 	}
 	
+	public function histories()
+	{
+		return $this->hasMany(SbindHistory::class);
+	}
 }
