@@ -185,6 +185,7 @@ class PeripheralController extends AdminController
 
                 })->useTable();
                 
+                
 
                 $form->confirm('?','content');
                 $form->saved(function (Form $form){

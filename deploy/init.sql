@@ -13,6 +13,7 @@ ADD CONSTRAINT `sbind_histories_admin_users_id_foreign` FOREIGN KEY ( `admin_use
 -- ----------------------------
 -- Records of admin_menu
 -- ----------------------------
+TRUNCATE table `admin_menu`;
 INSERT INTO `admin_menu` VALUES (1, 0, 1, 'Index', 'feather icon-bar-chart-2', '/', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
 INSERT INTO `admin_menu` VALUES (2, 0, 2, 'Softwares_Management', NULL, NULL, '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
 INSERT INTO `admin_menu` VALUES (3, 2, 3, 'Software_Adaptions', NULL, 'sbinds', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');

@@ -8,6 +8,7 @@ SQL=$WORKSPACE/deploy/init.sql
 
 cd $WORKSPACE
 # Composer 依赖
+# TODO Composer检查
 composer install
 
 # 检查.env
