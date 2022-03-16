@@ -1,22 +1,30 @@
+# Package Manager
 /node_modules
-/public/hot
-/public/storage
-/storage/*.key
-.phpunit.result.cache
-docker-compose.override.yml
-Homestead.json
-Homestead.yaml
+/vendor
+
 npm-debug.log
 yarn-error.log
 
-# ENV
+# Laravel
 .env
 .env.backup
+/public/hot
+/public/storage
+/storage/*.key
+
+# Dcat-Admin
+dcat_admin_ide_helper.php
+
+# Docker
+docker-compose.override.yml
+
+# Homestead
+Homestead.json
+Homestead.yaml
+
+# Test
+.phpunit.result.cache
 
 # IDE
 /.idea
 /.vscode
-
-# composer
-composer.lock
-/vendor

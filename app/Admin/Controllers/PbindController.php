@@ -18,7 +18,7 @@ use Dcat\Admin\Http\Controllers\AdminController;
 use App\Admin\Renderable\SolutionTable;
 use App\Admin\Renderable\ReleaseTable;
 use App\Admin\Renderable\ChipTable;
-use App\Exceptions\RequiredNotFoundException;
+use App\Admin\Renderable\PhistoryTable;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Layout\Content;
 
@@ -52,7 +52,7 @@ class PbindController extends AdminController
                 });
             }
 
-            if(!Admin::user()->can('pbinds-creat'))
+            if(!Admin::user()->can('pbinds-create'))
             {
                 $grid->disableCreateButton();
             }
@@ -75,7 +75,7 @@ class PbindController extends AdminController
                 ->modal(function ($modal){
                     $modal->title('解决方案');
                     $modal->xl();
-                    $modal->value('详情');
+                    // $modal->value('详情');
                     return SolutionTable::make();
                 }); 
             $grid->column('statuses.name',__('适配状态'));
@@ -105,6 +105,14 @@ class PbindController extends AdminController
             $grid->column('comment')->limit()->hide();
 
             $grid->column('comment');
+
+            $grid->column('admin_users.username',__('当前适配状态责任人'));
+            $grid->column('histories')
+            ->display('查看')
+            ->modal(function ($modal) {
+                return PhistoryTable::make();
+            });
+            
             // $grid->column('created_at');
             $grid->column('updated_at')->sortable();
         

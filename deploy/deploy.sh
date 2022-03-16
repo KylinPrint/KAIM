@@ -8,6 +8,7 @@ SQL=$WORKSPACE/deploy/init.sql
 
 cd $WORKSPACE
 # Composer 依赖
+# TODO Composer检查
 composer install
 
 # 检查.env
@@ -27,7 +28,9 @@ if [ -n "$SQLTEST" ]; then
 fi
 
 # 运行迁移
+# TODO 判断执行结果
 php artisan admin:install
+
 # 执行init.sql
 SQLINIT=`mysql -u$DB_USERNAME -p$DB_PASSWORD -e "
 use $DB_DATABASE;
@@ -40,6 +43,7 @@ if [ -z "$APP_KEY" ]; then
 fi
 
 # 生成storage link
+# TODO 先判断有没有
 php artisan storage:link
 
 echo "部署完成,默认用户名/密码: admin/admin"
