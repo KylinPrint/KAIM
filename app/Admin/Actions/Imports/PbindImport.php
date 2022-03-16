@@ -3,12 +3,15 @@
 namespace App\Admin\Actions\Imports;
 
 use App\Models\Brand;
+use App\Models\Chip;
 use App\Models\Industry;
 use App\Models\Manufactor;
 use App\Models\Pbind;
 use App\Models\Peripheral;
 use App\Models\PeripheralIndustry;
+use App\Models\Release;
 use App\Models\Solution;
+use App\Models\Status;
 use App\Models\Type;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -32,6 +35,7 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
      *
      * @return \Illuminate\Database\Eloquent\Model|null
      */
+
     public function collection(Collection $rows)
     {
         set_time_limit(0);
@@ -42,6 +46,7 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
 
         foreach($rows as $row)
         {
+            
             if($row['厂商'] != '')
             {
                 $curManufactorId = Manufactor::where('name',$row['厂商']->pluck('id')->first());
@@ -117,13 +122,13 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
                 DB::table('peripheral_industry')->insert($peripheralIndustryInsert);
             }
 
-            $curSolutionId = Solution::where('name',$row['安装包名称'])->pluck('id')->first();
+            $curSolutionId = Solution::where('name',$row['方案名称'])->pluck('id')->first();
             if(empty($curSolutionId))
             {
                 $solutionInsert = 
                 [
-                    'name' => $row['安装包名称'],
-                    'details' => $row['下载地址'] ,
+                    'name' => $row['方案名称'],
+                    'details' => $row['方案下载地址'] ,
                     'source' => '',
                     'created_at' => date('Y-M-D H:i:s'),
                     'updated_at' => date('Y-M-D H:i:s'),
@@ -135,11 +140,20 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
             [
                 'peripherals_id' => $curPeripheralId,
                 'solutions_id' => $curSolutionId,
-                'chips_id' => $row['芯片'],
-                'releases_id' => $row['适配系统'],
-                'status_id' => $row['适配状态'],
+                'chips_id' => Chip::where('name',$row['芯片'])->pluck('id')->first(),
+                'releases_id' => Release::where('name',$row['操作系统版本'])->pluck('id')->first(),
+                'os_subversion' => $row['操作系统小版本'],
+                'status_id' => Status::where('name',$row['当前适配状态'])->pluck('id')->first(),
                 'class' => $row['兼容等级'],
                 'commment' => $row['备注'],
+                'adapt_source' => $row['引入来源'],
+                'adapted_before' => $this->bools($row['是否适配过国产CPU']),
+                'admin_users_id' => '',
+                'adaption_type' => $row['适配类型'],
+                'test_type' => $row['测试方式'],
+                'kylineco' => $this->bools($row['是否上传生态网站']),
+                'appstore' => $this->bools($row['是否上架软件商店']),
+                'iscert' => $this->bools($row['是否互认证']),
                 'created_at' => date('Y-M-D H:i:s'),
                 'updated_at' => date('Y-M-D H:i:s'),
             ];
@@ -147,8 +161,8 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
             [
                 'peripherals_id' => $curPeripheralId,
                 'solutions_id' => $curSolutionId,
-                'chips_id' => $row['芯片'],
-                'releases_id' => $row['适配系统'],
+                'chips_id' => Chip::where('name',$row['芯片'])->pluck('id')->first(),
+                'releases_id' => Release::where('name',$row['操作系统版本'])->pluck('id')->first(),
             ];
             Rule::unique('pbinds')->where(function ($query) use ($pbindInsertUnique)
             {
@@ -160,6 +174,10 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
         
     }
 
+    public function bools($value)
+    {
+        return $value =='是' ? 1 : 0;
+    }
 
 
     public function rules(): array
