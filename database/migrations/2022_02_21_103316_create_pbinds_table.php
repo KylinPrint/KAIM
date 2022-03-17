@@ -31,16 +31,14 @@ class CreatePbindsTable extends Migration
             $table->foreignId('statuses_id')
                   ->comment('当前适配状态')
                   ->constrained();
-            // $table->foreignId('admin_users_id')
-            //       ->comment('当前适配状态责任人')
-            //       ->constrained();
             $table->foreignId('solutions_id')
+                  ->nullable()
                   ->comment('解决方案ID')
                   ->constrained();
             
-            $table->string('class')->comment('兼容等级[READY,CERTIFICATION,VALIDATION,PM]');
-            $table->string('adaption_type')->comment('适配类型[原生适配,自研适配,开源适配,项目适配]');
-            $table->string('test_type')->comment('测试方式[厂商自测,视频复测,远程测试,麒麟适配测试]');
+            $table->string('class')->nullable()->comment('兼容等级[READY,CERTIFICATION,VALIDATION,PM]');
+            $table->string('adaption_type')->nullable()->comment('适配类型[原生适配,自研适配,开源适配,项目适配]');
+            $table->string('test_type')->nullable()->comment('测试方式[厂商自测,视频复测,远程测试,麒麟适配测试]');
             $table->boolean('kylineco')->comment('是否上传生态网站');
             $table->boolean('appstore')->comment('是否上架软件商店');
             $table->boolean('iscert')->comment('是否互认证');

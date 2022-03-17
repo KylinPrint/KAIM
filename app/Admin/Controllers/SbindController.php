@@ -129,10 +129,10 @@ class SbindController extends AdminController
     {
         return Form::make(Sbind::with('softwares','releases','chips'), function (Form $form) {
             $form->display('id');
-            $form->select('softwares_id')->options(Software::all()->pluck('name','id'));
-            $form->select('releases_id')->options(Release::all()->pluck('name','id'));
+            $form->select('softwares_id')->options(Software::all()->pluck('name','id'))->required();
+            $form->select('releases_id')->options(Release::all()->pluck('name','id'))->required();
             $form->text('os_subversion');
-            $form->select('chips_id')->options(Chip::all()->pluck('name','id'));
+            $form->select('chips_id')->options(Chip::all()->pluck('name','id'))->required();
             $form->select('adapt_source')
                  ->options([
                      '厂商主动申请' => '厂商主动申请',
@@ -145,11 +145,11 @@ class SbindController extends AdminController
                      '渠道部引入' => '渠道部引入',
                      '相关机构反馈' => '相关机构反馈',
                      '其他方式引入' => '其他方式引入'
-                    ]);
+                    ])->required();
             $form->select('adapted_before')->options([0 => '否',1 => '是']);
-            $form->select('statuses_id')->options(Status::where('parent','!=',null)->pluck('name','id'));
+            $form->select('statuses_id')->options(Status::where('parent','!=',null)->pluck('name','id'))->required();
             if ($form->isEditing()) {
-                $form->text('statuses_comment', __('状态变更说明'));
+                $form->text('statuses_comment', __('状态变更说明'))->required();
             }
             $form->hidden('admin_users_id')->default(Admin::user()->id);
             $form->text('softname');
@@ -175,9 +175,9 @@ class SbindController extends AdminController
                     '远程测试' => '远程测试',
                     '麒麟适配测试' => '麒麟适配测试'
                     ]);
-            $form->select('kylineco')->options([0 => '否',1 => '是']);
-            $form->select('appstore')->options([0 => '否',1 => '是']);
-            $form->select('iscert')->options([0 => '否',1 => '是']);
+            $form->select('kylineco')->options([0 => '否',1 => '是'])->required();
+            $form->select('appstore')->options([0 => '否',1 => '是'])->required();
+            $form->select('iscert')->options([0 => '否',1 => '是'])->required();
             $form->text('comment');
         
             $form->display('created_at');
