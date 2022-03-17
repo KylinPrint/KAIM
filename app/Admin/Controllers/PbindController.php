@@ -146,7 +146,7 @@ class PbindController extends AdminController
      */
     protected function form()
     {
-        return Form::make(new Pbind(['peripherals','releases','chips','solutions','statuses']), function (Form $form) {
+        return Form::make(Pbind::with(['peripherals','releases','chips','solutions','statuses']), function (Form $form) {
             $form->select('peripherals_id',__('型号'))->options(Peripheral::all()->pluck('name','id'));
             $form->select('releases_id',__('版本'))->options(Release::all()->pluck('name','id'));
             $form->text('os_subversion');
