@@ -43,7 +43,7 @@ if [ -z "$APP_KEY" ]; then
 fi
 
 # 生成storage link
-# TODO 先判断有没有
+rm -f public/storage
 php artisan storage:link
 
 echo "部署完成,默认用户名/密码: admin/admin"

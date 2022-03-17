@@ -150,10 +150,10 @@ class PbindController extends AdminController
     protected function form()
     {
         return Form::make(Pbind::with(['peripherals','releases','chips','solutions','statuses']), function (Form $form) {
-            $form->select('peripherals_id',__('型号'))->options(Peripheral::all()->pluck('name','id'));
-            $form->select('releases_id',__('版本'))->options(Release::all()->pluck('name','id'));
+            $form->select('peripherals_id',__('型号'))->options(Peripheral::all()->pluck('name','id'))->required();
+            $form->select('releases_id',__('版本'))->options(Release::all()->pluck('name','id'))->required();
             $form->text('os_subversion');
-            $form->select('chips_id',__('芯片'))->options(Chip::all()->pluck('name','id'));
+            $form->select('chips_id',__('芯片'))->options(Chip::all()->pluck('name','id'))->required();
             $form->select('solutions_id',__('解决方案'))->options(Solution::all()->pluck('name','id'));
             $form->select('adapt_source')
                  ->options([
@@ -167,11 +167,11 @@ class PbindController extends AdminController
                      '渠道部引入' => '渠道部引入',
                      '相关机构反馈' => '相关机构反馈',
                      '其他方式引入' => '其他方式引入'
-                    ]);
+                    ])->required();
             $form->select('adapted_before')->options([0 => '否',1 => '是']);
-            $form->select('statuses_id',__('状态'))->options(Status::where('parent','!=',null)->pluck('name','id'));
+            $form->select('statuses_id',__('状态'))->options(Status::where('parent','!=',null)->pluck('name','id'))->required();
             if ($form->isEditing()) {
-                $form->text('statuses_comment', __('状态变更说明'));
+                $form->text('statuses_comment', __('状态变更说明'))->required();
             }
             $form->hidden('admin_users_id')->default(Admin::user()->id);
             $form->select('class')
@@ -195,6 +195,7 @@ class PbindController extends AdminController
                     '远程测试' => '远程测试',
                     '麒麟适配测试' => '麒麟适配测试'
                     ]);
+<<<<<<< HEAD
             $form->select('kylineco')->options([0 => '否',1 => '是']);
             $form->select('appstore')->options([0 => '否',1 => '是']);
             $form->select('iscert')->options([0 => '否',1 => '是']);
@@ -203,6 +204,11 @@ class PbindController extends AdminController
                 $form->multipleSelect('adapter')->options(Industry::all()->pluck('name','id'));
        
             })->useTable();
+=======
+            $form->select('kylineco')->options([0 => '否',1 => '是'])->required();
+            $form->select('appstore')->options([0 => '否',1 => '是'])->required();
+            $form->select('iscert')->options([0 => '否',1 => '是'])->required();
+>>>>>>> d8749988819bf2ed2d4f2be387533fd2b2fea076
             $form->text('comment');
         
             $form->display('created_at');

@@ -53,6 +53,51 @@ INSERT INTO `admin_menu` VALUES (36, 32, 36, 'Menu', NULL, 'auth/menu', '', 1, '
 INSERT INTO `admin_menu` VALUES (37, 32, 37, 'Extensions', NULL, 'auth/extensions', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
 
 -- ----------------------------
+-- Records of admin_permissions
+-- ----------------------------
+INSERT INTO `admin_permissions` VALUES (13, '外设适配情况权限', 'pbinds', '', '/pbinds*', 7, 0, '2022-03-07 09:55:07', '2022-03-17 16:43:32');
+INSERT INTO `admin_permissions` VALUES (14, '外设适配情况-查看', 'pbinds-get', 'GET', '/pbinds', 8, 13, '2022-03-07 09:57:50', '2022-03-17 16:43:32');
+INSERT INTO `admin_permissions` VALUES (15, '外设适配情况-编辑', 'pbinds-edit', 'GET,POST,PUT', '/pbinds/*/edit', 9, 13, '2022-03-07 10:08:25', '2022-03-17 16:43:32');
+INSERT INTO `admin_permissions` VALUES (16, '外设适配情况-新建', 'pbinds-create', 'GET,POST,PUT', '/pbinds/create*', 10, 13, '2022-03-07 10:12:28', '2022-03-17 16:43:32');
+INSERT INTO `admin_permissions` VALUES (17, '外设适配情况-删除', 'pbinds-delete', 'DELETE', '/pbinds*', 11, 13, '2022-03-07 10:14:39', '2022-03-17 16:43:32');
+INSERT INTO `admin_permissions` VALUES (18, '外设适配情况-操作', 'pbinds-action', '', '', 12, 13, '2022-03-09 09:56:40', '2022-03-17 16:43:32');
+INSERT INTO `admin_permissions` VALUES (19, '外设适配情况-导入', 'pbinds-import', 'GET,POST,PUT', '', 13, 13, '2022-03-09 10:00:36', '2022-03-17 16:43:32');
+INSERT INTO `admin_permissions` VALUES (20, '外设适配情况-导出', 'pbinds-export', 'GET,POST,PUT', '', 14, 13, '2022-03-09 10:02:37', '2022-03-17 16:43:32');
+INSERT INTO `admin_permissions` VALUES (21, '外设数据管理权限', 'peripherals', '', '', 15, 0, '2022-03-17 16:42:27', '2022-03-17 16:43:32');
+INSERT INTO `admin_permissions` VALUES (22, '外设数据管理-查看', 'peripherals-get', 'GET', '/peripherals', 16, 21, '2022-03-17 16:53:15', '2022-03-17 16:53:17');
+INSERT INTO `admin_permissions` VALUES (23, '外设数据管理-编辑', 'peripherals-edit', 'GET,POST,PUT', '/peripherals/*/edit', 17, 21, '2022-03-17 16:53:15', '2022-03-17 16:53:17');
+INSERT INTO `admin_permissions` VALUES (24, '外设数据管理-新建', 'peripherals-create', 'GET,POST,PUT', '/peripherals/create*', 18, 21, '2022-03-17 16:53:15', '2022-03-17 16:53:17');
+INSERT INTO `admin_permissions` VALUES (25, '外设数据管理-删除', 'peripherals-delete', 'DELETE', '/peripherals*', 19, 21, '2022-03-17 16:53:15', '2022-03-17 16:53:17');
+INSERT INTO `admin_permissions` VALUES (26, '外设数据管理-操作', 'peripherals-action', NULL, NULL, 20, 21, '2022-03-17 16:53:15', '2022-03-17 16:53:17');
+INSERT INTO `admin_permissions` VALUES (27, '外设数据管理-导入', 'peripherals-import', 'GET,POST,PUT', NULL, 21, 21, '2022-03-17 16:53:15', '2022-03-17 16:53:17');
+INSERT INTO `admin_permissions` VALUES (28, '外设数据管理-导出', 'peripherals-export', 'GET,POST,PUT', NULL, 22, 21, '2022-03-17 16:53:15', '2022-03-17 16:53:17');
+INSERT INTO `admin_permissions` VALUES (29, '软件适配情况权限', 'sbinds', NULL, '/sbinds*', 23, 0, '2022-03-17 16:53:15', '2022-03-17 16:53:17');
+INSERT INTO `admin_permissions` VALUES (30, '软件适配情况-查看', 'sbinds-get', 'GET', '/sbinds', 24, 29, '2022-03-17 16:53:15', '2022-03-17 16:53:17');
+INSERT INTO `admin_permissions` VALUES (31, '软件适配情况-编辑', 'sbinds-edit', 'GET,POST,PUT', '/sbinds/*/edit', 25, 29, '2022-03-17 16:53:15', '2022-03-17 16:53:17');
+INSERT INTO `admin_permissions` VALUES (32, '软件适配情况-新建', 'sbinds-create', 'GET,POST,PUT', '/sbinds/create*', 26, 29, '2022-03-17 16:53:15', '2022-03-17 16:53:17');
+INSERT INTO `admin_permissions` VALUES (33, '软件适配情况-删除', 'sbinds-delete', 'DELETE', '/sbinds*', 27, 29, '2022-03-17 16:53:15', '2022-03-17 16:53:17');
+INSERT INTO `admin_permissions` VALUES (34, '软件适配情况-操作', 'sbinds-action', NULL, NULL, 28, 29, '2022-03-17 16:53:15', '2022-03-17 16:53:17');
+INSERT INTO `admin_permissions` VALUES (35, '软件适配情况-导入', 'sbinds-import', 'GET,POST,PUT', NULL, 29, 29, '2022-03-17 16:53:15', '2022-03-17 16:53:17');
+INSERT INTO `admin_permissions` VALUES (36, '软件适配情况-导出', 'sbinds-export', 'GET,POST,PUT', NULL, 30, 29, '2022-03-17 16:53:15', '2022-03-17 16:53:17');
+INSERT INTO `admin_permissions` VALUES (37, '外设数据管理权限', 'softwares', NULL, NULL, 31, 0, '2022-03-17 16:53:15', '2022-03-17 16:53:17');
+INSERT INTO `admin_permissions` VALUES (38, '外设数据管理-查看', 'softwares-get', 'GET', '/softwares', 32, 37, '2022-03-17 16:53:15', '2022-03-17 16:53:17');
+INSERT INTO `admin_permissions` VALUES (39, '外设数据管理-编辑', 'softwares-edit', 'GET,POST,PUT', '/softwares/*/edit', 33, 37, '2022-03-17 16:53:15', '2022-03-17 16:53:17');
+INSERT INTO `admin_permissions` VALUES (40, '外设数据管理-新建', 'softwares-create', 'GET,POST,PUT', '/softwares/create*', 34, 37, '2022-03-17 16:53:15', '2022-03-17 16:53:17');
+INSERT INTO `admin_permissions` VALUES (41, '外设数据管理-删除', 'softwares-delete', 'DELETE', '/softwares*', 35, 37, '2022-03-17 16:53:15', '2022-03-17 16:53:17');
+INSERT INTO `admin_permissions` VALUES (42, '外设数据管理-操作', 'softwares-action', NULL, NULL, 36, 37, '2022-03-17 16:53:15', '2022-03-17 16:53:17');
+INSERT INTO `admin_permissions` VALUES (43, '外设数据管理-导入', 'softwares-import', 'GET,POST,PUT', NULL, 37, 37, '2022-03-17 16:53:15', '2022-03-17 16:53:17');
+INSERT INTO `admin_permissions` VALUES (44, '外设数据管理-导出', 'softwares-export', 'GET,POST,PUT', NULL, 38, 37, '2022-03-17 16:53:15', '2022-03-17 16:53:17');
+INSERT INTO `admin_permissions` VALUES (45, '关联信息管理-试运行', 'setting-debug', '', '', 39, 0, '2022-03-17 17:02:55', '2022-03-17 17:02:55');
+INSERT INTO `admin_permissions` VALUES (46, '厂商信息管理-试运行', 'manufacture-all', '', '/manufactors*', 40, 45, '2022-03-17 17:04:05', '2022-03-17 17:04:05');
+INSERT INTO `admin_permissions` VALUES (47, '品牌信息管理-试运行', 'brands-all', '', '/brands*', 41, 45, '2022-03-17 17:04:49', '2022-03-17 17:04:49');
+INSERT INTO `admin_permissions` VALUES (48, '芯片信息管理-试运行', 'chips-all', '', '/chips*', 42, 45, '2022-03-17 17:05:42', '2022-03-17 17:05:42');
+INSERT INTO `admin_permissions` VALUES (49, '系统信息管理-试运行', 'release-all', '', '/releases*', 43, 45, '2022-03-17 17:06:42', '2022-03-17 17:06:42');
+INSERT INTO `admin_permissions` VALUES (50, '分类信息管理-试运行', 'types-all', '', '/types*', 44, 45, '2022-03-17 17:07:35', '2022-03-17 17:07:35');
+INSERT INTO `admin_permissions` VALUES (51, '参数名管理-试运行', 'specifications-all', '', '/specifications*', 45, 45, '2022-03-17 17:08:46', '2022-03-17 17:08:46');
+INSERT INTO `admin_permissions` VALUES (52, '状态信息管理-试运行', 'status-all', '', '/statuses*', 46, 45, '2022-03-17 17:09:28', '2022-03-17 17:09:28');
+INSERT INTO `admin_permissions` VALUES (53, '解决方案信息管理-试运行', 'solutions-all', '', '/solutions*', 47, 45, '2022-03-17 17:10:06', '2022-03-17 17:10:06');
+
+-- ----------------------------
 -- Records of industries
 -- ----------------------------
 INSERT INTO `industries` VALUES (1, '政务', '2022-02-21 14:02:26', '2022-02-21 14:02:26');

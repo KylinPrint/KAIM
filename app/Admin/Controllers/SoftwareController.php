@@ -79,14 +79,21 @@ class SoftwareController extends AdminController
     {
         return Form::make(Software::with('manufactors','types'), function (Form $form) {
             $form->display('id');
+<<<<<<< HEAD
             $form->text('name');
             $form->select('manufactors_id')->options(Manufactor::all()->pluck('name','id'));
             $form->text('version');
             $form->select('types_id', __('类型'))->options(Stype::where('parent','!=',null)->pluck('name','id'));
+=======
+            $form->text('name')->required();
+            $form->select('manufactors_id')->options(Manufactor::all()->pluck('name','id'))->required();
+            $form->text('version')->required();
+            $form->select('types_id', __('类型'))->options(Type::where('parent','!=',null)->pluck('name','id'))->required();
+>>>>>>> d8749988819bf2ed2d4f2be387533fd2b2fea076
             $form->text('kernel_version');
             $form->text('crossover_version');
             $form->text('box86_version');
-            $form->text('bd');
+            $form->text('bd')->required();
             $form->text('am');
             $form->text('tsm');
             $form->text('comment');
