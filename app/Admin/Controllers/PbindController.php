@@ -54,6 +54,8 @@ class PbindController extends AdminController
                 $grid->disableActions();
             }
 
+            $grid->showColumnSelector();  //后期可能根据权限显示
+
             $grid->column('peripherals.name',__('外设型号'));
             $grid->column('releases.name',__('操作系统版本'));
             $grid->column('os_subversion');

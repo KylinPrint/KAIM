@@ -22,6 +22,7 @@ return [
         'appstore' => '是否上架软件商店',
         'iscert' => '是否互认证',
         'comment' => '备注',
+        'histories' => '适配状态变更记录',
     ],
     'options' => [
     ],
