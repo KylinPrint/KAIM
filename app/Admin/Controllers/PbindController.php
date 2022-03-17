@@ -4,7 +4,6 @@ namespace App\Admin\Controllers;
 
 use App\Admin\Actions\Exports\PbindExport;
 use App\Admin\Actions\Modal\PbindModal;
-use App\Admin\Metrics\DataAdd;
 use App\Models\Chip;
 use App\Models\Pbind;
 use App\Models\Peripheral;
@@ -19,10 +18,7 @@ use App\Admin\Renderable\SolutionTable;
 use App\Admin\Renderable\ReleaseTable;
 use App\Admin\Renderable\ChipTable;
 use App\Admin\Renderable\PhistoryTable;
-use App\Exceptions\RequiredNotFoundException;
 use Dcat\Admin\Admin;
-use Illuminate\Support\Facades\DB;
-use Dcat\Admin\Layout\Content;
 use Illuminate\Support\Facades\DB;
 
 class PbindController extends AdminController
