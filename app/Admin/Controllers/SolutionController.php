@@ -66,7 +66,7 @@ class SolutionController extends AdminController
         return Form::make(new Solution(), function (Form $form) {
             $form->display('id');
             $form->text('name');
-            $form->text('source');
+            $form->text('source')->required();
             $form->editor('details');
             $form->display('created_at');
             $form->display('updated_at');
