@@ -18,6 +18,7 @@ use App\Admin\Renderable\SolutionTable;
 use App\Admin\Renderable\ReleaseTable;
 use App\Admin\Renderable\ChipTable;
 use App\Admin\Renderable\PhistoryTable;
+use App\Models\Industry;
 use Dcat\Admin\Admin;
 use Illuminate\Support\Facades\DB;
 
@@ -197,6 +198,11 @@ class PbindController extends AdminController
             $form->select('kylineco')->options([0 => '否',1 => '是']);
             $form->select('appstore')->options([0 => '否',1 => '是']);
             $form->select('iscert')->options([0 => '否',1 => '是']);
+            $form->hasMany('peripheral_industry', '行业', function (Form\NestedForm $form){
+           
+                $form->multipleSelect('adapter')->options(Industry::all()->pluck('name','id'));
+       
+            })->useTable();
             $form->text('comment');
         
             $form->display('created_at');

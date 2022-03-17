@@ -4,6 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Models\Manufactor;
 use App\Models\Software;
+use App\Models\Stype;
 use App\Models\Type;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
@@ -81,7 +82,7 @@ class SoftwareController extends AdminController
             $form->text('name');
             $form->select('manufactors_id')->options(Manufactor::all()->pluck('name','id'));
             $form->text('version');
-            $form->select('types_id', __('类型'))->options(Type::where('parent','!=',null)->pluck('name','id'));
+            $form->select('types_id', __('类型'))->options(Stype::where('parent','!=',null)->pluck('name','id'));
             $form->text('kernel_version');
             $form->text('crossover_version');
             $form->text('box86_version');
