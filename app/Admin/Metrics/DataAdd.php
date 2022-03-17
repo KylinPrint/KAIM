@@ -42,8 +42,9 @@ class DataAdd extends Donut
                         return val.toFixed(1)+'%';
                     }
                     JS
-                )]
-            ]);
+                )
+            ]
+        ]);
     }
 
 
