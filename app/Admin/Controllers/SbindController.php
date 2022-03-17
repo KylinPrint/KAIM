@@ -199,6 +199,7 @@ class SbindController extends AdminController
                             'status_new' => $status_coming,
                             'admin_users_id' => Admin::user()->id,
                             'comment' => $form->statuses_comment,
+
                             'created_at' => $timestamp,
                             'updated_at' => $timestamp,
                         ]);

@@ -21,6 +21,7 @@ use App\Admin\Renderable\ChipTable;
 use App\Admin\Renderable\PhistoryTable;
 use App\Exceptions\RequiredNotFoundException;
 use Dcat\Admin\Admin;
+use Illuminate\Support\Facades\DB;
 use Dcat\Admin\Layout\Content;
 use Illuminate\Support\Facades\DB;
 
@@ -219,6 +220,7 @@ class PbindController extends AdminController
                             'status_new' => $status_coming,
                             'admin_users_id' => Admin::user()->id,
                             'comment' => $form->statuses_comment,
+
                             'created_at' => $timestamp,
                             'updated_at' => $timestamp,
                         ]);
