@@ -22,7 +22,7 @@ class CreateSoftwaresTable extends Migration
                   ->comment('厂商名称')
                   ->constrained();
             $table->string('version')->comment('软件版本号');
-            $table->foreignId('types_id')
+            $table->foreignId('stypes_id')
                   ->comment('软件分类')
                   ->constrained();
             $table->string('kernel_version')->nullable()->comment('内核引用版本');

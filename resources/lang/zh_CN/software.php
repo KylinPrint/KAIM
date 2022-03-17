@@ -8,7 +8,7 @@ return [
         'name' => '软件名',
         'manufactors_id' => '厂商名称',
         'version' => '软件版本号',
-        'types_id' => '软件分类',
+        'stypes_id' => '软件分类',
         'kernel_version' => '内核引用版本',
         'crossover_version' => 'Crossover版本',
         'box86_version' => 'Box86版本',
