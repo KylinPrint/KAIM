@@ -9,3 +9,4 @@
 
 ## 待解决问题
 
+1.目前导入模板中缺少Manufacture中isconnected字段
