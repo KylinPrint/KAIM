@@ -10,14 +10,10 @@ class Brand extends Model
 {
 	use HasDateTimeFormatter;    
 
-	protected $table = 'brands';
-
-	protected $fillable = 
-	[
-		'name',
-		'alias',
-		'manufactors_id'
-	];
+	public function manufactors()
+	{
+		return $this->belongsTo(Manufactor::class);
+	}
 
 	public function peripherals()
     {

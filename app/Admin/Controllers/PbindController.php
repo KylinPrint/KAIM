@@ -22,6 +22,7 @@ use App\Admin\Renderable\PhistoryTable;
 use App\Exceptions\RequiredNotFoundException;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Layout\Content;
+use Illuminate\Support\Facades\DB;
 
 class PbindController extends AdminController
 {
@@ -30,23 +31,11 @@ class PbindController extends AdminController
      *
      * @return Grid
      */
-
-    public function index(Content $content)
-    {
-        return $content
-            ->header('新增数据')
-            ->description('')
-            ->body(function ($row) {
-                $row->column(4, new DataAdd());
-            })
-            ->body($this->grid());
-    }
-
     protected function grid()
     {
         return Grid::make(Pbind::with(['peripherals','releases','chips','solutions','statuses','admin_users']), function (Grid $grid) {
 
-            if(Admin::user()->can('pbinds-impor t'))
+            if(Admin::user()->can('pbinds-import'))
             {
                 $grid->tools(function  (Grid\Tools  $tools)  { 
                     $tools->append(new PbindModal()); 
@@ -73,10 +62,10 @@ class PbindController extends AdminController
             $grid->column('os_subversion');
             $grid->column('chips.name',__('芯片'));
             $grid->column('solutions', __('解决方案'))
+                ->display('详情')
                 ->modal(function ($modal){
                     $modal->title('解决方案');
                     $modal->xl();
-                    $modal->value('详情');
                     return SolutionTable::make();
                 }); 
             $grid->column('statuses.name',__('适配状态'));
@@ -87,7 +76,12 @@ class PbindController extends AdminController
                 else                { return '否'; }
             })->hide();
             $grid->column('statuses.name',__('当前适配状态'));
-            $grid->column('admin_users.username',__('当前适配状态责任人'));
+            $grid->column('admin_users.name',__('当前适配状态责任人'));
+            $grid->column('histories')
+                ->display('查看')
+                ->modal(function () {
+                    return PhistoryTable::make();
+                });
 
             $grid->column('adaption_type')->hide();
             $grid->column('test_type')->hide();
@@ -104,15 +98,6 @@ class PbindController extends AdminController
                 else                { return '否'; }
             });
             $grid->column('comment')->limit()->hide();
-
-            $grid->column('comment');
-
-            $grid->column('admin_users.username',__('当前适配状态责任人'));
-            // $grid->column('histories')
-            // ->display('查看')
-            // ->modal(function ($modal) {
-            //     return PhistoryTable::make();
-            // });
             
             // $grid->column('created_at');
             $grid->column('updated_at')->sortable();
@@ -214,6 +199,28 @@ class PbindController extends AdminController
         
             $form->display('created_at');
             $form->display('updated_at');
+
+            $form->saving(function (Form $form) {
+                // 判断是否是修改操作
+                if ($form->isEditing()) {
+                    $status_coming = $form->statuses_id;
+                    $id = $form->getKey();
+                    $timestamp = date("Y-m-d H:i:s");
+                    
+                    // 取当前状态
+                    $status_current = DB::table('pbinds')->where('id', $id)->value('statuses_id');
+                    if ($status_coming != $status_current) {
+                        DB::table('pbind_histories')->insert([
+                            'pbind_id' => $id,
+                            'status_old' => $status_current,
+                            'status_new' => $status_coming,
+                            'admin_users_id' => Admin::user()->id,
+                            'created_at' => $timestamp,
+                            'updated_at' => $timestamp,
+                        ]);
+                    }
+                }
+            });
         });
     }
 }

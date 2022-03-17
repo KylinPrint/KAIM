@@ -49,6 +49,7 @@ class SolutionController extends AdminController
             $show->field('id');
             $show->field('name');
             $show->field('source');
+            // TODO 富文本显示details
             $show->field('details');
             $show->field('created_at');
             $show->field('updated_at');

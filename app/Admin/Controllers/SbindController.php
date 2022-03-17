@@ -4,6 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Admin\Actions\Exports\SbindExport;
 use App\Admin\Actions\Modal\SbindModal;
+use App\Admin\Renderable\PhistoryTable;
 use App\Models\Chip;
 use App\Models\Release;
 use App\Models\Sbind;
@@ -46,6 +47,12 @@ class SbindController extends AdminController
             })->hide();
             $grid->column('statuses.name',__('当前适配状态'));
             $grid->column('admin_users.username',__('当前适配状态责任人'));
+            $grid->column('histories')
+                ->display('查看')
+                ->modal(function () {
+                    return PhistoryTable::make();
+                });
+
             $grid->column('softname');
             $grid->column('solution');
             $grid->column('class');
@@ -173,6 +180,27 @@ class SbindController extends AdminController
             $form->display('created_at');
             $form->display('updated_at');
             
+            $form->saving(function (Form $form) {
+                // 判断是否是修改操作
+                if ($form->isEditing()) {
+                    $status_coming = $form->statuses_id;
+                    $id = $form->getKey();
+                    $timestamp = date("Y-m-d H:i:s");
+                    
+                    // 取当前状态
+                    $status_current = DB::table('sbinds')->where('id', $id)->value('statuses_id');
+                    if ($status_coming != $status_current) {
+                        DB::table('sbind_histories')->insert([
+                            'sbind_id' => $id,
+                            'status_old' => $status_current,
+                            'status_new' => $status_coming,
+                            'admin_users_id' => Admin::user()->id,
+                            'created_at' => $timestamp,
+                            'updated_at' => $timestamp,
+                        ]);
+                    }
+                }
+            });
         });
     }
 }

@@ -9,8 +9,23 @@ class PbindHistory extends Model
 {
     use HasDateTimeFormatter;
 
-    public function pbind()
+    public function pbinds()
     {
         return $this->belongsTo(Pbind::class);
+    }
+
+    public function status_old()
+    {
+        return $this->belongsTo(Status::class, 'status_old');
+    }
+
+    public function status_new()
+    {
+        return $this->belongsTo(Status::class, 'status_new');
+    }
+
+    public function admin_users_id()
+    {
+        return $this->belongsTo(AdminUser::class, 'admin_users_id');
     }
 }

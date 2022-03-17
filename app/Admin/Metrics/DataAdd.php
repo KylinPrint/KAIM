@@ -22,7 +22,7 @@ class DataAdd extends Donut
         $color = Admin::color();
         $colors = [$color->dark90(),$color->blue1(), $color->alpha('blue2', 0.5),$color->blue2()];
 
-        $this->title('New Data');
+        $this->title('新增适配数据');
         $this->dropdown([
             '7' => 'Last 7 Days',
             '30' => 'Last Month',

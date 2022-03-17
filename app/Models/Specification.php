@@ -8,4 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Specification extends Model
 {
-	use HasDateTimeFormatter;    }
+	use HasDateTimeFormatter;
+
+	public function types()
+	{
+		return $this->belongsTo(Type::class);
+	}
+}

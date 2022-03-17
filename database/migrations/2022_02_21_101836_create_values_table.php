@@ -14,9 +14,11 @@ class CreateValuesTable extends Migration
     public function up()
     {
         Schema::create('values', function (Blueprint $table) {
-            $table->foreignId('peripherals_id')
-                  ->comment('外设ID')
-                  ->constrained();
+            $table->unsignedBigInteger('peripherals_id')->comment('外设ID');
+            // 外设添加参数的脑瘫代码的后遗症
+            // $table->foreignId('peripherals_id')
+            //       ->comment('外设ID')
+            //       ->constrained();
             $table->foreignId('specifications_id')
                   ->comment('参数ID')
                   ->constrained();

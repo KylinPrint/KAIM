@@ -18,11 +18,13 @@ class SpecificationController extends AdminController
      */
     protected function grid()
     {
-        return Grid::make(new Specification(), function (Grid $grid) {
+        return Grid::make(Specification::with(['types']), function (Grid $grid) {
             $grid->column('id')->sortable();
             $grid->column('name');
-            $grid->column('types_id');
-            $grid->column('isrequired');
+            $grid->column('types.name', __('外设分类'));
+            $grid->column('isrequired')->display(function ($isrequired) {
+                return $isrequired ? '是' : '否';
+            });
             $grid->column('created_at');
             $grid->column('updated_at')->sortable();
         
@@ -42,10 +44,10 @@ class SpecificationController extends AdminController
      */
     protected function detail($id)
     {
-        return Show::make($id, new Specification(), function (Show $show) {
+        return Show::make($id, Specification::with(['types']), function (Show $show) {
             $show->field('id');
             $show->field('name');
-            $show->field('types_id');
+            $show->field('types.name', __('外设分类'));
             $show->field('isrequired');
             $show->field('created_at');
             $show->field('updated_at');
@@ -62,7 +64,7 @@ class SpecificationController extends AdminController
         return Form::make(Specification::with('types'), function (Form $form) {
             $form->display('id');
             $form->text('name');
-            $form->select('types_id', __('类型'))->options(Type::where('parent','!=',null)->pluck('name','id'));
+            $form->select('types_id', __('外设分类'))->options(Type::where('parent','!=',null)->pluck('name','id'));
             $form->select('isrequired')->options([0 => '否',1 => '是']);
         
             $form->display('created_at');
