@@ -167,9 +167,10 @@ class PeripheralController extends AdminController
 
             $form->saving(function (Form $form) {
                 if ($form->isCreating()) {
+                    $database_name = env('DB_DATABASE');
                     $newID = DB::select("
-                        SELECT `AUTO_INCREMENT` FROM  INFORMATION_SCHEMA.TABLES 
-                        WHERE TABLE_SCHEMA = 'kylinprint' AND TABLE_NAME = 'peripherals'
+                        SELECT `AUTO_INCREMENT` FROM INFORMATION_SCHEMA.TABLES 
+                        WHERE TABLE_SCHEMA = '$database_name' AND TABLE_NAME = 'peripherals'
                     ")[0]->AUTO_INCREMENT;
                     $timestamp = date("Y-m-d H:i:s");
                     $specs = Specification::where('types_id', $form->types_id)->get(['id'])->toArray();
