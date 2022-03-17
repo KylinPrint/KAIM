@@ -49,6 +49,7 @@ class SolutionController extends AdminController
             $show->field('id');
             $show->field('name');
             $show->field('source');
+            // TODO 富文本显示details
             $show->field('details');
             $show->field('created_at');
             $show->field('updated_at');
@@ -65,7 +66,7 @@ class SolutionController extends AdminController
         return Form::make(new Solution(), function (Form $form) {
             $form->display('id');
             $form->text('name');
-            $form->text('source');
+            $form->text('source')->required();
             $form->editor('details');
             $form->display('created_at');
             $form->display('updated_at');

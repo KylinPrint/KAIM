@@ -59,7 +59,14 @@ class ChipController extends AdminController
         return Form::make(new Chip(), function (Form $form) {
             $form->display('id');
             $form->text('name');
-            $form->text('arch');
+            $form->select('arch')
+            ->options([
+                'amd64'         => 'amd64',
+                'arm64'         => 'arm64',
+                'mips64el'      => 'mips64el',
+                'loongarch64'   => 'loongarch64',
+                'sw64'          => 'sw64',
+               ]);
         
             $form->display('created_at');
             $form->display('updated_at');

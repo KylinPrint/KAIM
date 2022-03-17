@@ -1,14 +1,14 @@
 -- ----------------------------
 -- Columns update for Bind histories
 -- ----------------------------
-ALTER TABLE `kylinprint`.`pbinds` ADD COLUMN `admin_user_id` BIGINT ( 20 ) UNSIGNED NOT NULL COMMENT '当前适配状态责任人' AFTER `statuses_id`,
-ADD CONSTRAINT `pbinds_admin_user_id_foreign` FOREIGN KEY ( `admin_user_id` ) REFERENCES `kylinprint`.`admin_users` ( `id` ) ON DELETE RESTRICT ON UPDATE RESTRICT;
-ALTER TABLE `kylinprint`.`sbinds` ADD COLUMN `admin_user_id` BIGINT ( 20 ) UNSIGNED NOT NULL COMMENT '当前适配状态责任人' AFTER `statuses_id`,
-ADD CONSTRAINT `sbinds_admin_user_id_foreign` FOREIGN KEY ( `admin_user_id` ) REFERENCES `kylinprint`.`admin_users` ( `id` ) ON DELETE RESTRICT ON UPDATE RESTRICT;
-ALTER TABLE `kylinprint`.`pbind_histories` ADD COLUMN `admin_user_id` BIGINT ( 20 ) UNSIGNED NOT NULL COMMENT '当前适配状态责任人' AFTER `statuses_new`,
-ADD CONSTRAINT `pbind_histories_admin_user_id_foreign` FOREIGN KEY ( `admin_user_id` ) REFERENCES `kylinprint`.`admin_users` ( `id` ) ON DELETE RESTRICT ON UPDATE RESTRICT;
-ALTER TABLE `kylinprint`.`sbind_histories` ADD COLUMN `admin_user_id` BIGINT ( 20 ) UNSIGNED NOT NULL COMMENT '当前适配状态责任人' AFTER `statuses_new`,
-ADD CONSTRAINT `sbind_histories_admin_user_id_foreign` FOREIGN KEY ( `admin_user_id` ) REFERENCES `kylinprint`.`admin_users` ( `id` ) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `kylinprint`.`pbinds` ADD COLUMN `admin_users_id` BIGINT ( 20 ) UNSIGNED NOT NULL COMMENT '当前适配状态责任人' AFTER `statuses_id`,
+ADD CONSTRAINT `pbinds_admin_users_id_foreign` FOREIGN KEY ( `admin_users_id` ) REFERENCES `kylinprint`.`admin_users` ( `id` ) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `kylinprint`.`sbinds` ADD COLUMN `admin_users_id` BIGINT ( 20 ) UNSIGNED NOT NULL COMMENT '当前适配状态责任人' AFTER `statuses_id`,
+ADD CONSTRAINT `sbinds_admin_users_id_foreign` FOREIGN KEY ( `admin_users_id` ) REFERENCES `kylinprint`.`admin_users` ( `id` ) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `kylinprint`.`pbind_histories` ADD COLUMN `admin_users_id` BIGINT ( 20 ) UNSIGNED NOT NULL COMMENT '当前适配状态责任人' AFTER `status_new`,
+ADD CONSTRAINT `pbind_histories_admin_users_id_foreign` FOREIGN KEY ( `admin_users_id` ) REFERENCES `kylinprint`.`admin_users` ( `id` ) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `kylinprint`.`sbind_histories` ADD COLUMN `admin_users_id` BIGINT ( 20 ) UNSIGNED NOT NULL COMMENT '当前适配状态责任人' AFTER `status_new`,
+ADD CONSTRAINT `sbind_histories_admin_users_id_foreign` FOREIGN KEY ( `admin_users_id` ) REFERENCES `kylinprint`.`admin_users` ( `id` ) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 -- ----------------------------
 -- Records of admin_menu

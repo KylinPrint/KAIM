@@ -2,18 +2,18 @@
 
 namespace App\Admin\Renderable;
 
-use App\Models\PbindHistory;
+use App\Models\SbindHistory;
 use Dcat\Admin\Support\LazyRenderable;
 use Dcat\Admin\Widgets\Table;
 
-class PhistoryTable extends LazyRenderable
+class ShistoryTable extends LazyRenderable
 {
     public function render()
     {
         $id = $this->key;
         
-        $query = PbindHistory::with(['admin_users_id', 'status_old', 'status_new'])
-            ->where('pbind_id', $id)
+        $query = SbindHistory::with(['admin_users_id', 'status_old', 'status_new'])
+            ->where('sbind_id', $id)
             ->get()
             ->toArray();
 

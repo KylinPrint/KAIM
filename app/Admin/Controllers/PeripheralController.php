@@ -140,60 +140,56 @@ class PeripheralController extends AdminController
     {
         return Form::make(Peripheral::with(['brands', 'types','values']), function (Form $form) {
             
-            if($form->isEditing())
-            {
-                $form->display('id');
+            // TODO 参数的新增和修改好像哪里有问题
+            $form->display('id');
+            if ($form->isEditing()) {
                 $typesID = $form->model()->types_id;
-                $form->text('name');
-                $form->select('brands_id', __('品牌'))->options(Brand::all()->pluck('name','id'));
                 $form->select('types_id', __('类型'))->options(Type::where('parent','!=',null)->pluck('name','id'))->disable();
-                $form->date('release_date')->format('YYYY-MM-DD');
-                $form->date('eosl_date')->format('YYYY-MM-DD');
-
-                
-                $form->hasMany('values', '参数', function (Form\NestedForm $form) use ($typesID){
-
-                    $form->select('specifications_id',__('specifications name'))
-                        ->options(Specification::where('types_id',$typesID)
-                        ->pluck('name', 'id'))
-                        ->disable();
-                    $form->text('value');
-
-                })->useTable();
-                
-            }    
-            
-            elseif($form->isCreating()){
-
+            } else {
                 $urlArr = explode('type=',URL::full());
-                $param = end($urlArr);
-                $form->display('id');
-                $form->text('name');
-                $form->select('brands_id', __('品牌'))->options(Brand::all()->pluck('name','id'));
-                $form->hidden('types_id')->default($param);
-                $form->date('release_date')->format('YYYY-MM-DD');
-                $form->date('eosl_date')->format('YYYY-MM-DD');
+                $typesID = end($urlArr);
+                $form->hidden('types_id')->default($typesID);
+            }
+            
+            $form->select('brands_id', __('品牌'))->options(Brand::all()->pluck('name','id'));
+            $form->text('name');
+            $form->date('release_date')->format('YYYY-MM-DD');
+            $form->date('eosl_date')->format('YYYY-MM-DD');
 
-                $spcificArr = Specification::where('types_id',$param)->pluck('name','id');  //获取对应type的specification数据，格式为键名为id，键值为name的数组
-                
-                $form->hasMany('values', '参数', function (Form\NestedForm $form) use ($param) {
+            if ($form->isCreating()) {
+                // 脑瘫参数写法
+                $specs = Specification::where('types_id', $typesID)->get(['id', 'name', 'isrequired'])->toArray();
+                foreach ($specs as $key => $value) {
+                    if ($value['isrequired'] == 0) {  $form->text($value['id'], $value['name']); } 
+                    else { $form->text($value['id'], $value['name'])->required(); }
+                }
+            }
 
-                    $form->select('specifications_id',__('specifications name'))
-                        ->options(Specification::where('types_id',$param)
-                        ->pluck('name', 'id'));
-                    $form->text('value');
+            $form->saving(function (Form $form) {
+                if ($form->isCreating()) {
+                    $newID = DB::select("
+                        SELECT `AUTO_INCREMENT` FROM  INFORMATION_SCHEMA.TABLES 
+                        WHERE TABLE_SCHEMA = 'kylinprint' AND TABLE_NAME = 'peripherals'
+                    ")[0]->AUTO_INCREMENT;
+                    $timestamp = date("Y-m-d H:i:s");
+                    $specs = Specification::where('types_id', $form->types_id)->get(['id'])->toArray();
 
-                })->useTable();
-                
-                
+                    foreach ($specs as $key => $value) {
+                        DB::table('values')->insert([
+                            'peripherals_id' => $newID,
+                            'specifications_id' => $value['id'],
+                            'value' => $form->input($value['id']),
+                            'created_at' => $timestamp,
+                            'updated_at' => $timestamp,
+                        ]);
+                        $form->deleteInput($value['id']);
+                    }
+                }
+            });
 
-                $form->confirm('?','content');
-                $form->saved(function (Form $form){
-                    $types_id = $form->input('types_id');
-                    $peripherals_id = DB::getPdo()->lastInsertId();
-                    return $form->response()->redirect('values/create?typy='.$types_id.'&peripherals_id='.$peripherals_id);
-                });
-            }    
+            $form->saved(function (Form $form){
+                return $form->response()->redirect('peripherals?type='.$form->input('types_id'));
+            });
         });
     }
 }

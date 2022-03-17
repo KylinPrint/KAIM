@@ -25,9 +25,8 @@ class CreatePbindHistoriesTable extends Migration
             $table->foreignId('status_new')
                 ->comment('修改后适配状态')
                 ->constrained('statuses', 'id');
-            // $table->foreignId('admin_user_id')
-            //     ->comment('当前适配状态责任人')
-            //     ->constrained();
+
+            $table->string('comment')->nullable()->comment('状态变更说明');
 
             $table->timestamps();
         });
