@@ -148,6 +148,9 @@ class SbindController extends AdminController
                     ]);
             $form->select('adapted_before')->options([0 => '否',1 => '是']);
             $form->select('statuses_id')->options(Status::where('parent','!=',null)->pluck('name','id'));
+            if ($form->isEditing()) {
+                $form->text('statuses_comment', __('状态变更说明'));
+            }
             $form->hidden('admin_users_id')->default(Admin::user()->id);
             $form->text('softname');
             $form->text('solution');
@@ -195,6 +198,7 @@ class SbindController extends AdminController
                             'status_old' => $status_current,
                             'status_new' => $status_coming,
                             'admin_users_id' => Admin::user()->id,
+                            'comment' => $form->statuses_comment,
                             'created_at' => $timestamp,
                             'updated_at' => $timestamp,
                         ]);

@@ -22,6 +22,8 @@ class ShistoryTable extends LazyRenderable
             $data[$key]['admin_users_id'] = $value['admin_users_id']['name'];
             $data[$key]['status_old'] = $value['status_old']['name'];
             $data[$key]['status_new'] = $value['status_new']['name'];
+            $data[$key]['comment'] = $value['comment'];
+
             $data[$key]['updated_at'] = $value['updated_at'];
         }
         
@@ -29,6 +31,7 @@ class ShistoryTable extends LazyRenderable
             '处理人',
             '修改前状态',
             '修改后状态',
+            '状态变更说明',
             '更新时间',
         ];
 

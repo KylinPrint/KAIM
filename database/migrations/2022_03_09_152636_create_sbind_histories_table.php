@@ -29,6 +29,8 @@ class CreateSbindHistoriesTable extends Migration
             //     ->comment('当前适配状态责任人')
             //     ->constrained();
 
+            $table->string('comment')->nullable()->comment('状态变更说明');
+
             $table->timestamps();
         });
     }
