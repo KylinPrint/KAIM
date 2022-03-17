@@ -62,9 +62,9 @@ class DataAdd extends Donut
      */
     public function handle(Request $request)
     {
-        $curOption = $request->get('option');
+        $curOption = $request->get('option')?:'7';
         $curTime = now();
-        $curTimeBefor = now()->subDays($curOption);
+        $curTimeBefor = now()->subDays($curOption)->toDateTimeString();
 
         $AddNum = count(Pbind::all()->whereBetween('created_at',[$curTimeBefor,$curTime]));
  

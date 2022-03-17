@@ -75,8 +75,11 @@ class SbindExport extends BaseExport implements WithMapping, WithHeadings, FromC
 
         // TODO: Implement map() method.
         
-        $PbindRow = new Fluent($row);
-        $ids = $PbindRow->id;
+        $SbindRow = new Fluent($row);
+        $ids = $SbindRow->id;
+
+        $curIndustryStr = '';  //行业
+        $curIndustryArr = array();
 
         $ExportArr = array();
 
@@ -93,7 +96,6 @@ class SbindExport extends BaseExport implements WithMapping, WithHeadings, FromC
         
         if($curSoftwareIndustryArr->count())
         {
-            $curSoftwareIndustryArr = array();
 
             foreach($curSoftwareIndustryArr[0]->peripheral_industry as $value)
             {

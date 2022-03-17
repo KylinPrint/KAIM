@@ -90,6 +90,7 @@ class PbindExport extends BaseExport implements WithMapping, WithHeadings, FromC
         $ids = $PbindRow->id;
 
         $curIndustryStr = '';  //行业
+        $curIndustryArr = array();
 
         $ExportArr = array();
         $curPbindsArr = Pbind::with('releases','chips','solutions','statuses')->find($row['id']);
@@ -104,8 +105,7 @@ class PbindExport extends BaseExport implements WithMapping, WithHeadings, FromC
         
         if($curPeripheralIndustryArr->count())
         {
-            $curPeripheralIndustryArr = array();
-
+            
             foreach($curPeripheralIndustryArr[0]->peripheral_industry as $value)
             {
                 $curIndustry = $value->industries->name;
