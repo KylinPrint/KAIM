@@ -195,20 +195,12 @@ class PbindController extends AdminController
                     '远程测试' => '远程测试',
                     '麒麟适配测试' => '麒麟适配测试'
                     ]);
-<<<<<<< HEAD
-            $form->select('kylineco')->options([0 => '否',1 => '是']);
-            $form->select('appstore')->options([0 => '否',1 => '是']);
-            $form->select('iscert')->options([0 => '否',1 => '是']);
-            $form->hasMany('peripheral_industry', '行业', function (Form\NestedForm $form){
-           
-                $form->multipleSelect('adapter')->options(Industry::all()->pluck('name','id'));
-       
-            })->useTable();
-=======
             $form->select('kylineco')->options([0 => '否',1 => '是'])->required();
             $form->select('appstore')->options([0 => '否',1 => '是'])->required();
-            $form->select('iscert')->options([0 => '否',1 => '是'])->required();
->>>>>>> d8749988819bf2ed2d4f2be387533fd2b2fea076
+            $form->select('iscert')->options([0 => '否',1 => '是']);
+            $form->hasMany('peripheral_industry', '行业', function (Form\NestedForm $form){
+                $form->multipleSelect('adapter')->options(Industry::all()->pluck('name','id'));
+            })->useTable();
             $form->text('comment');
         
             $form->display('created_at');

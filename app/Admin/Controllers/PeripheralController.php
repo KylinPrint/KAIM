@@ -50,7 +50,6 @@ class PeripheralController extends AdminController
 
             else
             {
-                //$typeID = Type::where('name',$param)->pluck('id')->first();
                 $grid->model()->setConstraints([
                     'type' => $param,
                 ]);
@@ -63,13 +62,21 @@ class PeripheralController extends AdminController
                 $grid->column('release_date');
                 $grid->column('eosl_date');
 
-                $spcificArr = Specification::where('types_id',$param)->pluck('name','id');  //获取对应type的specification数据，格式为键名为id，键值为name的数组
-
-                foreach($spcificArr as $id => $name)
+                $specs = Specification::where('types_id',$param)->get(['id', 'name', 'field'])->toArray();
+                
+                foreach ($specs as $key => $value)
                 {
-                    $grid->column($name)->display(function() use ($id)
-                    {
-                        return Value::where([['peripherals_id',$this->id],['specifications_id',$id]])->pluck('value')->first();
+                    $grid->column($value['name'])->display(function() use ($key, $value) {
+                        //处理布尔值
+                        if ($value['field'] == 2) {
+                            if (Value::where([['peripherals_id',$this->id],['specifications_id',$key]])->pluck('value')->first() == 0) {
+                                return '否';
+                            } else {
+                                return '是';
+                            }
+                        } else {
+                            return Value::where([['peripherals_id',$this->id],['specifications_id',$key]])->pluck('value')->first();
+                        }
                     });
                 }
 
@@ -158,10 +165,32 @@ class PeripheralController extends AdminController
 
             if ($form->isCreating()) {
                 // 脑瘫参数写法
-                $specs = Specification::where('types_id', $typesID)->get(['id', 'name', 'isrequired'])->toArray();
+                $specs = Specification::where('types_id', $typesID)->get(['id', 'name', 'isrequired', 'field'])->toArray();
                 foreach ($specs as $key => $value) {
-                    if ($value['isrequired'] == 0) {  $form->text($value['id'], $value['name']); } 
-                    else { $form->text($value['id'], $value['name'])->required(); }
+                    if ($value['isrequired'] == 0) 
+                    {
+                        if ($value['field'] == 0) {
+                            $form->text($value['id'], $value['name']);
+                        }
+                        elseif ($value['field'] == 1) {
+                            $form->number($value['id'], $value['name']);
+                        }
+                        elseif ($value['field'] == 2) {
+                            $form->radio($value['id'], $value['name'])->options(['0' => '否', '1'=> '是'])->default('0');
+                        }
+                    }
+                    else
+                    {
+                        if ($value['field'] == 0) {
+                            $form->text($value['id'], $value['name'])->required();
+                        }
+                        elseif ($value['field'] == 1) {
+                            $form->number($value['id'], $value['name'])->required();
+                        }
+                        elseif ($value['field'] == 2) {
+                            $form->radio($value['id'], $value['name'])->options(['0' => '否', '1'=> '是'])->default('0')->required();
+                        }
+                    }
                 }
             }
 
