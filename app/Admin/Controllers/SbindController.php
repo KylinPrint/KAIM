@@ -4,8 +4,12 @@ namespace App\Admin\Controllers;
 
 use App\Admin\Actions\Exports\SbindExport;
 use App\Admin\Actions\Modal\SbindModal;
+use App\Admin\Renderable\ChipTable;
 use App\Admin\Renderable\PhistoryTable;
+use App\Admin\Renderable\ReleaseTable;
+use App\Admin\Renderable\StatusTable;
 use App\Models\Chip;
+use App\Models\Manufactor;
 use App\Models\Release;
 use App\Models\Sbind;
 use App\Models\Software;
@@ -45,7 +49,13 @@ class SbindController extends AdminController
                 if ($value == '1')  { return '是'; }
                 else                { return '否'; }
             })->hide();
-            $grid->column('statuses.name',__('当前适配状态'));
+            $grid->column('statuses',__('当前适配状态'))
+                ->display(function($statuses){
+                    $a = $statuses->toArray();
+                    $b = Status::where('id',$a['parent'])->pluck('name')->first();
+                    return $b;
+                });
+            $grid->column('statuses.name',__('当前细分适配状态'));
             $grid->column('admin_users.username',__('当前适配状态责任人'));
             $grid->column('histories')
                 ->display('查看')
@@ -79,10 +89,25 @@ class SbindController extends AdminController
             $grid->addTableClass(['table-text-center']);
             $grid->withBorder();
             $grid->showColumnSelector();
-        
+            
             $grid->filter(function (Grid\Filter $filter) {
-                $filter->equal('id');
-        
+                $filter->like('softwares.name');
+                $filter->equal('releases.id', '操作系统版本')
+                    ->multipleSelectTable(ReleaseTable::make(['id' => 'name']))
+                    ->title('弹窗标题')
+                    ->dialogWidth('50%')
+                    ->model(Release::class, 'id', 'name');
+                $filter->equal('chips.id', '芯片')
+                    ->multipleSelectTable(ChipTable::make(['id' => 'name']))
+                    ->title('弹窗标题')
+                    ->dialogWidth('50%')
+                    ->model(Chip::class, 'id', 'name');
+                $filter->equal('statuses.id', '适配状态')
+                    ->multipleSelectTable(StatusTable::make(['id' => 'name']))
+                    ->title('弹窗标题')
+                    ->dialogWidth('50%')
+                    ->model(Status::class, 'id', 'name');
+
             });
         });
     }

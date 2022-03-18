@@ -22,6 +22,7 @@ class CreateSoftwaresTable extends Migration
                   ->comment('厂商名称')
                   ->constrained();
             $table->string('version')->comment('软件版本号');
+            $table->string('packagename')->comment('包名');
             $table->foreignId('types_id')
                   ->comment('软件分类')
                   ->constrained();

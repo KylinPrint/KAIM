@@ -18,6 +18,7 @@ use App\Admin\Renderable\SolutionTable;
 use App\Admin\Renderable\ReleaseTable;
 use App\Admin\Renderable\ChipTable;
 use App\Admin\Renderable\PhistoryTable;
+use App\Admin\Renderable\StatusTable;
 use App\Models\Industry;
 use Dcat\Admin\Admin;
 use Illuminate\Support\Facades\DB;
@@ -68,7 +69,13 @@ class PbindController extends AdminController
                     $modal->xl();
                     return SolutionTable::make();
                 }); 
-            $grid->column('statuses.name',__('适配状态'));
+            $grid->column('statuses',__('当前适配状态'))
+                ->display(function($statuses){
+                    $a = $statuses->toArray();
+                    $b = Status::where('id',$a['parent'])->pluck('name')->first();
+                    return $b;
+                });
+            $grid->column('statuses.name',__('当前细分适配状态'));
             $grid->column('class');
             $grid->column('adapt_source');
             $grid->column('adapted_before')->display(function ($value) {
@@ -105,7 +112,7 @@ class PbindController extends AdminController
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->panel();
                 $filter->like('peripherals.name','设备名');
-                $filter->like('solutions.name','解决方案');
+                $filter->like('solution','解决方案');
                 $filter->equal('releases.id', '操作系统版本')
                     ->multipleSelectTable(ReleaseTable::make(['id' => 'name']))
                     ->title('弹窗标题')
@@ -116,6 +123,11 @@ class PbindController extends AdminController
                     ->title('弹窗标题')
                     ->dialogWidth('50%')
                     ->model(Chip::class, 'id', 'name');
+                $filter->equal('statuses.id', '适配状态')
+                    ->multipleSelectTable(StatusTable::make(['id' => 'name']))
+                    ->title('弹窗标题')
+                    ->dialogWidth('50%')
+                    ->model(Status::class, 'id', 'name');
             });
         });
     }
@@ -195,20 +207,16 @@ class PbindController extends AdminController
                     '远程测试' => '远程测试',
                     '麒麟适配测试' => '麒麟适配测试'
                     ]);
-<<<<<<< HEAD
-            $form->select('kylineco')->options([0 => '否',1 => '是']);
-            $form->select('appstore')->options([0 => '否',1 => '是']);
-            $form->select('iscert')->options([0 => '否',1 => '是']);
+
+            $form->select('kylineco')->options([0 => '否',1 => '是'])->required();
+            $form->select('appstore')->options([0 => '否',1 => '是'])->required();
+            $form->select('iscert')->options([0 => '否',1 => '是'])->required();
             $form->hasMany('peripheral_industry', '行业', function (Form\NestedForm $form){
            
                 $form->multipleSelect('adapter')->options(Industry::all()->pluck('name','id'));
        
             })->useTable();
-=======
-            $form->select('kylineco')->options([0 => '否',1 => '是'])->required();
-            $form->select('appstore')->options([0 => '否',1 => '是'])->required();
-            $form->select('iscert')->options([0 => '否',1 => '是'])->required();
->>>>>>> d8749988819bf2ed2d4f2be387533fd2b2fea076
+
             $form->text('comment');
         
             $form->display('created_at');

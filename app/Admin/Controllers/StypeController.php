@@ -7,6 +7,7 @@ use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
 use Dcat\Admin\Http\Controllers\AdminController;
+use Illuminate\Http\Request;
 
 class StypeController extends AdminController
 {
@@ -59,10 +60,26 @@ class StypeController extends AdminController
         return Form::make(new Stype(), function (Form $form) {
             $form->display('id');
             $form->text('name');
-            $form->text('parent');
+            if($form->isEditing())
+            {
+                $form->select('parent')->options(Stype::where('parent','=',null)->pluck('name','id'))->load('name','/api/stype');
+                $form->select('name');
+            }
+            else
+            {
+                $form->select('parent')->options(Stype::where('parent','=',null)->pluck('name','id'));
+                $form->text('name');
+            }
         
             $form->display('created_at');
             $form->display('updated_at');
         });
+        
+    }
+    public function getName(Request $request)
+    {
+        $provinceId = $request->get('q')?:0;
+        return Stype::where('parent', $provinceId)->get(['id', \Illuminate\Support\Facades\DB::raw('name as text')])->toArray();
+        
     }
 }

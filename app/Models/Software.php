@@ -16,6 +16,7 @@ class Software extends Model
         'manufactors_id',
         'version',
         'types_id',
+        'packagename',
         'kernel_version',
         'crossover_version',
         'box86_version',

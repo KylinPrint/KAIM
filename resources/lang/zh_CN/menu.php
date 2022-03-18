@@ -41,6 +41,7 @@ return [
         'manufactors'   => '厂商信息管理',
         'requirements'   => '需求管理',
         'tools'          => '实用小工具',
+        'others'         => '关联信息管理',
         'solution_query' => '解决方案快速筛查',
     
     ],

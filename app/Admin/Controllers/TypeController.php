@@ -61,8 +61,17 @@ class TypeController extends AdminController
     {
         return Form::make(new Type(), function (Form $form) {
             $form->display('id');
-            $form->select('parent')->options(Type::where('parent','=',null)->pluck('name','id'))->load('name','/api/type');
-            $form->select('name');
+            if($form->isEditing())
+            {
+                $form->select('parent')->options(Type::where('parent','=',null)->pluck('name','id'))->load('name','/api/type');
+                $form->select('name');
+            }
+            else
+            {
+                $form->select('parent')->options(Type::where('parent','=',null)->pluck('name','id'));
+                $form->text('name');
+            }
+            
         
             $form->display('created_at');
             $form->display('updated_at');
