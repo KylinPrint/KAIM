@@ -41,7 +41,6 @@ INSERT INTO `admin_menu` VALUES (24, 20, 24, 'Releases', NULL, 'releases', '', 1
 INSERT INTO `admin_menu` VALUES (25, 20, 25, 'Types', NULL, 'types', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
 INSERT INTO `admin_menu` VALUES (26, 20, 26, 'Specifications', NULL, 'specifications', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
 INSERT INTO `admin_menu` VALUES (27, 20, 27, 'Statuses', NULL, 'statuses', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `admin_menu` VALUES (28, 20, 28, 'Solutions', NULL, 'solutions', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
 INSERT INTO `admin_menu` VALUES (29, 0, 29, 'Requirements', 'fa-bicycle', NULL, '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
 INSERT INTO `admin_menu` VALUES (30, 0, 30, 'Tools', 'fa-wrench', NULL, '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
 INSERT INTO `admin_menu` VALUES (31, 30, 31, 'Solution_Query', NULL, 'solution_matches', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
@@ -95,7 +94,6 @@ INSERT INTO `admin_permissions` VALUES (49, '系统信息管理-试运行', 'rel
 INSERT INTO `admin_permissions` VALUES (50, '分类信息管理-试运行', 'types-all', '', '/types*', 44, 45, '2022-03-17 17:07:35', '2022-03-17 17:07:35');
 INSERT INTO `admin_permissions` VALUES (51, '参数名管理-试运行', 'specifications-all', '', '/specifications*', 45, 45, '2022-03-17 17:08:46', '2022-03-17 17:08:46');
 INSERT INTO `admin_permissions` VALUES (52, '状态信息管理-试运行', 'status-all', '', '/statuses*', 46, 45, '2022-03-17 17:09:28', '2022-03-17 17:09:28');
-INSERT INTO `admin_permissions` VALUES (53, '解决方案信息管理-试运行', 'solutions-all', '', '/solutions*', 47, 45, '2022-03-17 17:10:06', '2022-03-17 17:10:06');
 
 -- ----------------------------
 -- Records of industries

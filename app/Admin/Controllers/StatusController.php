@@ -66,7 +66,7 @@ class StatusController extends AdminController
             ->pluck('name','id'))
             #->load('name','/api/status')
             ;
-            $form->text('name');
+            $form->text('name')->required();
         
             $form->display('created_at');
             $form->display('updated_at');

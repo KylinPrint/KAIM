@@ -58,9 +58,9 @@ class StypeController extends AdminController
     {
         return Form::make(new Stype(), function (Form $form) {
             $form->display('id');
-            $form->text('name');
             $form->text('parent');
-        
+            $form->text('name')->required();
+
             $form->display('created_at');
             $form->display('updated_at');
         });

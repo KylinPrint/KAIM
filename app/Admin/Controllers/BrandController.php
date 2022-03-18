@@ -61,7 +61,7 @@ class BrandController extends AdminController
     {
         return Form::make(Brand::with(['manufactors']), function (Form $form) {
             $form->display('id');
-            $form->text('name');
+            $form->text('name')->required();
             $form->text('alias');
             $form->select('manufactors_id', __('厂商'))->options(Manufactor::all()->pluck('name','id'));
         

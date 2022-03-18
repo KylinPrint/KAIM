@@ -79,15 +79,16 @@ class PeripheralController extends AdminController
                 foreach ($specs as $key => $value)
                 {
                     $grid->column($value['name'])->display(function() use ($key, $value) {
+                        $res = Value::where([['peripherals_id',$this->id], ['specifications_id',$value['id']]])->pluck('value')->first();
                         //处理布尔值
                         if ($value['field'] == 2) {
-                            if (Value::where([['peripherals_id',$this->id],['specifications_id',$key]])->pluck('value')->first() == 0) {
+                            if ($res == "0") {
                                 return '否';
                             } else {
                                 return '是';
                             }
                         } else {
-                            return Value::where([['peripherals_id',$this->id],['specifications_id',$key]])->pluck('value')->first();
+                            return $res;
                         }
                     });
                 }
@@ -170,8 +171,8 @@ class PeripheralController extends AdminController
                 $form->hidden('types_id')->default($typesID);
             }
             
-            $form->select('brands_id', __('品牌'))->options(Brand::all()->pluck('name','id'));
-            $form->text('name');
+            $form->select('brands_id', __('品牌'))->options(Brand::all()->pluck('name','id'))->required();
+            $form->text('name')->required();
             $form->date('release_date')->format('YYYY-MM-DD');
             $form->date('eosl_date')->format('YYYY-MM-DD');
 
