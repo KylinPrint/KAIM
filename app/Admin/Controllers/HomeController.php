@@ -48,7 +48,7 @@ class HomeController extends Controller
             $grid->setActionClass(Grid\Displayers\ContextMenuActions::class);
 
             $grid->model()->where('admin_users_id', '=', Admin::user()->id);
-            $grid->model()->orderBy('updated_at', 'desc');
+            $grid->model()->orderBy('updated_at');
 
             $grid->column('peripherals.name',__('外设型号'));
             $grid->column('releases.name',__('操作系统版本'));
