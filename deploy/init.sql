@@ -41,7 +41,6 @@ INSERT INTO `admin_menu` VALUES (24, 20, 24, 'Releases', NULL, 'releases', '', 1
 INSERT INTO `admin_menu` VALUES (25, 20, 25, 'Types', NULL, 'types', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
 INSERT INTO `admin_menu` VALUES (26, 20, 26, 'Specifications', NULL, 'specifications', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
 INSERT INTO `admin_menu` VALUES (27, 20, 27, 'Statuses', NULL, 'statuses', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `admin_menu` VALUES (28, 20, 28, 'Solutions', NULL, 'solutions', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
 INSERT INTO `admin_menu` VALUES (29, 0, 29, 'Requirements', 'fa-bicycle', NULL, '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
 INSERT INTO `admin_menu` VALUES (30, 0, 30, 'Tools', 'fa-wrench', NULL, '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
 INSERT INTO `admin_menu` VALUES (31, 30, 31, 'Solution_Query', NULL, 'solution_matches', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
@@ -79,14 +78,14 @@ INSERT INTO `admin_permissions` VALUES (33, '软件适配情况-删除', 'sbinds
 INSERT INTO `admin_permissions` VALUES (34, '软件适配情况-操作', 'sbinds-action', NULL, NULL, 28, 29, '2022-03-17 16:53:15', '2022-03-17 16:53:17');
 INSERT INTO `admin_permissions` VALUES (35, '软件适配情况-导入', 'sbinds-import', 'GET,POST,PUT', NULL, 29, 29, '2022-03-17 16:53:15', '2022-03-17 16:53:17');
 INSERT INTO `admin_permissions` VALUES (36, '软件适配情况-导出', 'sbinds-export', 'GET,POST,PUT', NULL, 30, 29, '2022-03-17 16:53:15', '2022-03-17 16:53:17');
-INSERT INTO `admin_permissions` VALUES (37, '外设数据管理权限', 'softwares', NULL, NULL, 31, 0, '2022-03-17 16:53:15', '2022-03-17 16:53:17');
-INSERT INTO `admin_permissions` VALUES (38, '外设数据管理-查看', 'softwares-get', 'GET', '/softwares', 32, 37, '2022-03-17 16:53:15', '2022-03-17 16:53:17');
-INSERT INTO `admin_permissions` VALUES (39, '外设数据管理-编辑', 'softwares-edit', 'GET,POST,PUT', '/softwares/*/edit', 33, 37, '2022-03-17 16:53:15', '2022-03-17 16:53:17');
-INSERT INTO `admin_permissions` VALUES (40, '外设数据管理-新建', 'softwares-create', 'GET,POST,PUT', '/softwares/create*', 34, 37, '2022-03-17 16:53:15', '2022-03-17 16:53:17');
-INSERT INTO `admin_permissions` VALUES (41, '外设数据管理-删除', 'softwares-delete', 'DELETE', '/softwares*', 35, 37, '2022-03-17 16:53:15', '2022-03-17 16:53:17');
-INSERT INTO `admin_permissions` VALUES (42, '外设数据管理-操作', 'softwares-action', NULL, NULL, 36, 37, '2022-03-17 16:53:15', '2022-03-17 16:53:17');
-INSERT INTO `admin_permissions` VALUES (43, '外设数据管理-导入', 'softwares-import', 'GET,POST,PUT', NULL, 37, 37, '2022-03-17 16:53:15', '2022-03-17 16:53:17');
-INSERT INTO `admin_permissions` VALUES (44, '外设数据管理-导出', 'softwares-export', 'GET,POST,PUT', NULL, 38, 37, '2022-03-17 16:53:15', '2022-03-17 16:53:17');
+INSERT INTO `admin_permissions` VALUES (37, '软件数据管理权限', 'softwares', NULL, NULL, 31, 0, '2022-03-17 16:53:15', '2022-03-17 16:53:17');
+INSERT INTO `admin_permissions` VALUES (38, '软件数据管理-查看', 'softwares-get', 'GET', '/softwares', 32, 37, '2022-03-17 16:53:15', '2022-03-17 16:53:17');
+INSERT INTO `admin_permissions` VALUES (39, '软件数据管理-编辑', 'softwares-edit', 'GET,POST,PUT', '/softwares/*/edit', 33, 37, '2022-03-17 16:53:15', '2022-03-17 16:53:17');
+INSERT INTO `admin_permissions` VALUES (40, '软件数据管理-新建', 'softwares-create', 'GET,POST,PUT', '/softwares/create*', 34, 37, '2022-03-17 16:53:15', '2022-03-17 16:53:17');
+INSERT INTO `admin_permissions` VALUES (41, '软件数据管理-删除', 'softwares-delete', 'DELETE', '/softwares*', 35, 37, '2022-03-17 16:53:15', '2022-03-17 16:53:17');
+INSERT INTO `admin_permissions` VALUES (42, '软件数据管理-操作', 'softwares-action', NULL, NULL, 36, 37, '2022-03-17 16:53:15', '2022-03-17 16:53:17');
+INSERT INTO `admin_permissions` VALUES (43, '软件数据管理-导入', 'softwares-import', 'GET,POST,PUT', NULL, 37, 37, '2022-03-17 16:53:15', '2022-03-17 16:53:17');
+INSERT INTO `admin_permissions` VALUES (44, '软件数据管理-导出', 'softwares-export', 'GET,POST,PUT', NULL, 38, 37, '2022-03-17 16:53:15', '2022-03-17 16:53:17');
 INSERT INTO `admin_permissions` VALUES (45, '关联信息管理-试运行', 'setting-debug', '', '', 39, 0, '2022-03-17 17:02:55', '2022-03-17 17:02:55');
 INSERT INTO `admin_permissions` VALUES (46, '厂商信息管理-试运行', 'manufacture-all', '', '/manufactors*', 40, 45, '2022-03-17 17:04:05', '2022-03-17 17:04:05');
 INSERT INTO `admin_permissions` VALUES (47, '品牌信息管理-试运行', 'brands-all', '', '/brands*', 41, 45, '2022-03-17 17:04:49', '2022-03-17 17:04:49');
@@ -95,7 +94,6 @@ INSERT INTO `admin_permissions` VALUES (49, '系统信息管理-试运行', 'rel
 INSERT INTO `admin_permissions` VALUES (50, '分类信息管理-试运行', 'types-all', '', '/types*', 44, 45, '2022-03-17 17:07:35', '2022-03-17 17:07:35');
 INSERT INTO `admin_permissions` VALUES (51, '参数名管理-试运行', 'specifications-all', '', '/specifications*', 45, 45, '2022-03-17 17:08:46', '2022-03-17 17:08:46');
 INSERT INTO `admin_permissions` VALUES (52, '状态信息管理-试运行', 'status-all', '', '/statuses*', 46, 45, '2022-03-17 17:09:28', '2022-03-17 17:09:28');
-INSERT INTO `admin_permissions` VALUES (53, '解决方案信息管理-试运行', 'solutions-all', '', '/solutions*', 47, 45, '2022-03-17 17:10:06', '2022-03-17 17:10:06');
 
 -- ----------------------------
 -- Records of industries
@@ -168,3 +166,74 @@ INSERT INTO `types` VALUES (14, '手写板', 2, '2022-02-21 14:02:26', '2022-02-
 INSERT INTO `types` VALUES (15, '手写屏', 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
 INSERT INTO `types` VALUES (16, '无线网卡', 3, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
 INSERT INTO `types` VALUES (17, 'UKey', 4, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+
+-- ----------------------------
+-- Records of stypes
+-- ----------------------------
+INSERT INTO `stypes` VALUES (1, '日常办公', NULL, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (2, '多媒体软件', NULL, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (3, '基础软件', NULL, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (4, '安全防护', NULL, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (5, '业务软件', NULL, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (6, '开发测试', NULL, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (7, '存储备份', NULL, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (8, '其他', NULL, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (9, '即时通讯', 1, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (10, '浏览器', 1, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (11, '流式板式软件', 1, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (12, '签章软件', 1, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (13, '视频会议', 1, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (14, '输入法', 1, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (15, '协同办公', 1, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (16, '压缩软件', 1, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (17, '邮件系统', 1, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (18, '云盘', 1, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (19, '字体', 1, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (20, '翻译', 1, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (21, '其他', 1, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (22, '音视频', 2, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (23, '图形图像', 2, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (24, '游戏', 2, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (25, '数据库', 3, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (26, '中间件', 3, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (27, '虚拟化', 3, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (28, '大数据', 3, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (29, '云桌面', 3, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (30, '云平台', 3, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (31, '区块链', 3, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (32, '分布式存储', 3, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (33, '高可用', 3, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (34, '负载均衡', 3, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (35, 'Web', 3, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (36, '高性能计算', 3, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (37, '其他', 3, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (38, '防火墙', 4, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (39, '杀毒软件', 4, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (40, '入侵检测', 4, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (41, '终端安全管理', 4, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (42, '身份认证', 4, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (43, '网络接入', 4, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (44, '威胁预警', 4, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (45, '态势感知', 4, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (46, '审计', 4, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (47, '隔离交换', 4, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (48, '其他', 4, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (49, '财务软件', 5, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (50, '运维管理', 5, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (51, '业务管理系统', 5, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (52, '监控软件(HMI/SCADA)', 5, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (53, '人工智能', 5, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (54, '电子商务', 5, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (55, 'ERP', 5, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (56, 'CAD', 5, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (57, 'GIS', 5, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (58, 'EDA', 5, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (59, '其他', 5, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (60, '开发测试', 6, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (61, '设计仿真', 6, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (62, '编译器/工具链', 6, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (63, '其他', 6, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (64, '备份恢复', 7, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (65, '存储软件', 7, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (66, '其他', 7, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (67, '驱动', 8, '2022-03-17 20:33:11', '2022-03-17 20:33:11');

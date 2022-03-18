@@ -13,10 +13,22 @@ use Dcat\Admin\Show;
 use Dcat\Admin\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
+use Dcat\Admin\Layout\Content;
 
 
 class PeripheralController extends AdminController
 {
+    public function index(Content $content)
+    {
+        $urlArr = explode('type=',URL::full());
+        $param = end($urlArr);
+        $header = Type::where('id', $param)->pluck('name')->first();
+        return $content
+            ->header($header)
+            ->description('列表')
+            ->body($this->grid());
+    }
+
     /**
      * Make a grid builder.
      *
@@ -50,7 +62,6 @@ class PeripheralController extends AdminController
 
             else
             {
-                //$typeID = Type::where('name',$param)->pluck('id')->first();
                 $grid->model()->setConstraints([
                     'type' => $param,
                 ]);
@@ -63,13 +74,22 @@ class PeripheralController extends AdminController
                 $grid->column('release_date');
                 $grid->column('eosl_date');
 
-                $spcificArr = Specification::where('types_id',$param)->pluck('name','id');  //获取对应type的specification数据，格式为键名为id，键值为name的数组
-
-                foreach($spcificArr as $id => $name)
+                $specs = Specification::where('types_id',$param)->get(['id', 'name', 'field'])->toArray();
+                
+                foreach ($specs as $key => $value)
                 {
-                    $grid->column($name)->display(function() use ($id)
-                    {
-                        return Value::where([['peripherals_id',$this->id],['specifications_id',$id]])->pluck('value')->first();
+                    $grid->column($value['name'])->display(function() use ($key, $value) {
+                        $res = Value::where([['peripherals_id',$this->id], ['specifications_id',$value['id']]])->pluck('value')->first();
+                        //处理布尔值
+                        if ($value['field'] == 2) {
+                            if ($res == "0") {
+                                return '否';
+                            } else {
+                                return '是';
+                            }
+                        } else {
+                            return $res;
+                        }
                     });
                 }
 
@@ -151,17 +171,39 @@ class PeripheralController extends AdminController
                 $form->hidden('types_id')->default($typesID);
             }
             
-            $form->select('brands_id', __('品牌'))->options(Brand::all()->pluck('name','id'));
-            $form->text('name');
+            $form->select('brands_id', __('品牌'))->options(Brand::all()->pluck('name','id'))->required();
+            $form->text('name')->required();
             $form->date('release_date')->format('YYYY-MM-DD');
             $form->date('eosl_date')->format('YYYY-MM-DD');
 
             if ($form->isCreating()) {
                 // 脑瘫参数写法
-                $specs = Specification::where('types_id', $typesID)->get(['id', 'name', 'isrequired'])->toArray();
+                $specs = Specification::where('types_id', $typesID)->get(['id', 'name', 'isrequired', 'field'])->toArray();
                 foreach ($specs as $key => $value) {
-                    if ($value['isrequired'] == 0) {  $form->text($value['id'], $value['name']); } 
-                    else { $form->text($value['id'], $value['name'])->required(); }
+                    if ($value['isrequired'] == 0) 
+                    {
+                        if ($value['field'] == 0) {
+                            $form->text($value['id'], $value['name']);
+                        }
+                        elseif ($value['field'] == 1) {
+                            $form->number($value['id'], $value['name']);
+                        }
+                        elseif ($value['field'] == 2) {
+                            $form->radio($value['id'], $value['name'])->options(['0' => '否', '1'=> '是'])->default('0');
+                        }
+                    }
+                    else
+                    {
+                        if ($value['field'] == 0) {
+                            $form->text($value['id'], $value['name'])->required();
+                        }
+                        elseif ($value['field'] == 1) {
+                            $form->number($value['id'], $value['name'])->required();
+                        }
+                        elseif ($value['field'] == 2) {
+                            $form->radio($value['id'], $value['name'])->options(['0' => '否', '1'=> '是'])->default('0')->required();
+                        }
+                    }
                 }
             }
 

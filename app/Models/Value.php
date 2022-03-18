@@ -12,13 +12,6 @@ class Value extends Model
 
 	protected $table = 'values';
 
-	protected $fillable = 
-	[
-		'peripherals_id',
-		'specifications_id',
-		'value',
-	];
-
 	public function peripherals()
     {
         return $this->belongsTo(Peripheral::class);

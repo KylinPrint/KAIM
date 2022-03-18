@@ -174,7 +174,7 @@ class SbindController extends AdminController
             $form->select('adapted_before')->options([0 => '否',1 => '是']);
             $form->select('statuses_id')->options(Status::where('parent','!=',null)->pluck('name','id'))->required();
             if ($form->isEditing()) {
-                $form->text('statuses_comment', __('状态变更说明'))->required();
+                $form->text('statuses_comment', __('状态变更说明'));
             }
             $form->hidden('admin_users_id')->default(Admin::user()->id);
             $form->text('softname');

@@ -32,7 +32,7 @@ class PbindController extends AdminController
      */
     protected function grid()
     {
-        return Grid::make(Pbind::with(['peripherals','releases','chips','solutions','statuses','admin_users']), function (Grid $grid) {
+        return Grid::make(Pbind::with(['peripherals','releases','chips','statuses','admin_users']), function (Grid $grid) {
 
             if(Admin::user()->can('pbinds-import'))
             {
@@ -62,13 +62,8 @@ class PbindController extends AdminController
             $grid->column('releases.name',__('操作系统版本'));
             $grid->column('os_subversion');
             $grid->column('chips.name',__('芯片'));
-            $grid->column('solutions', __('解决方案'))
-                ->display('详情')
-                ->modal(function ($modal){
-                    $modal->title('解决方案');
-                    $modal->xl();
-                    return SolutionTable::make();
-                }); 
+
+            $grid->column('solution', __('解决方案'));
             $grid->column('statuses',__('当前适配状态'))
                 ->display(function($statuses){
                     $a = $statuses->toArray();
@@ -76,6 +71,7 @@ class PbindController extends AdminController
                     return $b;
                 });
             $grid->column('statuses.name',__('当前细分适配状态'));
+
             $grid->column('class');
             $grid->column('adapt_source');
             $grid->column('adapted_before')->display(function ($value) {
@@ -141,11 +137,11 @@ class PbindController extends AdminController
      */
     protected function detail($id)
     {
-        return Show::make($id, new Pbind(['peripherals','releases','chips','solutions','statuses']), function (Show $show) {
+        return Show::make($id, new Pbind(['peripherals','releases','chips','statuses']), function (Show $show) {
             $show->field('peripherals.name',__('型号'));
             $show->field('releases.name',__('版本'));
             $show->field('chips.name',__('芯片'));
-            $show->field('solutions.name',__('解决方案'));
+            $show->field('solution',__('解决方案'));
             $show->field('statuses.name',__('状态'));
             $show->field('class');
             $show->field('comment');
@@ -161,12 +157,12 @@ class PbindController extends AdminController
      */
     protected function form()
     {
-        return Form::make(Pbind::with(['peripherals','releases','chips','solutions','statuses']), function (Form $form) {
+        return Form::make(Pbind::with(['peripherals','releases','chips','statuses']), function (Form $form) {
             $form->select('peripherals_id',__('型号'))->options(Peripheral::all()->pluck('name','id'))->required();
             $form->select('releases_id',__('版本'))->options(Release::all()->pluck('name','id'))->required();
             $form->text('os_subversion');
             $form->select('chips_id',__('芯片'))->options(Chip::all()->pluck('name','id'))->required();
-            $form->select('solutions_id',__('解决方案'))->options(Solution::all()->pluck('name','id'));
+            $form->text('solution',__('解决方案'));
             $form->select('adapt_source')
                  ->options([
                      '厂商主动申请' => '厂商主动申请',
@@ -183,7 +179,7 @@ class PbindController extends AdminController
             $form->select('adapted_before')->options([0 => '否',1 => '是']);
             $form->select('statuses_id',__('状态'))->options(Status::where('parent','!=',null)->pluck('name','id'))->required();
             if ($form->isEditing()) {
-                $form->text('statuses_comment', __('状态变更说明'))->required();
+                $form->text('statuses_comment', __('状态变更说明'));
             }
             $form->hidden('admin_users_id')->default(Admin::user()->id);
             $form->select('class')
@@ -208,6 +204,7 @@ class PbindController extends AdminController
                     '麒麟适配测试' => '麒麟适配测试'
                     ]);
 
+
             $form->select('kylineco')->options([0 => '否',1 => '是'])->required();
             $form->select('appstore')->options([0 => '否',1 => '是'])->required();
             $form->select('iscert')->options([0 => '否',1 => '是'])->required();
@@ -216,6 +213,7 @@ class PbindController extends AdminController
                 $form->multipleSelect('adapter')->options(Industry::all()->pluck('name','id'));
        
             })->useTable();
+
 
             $form->text('comment');
         

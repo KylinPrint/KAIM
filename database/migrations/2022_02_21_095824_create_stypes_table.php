@@ -14,9 +14,11 @@ class CreateStypesTable extends Migration
     public function up()
     {
         Schema::create('stypes', function (Blueprint $table) {
-            $table->increments('id');
+            $table->id();
             $table->string('name')->default('')->comment('类型名称');
-            $table->integer('parent')->comment('父ID');
+
+            $table->unsignedBigInteger('parent')->nullable()->comment('父级ID');
+            
             $table->timestamps();
         });
     }

@@ -5,7 +5,6 @@ namespace App\Admin\Controllers;
 use App\Models\Manufactor;
 use App\Models\Software;
 use App\Models\Stype;
-use App\Models\Type;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
@@ -20,13 +19,15 @@ class SoftwareController extends AdminController
      */
     protected function grid()
     {
-        return Grid::make(Software::with('manufactors','types'), function (Grid $grid) {
+        return Grid::make(Software::with(['manufactors','stypes']), function (Grid $grid) {
             $grid->column('id')->sortable();
             $grid->column('name');
             $grid->column('manufactors.name',__('厂商'));
             $grid->column('version');
+
             $grid->column('packagename');
-            $grid->column('types.name',__('类型'));
+            $grid->column('stypes.name',__('类型'));
+
             $grid->column('kernel_version');
             $grid->column('crossover_version');
             $grid->column('box86_version');
@@ -58,7 +59,7 @@ class SoftwareController extends AdminController
             $show->field('name');
             $show->field('manufactors_id');
             $show->field('version');
-            $show->field('types_id');
+            $show->field('stypes_id');
             $show->field('kernel_version');
             $show->field('crossover_version');
             $show->field('box86_version');
@@ -84,7 +85,8 @@ class SoftwareController extends AdminController
             $form->select('manufactors_id')->options(Manufactor::all()->pluck('name','id'))->required();
             $form->text('version')->required();
             $form->text('packagename');
-            $form->select('types_id', __('类型'))->options(Stype::where('parent','!=',null)->pluck('name','id'))->required();    
+            $form->select('stypes_id', __('类型'))->options(Stype::where('parent','!=',null)->pluck('name','id'))->required();    
+
             $form->text('kernel_version');
             $form->text('crossover_version');
             $form->text('box86_version');

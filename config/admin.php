@@ -96,7 +96,7 @@ return [
     | Html title for all pages.
     |
     */
-    'title' => 'Admin',
+    'title' => env('ADMIN_TITLE', 'Admin'),
 
     /*
     |--------------------------------------------------------------------------

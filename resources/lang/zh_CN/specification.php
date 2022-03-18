@@ -8,6 +8,7 @@ return [
         'name' => '参数名',
         'types_id' => '分类',
         'isrequired' => '必填',
+        'field' => '字段属性',
     ],
     'options' => [
     ],

@@ -21,6 +21,7 @@ class CreateSpecificationsTable extends Migration
                   ->comment('所属分类')
                   ->constrained();
             $table->boolean('isrequired')->comment('是否必填');
+            $table->unsignedSmallInteger('field')->comment('参数类型[0=>文本,1=>数字,2=>布尔]');
 
             $table->timestamps();
         });

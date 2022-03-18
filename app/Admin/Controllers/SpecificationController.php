@@ -25,6 +25,17 @@ class SpecificationController extends AdminController
             $grid->column('isrequired')->display(function ($isrequired) {
                 return $isrequired ? '是' : '否';
             });
+            $grid->column('field')->display(function ($field) {
+                if ($field == 0) {
+                    return '文本';
+                }
+                elseif ($field == 1) {
+                    return '数字';
+                }
+                elseif ($field == 2) {
+                    return '布尔';
+                }
+            });
             $grid->column('created_at');
             $grid->column('updated_at')->sortable();
         
@@ -48,7 +59,20 @@ class SpecificationController extends AdminController
             $show->field('id');
             $show->field('name');
             $show->field('types.name', __('外设分类'));
-            $show->field('isrequired');
+            $show->field('isrequired')->as(function ($isrequired) {
+                return $isrequired ? '是' : '否';
+            });
+            $show->field('field')->as(function ($field) {
+                if ($field == 0) {
+                    return '文本';
+                }
+                elseif ($field == 1) {
+                    return '数字';
+                }
+                elseif ($field == 2) {
+                    return '布尔';
+                }
+            });
             $show->field('created_at');
             $show->field('updated_at');
         });
@@ -63,9 +87,14 @@ class SpecificationController extends AdminController
     {
         return Form::make(Specification::with('types'), function (Form $form) {
             $form->display('id');
-            $form->text('name');
-            $form->select('types_id', __('外设分类'))->options(Type::where('parent','!=',null)->pluck('name','id'));
-            $form->select('isrequired')->options([0 => '否',1 => '是']);
+            $form->text('name')->required();
+            $form->select('types_id', __('外设分类'))->options(Type::where('parent','!=',null)->pluck('name','id'))->required();
+            $form->select('isrequired')->options([0 => '否',1 => '是'])->required();
+            $form->select('field')->options([
+                0 => '文本',
+                1 => '数字',
+                2 => '布尔',
+            ])->required();
         
             $form->display('created_at');
             $form->display('updated_at');

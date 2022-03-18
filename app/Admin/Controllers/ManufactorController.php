@@ -62,7 +62,7 @@ class ManufactorController extends AdminController
     {
         return Form::make(new Manufactor(), function (Form $form) {
             $form->display('id');
-            $form->text('name');
+            $form->text('name')->required();
             $form->select('isconnected')->options([0 => '否',1 => '是']);
         
             $form->display('created_at');

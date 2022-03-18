@@ -62,7 +62,7 @@ class ReleaseController extends AdminController
     {
         return Form::make(new Release(), function (Form $form) {
             $form->display('id');
-            $form->text('name');
+            $form->text('name')->required();
             $form->text('abbr');
             $form->date('release_date')->format('YYYY-MM-DD');
             $form->date('eosl_date')->format('YYYY-MM-DD');

@@ -59,6 +59,7 @@ class StypeController extends AdminController
     {
         return Form::make(new Stype(), function (Form $form) {
             $form->display('id');
+
             $form->text('name');
             if($form->isEditing())
             {

@@ -25,11 +25,6 @@ class Pbind extends Model
 		return $this->belongsTo(Chip::class);
 	}
 
-	public function solutions()
-	{
-		return $this->belongsTo(Solution::class);
-	}
-
 	public function statuses()
 	{
 		return $this->belongsTo(Status::class);
