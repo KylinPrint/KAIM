@@ -56,7 +56,22 @@ class PeripheralController extends AdminController
                 $grid->column('updated_at')->sortable();
             
                 $grid->filter(function (Grid\Filter $filter) {
-                    $filter->equal('id');
+                    $filter->like('name');
+                    $filter->like('brands.name');
+                    $filter->whereBetween('created_at', function ($query) {
+                        $start = $this->input['start'] ?? null;
+                        $end = $this->input['end'] ?? null;
+                    
+                        $query->whereHas('binds', function ($query) use ($start,$end) {
+                            if ($start !== null) {
+                                $query->where('created_at', '>=', $start);
+                            }
+                    
+                            if ($end !== null) {
+                                $query->where('created_at', '<=', $end);
+                            }
+                        });
+                    })->datetime()->width(3);
                 });
             }
 
@@ -74,14 +89,14 @@ class PeripheralController extends AdminController
                 $grid->column('release_date');
                 $grid->column('eosl_date');
 
-                $specs = Specification::where('types_id',$param)->get(['id', 'name', 'field'])->toArray();
+                $specs = Specification::where('types_id',$param)->get(['id', 'name', 'isrequired'])->toArray();
                 
                 foreach ($specs as $key => $value)
                 {
                     $grid->column($value['name'])->display(function() use ($key, $value) {
                         $res = Value::where([['peripherals_id',$this->id], ['specifications_id',$value['id']]])->pluck('value')->first();
                         //处理布尔值
-                        if ($value['field'] == 2) {
+                        if ($value['isrequired'] == 2) {
                             if ($res == "0") {
                                 return '否';
                             } else {
@@ -97,7 +112,23 @@ class PeripheralController extends AdminController
                 $grid->column('updated_at')->sortable();
             
                 $grid->filter(function (Grid\Filter $filter) {
-                    $filter->equal('id');
+                    $filter->panel();
+                    $filter->like('name','产品名称');
+                    $filter->like('brands.name','品牌');
+                $filter->whereBetween('created_at', function ($query) {
+                    $start = $this->input['start'] ?? null;
+                    $end = $this->input['end'] ?? null;
+                
+                    $query->whereHas('binds', function ($query) use ($start,$end) {
+                        if ($start !== null) {
+                            $query->where('created_at', '>=', $start);
+                        }
+                
+                        if ($end !== null) {
+                            $query->where('created_at', '<=', $end);
+                        }
+                    });
+                })->datetime()->width(3);
                 });
             }
         });

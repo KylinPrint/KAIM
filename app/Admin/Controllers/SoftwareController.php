@@ -39,8 +39,23 @@ class SoftwareController extends AdminController
             $grid->column('updated_at')->sortable();
         
             $grid->filter(function (Grid\Filter $filter) {
-                $filter->equal('id');
-        
+                $filter->panel();
+                $filter->like('name','产品名称');
+                $filter->like('manufactors.name','厂商');
+                $filter->whereBetween('created_at', function ($query) {
+                    $start = $this->input['start'] ?? null;
+                    $end = $this->input['end'] ?? null;
+                
+                    $query->whereHas('binds', function ($query) use ($start,$end) {
+                        if ($start !== null) {
+                            $query->where('created_at', '>=', $start);
+                        }
+                
+                        if ($end !== null) {
+                            $query->where('created_at', '<=', $end);
+                        }
+                    });
+                })->datetime()->width(3);
             });
         });
     }
