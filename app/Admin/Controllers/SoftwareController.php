@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Renderable\IndustryTable;
 use App\Models\Manufactor;
 use App\Models\Software;
 use App\Models\Stype;
@@ -27,6 +28,7 @@ class SoftwareController extends AdminController
 
             $grid->column('packagename');
             $grid->column('stypes.name',__('类型'));
+            $grid->column('industries')->pluck('name')->badge();
 
             $grid->column('kernel_version');
             $grid->column('crossover_version');
@@ -101,6 +103,16 @@ class SoftwareController extends AdminController
             $form->text('version')->required();
             $form->text('packagename');
             $form->select('stypes_id', __('类型'))->options(Stype::where('parent','!=',null)->pluck('name','id'))->required();    
+            $form->multipleSelectTable('industries')
+                ->title('行业')
+                ->from(IndustryTable::make())
+                ->model(Industry::class, 'id', 'name')
+                ->required()
+                ->customFormat(function ($v) {
+                    if (!$v) return [];
+                    // 这一步非常重要，需要把数据库中查出来的二维数组转化成一维数组
+                    return array_column($v, 'id');
+            });
 
             $form->text('kernel_version');
             $form->text('crossover_version');

@@ -43,6 +43,6 @@ return [
         'tools'          => '实用小工具',
         'others'         => '关联信息管理',
         'solution_query' => '解决方案快速筛查',
-    
+        'statistics' => '数据统计',
     ],
 ];

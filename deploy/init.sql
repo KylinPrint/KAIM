@@ -50,6 +50,7 @@ INSERT INTO `admin_menu` VALUES (34, 32, 34, 'Roles', NULL, 'auth/roles', '', 1,
 INSERT INTO `admin_menu` VALUES (35, 32, 35, 'Permission', NULL, 'auth/permissions', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
 INSERT INTO `admin_menu` VALUES (36, 32, 36, 'Menu', NULL, 'auth/menu', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
 INSERT INTO `admin_menu` VALUES (37, 32, 37, 'Extensions', NULL, 'auth/extensions', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `admin_menu` VALUES (38, 0, 38, 'Statistics', 'fa-bar-chart', 'statistics', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
 
 -- ----------------------------
 -- Records of admin_permissions
@@ -94,6 +95,46 @@ INSERT INTO `admin_permissions` VALUES (49, '系统信息管理-试运行', 'rel
 INSERT INTO `admin_permissions` VALUES (50, '分类信息管理-试运行', 'types-all', '', '/types*', 44, 45, '2022-03-17 17:07:35', '2022-03-17 17:07:35');
 INSERT INTO `admin_permissions` VALUES (51, '参数名管理-试运行', 'specifications-all', '', '/specifications*', 45, 45, '2022-03-17 17:08:46', '2022-03-17 17:08:46');
 INSERT INTO `admin_permissions` VALUES (52, '状态信息管理-试运行', 'status-all', '', '/statuses*', 46, 45, '2022-03-17 17:09:28', '2022-03-17 17:09:28');
+INSERT INTO `admin_permissions` VALUES (53, '数据统计', 'statistics', '', '/statistics*', 47, 0, '2022-03-18 17:23:53', '2022-03-18 17:23:53');
+
+-- ----------------------------
+-- Records of admin_permission_menu
+-- ----------------------------
+INSERT INTO `admin_permission_menu` VALUES (14, 5, '2022-03-18 17:33:22', '2022-03-18 17:33:22');
+INSERT INTO `admin_permission_menu` VALUES (14, 6, '2022-03-18 17:32:40', '2022-03-18 17:32:40');
+INSERT INTO `admin_permission_menu` VALUES (22, 5, '2022-03-18 17:35:24', '2022-03-18 17:35:24');
+INSERT INTO `admin_permission_menu` VALUES (22, 7, '2022-03-18 17:35:24', '2022-03-18 17:35:24');
+INSERT INTO `admin_permission_menu` VALUES (22, 8, '2022-03-18 17:35:24', '2022-03-18 17:35:24');
+INSERT INTO `admin_permission_menu` VALUES (22, 9, '2022-03-18 17:35:24', '2022-03-18 17:35:24');
+INSERT INTO `admin_permission_menu` VALUES (22, 10, '2022-03-18 17:35:24', '2022-03-18 17:35:24');
+INSERT INTO `admin_permission_menu` VALUES (22, 11, '2022-03-18 17:35:24', '2022-03-18 17:35:24');
+INSERT INTO `admin_permission_menu` VALUES (22, 12, '2022-03-18 17:35:24', '2022-03-18 17:35:24');
+INSERT INTO `admin_permission_menu` VALUES (22, 13, '2022-03-18 17:35:24', '2022-03-18 17:35:24');
+INSERT INTO `admin_permission_menu` VALUES (22, 14, '2022-03-18 17:35:24', '2022-03-18 17:35:24');
+INSERT INTO `admin_permission_menu` VALUES (22, 15, '2022-03-18 17:35:24', '2022-03-18 17:35:24');
+INSERT INTO `admin_permission_menu` VALUES (22, 16, '2022-03-18 17:35:24', '2022-03-18 17:35:24');
+INSERT INTO `admin_permission_menu` VALUES (22, 17, '2022-03-18 17:35:24', '2022-03-18 17:35:24');
+INSERT INTO `admin_permission_menu` VALUES (22, 18, '2022-03-18 17:35:24', '2022-03-18 17:35:24');
+INSERT INTO `admin_permission_menu` VALUES (22, 19, '2022-03-18 17:35:24', '2022-03-18 17:35:24');
+INSERT INTO `admin_permission_menu` VALUES (30, 2, '2022-03-18 17:35:39', '2022-03-18 17:35:39');
+INSERT INTO `admin_permission_menu` VALUES (30, 3, '2022-03-18 17:35:39', '2022-03-18 17:35:39');
+INSERT INTO `admin_permission_menu` VALUES (38, 2, '2022-03-18 17:35:51', '2022-03-18 17:35:51');
+INSERT INTO `admin_permission_menu` VALUES (38, 4, '2022-03-18 17:35:51', '2022-03-18 17:35:51');
+INSERT INTO `admin_permission_menu` VALUES (46, 20, '2022-03-18 17:36:06', '2022-03-18 17:36:06');
+INSERT INTO `admin_permission_menu` VALUES (46, 21, '2022-03-18 17:36:06', '2022-03-18 17:36:06');
+INSERT INTO `admin_permission_menu` VALUES (47, 20, '2022-03-18 17:36:12', '2022-03-18 17:36:12');
+INSERT INTO `admin_permission_menu` VALUES (47, 22, '2022-03-18 17:36:12', '2022-03-18 17:36:12');
+INSERT INTO `admin_permission_menu` VALUES (48, 20, '2022-03-18 17:36:17', '2022-03-18 17:36:17');
+INSERT INTO `admin_permission_menu` VALUES (48, 23, '2022-03-18 17:36:17', '2022-03-18 17:36:17');
+INSERT INTO `admin_permission_menu` VALUES (49, 20, '2022-03-18 17:36:22', '2022-03-18 17:36:22');
+INSERT INTO `admin_permission_menu` VALUES (49, 24, '2022-03-18 17:36:22', '2022-03-18 17:36:22');
+INSERT INTO `admin_permission_menu` VALUES (50, 20, '2022-03-18 17:36:28', '2022-03-18 17:36:28');
+INSERT INTO `admin_permission_menu` VALUES (50, 25, '2022-03-18 17:36:28', '2022-03-18 17:36:28');
+INSERT INTO `admin_permission_menu` VALUES (51, 20, '2022-03-18 17:36:34', '2022-03-18 17:36:34');
+INSERT INTO `admin_permission_menu` VALUES (51, 26, '2022-03-18 17:36:34', '2022-03-18 17:36:34');
+INSERT INTO `admin_permission_menu` VALUES (52, 20, '2022-03-18 17:36:40', '2022-03-18 17:36:40');
+INSERT INTO `admin_permission_menu` VALUES (52, 27, '2022-03-18 17:36:40', '2022-03-18 17:36:40');
+INSERT INTO `admin_permission_menu` VALUES (53, 38, '2022-03-18 17:36:51', '2022-03-18 17:36:51');
 
 -- ----------------------------
 -- Records of industries

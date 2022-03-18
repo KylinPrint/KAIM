@@ -71,7 +71,7 @@ class DataAdd extends Donut
         $curTime = now();
         $curTimeBefor = now()->subDays($curOption)->toDateTimeString();
 
-        $AddNum = count(Pbind::all()->whereBetween('created_at',[$curTimeBefor,$curTime]));
+        // $AddNum = count(Pbind::all()->whereBetween('created_at',[$curTimeBefor,$curTime]));
         $a1 = count(Pbind::whereHas('statuses', function (Builder $query){
             $query->where('parent','1')->orWhere('id','1');
         })->whereBetween('created_at',[$curTimeBefor,$curTime])->get());
