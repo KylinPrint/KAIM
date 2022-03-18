@@ -197,7 +197,7 @@ class PbindController extends AdminController
                     ]);
             $form->select('kylineco')->options([0 => '否',1 => '是'])->required();
             $form->select('appstore')->options([0 => '否',1 => '是'])->required();
-            $form->select('iscert')->options([0 => '否',1 => '是']);
+            $form->select('iscert')->options([0 => '否',1 => '是'])->required();
             $form->hasMany('peripheral_industry', '行业', function (Form\NestedForm $form){
                 $form->multipleSelect('adapter')->options(Industry::all()->pluck('name','id'));
             })->useTable();

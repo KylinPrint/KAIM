@@ -13,10 +13,22 @@ use Dcat\Admin\Show;
 use Dcat\Admin\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
+use Dcat\Admin\Layout\Content;
 
 
 class PeripheralController extends AdminController
 {
+    public function index(Content $content)
+    {
+        $urlArr = explode('type=',URL::full());
+        $param = end($urlArr);
+        $header = Type::where('id', $param)->pluck('name')->first();
+        return $content
+            ->header($header)
+            ->description('列表')
+            ->body($this->grid());
+    }
+
     /**
      * Make a grid builder.
      *
