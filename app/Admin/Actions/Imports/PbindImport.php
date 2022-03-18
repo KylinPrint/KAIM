@@ -148,24 +148,12 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
                 DB::table('peripheral_industry')->insert($peripheralIndustryInsert);
             }
 
-            $curSolutionId = Solution::where('name',$row['方案名称'])->pluck('id')->first();
-            if(empty($curSolutionId))
-            {
-                $solutionInsert = 
-                [
-                    'name' => $row['方案名称'],
-                    'details' => $row['方案下载地址'] ,
-                    'source' => '',
-                    'created_at' => date('Y-m-d H:i:s'),
-                    'updated_at' => date('Y-m-d H:i:s'),
-                ];
-                $curSolutionId = DB::table('solutions')->insertGetId($solutionInsert);
-            }
+            
 
             $pbindInsert =
             [
                 'peripherals_id' => $curPeripheralId,
-                'solutions_id' => $curSolutionId,
+                'solution' => $row['方案名称'],
                 'chips_id' => 
                     Chip::where([
                         ['name',$row['芯片']],
@@ -191,7 +179,6 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
             $pbindInsertUnique = 
             [
                 'peripherals_id' => $curPeripheralId,
-                'solutions_id' => $curSolutionId,
                 'chips_id' => Chip::where('name',$row['芯片'])->pluck('id')->first(),
                 'releases_id' => Release::where('name',$row['操作系统版本'])->pluck('id')->first(),
             ];

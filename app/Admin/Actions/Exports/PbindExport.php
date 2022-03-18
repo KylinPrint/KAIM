@@ -130,8 +130,8 @@ class PbindExport extends BaseExport implements WithMapping, WithHeadings, FromC
         $ExportArr['兼容等级'] = $curPbindsArr->class?:'';
         $ExportArr['测试时间'] = '';         //muji
         $ExportArr['适配状态'] = $curPbindsArr->statuses->name;
-        $ExportArr['安装包名称'] = $curPbindsArr->solutions->name;
-        $ExportArr['下载地址'] = $curPbindsArr->solutions->details;
+        $ExportArr['安装包名称'] = $curPbindsArr->solution;
+        // $ExportArr['下载地址'] = $curPbindsArr->solutions->details;
         $ExportArr['产品描述'] = $curPeripheralArr->comment?:'';
         $ExportArr['小版本号'] = $curSmallReleas[0];
         $ExportArr['备注'] = $row['comment']?:'';

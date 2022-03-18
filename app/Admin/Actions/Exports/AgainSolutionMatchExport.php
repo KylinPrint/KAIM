@@ -122,13 +122,13 @@ class AgainSolutionMatchExport implements FromCollection, WithHeadings
                         {
                             if($curMatchArr[$i]['解决方案名'] == '暂无适配方案')
                             {
-                                $curMatchArr[$i]['解决方案名'] = $curPbind->solutions->name;
-                                $curMatchArr[$i]['解决方案详情'] = $curPbind->solutions->details;
+                                $curMatchArr[$i]['解决方案名'] = $curPbind->solution;
+                                $curMatchArr[$i]['解决方案详情'] = $curPbind->solution;
                             }
                             else
                             {
-                                $curMatchArr[$i]['解决方案名'] = '/'.$curPbind->solutions->name;
-                                $curMatchArr[$i]['解决方案详情'] = '/'.$curPbind->solutions->details;
+                                $curMatchArr[$i]['解决方案名'] = '/'.$curPbind->solution;
+                                $curMatchArr[$i]['解决方案详情'] = '/'.$curPbind->solution;
                             }
                         }
                     }

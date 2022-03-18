@@ -32,6 +32,8 @@ class DataAdd extends Donut
         // 设置图表颜色
         $this->chartColors($colors);
 
+        $this->chartHeight(150);
+
         //显示图标百分百
         // $this->chart([
         //     'dataLabels' => [
@@ -45,6 +47,8 @@ class DataAdd extends Donut
         //         )
         //     ]
         // ]);
+
+        $this->chart->style('margin: 15px 15px 0 0;width: 200px;float:right;');
     }
 
 
