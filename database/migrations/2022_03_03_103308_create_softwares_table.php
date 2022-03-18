@@ -25,7 +25,6 @@ class CreateSoftwaresTable extends Migration
 
             $table->string('packagename')->comment('包名');
             $table->foreignId('stypes_id')
-
                   ->comment('软件分类')
                   ->constrained();
             $table->string('kernel_version')->nullable()->comment('内核引用版本');

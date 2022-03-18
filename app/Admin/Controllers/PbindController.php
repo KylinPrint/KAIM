@@ -8,18 +8,15 @@ use App\Models\Chip;
 use App\Models\Pbind;
 use App\Models\Peripheral;
 use App\Models\Release;
-use App\Models\Solution;
 use App\Models\Status;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
 use Dcat\Admin\Http\Controllers\AdminController;
-use App\Admin\Renderable\SolutionTable;
 use App\Admin\Renderable\ReleaseTable;
 use App\Admin\Renderable\ChipTable;
 use App\Admin\Renderable\PhistoryTable;
 use App\Admin\Renderable\StatusTable;
-use App\Models\Industry;
 use Dcat\Admin\Admin;
 use Illuminate\Support\Facades\DB;
 
@@ -208,12 +205,6 @@ class PbindController extends AdminController
             $form->select('kylineco')->options([0 => '否',1 => '是'])->required();
             $form->select('appstore')->options([0 => '否',1 => '是'])->required();
             $form->select('iscert')->options([0 => '否',1 => '是'])->required();
-            $form->hasMany('peripheral_industry', '行业', function (Form\NestedForm $form){
-           
-                $form->multipleSelect('adapter')->options(Industry::all()->pluck('name','id'));
-       
-            })->useTable();
-
 
             $form->text('comment');
         

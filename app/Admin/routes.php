@@ -18,6 +18,7 @@ Route::group([
     $router->get('/api/stype',[App\Admin\Controllers\StypeController::class,'getName']);
     $router->get('/api/status',[App\Admin\Controllers\StatusController::class,'getName']);
 
+    $router->resource('statistics', StatisticsController::class);
     $router->resource('peripherals', PeripheralController::class);
     $router->resource('solutions', SolutionController::class);
     $router->resource('brands', BrandController::class);

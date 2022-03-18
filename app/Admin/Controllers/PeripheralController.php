@@ -2,7 +2,9 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Renderable\IndustryTable;
 use App\Models\Brand;
+use App\Models\Industry;
 use App\Models\Peripheral;
 use App\Models\Specification;
 use App\Models\Type;
@@ -51,7 +53,7 @@ class PeripheralController extends AdminController
                 $grid->column('release_date');
                 $grid->column('eosl_date');
                 $grid->column('comment');
-
+                $grid->column('industries')->pluck('name')->badge();
                 $grid->column('created_at');
                 $grid->column('updated_at')->sortable();
             
@@ -71,6 +73,7 @@ class PeripheralController extends AdminController
                 $grid->column('name');
                 $grid->column('brands.name', __('品牌'));
                 $grid->column('types.name', __('类型'));
+                $grid->column('industries')->pluck('name')->badge();
                 $grid->column('release_date');
                 $grid->column('eosl_date');
 
@@ -173,6 +176,18 @@ class PeripheralController extends AdminController
             
             $form->select('brands_id', __('品牌'))->options(Brand::all()->pluck('name','id'))->required();
             $form->text('name')->required();
+
+            $form->multipleSelectTable('industries')
+                ->title('行业')
+                ->from(IndustryTable::make())
+                ->model(Industry::class, 'id', 'name')
+                ->required()
+                ->customFormat(function ($v) {
+                    if (!$v) return [];
+                    // 这一步非常重要，需要把数据库中查出来的二维数组转化成一维数组
+                    return array_column($v, 'id');
+            });
+
             $form->date('release_date')->format('YYYY-MM-DD');
             $form->date('eosl_date')->format('YYYY-MM-DD');
 
