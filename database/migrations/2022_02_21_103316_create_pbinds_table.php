@@ -31,6 +31,7 @@ class CreatePbindsTable extends Migration
             $table->foreignId('statuses_id')
                   ->comment('当前适配状态')
                   ->constrained();
+            $table->unsignedBigInteger('admin_users_id')->nullable()->comment('当前适配状态责任人');
 
             $table->string('solution')->nullable()->comment('适配方案');
             $table->string('class')->nullable()->comment('兼容等级[READY,CERTIFICATION,VALIDATION,PM]');

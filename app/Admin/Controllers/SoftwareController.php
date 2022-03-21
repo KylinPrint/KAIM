@@ -100,7 +100,7 @@ class SoftwareController extends AdminController
             $form->display('id');
             $form->text('name')->required();
             $form->select('manufactors_id')->options(Manufactor::all()->pluck('name','id'))->required();
-            $form->text('version')->required();
+            $form->text('version');
             $form->text('packagename');
             $form->select('stypes_id', __('类型'))->options(Stype::where('parent','!=',null)->pluck('name','id'))->required();    
             $form->multipleSelectTable('industries')
