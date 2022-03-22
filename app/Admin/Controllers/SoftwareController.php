@@ -100,7 +100,7 @@ class SoftwareController extends AdminController
      */
     protected function form()
     {
-        return Form::make(Software::with('manufactors','types'), function (Form $form) {
+        return Form::make(Software::with('manufactors','stypes'), function (Form $form) {
             $form->display('id');
             $form->text('name')->required();
             $form->select('manufactors_id')->options(Manufactor::all()->pluck('name','id'))->required();
