@@ -21,6 +21,8 @@ return [
         'kylineco' => '是否上传生态网站',
         'appstore' => '是否上架软件商店',
         'iscert' => '是否互认证',
+        'start_time' => '适配开始时间',
+        'complete_time' => '适配完成时间',
         'class' => '兼容等级',
         'comment' => '备注',
         'histories' => '适配状态变更记录',

@@ -29,6 +29,10 @@ class SoftwareController extends AdminController
             $grid->column('packagename');
             $grid->column('stypes.name',__('类型'));
             $grid->column('industries')->pluck('name')->badge();
+            $grid->column('appstore_soft')->display(function ($value) {
+                if ($value == '1')  { return '是'; }
+                else                { return '否'; }
+            });
 
             $grid->column('kernel_version');
             $grid->column('crossover_version');
@@ -113,6 +117,7 @@ class SoftwareController extends AdminController
                     // 这一步非常重要，需要把数据库中查出来的二维数组转化成一维数组
                     return array_column($v, 'id');
             });
+            $form->select('appstre_soft')->options([0 => '否',1 => '是']);
 
             $form->text('kernel_version');
             $form->text('crossover_version');

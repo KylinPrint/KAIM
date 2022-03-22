@@ -24,6 +24,7 @@ Route::group([
     $router->resource('brands', BrandController::class);
     $router->resource('pbinds', PbindController::class);
     $router->resource('types',TypeController::class);
+    $router->resource('stypes',StypeController::class);
     $router->resource('releases',ReleaseController::class);
     $router->resource('chips',ChipController::class);
     $router->resource('statuses',StatusController::class);

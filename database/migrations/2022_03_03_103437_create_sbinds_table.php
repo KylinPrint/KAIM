@@ -40,6 +40,8 @@ class CreateSbindsTable extends Migration
             $table->boolean('kylineco')->comment('是否上传生态网站');
             $table->boolean('appstore')->comment('是否上架软件商店');
             $table->boolean('iscert')->comment('是否互认证');
+            $table->timestamp('start_time')->nullable()->comment('适配开始时间');
+            $table->timestamp('complete_time')->nullable()->comment('适配完成时间');
             $table->string('comment')->nullable()->comment('备注');
             
             $table->timestamps();

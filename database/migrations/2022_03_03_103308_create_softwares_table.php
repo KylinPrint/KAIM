@@ -27,6 +27,8 @@ class CreateSoftwaresTable extends Migration
             $table->foreignId('stypes_id')
                   ->comment('软件分类')
                   ->constrained();
+                  
+            $table->boolean('appstre_soft')->nullable()->comment('是否为软件商店应用');
             $table->string('kernel_version')->nullable()->comment('内核引用版本');
             $table->string('crossover_version')->nullable()->comment('Crossover版本');
             $table->string('box86_version')->nullable()->comment('Box86版本');

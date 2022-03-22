@@ -17,6 +17,7 @@ use App\Admin\Renderable\ReleaseTable;
 use App\Admin\Renderable\ChipTable;
 use App\Admin\Renderable\PhistoryTable;
 use App\Admin\Renderable\StatusTable;
+use App\Models\Brand;
 use App\Models\Type;
 use Dcat\Admin\Admin;
 use Illuminate\Support\Facades\DB;
@@ -61,11 +62,14 @@ class PbindController extends AdminController
             $grid->column('peripherals.types_id',__('外设类型'))->display(function ($type) {
                 return Type::where('id', $type)->pluck('name')->first();
             });
+            $grid->column('peripherals.brands_id',__('品牌'))->display(function ($brand) {
+                return Brand::where('id', $brand)->pluck('name')->first();
+            });
             $grid->column('releases.name',__('操作系统版本'));
-            $grid->column('os_subversion');
+            $grid->column('os_subversion')->hide();
             $grid->column('chips.name',__('芯片'));
-            $grid->column('solution', __('解决方案'));
-            $grid->column('class');
+            $grid->column('solution', __('适配方案'));
+            $grid->column('class')->hide();
             $grid->column('adapt_source');
             $grid->column('adapted_before')->display(function ($value) {
                 if ($value == '1')  { return '是'; }
@@ -81,8 +85,8 @@ class PbindController extends AdminController
                 ->modal(function () {
                     return PhistoryTable::make();
                 });
-            $grid->column('adaption_type')->hide();
-            $grid->column('test_type')->hide();
+            $grid->column('adaption_type');
+            $grid->column('test_type');
             $grid->column('kylineco')->display(function ($value) {
                 if ($value == '1')  { return '是'; }
                 else                { return '否'; }
@@ -95,6 +99,8 @@ class PbindController extends AdminController
                 if ($value == '1')  { return '是'; }
                 else                { return '否'; }
             });
+            $grid->column('start_time');
+            $grid->column('complete_time');
             $grid->column('comment')->limit()->hide();       
             // $grid->column('created_at');
             $grid->column('updated_at')->sortable();
@@ -118,6 +124,20 @@ class PbindController extends AdminController
                     ->title('弹窗标题')
                     ->dialogWidth('50%')
                     ->model(Status::class, 'id', 'name');
+                $filter->whereBetween('updated_at', function ($query) {
+                        $start = $this->input['start'] ?? null;
+                        $end = $this->input['end'] ?? null;
+                    
+                        $query->whereHas('binds', function ($query) use ($start,$end) {
+                            if ($start !== null) {
+                                $query->where('updated_at', '>=', $start);
+                            }
+                    
+                            if ($end !== null) {
+                                $query->where('updated_at', '<=', $end);
+                            }
+                        });
+                    })->datetime()->width(3);
             });
         });
     }
@@ -156,7 +176,7 @@ class PbindController extends AdminController
             $form->select('releases_id',__('版本'))->options(Release::all()->pluck('name','id'))->required();
             $form->text('os_subversion');
             $form->select('chips_id',__('芯片'))->options(Chip::all()->pluck('name','id'))->required();
-            $form->text('solution',__('解决方案'));
+            $form->text('solution',__('适配方案'));
             $form->select('adapt_source')
                  ->options([
                      '厂商主动申请' => '厂商主动申请',
@@ -202,6 +222,8 @@ class PbindController extends AdminController
             $form->select('kylineco')->options([0 => '否',1 => '是'])->required();
             $form->select('appstore')->options([0 => '否',1 => '是'])->required();
             $form->select('iscert')->options([0 => '否',1 => '是'])->required();
+            $form->date('start_time')->format('Y-m-d');
+            $form->date('complete_time')->format('Y-m-d');
 
             $form->text('comment');
         

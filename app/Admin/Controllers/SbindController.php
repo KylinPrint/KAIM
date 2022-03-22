@@ -14,6 +14,7 @@ use App\Models\Release;
 use App\Models\Sbind;
 use App\Models\Software;
 use App\Models\Status;
+use App\Models\Stype;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Form;
 use Dcat\Admin\Form\Events\Saving;
@@ -41,8 +42,11 @@ class SbindController extends AdminController
 
             $grid->column('id')->sortable();
             $grid->column('softwares.name',__('软件名'))->width('15%');
+            $grid->column('softwares.stypes_id',__('类型'))->display(function ($stypes_id) {
+                return Stype::where('id',$stypes_id)->pluck('name')->first();
+            });
             $grid->column('releases.name',__('操作系统版本'))->width('15%');
-            $grid->column('os_subversion');
+            $grid->column('os_subversion')->hide();
             $grid->column('chips.name',__('芯片'));
             $grid->column('adapt_source');
             $grid->column('adapted_before')->display(function ($value) {
@@ -53,18 +57,18 @@ class SbindController extends AdminController
                 return Status::where('id', $parent)->pluck('name')->first();
             });
             $grid->column('statuses.name', __('当前细分适配状态'));
-            $grid->column('admin_users.username', __('当前适配状态责任人'));
+            $grid->column('admin_users.name', __('当前适配状态责任人'));
             $grid->column('histories')
                 ->display('查看')
                 ->modal(function () {
                     return PhistoryTable::make();
                 });
 
-            $grid->column('softname');
+            $grid->column('softname')->hide();
             $grid->column('solution');
-            $grid->column('class');
-            $grid->column('adaption_type')->hide();
-            $grid->column('test_type')->hide();
+            $grid->column('class')->hide();
+            $grid->column('adaption_type');
+            $grid->column('test_type');
             $grid->column('kylineco')->display(function ($value) {
                 if ($value == '1')  { return '是'; }
                 else                { return '否'; }
@@ -77,6 +81,8 @@ class SbindController extends AdminController
                 if ($value == '1')  { return '是'; }
                 else                { return '否'; }
             });
+            $grid->column('start_time');
+            $grid->column('complete_time');
             $grid->column('comment')->limit()->hide();
             $grid->column('created_at')->hide();
             $grid->column('updated_at')->sortable()->hide();
@@ -88,7 +94,7 @@ class SbindController extends AdminController
             $grid->showColumnSelector();
             
             $grid->filter(function (Grid\Filter $filter) {
-                $filter->like('softwares.name');
+                $filter->like('softwares.name','软件名');
                 $filter->equal('releases.id', '操作系统版本')
                     ->multipleSelectTable(ReleaseTable::make(['id' => 'name']))
                     ->title('弹窗标题')
@@ -104,7 +110,20 @@ class SbindController extends AdminController
                     ->title('弹窗标题')
                     ->dialogWidth('50%')
                     ->model(Status::class, 'id', 'name');
-
+                $filter->whereBetween('updated_at', function ($query) {
+                        $start = $this->input['start'] ?? null;
+                        $end = $this->input['end'] ?? null;
+                    
+                        $query->whereHas('binds', function ($query) use ($start,$end) {
+                            if ($start !== null) {
+                                $query->where('updated_at', '>=', $start);
+                            }
+                    
+                            if ($end !== null) {
+                                $query->where('updated_at', '<=', $end);
+                            }
+                        });
+                    })->datetime()->width(3);
             });
         });
     }
@@ -200,6 +219,8 @@ class SbindController extends AdminController
             $form->select('kylineco')->options([0 => '否',1 => '是'])->required();
             $form->select('appstore')->options([0 => '否',1 => '是'])->required();
             $form->select('iscert')->options([0 => '否',1 => '是'])->required();
+            $form->date('start_time')->format('Y-m-d');
+            $form->date('complete_time')->format('Y-m-d');
             $form->text('comment');
         
             $form->display('created_at');

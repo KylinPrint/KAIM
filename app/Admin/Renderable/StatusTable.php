@@ -12,6 +12,7 @@ class StatusTable extends LazyRenderable
     public function grid(): Grid
     {
         return Grid::make(new Status(), function (Grid $grid) {
+            $grid->model()->where('parent',null);
             $grid->column('name');
 
             $grid->paginate(10);
