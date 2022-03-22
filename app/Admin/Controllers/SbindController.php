@@ -49,14 +49,11 @@ class SbindController extends AdminController
                 if ($value == '1')  { return '是'; }
                 else                { return '否'; }
             })->hide();
-            $grid->column('statuses',__('当前适配状态'))
-                ->display(function($statuses){
-                    $a = $statuses->toArray();
-                    $b = Status::where('id',$a['parent'])->pluck('name')->first();
-                    return $b;
-                });
-            $grid->column('statuses.name',__('当前细分适配状态'));
-            $grid->column('admin_users.username',__('当前适配状态责任人'));
+            $grid->column('statuses.parent', __('当前适配状态'))->display(function ($parent) {
+                return Status::where('id', $parent)->pluck('name')->first();
+            });
+            $grid->column('statuses.name', __('当前细分适配状态'));
+            $grid->column('admin_users.username', __('当前适配状态责任人'));
             $grid->column('histories')
                 ->display('查看')
                 ->modal(function () {

@@ -17,6 +17,7 @@ use App\Admin\Renderable\ReleaseTable;
 use App\Admin\Renderable\ChipTable;
 use App\Admin\Renderable\PhistoryTable;
 use App\Admin\Renderable\StatusTable;
+use App\Models\Type;
 use Dcat\Admin\Admin;
 use Illuminate\Support\Facades\DB;
 
@@ -56,33 +57,30 @@ class PbindController extends AdminController
             $grid->showColumnSelector();  //后期可能根据权限显示
 
             $grid->column('peripherals.name',__('外设型号'));
+            // 脑瘫代码
+            $grid->column('peripherals.types_id',__('外设类型'))->display(function ($type) {
+                return Type::where('id', $type)->pluck('name')->first();
+            });
             $grid->column('releases.name',__('操作系统版本'));
             $grid->column('os_subversion');
             $grid->column('chips.name',__('芯片'));
-
             $grid->column('solution', __('解决方案'));
-            $grid->column('statuses',__('当前适配状态'))
-                ->display(function($statuses){
-                    $a = $statuses->toArray();
-                    $b = Status::where('id',$a['parent'])->pluck('name')->first();
-                    return $b;
-                });
-            $grid->column('statuses.name',__('当前细分适配状态'));
-
             $grid->column('class');
             $grid->column('adapt_source');
             $grid->column('adapted_before')->display(function ($value) {
                 if ($value == '1')  { return '是'; }
                 else                { return '否'; }
             })->hide();
-            $grid->column('statuses.name',__('当前适配状态'));
-            $grid->column('admin_users.name',__('当前适配状态责任人'));
+            $grid->column('statuses.parent', __('当前适配状态'))->display(function ($parent) {
+                    return Status::where('id', $parent)->pluck('name')->first();
+                });
+            $grid->column('statuses.name', __('当前细分适配状态'));
+            $grid->column('admin_users.name', __('当前适配状态责任人'));
             $grid->column('histories')
                 ->display('查看')
                 ->modal(function () {
                     return PhistoryTable::make();
                 });
-
             $grid->column('adaption_type')->hide();
             $grid->column('test_type')->hide();
             $grid->column('kylineco')->display(function ($value) {
@@ -97,11 +95,10 @@ class PbindController extends AdminController
                 if ($value == '1')  { return '是'; }
                 else                { return '否'; }
             });
-            $grid->column('comment')->limit()->hide();
-            
+            $grid->column('comment')->limit()->hide();       
             // $grid->column('created_at');
             $grid->column('updated_at')->sortable();
-        
+           
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->panel();
                 $filter->like('peripherals.name','设备名');
