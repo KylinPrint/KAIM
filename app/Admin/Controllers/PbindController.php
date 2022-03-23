@@ -109,6 +109,7 @@ class PbindController extends AdminController
                 $filter->panel();
                 $filter->like('peripherals.name','设备名');
                 $filter->like('solution','解决方案');
+                $filter->like('comment','备注');
                 $filter->equal('releases.id', '操作系统版本')
                     ->multipleSelectTable(ReleaseTable::make(['id' => 'name']))
                     ->title('弹窗标题')

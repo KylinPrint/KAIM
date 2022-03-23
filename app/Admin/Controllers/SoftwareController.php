@@ -48,6 +48,7 @@ class SoftwareController extends AdminController
                 $filter->panel();
                 $filter->like('name','产品名称');
                 $filter->like('manufactors.name','厂商');
+                $filter->like('comment','备注');
                 $filter->whereBetween('created_at', function ($query) {
                     $start = $this->input['start'] ?? null;
                     $end = $this->input['end'] ?? null;

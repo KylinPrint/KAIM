@@ -95,6 +95,7 @@ class SbindController extends AdminController
             
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->like('softwares.name','软件名');
+                $filter->like('comment','备注');
                 $filter->equal('releases.id', '操作系统版本')
                     ->multipleSelectTable(ReleaseTable::make(['id' => 'name']))
                     ->title('弹窗标题')

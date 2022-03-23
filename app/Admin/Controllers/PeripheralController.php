@@ -118,20 +118,21 @@ class PeripheralController extends AdminController
                     $filter->panel();
                     $filter->like('name','产品名称');
                     $filter->like('brands.name','品牌');
-                $filter->whereBetween('created_at', function ($query) {
-                    $start = $this->input['start'] ?? null;
-                    $end = $this->input['end'] ?? null;
+                    $filter->like('comment','备注');
+                    $filter->whereBetween('created_at', function ($query) {
+                        $start = $this->input['start'] ?? null;
+                        $end = $this->input['end'] ?? null;
                 
-                    $query->whereHas('binds', function ($query) use ($start,$end) {
-                        if ($start !== null) {
-                            $query->where('created_at', '>=', $start);
-                        }
+                        $query->whereHas('binds', function ($query) use ($start,$end) {
+                            if ($start !== null) {
+                                $query->where('created_at', '>=', $start);
+                            }
                 
-                        if ($end !== null) {
-                            $query->where('created_at', '<=', $end);
-                        }
-                    });
-                })->datetime()->width(3);
+                            if ($end !== null) {
+                                $query->where('created_at', '<=', $end);
+                            }
+                        });
+                    })->datetime()->width(3);
                 });
             }
         });
