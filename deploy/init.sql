@@ -1,7 +1,24 @@
-TRUNCATE table `admin_menu`;
+-- ----------------------------
+-- Records of admin_users
+-- ----------------------------
+TRUNCATE TABLE `admin_users`;
+INSERT INTO `admin_users` VALUES (1, 'admin', '$2y$10$dng8ApS.9yZ/g5tv7ZRPhOE6BF1hP0vCLmixEK/SjFVZAKJGmUu9e', 'Administrator', NULL, NULL, '2022-03-18 17:42:21', '2022-03-18 19:02:00');
+INSERT INTO `admin_users` VALUES (2, 'zhaoyan', '$2y$10$Xwg0uCA33DzYdScH07bHtOI0lcschACD83xQ1SJCzkyxukSnUSdCS', '赵岩', NULL, NULL, '2022-03-18 18:41:00', '2022-03-18 18:41:00');
+INSERT INTO `admin_users` VALUES (3, 'shiyi', '$2y$10$O3sQFKUVErayY6zMV290zOVmm9MwRo3fVW3AcqcNDUpBgBpyodTn2', '石艺', NULL, NULL, '2022-03-18 18:41:24', '2022-03-18 18:41:24');
+INSERT INTO `admin_users` VALUES (4, 'cuixin', '$2y$10$gYfrMREds2xuwizgkduk9OmuCIhX8bK9ibwjTTBuldjO7D5GZWuMq', '崔欣', NULL, NULL, '2022-03-18 18:41:49', '2022-03-18 18:41:49');
+INSERT INTO `admin_users` VALUES (5, 'zhanghualiang', '$2y$10$1SUzIgRFq8DcZ7B9qZTCzOiaPuscYvOQgYbY0IM/UWmXGDcOw.Exi', '张化亮', NULL, NULL, '2022-03-18 18:42:17', '2022-03-18 18:42:17');
+INSERT INTO `admin_users` VALUES (6, 'chenjingang', '$2y$10$Mjda.mW1XQu4Iz6aHB.v7.2f7kScIHISnI4G8DzwDbiAxFgUFJx8m', '陈金刚', NULL, NULL, '2022-03-18 18:42:44', '2022-03-18 18:42:44');
+INSERT INTO `admin_users` VALUES (7, 'yuwenjie', '$2y$10$YflAaPVVXfLA7PXSQWJu3Oi8E4IjrlYKlsT.5ABvVN/hy6WSreu22', '于文洁', NULL, NULL, '2022-03-18 18:43:09', '2022-03-18 18:43:09');
+INSERT INTO `admin_users` VALUES (8, 'bianshuting', '$2y$10$H9ocYfu0b0rpY0xBmQIxyuJ8HuV5ovdk.z2x5OEuwW2lN4tiojNoa', '边淑婷', NULL, NULL, '2022-03-18 18:43:41', '2022-03-18 18:43:41');
+INSERT INTO `admin_users` VALUES (9, 'zhouziqi', '$2y$10$nmlsvN6lo0aFxOF1w97YvuHXXZ5JFdc8uVYnF7jaJ0RUOhjfWyOGa', '周子琦', NULL, NULL, '2022-03-18 18:44:10', '2022-03-18 18:44:10');
+INSERT INTO `admin_users` VALUES (10, 'pengyixuan', '$2y$10$3lNUX//gb5RbagG8a.JgVOHxNJnz2MO2e1.BK4ihtlFSV.LrLJ2dy', '彭一轩', NULL, NULL, '2022-03-18 18:44:38', '2022-03-18 18:44:38');
+INSERT INTO `admin_users` VALUES (11, 'songchengcheng', '$2y$10$wD4AYxIK4or3gq4DovAdreoePqOeug2Ewg1g8Btd3dsgPhzkVZBiK', '宋城成', NULL, NULL, '2022-03-18 18:45:25', '2022-03-18 18:45:25');
+INSERT INTO `admin_users` VALUES (12, 'libin', '$2y$10$AQaqhN86TbR6phe80AyJBOh/1XpZvmesIOj8Xj4s3HaBNa7JuVMx6', '李斌', NULL, NULL, '2022-03-18 18:46:39', '2022-03-18 18:46:39');
+
 -- ----------------------------
 -- Records of admin_menu
 -- ----------------------------
+TRUNCATE TABLE `admin_menu`;
 INSERT INTO `admin_menu` VALUES (1, 0, 1, 'Index', 'feather icon-bar-chart-2', '/', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
 INSERT INTO `admin_menu` VALUES (2, 0, 2, 'Softwares_Management', NULL, NULL, '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
 INSERT INTO `admin_menu` VALUES (3, 2, 3, 'Software_Adaptions', NULL, 'sbinds', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
@@ -185,6 +202,259 @@ INSERT INTO `admin_permission_menu` VALUES (45, 26, '2022-03-23 12:21:42', '2022
 INSERT INTO `admin_permission_menu` VALUES (45, 27, '2022-03-23 12:21:42', '2022-03-23 12:21:42');
 INSERT INTO `admin_permission_menu` VALUES (45, 39, '2022-03-23 12:21:42', '2022-03-23 12:21:42');
 INSERT INTO `admin_permission_menu` VALUES (53, 38, '2022-03-23 12:22:01', '2022-03-23 12:22:01');
+
+-- ----------------------------
+-- Records of admin_roles
+-- ----------------------------
+TRUNCATE TABLE `admin_roles`;
+INSERT INTO `admin_roles` VALUES (1, '系统管理员', 'administrator', '2022-03-18 17:42:21', '2022-03-18 18:40:17');
+INSERT INTO `admin_roles` VALUES (2, '普通用户', 'common_user', '2022-03-18 18:35:40', '2022-03-18 18:35:40');
+INSERT INTO `admin_roles` VALUES (3, '生态BD', 'eco_bd', '2022-03-18 18:36:26', '2022-03-18 18:36:26');
+INSERT INTO `admin_roles` VALUES (4, '适配测试工程师', 'adapt_tester', '2022-03-18 18:37:26', '2022-03-18 18:37:26');
+INSERT INTO `admin_roles` VALUES (5, '适配支撑工程师', 'adapt_technical', '2022-03-18 18:38:19', '2022-03-18 18:38:19');
+INSERT INTO `admin_roles` VALUES (6, '适配数据管理员', 'adapt_data_manager', '2022-03-18 18:39:42', '2022-03-18 18:39:42');
+
+-- ----------------------------
+-- Records of admin_role_permissions
+-- ----------------------------
+INSERT INTO `admin_role_permissions` VALUES (1, 2, '2022-03-18 18:40:17', '2022-03-18 18:40:17');
+INSERT INTO `admin_role_permissions` VALUES (1, 3, '2022-03-18 18:40:17', '2022-03-18 18:40:17');
+INSERT INTO `admin_role_permissions` VALUES (1, 4, '2022-03-18 18:40:17', '2022-03-18 18:40:17');
+INSERT INTO `admin_role_permissions` VALUES (1, 5, '2022-03-18 18:40:17', '2022-03-18 18:40:17');
+INSERT INTO `admin_role_permissions` VALUES (1, 6, '2022-03-18 18:40:17', '2022-03-18 18:40:17');
+INSERT INTO `admin_role_permissions` VALUES (1, 14, '2022-03-18 18:40:17', '2022-03-18 18:40:17');
+INSERT INTO `admin_role_permissions` VALUES (1, 15, '2022-03-18 18:40:17', '2022-03-18 18:40:17');
+INSERT INTO `admin_role_permissions` VALUES (1, 16, '2022-03-18 18:40:17', '2022-03-18 18:40:17');
+INSERT INTO `admin_role_permissions` VALUES (1, 17, '2022-03-18 18:40:17', '2022-03-18 18:40:17');
+INSERT INTO `admin_role_permissions` VALUES (1, 18, '2022-03-18 18:40:17', '2022-03-18 18:40:17');
+INSERT INTO `admin_role_permissions` VALUES (1, 19, '2022-03-18 18:40:17', '2022-03-18 18:40:17');
+INSERT INTO `admin_role_permissions` VALUES (1, 20, '2022-03-18 18:40:17', '2022-03-18 18:40:17');
+INSERT INTO `admin_role_permissions` VALUES (1, 22, '2022-03-18 18:40:17', '2022-03-18 18:40:17');
+INSERT INTO `admin_role_permissions` VALUES (1, 23, '2022-03-18 18:40:17', '2022-03-18 18:40:17');
+INSERT INTO `admin_role_permissions` VALUES (1, 24, '2022-03-18 18:40:17', '2022-03-18 18:40:17');
+INSERT INTO `admin_role_permissions` VALUES (1, 25, '2022-03-18 18:40:17', '2022-03-18 18:40:17');
+INSERT INTO `admin_role_permissions` VALUES (1, 26, '2022-03-18 18:40:17', '2022-03-18 18:40:17');
+INSERT INTO `admin_role_permissions` VALUES (1, 27, '2022-03-18 18:40:17', '2022-03-18 18:40:17');
+INSERT INTO `admin_role_permissions` VALUES (1, 28, '2022-03-18 18:40:17', '2022-03-18 18:40:17');
+INSERT INTO `admin_role_permissions` VALUES (1, 30, '2022-03-18 18:40:17', '2022-03-18 18:40:17');
+INSERT INTO `admin_role_permissions` VALUES (1, 31, '2022-03-18 18:40:17', '2022-03-18 18:40:17');
+INSERT INTO `admin_role_permissions` VALUES (1, 32, '2022-03-18 18:40:17', '2022-03-18 18:40:17');
+INSERT INTO `admin_role_permissions` VALUES (1, 33, '2022-03-18 18:40:17', '2022-03-18 18:40:17');
+INSERT INTO `admin_role_permissions` VALUES (1, 34, '2022-03-18 18:40:17', '2022-03-18 18:40:17');
+INSERT INTO `admin_role_permissions` VALUES (1, 35, '2022-03-18 18:40:17', '2022-03-18 18:40:17');
+INSERT INTO `admin_role_permissions` VALUES (1, 36, '2022-03-18 18:40:17', '2022-03-18 18:40:17');
+INSERT INTO `admin_role_permissions` VALUES (1, 38, '2022-03-18 18:40:17', '2022-03-18 18:40:17');
+INSERT INTO `admin_role_permissions` VALUES (1, 39, '2022-03-18 18:40:17', '2022-03-18 18:40:17');
+INSERT INTO `admin_role_permissions` VALUES (1, 40, '2022-03-18 18:40:17', '2022-03-18 18:40:17');
+INSERT INTO `admin_role_permissions` VALUES (1, 41, '2022-03-18 18:40:17', '2022-03-18 18:40:17');
+INSERT INTO `admin_role_permissions` VALUES (1, 42, '2022-03-18 18:40:17', '2022-03-18 18:40:17');
+INSERT INTO `admin_role_permissions` VALUES (1, 43, '2022-03-18 18:40:17', '2022-03-18 18:40:17');
+INSERT INTO `admin_role_permissions` VALUES (1, 44, '2022-03-18 18:40:17', '2022-03-18 18:40:17');
+INSERT INTO `admin_role_permissions` VALUES (1, 46, '2022-03-18 18:40:17', '2022-03-18 18:40:17');
+INSERT INTO `admin_role_permissions` VALUES (1, 47, '2022-03-18 18:40:17', '2022-03-18 18:40:17');
+INSERT INTO `admin_role_permissions` VALUES (1, 48, '2022-03-18 18:40:17', '2022-03-18 18:40:17');
+INSERT INTO `admin_role_permissions` VALUES (1, 49, '2022-03-18 18:40:17', '2022-03-18 18:40:17');
+INSERT INTO `admin_role_permissions` VALUES (1, 50, '2022-03-18 18:40:17', '2022-03-18 18:40:17');
+INSERT INTO `admin_role_permissions` VALUES (1, 51, '2022-03-18 18:40:17', '2022-03-18 18:40:17');
+INSERT INTO `admin_role_permissions` VALUES (1, 52, '2022-03-18 18:40:17', '2022-03-18 18:40:17');
+INSERT INTO `admin_role_permissions` VALUES (1, 53, '2022-03-18 18:40:17', '2022-03-18 18:40:17');
+INSERT INTO `admin_role_permissions` VALUES (2, 14, '2022-03-18 18:35:40', '2022-03-18 18:35:40');
+INSERT INTO `admin_role_permissions` VALUES (2, 20, '2022-03-18 18:35:40', '2022-03-18 18:35:40');
+INSERT INTO `admin_role_permissions` VALUES (2, 22, '2022-03-18 18:35:40', '2022-03-18 18:35:40');
+INSERT INTO `admin_role_permissions` VALUES (2, 28, '2022-03-18 18:35:40', '2022-03-18 18:35:40');
+INSERT INTO `admin_role_permissions` VALUES (2, 30, '2022-03-18 18:35:40', '2022-03-18 18:35:40');
+INSERT INTO `admin_role_permissions` VALUES (2, 36, '2022-03-18 18:35:40', '2022-03-18 18:35:40');
+INSERT INTO `admin_role_permissions` VALUES (2, 38, '2022-03-18 18:35:40', '2022-03-18 18:35:40');
+INSERT INTO `admin_role_permissions` VALUES (2, 44, '2022-03-18 18:35:40', '2022-03-18 18:35:40');
+INSERT INTO `admin_role_permissions` VALUES (2, 53, '2022-03-18 18:35:40', '2022-03-18 18:35:40');
+INSERT INTO `admin_role_permissions` VALUES (3, 14, '2022-03-18 18:36:26', '2022-03-18 18:36:26');
+INSERT INTO `admin_role_permissions` VALUES (3, 15, '2022-03-18 18:36:26', '2022-03-18 18:36:26');
+INSERT INTO `admin_role_permissions` VALUES (3, 16, '2022-03-18 18:36:26', '2022-03-18 18:36:26');
+INSERT INTO `admin_role_permissions` VALUES (3, 17, '2022-03-18 18:36:26', '2022-03-18 18:36:26');
+INSERT INTO `admin_role_permissions` VALUES (3, 18, '2022-03-18 18:36:26', '2022-03-18 18:36:26');
+INSERT INTO `admin_role_permissions` VALUES (3, 19, '2022-03-18 18:36:26', '2022-03-18 18:36:26');
+INSERT INTO `admin_role_permissions` VALUES (3, 20, '2022-03-18 18:36:26', '2022-03-18 18:36:26');
+INSERT INTO `admin_role_permissions` VALUES (3, 22, '2022-03-18 18:36:26', '2022-03-18 18:36:26');
+INSERT INTO `admin_role_permissions` VALUES (3, 23, '2022-03-18 18:36:26', '2022-03-18 18:36:26');
+INSERT INTO `admin_role_permissions` VALUES (3, 24, '2022-03-18 18:36:26', '2022-03-18 18:36:26');
+INSERT INTO `admin_role_permissions` VALUES (3, 25, '2022-03-18 18:36:26', '2022-03-18 18:36:26');
+INSERT INTO `admin_role_permissions` VALUES (3, 26, '2022-03-18 18:36:26', '2022-03-18 18:36:26');
+INSERT INTO `admin_role_permissions` VALUES (3, 27, '2022-03-18 18:36:26', '2022-03-18 18:36:26');
+INSERT INTO `admin_role_permissions` VALUES (3, 28, '2022-03-18 18:36:26', '2022-03-18 18:36:26');
+INSERT INTO `admin_role_permissions` VALUES (3, 30, '2022-03-18 18:36:26', '2022-03-18 18:36:26');
+INSERT INTO `admin_role_permissions` VALUES (3, 31, '2022-03-18 18:36:26', '2022-03-18 18:36:26');
+INSERT INTO `admin_role_permissions` VALUES (3, 32, '2022-03-18 18:36:26', '2022-03-18 18:36:26');
+INSERT INTO `admin_role_permissions` VALUES (3, 33, '2022-03-18 18:36:26', '2022-03-18 18:36:26');
+INSERT INTO `admin_role_permissions` VALUES (3, 34, '2022-03-18 18:36:26', '2022-03-18 18:36:26');
+INSERT INTO `admin_role_permissions` VALUES (3, 35, '2022-03-18 18:36:26', '2022-03-18 18:36:26');
+INSERT INTO `admin_role_permissions` VALUES (3, 36, '2022-03-18 18:36:26', '2022-03-18 18:36:26');
+INSERT INTO `admin_role_permissions` VALUES (3, 38, '2022-03-18 18:36:26', '2022-03-18 18:36:26');
+INSERT INTO `admin_role_permissions` VALUES (3, 39, '2022-03-18 18:36:26', '2022-03-18 18:36:26');
+INSERT INTO `admin_role_permissions` VALUES (3, 40, '2022-03-18 18:36:26', '2022-03-18 18:36:26');
+INSERT INTO `admin_role_permissions` VALUES (3, 41, '2022-03-18 18:36:26', '2022-03-18 18:36:26');
+INSERT INTO `admin_role_permissions` VALUES (3, 42, '2022-03-18 18:36:26', '2022-03-18 18:36:26');
+INSERT INTO `admin_role_permissions` VALUES (3, 43, '2022-03-18 18:36:26', '2022-03-18 18:36:26');
+INSERT INTO `admin_role_permissions` VALUES (3, 44, '2022-03-18 18:36:26', '2022-03-18 18:36:26');
+INSERT INTO `admin_role_permissions` VALUES (3, 46, '2022-03-18 18:36:26', '2022-03-18 18:36:26');
+INSERT INTO `admin_role_permissions` VALUES (3, 47, '2022-03-18 18:36:26', '2022-03-18 18:36:26');
+INSERT INTO `admin_role_permissions` VALUES (3, 48, '2022-03-18 18:36:26', '2022-03-18 18:36:26');
+INSERT INTO `admin_role_permissions` VALUES (3, 49, '2022-03-18 18:36:26', '2022-03-18 18:36:26');
+INSERT INTO `admin_role_permissions` VALUES (3, 50, '2022-03-18 18:36:26', '2022-03-18 18:36:26');
+INSERT INTO `admin_role_permissions` VALUES (3, 51, '2022-03-18 18:36:26', '2022-03-18 18:36:26');
+INSERT INTO `admin_role_permissions` VALUES (3, 52, '2022-03-18 18:36:26', '2022-03-18 18:36:26');
+INSERT INTO `admin_role_permissions` VALUES (3, 53, '2022-03-18 18:36:26', '2022-03-18 18:36:26');
+INSERT INTO `admin_role_permissions` VALUES (4, 14, '2022-03-18 18:37:26', '2022-03-18 18:37:26');
+INSERT INTO `admin_role_permissions` VALUES (4, 15, '2022-03-18 18:37:26', '2022-03-18 18:37:26');
+INSERT INTO `admin_role_permissions` VALUES (4, 16, '2022-03-18 18:37:26', '2022-03-18 18:37:26');
+INSERT INTO `admin_role_permissions` VALUES (4, 17, '2022-03-18 18:37:26', '2022-03-18 18:37:26');
+INSERT INTO `admin_role_permissions` VALUES (4, 18, '2022-03-18 18:37:26', '2022-03-18 18:37:26');
+INSERT INTO `admin_role_permissions` VALUES (4, 19, '2022-03-18 18:37:26', '2022-03-18 18:37:26');
+INSERT INTO `admin_role_permissions` VALUES (4, 20, '2022-03-18 18:37:26', '2022-03-18 18:37:26');
+INSERT INTO `admin_role_permissions` VALUES (4, 22, '2022-03-18 18:37:26', '2022-03-18 18:37:26');
+INSERT INTO `admin_role_permissions` VALUES (4, 23, '2022-03-18 18:37:26', '2022-03-18 18:37:26');
+INSERT INTO `admin_role_permissions` VALUES (4, 24, '2022-03-18 18:37:26', '2022-03-18 18:37:26');
+INSERT INTO `admin_role_permissions` VALUES (4, 25, '2022-03-18 18:37:26', '2022-03-18 18:37:26');
+INSERT INTO `admin_role_permissions` VALUES (4, 26, '2022-03-18 18:37:26', '2022-03-18 18:37:26');
+INSERT INTO `admin_role_permissions` VALUES (4, 27, '2022-03-18 18:37:26', '2022-03-18 18:37:26');
+INSERT INTO `admin_role_permissions` VALUES (4, 28, '2022-03-18 18:37:26', '2022-03-18 18:37:26');
+INSERT INTO `admin_role_permissions` VALUES (4, 30, '2022-03-18 18:37:26', '2022-03-18 18:37:26');
+INSERT INTO `admin_role_permissions` VALUES (4, 31, '2022-03-18 18:37:26', '2022-03-18 18:37:26');
+INSERT INTO `admin_role_permissions` VALUES (4, 32, '2022-03-18 18:37:26', '2022-03-18 18:37:26');
+INSERT INTO `admin_role_permissions` VALUES (4, 33, '2022-03-18 18:37:26', '2022-03-18 18:37:26');
+INSERT INTO `admin_role_permissions` VALUES (4, 34, '2022-03-18 18:37:26', '2022-03-18 18:37:26');
+INSERT INTO `admin_role_permissions` VALUES (4, 35, '2022-03-18 18:37:26', '2022-03-18 18:37:26');
+INSERT INTO `admin_role_permissions` VALUES (4, 36, '2022-03-18 18:37:26', '2022-03-18 18:37:26');
+INSERT INTO `admin_role_permissions` VALUES (4, 38, '2022-03-18 18:37:26', '2022-03-18 18:37:26');
+INSERT INTO `admin_role_permissions` VALUES (4, 39, '2022-03-18 18:37:26', '2022-03-18 18:37:26');
+INSERT INTO `admin_role_permissions` VALUES (4, 40, '2022-03-18 18:37:26', '2022-03-18 18:37:26');
+INSERT INTO `admin_role_permissions` VALUES (4, 41, '2022-03-18 18:37:26', '2022-03-18 18:37:26');
+INSERT INTO `admin_role_permissions` VALUES (4, 42, '2022-03-18 18:37:26', '2022-03-18 18:37:26');
+INSERT INTO `admin_role_permissions` VALUES (4, 43, '2022-03-18 18:37:26', '2022-03-18 18:37:26');
+INSERT INTO `admin_role_permissions` VALUES (4, 44, '2022-03-18 18:37:26', '2022-03-18 18:37:26');
+INSERT INTO `admin_role_permissions` VALUES (4, 46, '2022-03-18 18:37:26', '2022-03-18 18:37:26');
+INSERT INTO `admin_role_permissions` VALUES (4, 47, '2022-03-18 18:37:26', '2022-03-18 18:37:26');
+INSERT INTO `admin_role_permissions` VALUES (4, 48, '2022-03-18 18:37:26', '2022-03-18 18:37:26');
+INSERT INTO `admin_role_permissions` VALUES (4, 49, '2022-03-18 18:37:26', '2022-03-18 18:37:26');
+INSERT INTO `admin_role_permissions` VALUES (4, 50, '2022-03-18 18:37:26', '2022-03-18 18:37:26');
+INSERT INTO `admin_role_permissions` VALUES (4, 51, '2022-03-18 18:37:26', '2022-03-18 18:37:26');
+INSERT INTO `admin_role_permissions` VALUES (4, 52, '2022-03-18 18:37:26', '2022-03-18 18:37:26');
+INSERT INTO `admin_role_permissions` VALUES (4, 53, '2022-03-18 18:37:26', '2022-03-18 18:37:26');
+INSERT INTO `admin_role_permissions` VALUES (5, 14, '2022-03-18 18:38:19', '2022-03-18 18:38:19');
+INSERT INTO `admin_role_permissions` VALUES (5, 15, '2022-03-18 18:38:19', '2022-03-18 18:38:19');
+INSERT INTO `admin_role_permissions` VALUES (5, 16, '2022-03-18 18:38:19', '2022-03-18 18:38:19');
+INSERT INTO `admin_role_permissions` VALUES (5, 17, '2022-03-18 18:38:19', '2022-03-18 18:38:19');
+INSERT INTO `admin_role_permissions` VALUES (5, 18, '2022-03-18 18:38:19', '2022-03-18 18:38:19');
+INSERT INTO `admin_role_permissions` VALUES (5, 19, '2022-03-18 18:38:19', '2022-03-18 18:38:19');
+INSERT INTO `admin_role_permissions` VALUES (5, 20, '2022-03-18 18:38:19', '2022-03-18 18:38:19');
+INSERT INTO `admin_role_permissions` VALUES (5, 22, '2022-03-18 18:38:19', '2022-03-18 18:38:19');
+INSERT INTO `admin_role_permissions` VALUES (5, 23, '2022-03-18 18:38:19', '2022-03-18 18:38:19');
+INSERT INTO `admin_role_permissions` VALUES (5, 24, '2022-03-18 18:38:19', '2022-03-18 18:38:19');
+INSERT INTO `admin_role_permissions` VALUES (5, 25, '2022-03-18 18:38:19', '2022-03-18 18:38:19');
+INSERT INTO `admin_role_permissions` VALUES (5, 26, '2022-03-18 18:38:19', '2022-03-18 18:38:19');
+INSERT INTO `admin_role_permissions` VALUES (5, 27, '2022-03-18 18:38:19', '2022-03-18 18:38:19');
+INSERT INTO `admin_role_permissions` VALUES (5, 28, '2022-03-18 18:38:19', '2022-03-18 18:38:19');
+INSERT INTO `admin_role_permissions` VALUES (5, 30, '2022-03-18 18:38:19', '2022-03-18 18:38:19');
+INSERT INTO `admin_role_permissions` VALUES (5, 31, '2022-03-18 18:38:19', '2022-03-18 18:38:19');
+INSERT INTO `admin_role_permissions` VALUES (5, 32, '2022-03-18 18:38:19', '2022-03-18 18:38:19');
+INSERT INTO `admin_role_permissions` VALUES (5, 33, '2022-03-18 18:38:19', '2022-03-18 18:38:19');
+INSERT INTO `admin_role_permissions` VALUES (5, 34, '2022-03-18 18:38:19', '2022-03-18 18:38:19');
+INSERT INTO `admin_role_permissions` VALUES (5, 35, '2022-03-18 18:38:19', '2022-03-18 18:38:19');
+INSERT INTO `admin_role_permissions` VALUES (5, 36, '2022-03-18 18:38:19', '2022-03-18 18:38:19');
+INSERT INTO `admin_role_permissions` VALUES (5, 38, '2022-03-18 18:38:19', '2022-03-18 18:38:19');
+INSERT INTO `admin_role_permissions` VALUES (5, 39, '2022-03-18 18:38:19', '2022-03-18 18:38:19');
+INSERT INTO `admin_role_permissions` VALUES (5, 40, '2022-03-18 18:38:19', '2022-03-18 18:38:19');
+INSERT INTO `admin_role_permissions` VALUES (5, 41, '2022-03-18 18:38:19', '2022-03-18 18:38:19');
+INSERT INTO `admin_role_permissions` VALUES (5, 42, '2022-03-18 18:38:19', '2022-03-18 18:38:19');
+INSERT INTO `admin_role_permissions` VALUES (5, 43, '2022-03-18 18:38:19', '2022-03-18 18:38:19');
+INSERT INTO `admin_role_permissions` VALUES (5, 44, '2022-03-18 18:38:19', '2022-03-18 18:38:19');
+INSERT INTO `admin_role_permissions` VALUES (5, 46, '2022-03-18 18:38:19', '2022-03-18 18:38:19');
+INSERT INTO `admin_role_permissions` VALUES (5, 47, '2022-03-18 18:38:19', '2022-03-18 18:38:19');
+INSERT INTO `admin_role_permissions` VALUES (5, 48, '2022-03-18 18:38:19', '2022-03-18 18:38:19');
+INSERT INTO `admin_role_permissions` VALUES (5, 49, '2022-03-18 18:38:19', '2022-03-18 18:38:19');
+INSERT INTO `admin_role_permissions` VALUES (5, 50, '2022-03-18 18:38:19', '2022-03-18 18:38:19');
+INSERT INTO `admin_role_permissions` VALUES (5, 51, '2022-03-18 18:38:19', '2022-03-18 18:38:19');
+INSERT INTO `admin_role_permissions` VALUES (5, 52, '2022-03-18 18:38:19', '2022-03-18 18:38:19');
+INSERT INTO `admin_role_permissions` VALUES (5, 53, '2022-03-18 18:38:19', '2022-03-18 18:38:19');
+INSERT INTO `admin_role_permissions` VALUES (6, 14, '2022-03-18 18:39:42', '2022-03-18 18:39:42');
+INSERT INTO `admin_role_permissions` VALUES (6, 15, '2022-03-18 18:39:42', '2022-03-18 18:39:42');
+INSERT INTO `admin_role_permissions` VALUES (6, 16, '2022-03-18 18:39:42', '2022-03-18 18:39:42');
+INSERT INTO `admin_role_permissions` VALUES (6, 17, '2022-03-18 18:39:42', '2022-03-18 18:39:42');
+INSERT INTO `admin_role_permissions` VALUES (6, 18, '2022-03-18 18:39:42', '2022-03-18 18:39:42');
+INSERT INTO `admin_role_permissions` VALUES (6, 19, '2022-03-18 18:39:42', '2022-03-18 18:39:42');
+INSERT INTO `admin_role_permissions` VALUES (6, 20, '2022-03-18 18:39:42', '2022-03-18 18:39:42');
+INSERT INTO `admin_role_permissions` VALUES (6, 22, '2022-03-18 18:39:42', '2022-03-18 18:39:42');
+INSERT INTO `admin_role_permissions` VALUES (6, 23, '2022-03-18 18:39:42', '2022-03-18 18:39:42');
+INSERT INTO `admin_role_permissions` VALUES (6, 24, '2022-03-18 18:39:42', '2022-03-18 18:39:42');
+INSERT INTO `admin_role_permissions` VALUES (6, 25, '2022-03-18 18:39:42', '2022-03-18 18:39:42');
+INSERT INTO `admin_role_permissions` VALUES (6, 26, '2022-03-18 18:39:42', '2022-03-18 18:39:42');
+INSERT INTO `admin_role_permissions` VALUES (6, 27, '2022-03-18 18:39:42', '2022-03-18 18:39:42');
+INSERT INTO `admin_role_permissions` VALUES (6, 28, '2022-03-18 18:39:42', '2022-03-18 18:39:42');
+INSERT INTO `admin_role_permissions` VALUES (6, 30, '2022-03-18 18:39:42', '2022-03-18 18:39:42');
+INSERT INTO `admin_role_permissions` VALUES (6, 31, '2022-03-18 18:39:42', '2022-03-18 18:39:42');
+INSERT INTO `admin_role_permissions` VALUES (6, 32, '2022-03-18 18:39:42', '2022-03-18 18:39:42');
+INSERT INTO `admin_role_permissions` VALUES (6, 33, '2022-03-18 18:39:42', '2022-03-18 18:39:42');
+INSERT INTO `admin_role_permissions` VALUES (6, 34, '2022-03-18 18:39:42', '2022-03-18 18:39:42');
+INSERT INTO `admin_role_permissions` VALUES (6, 35, '2022-03-18 18:39:42', '2022-03-18 18:39:42');
+INSERT INTO `admin_role_permissions` VALUES (6, 36, '2022-03-18 18:39:42', '2022-03-18 18:39:42');
+INSERT INTO `admin_role_permissions` VALUES (6, 38, '2022-03-18 18:39:42', '2022-03-18 18:39:42');
+INSERT INTO `admin_role_permissions` VALUES (6, 39, '2022-03-18 18:39:42', '2022-03-18 18:39:42');
+INSERT INTO `admin_role_permissions` VALUES (6, 40, '2022-03-18 18:39:42', '2022-03-18 18:39:42');
+INSERT INTO `admin_role_permissions` VALUES (6, 41, '2022-03-18 18:39:42', '2022-03-18 18:39:42');
+INSERT INTO `admin_role_permissions` VALUES (6, 42, '2022-03-18 18:39:42', '2022-03-18 18:39:42');
+INSERT INTO `admin_role_permissions` VALUES (6, 43, '2022-03-18 18:39:42', '2022-03-18 18:39:42');
+INSERT INTO `admin_role_permissions` VALUES (6, 44, '2022-03-18 18:39:42', '2022-03-18 18:39:42');
+INSERT INTO `admin_role_permissions` VALUES (6, 46, '2022-03-18 18:39:42', '2022-03-18 18:39:42');
+INSERT INTO `admin_role_permissions` VALUES (6, 47, '2022-03-18 18:39:42', '2022-03-18 18:39:42');
+INSERT INTO `admin_role_permissions` VALUES (6, 48, '2022-03-18 18:39:42', '2022-03-18 18:39:42');
+INSERT INTO `admin_role_permissions` VALUES (6, 49, '2022-03-18 18:39:42', '2022-03-18 18:39:42');
+INSERT INTO `admin_role_permissions` VALUES (6, 50, '2022-03-18 18:39:42', '2022-03-18 18:39:42');
+INSERT INTO `admin_role_permissions` VALUES (6, 51, '2022-03-18 18:39:42', '2022-03-18 18:39:42');
+INSERT INTO `admin_role_permissions` VALUES (6, 52, '2022-03-18 18:39:42', '2022-03-18 18:39:42');
+INSERT INTO `admin_role_permissions` VALUES (6, 53, '2022-03-18 18:39:42', '2022-03-18 18:39:42');
+
+-- ----------------------------
+-- Records of admin_role_users
+-- ----------------------------
+TRUNCATE TABLE `admin_role_users`;
+INSERT INTO `admin_role_users` (`role_id`, `user_id`, `created_at`, `updated_at`) VALUES (1, 1, '2022-03-18 17:42:21', '2022-03-18 17:42:21');
+INSERT INTO `admin_role_users` (`role_id`, `user_id`, `created_at`, `updated_at`) VALUES (1, 8, '2022-03-18 18:43:41', '2022-03-18 18:43:41');
+INSERT INTO `admin_role_users` (`role_id`, `user_id`, `created_at`, `updated_at`) VALUES (1, 9, '2022-03-18 18:44:10', '2022-03-18 18:44:10');
+INSERT INTO `admin_role_users` (`role_id`, `user_id`, `created_at`, `updated_at`) VALUES (1, 10, '2022-03-18 18:44:38', '2022-03-18 18:44:38');
+INSERT INTO `admin_role_users` (`role_id`, `user_id`, `created_at`, `updated_at`) VALUES (1, 11, '2022-03-18 18:45:25', '2022-03-18 18:45:25');
+INSERT INTO `admin_role_users` (`role_id`, `user_id`, `created_at`, `updated_at`) VALUES (2, 12, '2022-03-18 18:46:39', '2022-03-18 18:46:39');
+INSERT INTO `admin_role_users` (`role_id`, `user_id`, `created_at`, `updated_at`) VALUES (3, 2, '2022-03-18 18:41:00', '2022-03-18 18:41:00');
+INSERT INTO `admin_role_users` (`role_id`, `user_id`, `created_at`, `updated_at`) VALUES (3, 3, '2022-03-18 18:41:24', '2022-03-18 18:41:24');
+INSERT INTO `admin_role_users` (`role_id`, `user_id`, `created_at`, `updated_at`) VALUES (4, 4, '2022-03-18 18:41:49', '2022-03-18 18:41:49');
+INSERT INTO `admin_role_users` (`role_id`, `user_id`, `created_at`, `updated_at`) VALUES (4, 5, '2022-03-18 18:42:17', '2022-03-18 18:42:17');
+INSERT INTO `admin_role_users` (`role_id`, `user_id`, `created_at`, `updated_at`) VALUES (4, 6, '2022-03-18 18:42:44', '2022-03-18 18:42:44');
+INSERT INTO `admin_role_users` (`role_id`, `user_id`, `created_at`, `updated_at`) VALUES (5, 7, '2022-03-18 18:43:09', '2022-03-18 18:43:09');
+
+-- ----------------------------
+-- Records of releases
+-- ----------------------------
+INSERT INTO `releases` (`id`, `name`, `abbr`, `release_date`, `eosl_date`, `created_at`, `updated_at`) VALUES (1, '银河麒麟桌面操作系统V10SP1', '桌面V10SP1', NULL, NULL, '2022-03-18 18:29:36', '2022-03-18 18:29:36');
+INSERT INTO `releases` (`id`, `name`, `abbr`, `release_date`, `eosl_date`, `created_at`, `updated_at`) VALUES (2, '银河麒麟桌面操作系统V10', '桌面V10', NULL, NULL, '2022-03-18 18:29:52', '2022-03-18 18:29:52');
+INSERT INTO `releases` (`id`, `name`, `abbr`, `release_date`, `eosl_date`, `created_at`, `updated_at`) VALUES (3, '银河麒麟桌面操作系统V4', '桌面V4', NULL, NULL, '2022-03-18 18:30:07', '2022-03-18 18:30:07');
+INSERT INTO `releases` (`id`, `name`, `abbr`, `release_date`, `eosl_date`, `created_at`, `updated_at`) VALUES (4, '中标麒麟桌面操作系统V7', '桌面V7', NULL, NULL, '2022-03-18 18:30:20', '2022-03-18 18:30:20');
+INSERT INTO `releases` (`id`, `name`, `abbr`, `release_date`, `eosl_date`, `created_at`, `updated_at`) VALUES (5, '银河麒麟服务器操作系统V10SP1', '服务器V10SP1', NULL, NULL, '2022-03-18 18:30:35', '2022-03-18 18:30:35');
+INSERT INTO `releases` (`id`, `name`, `abbr`, `release_date`, `eosl_date`, `created_at`, `updated_at`) VALUES (6, '银河麒麟服务器操作系统V10', '服务器V10', NULL, NULL, '2022-03-18 18:30:48', '2022-03-18 18:30:48');
+INSERT INTO `releases` (`id`, `name`, `abbr`, `release_date`, `eosl_date`, `created_at`, `updated_at`) VALUES (7, '银河麒麟服务器操作系统V4', '服务器V4', NULL, NULL, '2022-03-18 18:31:05', '2022-03-18 18:31:05');
+INSERT INTO `releases` (`id`, `name`, `abbr`, `release_date`, `eosl_date`, `created_at`, `updated_at`) VALUES (8, '中标麒麟服务器操作系统V7', '服务器V7', NULL, NULL, '2022-03-18 18:31:24', '2022-03-18 18:31:24');
+
+-- ----------------------------
+-- Records of chips
+-- ----------------------------
+INSERT INTO `chips` (`id`, `name`, `arch`, `created_at`, `updated_at`) VALUES (1, '飞腾', 'arm64', '2022-03-18 18:31:55', '2022-03-18 18:31:55');
+INSERT INTO `chips` (`id`, `name`, `arch`, `created_at`, `updated_at`) VALUES (2, '鲲鹏', 'arm64', '2022-03-18 18:32:04', '2022-03-18 18:32:04');
+INSERT INTO `chips` (`id`, `name`, `arch`, `created_at`, `updated_at`) VALUES (3, '兆芯', 'amd64', '2022-03-18 18:32:18', '2022-03-18 18:32:18');
+INSERT INTO `chips` (`id`, `name`, `arch`, `created_at`, `updated_at`) VALUES (4, '海光', 'amd64', '2022-03-18 18:32:26', '2022-03-18 18:32:26');
+INSERT INTO `chips` (`id`, `name`, `arch`, `created_at`, `updated_at`) VALUES (5, '龙芯MIPS', 'mips64el', '2022-03-18 18:32:40', '2022-03-18 18:32:40');
+INSERT INTO `chips` (`id`, `name`, `arch`, `created_at`, `updated_at`) VALUES (6, '龙芯LoongArch', 'loongarch64', '2022-03-18 18:32:49', '2022-03-18 18:32:49');
+INSERT INTO `chips` (`id`, `name`, `arch`, `created_at`, `updated_at`) VALUES (7, '申威', 'sw64', '2022-03-18 18:33:02', '2022-03-18 18:33:02');
+INSERT INTO `chips` (`id`, `name`, `arch`, `created_at`, `updated_at`) VALUES (8, 'AMD', 'amd64', '2022-03-18 18:33:14', '2022-03-18 18:33:14');
+INSERT INTO `chips` (`id`, `name`, `arch`, `created_at`, `updated_at`) VALUES (9, 'Intel', 'amd64', '2022-03-18 18:33:24', '2022-03-18 18:33:24');
+INSERT INTO `chips` (`id`, `name`, `arch`, `created_at`, `updated_at`) VALUES (10, '海思麒麟990', 'arm64', '2022-03-18 18:33:36', '2022-03-18 18:33:36');
+INSERT INTO `chips` (`id`, `name`, `arch`, `created_at`, `updated_at`) VALUES (11, '海思麒麟9006c', 'arm64', '2022-03-18 18:33:45', '2022-03-18 18:33:45');
 
 -- ----------------------------
 -- Records of industries
