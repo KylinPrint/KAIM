@@ -19,7 +19,7 @@ class TypeController extends AdminController
     protected function grid()
     {
         return Grid::make(new Type(), function (Grid $grid) {
-            $grid->column('id')->sortable();
+            // $grid->column('id')->sortable();
             $grid->column('parent')->display(function($parent){
                 return Type::where('id',$parent)->pluck('name')->first();
             });

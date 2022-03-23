@@ -21,12 +21,11 @@ class SoftwareController extends AdminController
     protected function grid()
     {
         return Grid::make(Software::with(['manufactors','stypes']), function (Grid $grid) {
-            $grid->column('id')->sortable();
+            // $grid->column('id')->sortable();
             $grid->column('name');
             $grid->column('manufactors.name',__('厂商'));
             $grid->column('version');
 
-            $grid->column('packagename');
             $grid->column('stypes.name',__('类型'));
             $grid->column('industries')->pluck('name')->badge();
             $grid->column('appstore_soft')->display(function ($value) {
@@ -105,8 +104,7 @@ class SoftwareController extends AdminController
             $form->display('id');
             $form->text('name')->required();
             $form->select('manufactors_id')->options(Manufactor::all()->pluck('name','id'))->required();
-            $form->text('version');
-            $form->text('packagename');
+            $form->text('version')->required();
             $form->select('stypes_id', __('类型'))->options(Stype::where('parent','!=',null)->pluck('name','id'))->required();    
             $form->multipleSelectTable('industries')
                 ->title('行业')

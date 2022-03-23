@@ -17,6 +17,7 @@ use App\Admin\Renderable\ReleaseTable;
 use App\Admin\Renderable\ChipTable;
 use App\Admin\Renderable\PhistoryTable;
 use App\Admin\Renderable\StatusTable;
+use App\Models\AdminUser;
 use App\Models\Brand;
 use App\Models\Type;
 use Dcat\Admin\Admin;
@@ -89,15 +90,15 @@ class PbindController extends AdminController
             $grid->column('test_type');
             $grid->column('kylineco')->display(function ($value) {
                 if ($value == '1')  { return '是'; }
-                else                { return '否'; }
+                elseif ($value == '0') { return '否'; }
             });
             $grid->column('appstore')->display(function ($value) {
                 if ($value == '1')  { return '是'; }
-                else                { return '否'; }
+                elseif ($value == '0') { return '否'; }
             });
             $grid->column('iscert')->display(function ($value) {
                 if ($value == '1')  { return '是'; }
-                else                { return '否'; }
+                elseif ($value == '0') { return '否'; }
             });
             $grid->column('start_time');
             $grid->column('complete_time');
@@ -193,10 +194,9 @@ class PbindController extends AdminController
                     ])->required();
             $form->select('adapted_before')->options([0 => '否',1 => '是']);
             $form->select('statuses_id',__('状态'))->options(Status::where('parent','!=',null)->pluck('name','id'))->required();
-            if ($form->isEditing()) {
-                $form->text('statuses_comment', __('状态变更说明'));
-            }
-            $form->hidden('admin_users_id')->default(Admin::user()->id);
+            $form->text('statuses_comment', __('状态变更说明'));
+            $form->select('admin_users_id')->options(AdminUser::all()->pluck('name', 'id'))
+                ->required()->default(Admin::user()->id);
             $form->select('class')
                  ->options([
                     'READY' => 'READY',
@@ -232,28 +232,46 @@ class PbindController extends AdminController
             $form->display('updated_at');
 
             $form->saving(function (Form $form) {
-                // 判断是否是修改操作
-                if ($form->isEditing()) {
-                    $status_coming = $form->statuses_id;
+                $database_name = env('DB_DATABASE');
+                $status_coming = $form->statuses_id;
+                $timestamp = date("Y-m-d H:i:s");
+                
+                if ($form->isCreating()) {
+                    // 脑瘫代码
+                    $id = DB::select("
+                        SELECT `AUTO_INCREMENT` FROM INFORMATION_SCHEMA.TABLES 
+                        WHERE TABLE_SCHEMA = '$database_name' AND TABLE_NAME = 'pbinds'
+                    ")[0]->AUTO_INCREMENT;
+                }
+                else
+                {
                     $id = $form->getKey();
-                    $timestamp = date("Y-m-d H:i:s");
-                    
+                }
+                
+
+                // 判断当前为新增还是修改
+                if ($form->isCreating()) {
+                    $status_current = NULL;
+                }
+                else
+                {
                     // 取当前状态
                     $status_current = DB::table('pbinds')->where('id', $id)->value('statuses_id');
-                    if ($status_coming != $status_current) {
-                        DB::table('pbind_histories')->insert([
-                            'pbind_id' => $id,
-                            'status_old' => $status_current,
-                            'status_new' => $status_coming,
-                            'admin_users_id' => Admin::user()->id,
-                            'comment' => $form->statuses_comment,
-
-                            'created_at' => $timestamp,
-                            'updated_at' => $timestamp,
-                        ]);
-                    }
-                    $form->deleteInput('statuses_comment');
                 }
+                
+                if ($status_coming != $status_current) {
+                    DB::table('pbind_histories')->insert([
+                        'pbind_id' => $id,
+                        'status_old' => $status_current,
+                        'status_new' => $status_coming,
+                        'admin_users_id' => Admin::user()->id,
+                        'comment' => $form->statuses_comment,
+
+                        'created_at' => $timestamp,
+                        'updated_at' => $timestamp,
+                    ]);
+                }
+                $form->deleteInput('statuses_comment');
             });
         });
     }

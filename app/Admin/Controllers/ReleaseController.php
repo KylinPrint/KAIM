@@ -18,7 +18,7 @@ class ReleaseController extends AdminController
     protected function grid()
     {
         return Grid::make(new Release(), function (Grid $grid) {
-            $grid->column('id')->sortable();
+            // $grid->column('id')->sortable();
             $grid->column('name');
             $grid->column('abbr');
             $grid->column('release_date');

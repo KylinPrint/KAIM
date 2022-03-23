@@ -56,9 +56,7 @@ class Peripheral extends Model
 	public function industries()
     {
         $pivotTable = 'peripheral_industry'; // 中间表
-
         $relatedModel = Industry::class; // 关联模型类名
-
         return $this->belongsToMany($relatedModel, $pivotTable, 'peripherals_id', 'industries_id')->withTimestamps();
     }
 

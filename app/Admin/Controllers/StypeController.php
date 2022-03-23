@@ -19,7 +19,7 @@ class StypeController extends AdminController
     protected function grid()
     {
         return Grid::make(new Stype(), function (Grid $grid) {
-            $grid->column('id')->sortable();
+            // $grid->column('id')->sortable();
             $grid->column('name');
             $grid->column('parent');
             $grid->column('created_at');

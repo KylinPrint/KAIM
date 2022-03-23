@@ -18,7 +18,7 @@ class ChipController extends AdminController
     protected function grid()
     {
         return Grid::make(new Chip(), function (Grid $grid) {
-            $grid->column('id')->sortable();
+            // $grid->column('id')->sortable();
             $grid->column('name');
             $grid->column('arch');
             $grid->column('created_at');

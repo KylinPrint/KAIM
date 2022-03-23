@@ -15,7 +15,7 @@ class CreatePeripheralsTable extends Migration
     {
         Schema::create('peripherals', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->comment('外设型号');
+            $table->string('name')->comment('外设型号')->unique();
 
             $table->foreignId('manufactors_id')
                   ->nullable()
