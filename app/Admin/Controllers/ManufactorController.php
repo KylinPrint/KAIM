@@ -18,7 +18,7 @@ class ManufactorController extends AdminController
     protected function grid()
     {
         return Grid::make(new Manufactor(), function (Grid $grid) {
-            $grid->column('id')->sortable();
+            // $grid->column('id')->sortable();
             $grid->column('name');
             $grid->column('isconnected')->display(function ($isconnected) {
                 if     ($isconnected == '0')  { return '否'; }

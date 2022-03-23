@@ -19,7 +19,7 @@ class SpecificationController extends AdminController
     protected function grid()
     {
         return Grid::make(Specification::with(['types']), function (Grid $grid) {
-            $grid->column('id')->sortable();
+            // $grid->column('id')->sortable();
             $grid->column('name');
             $grid->column('types.name', __('外设分类'));
             $grid->column('isrequired')->display(function ($isrequired) {

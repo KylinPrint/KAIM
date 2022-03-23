@@ -37,9 +37,9 @@ class CreateSbindsTable extends Migration
             $table->string('class')->nullable()->comment('兼容等级[READY,CERTIFICATION,VALIDATION,PM]');
             $table->string('adaption_type')->nullable()->comment('适配类型[原生适配,自研适配,开源适配,项目适配]');
             $table->string('test_type')->nullable()->comment('测试方式[厂商自测,视频复测,远程测试,麒麟适配测试]');
-            $table->boolean('kylineco')->comment('是否上传生态网站');
-            $table->boolean('appstore')->comment('是否上架软件商店');
-            $table->boolean('iscert')->comment('是否互认证');
+            $table->boolean('kylineco')->nullable()->comment('是否上传生态网站');
+            $table->boolean('appstore')->nullable()->comment('是否上架软件商店');
+            $table->boolean('iscert')->nullable()->comment('是否互认证');
             $table->timestamp('start_time')->nullable()->comment('适配开始时间');
             $table->timestamp('complete_time')->nullable()->comment('适配完成时间');
             $table->string('comment')->nullable()->comment('备注');

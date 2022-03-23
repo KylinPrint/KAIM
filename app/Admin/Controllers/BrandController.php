@@ -19,7 +19,7 @@ class BrandController extends AdminController
     protected function grid()
     {
         return Grid::make(Brand::with(['manufactors']), function (Grid $grid) {
-            $grid->column('id')->sortable();
+            // $grid->column('id')->sortable();
             $grid->column('manufactors.name', __("厂商"));
             $grid->column('name');
             $grid->column('alias');

@@ -45,7 +45,7 @@ class PeripheralController extends AdminController
 
             if((ctype_alnum($param)) == 0)
             {
-                $grid->column('id')->sortable();
+                // $grid->column('id')->sortable();
                 $grid->column('name');
                 $grid->column('manufactors.name',__('厂商'));
                 $grid->column('brands.name', __('品牌'));
@@ -84,7 +84,7 @@ class PeripheralController extends AdminController
                 ]);
                 $grid->model()->where('types_id',$param);
 
-                $grid->column('id')->sortable();
+                // $grid->column('id')->sortable();
                 $grid->column('name');
                 $grid->column('brands.name', __('品牌'));
                 $grid->column('types.name', __('类型'));
@@ -193,12 +193,13 @@ class PeripheralController extends AdminController
     protected function form()
     {
         return Form::make(Peripheral::with(['brands', 'types','values']), function (Form $form) {
-            
+            $id = $form->model()->id;
             // TODO 参数的新增和修改好像哪里有问题
             $form->display('id');
             if ($form->isEditing()) {
-                $typesID = $form->model()->types_id;
-                $form->select('types_id', __('类型'))->options(Type::where('parent','!=',null)->pluck('name','id'))->disable();
+                $form->display('types_id', __('类型'))->with(function ($typesID) {
+                    return Type::where('id', $typesID)->pluck('name')->first();
+                });
             } else {
                 $urlArr = explode('type=',URL::full());
                 $typesID = end($urlArr);
@@ -206,7 +207,7 @@ class PeripheralController extends AdminController
             }
             
             $form->select('brands_id', __('品牌'))->options(Brand::all()->pluck('name','id'))->required();
-            $form->text('name')->required();
+            $form->text('name')->required()->rules("unique:peripherals,name,$id", [ 'unique' => '该外设名已存在' ]);
 
             $form->multipleSelectTable('industries')
                 ->title('行业')

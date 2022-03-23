@@ -19,7 +19,7 @@ class StatusController extends AdminController
     protected function grid()
     {
         return Grid::make(new Status(), function (Grid $grid) {
-            $grid->column('id')->sortable();
+            // $grid->column('id')->sortable();
             $grid->column('name');
             $grid->column('parent')->display(function($parent){
                 return Status::where('id',$parent)->pluck('name')->first();

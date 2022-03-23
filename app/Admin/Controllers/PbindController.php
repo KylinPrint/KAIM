@@ -17,6 +17,7 @@ use App\Admin\Renderable\ReleaseTable;
 use App\Admin\Renderable\ChipTable;
 use App\Admin\Renderable\PhistoryTable;
 use App\Admin\Renderable\StatusTable;
+use App\Models\AdminUser;
 use App\Models\Brand;
 use App\Models\Type;
 use Dcat\Admin\Admin;
@@ -89,15 +90,15 @@ class PbindController extends AdminController
             $grid->column('test_type');
             $grid->column('kylineco')->display(function ($value) {
                 if ($value == '1')  { return '是'; }
-                else                { return '否'; }
+                elseif ($value == '0') { return '否'; }
             });
             $grid->column('appstore')->display(function ($value) {
                 if ($value == '1')  { return '是'; }
-                else                { return '否'; }
+                elseif ($value == '0') { return '否'; }
             });
             $grid->column('iscert')->display(function ($value) {
                 if ($value == '1')  { return '是'; }
-                else                { return '否'; }
+                elseif ($value == '0') { return '否'; }
             });
             $grid->column('start_time');
             $grid->column('complete_time');
@@ -193,7 +194,8 @@ class PbindController extends AdminController
             $form->select('adapted_before')->options([0 => '否',1 => '是']);
             $form->select('statuses_id',__('状态'))->options(Status::where('parent','!=',null)->pluck('name','id'))->required();
             $form->text('statuses_comment', __('状态变更说明'));
-            $form->hidden('admin_users_id')->default(Admin::user()->id);
+            $form->select('admin_users_id')->options(AdminUser::all()->pluck('name', 'id'))
+                ->required()->default(Admin::user()->id);
             $form->select('class')
                  ->options([
                     'READY' => 'READY',

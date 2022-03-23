@@ -22,8 +22,6 @@ class CreateSoftwaresTable extends Migration
                   ->comment('厂商名称')
                   ->constrained();
             $table->string('version')->nullable()->comment('软件版本号');
-
-            $table->string('packagename')->comment('包名');
             $table->foreignId('stypes_id')
                   ->comment('软件分类')
                   ->constrained();
@@ -38,6 +36,8 @@ class CreateSoftwaresTable extends Migration
             $table->string('comment')->nullable()->comment('软件描述');
                               
             $table->timestamps();
+
+            $table->unique(['name', 'version']);
         });
     }
 

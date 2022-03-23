@@ -40,7 +40,7 @@ class SolutionMatchController extends AdminController
                           
             });
 
-            $grid->column('id')->sortable();
+            // $grid->column('id')->sortable();
             $grid->column('title');
             $grid->column('path');
             $grid->column('created_at');
