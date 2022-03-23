@@ -1,77 +1,75 @@
+TRUNCATE table `admin_menu`;
 -- ----------------------------
 -- Records of admin_menu
 -- ----------------------------
-TRUNCATE table `admin_menu`;
-INSERT INTO `admin_menu` (`id`, `parent_id`, `order`, `title`, `icon`, `uri`, `extension`, `show`, `created_at`, `updated_at`) VALUES
-(1, 0, 1, 'Index', 'feather icon-bar-chart-2', '/', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26'),
-(2, 0, 2, 'Softwares_Management', NULL, NULL, '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26'),
-(3, 2, 3, 'Software_Adaptions', NULL, 'sbinds', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26'),
-(4, 2, 4, 'Softwares', NULL, 'softwares', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26'),
-(5, 0, 5, 'Peripherals_Management', NULL, NULL, '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26'),
-(6, 5, 6, 'Peripheral_Adaptions', NULL, 'pbinds', '', 1, '2022-02-21 06:02:26', '2022-03-21 14:49:33'),
-(7, 40, 8, 'Printers', NULL, 'peripherals?type=5', '', 1, '2022-02-21 06:02:26', '2022-03-21 14:49:33'),
-(8, 52, 21, 'Scanners', NULL, 'peripherals?type=6', '', 1, '2022-02-21 06:02:26', '2022-03-21 14:49:33'),
-(9, 52, 22, 'Touchscreens', NULL, 'peripherals?type=7', '', 1, '2022-02-21 06:02:26', '2022-03-21 14:49:33'),
-(10, 52, 23, 'BarcodeScanners', NULL, 'peripherals?type=8', '', 1, '2022-02-21 06:02:26', '2022-03-21 14:49:33'),
-(11, 52, 24, 'WebCams', NULL, 'peripherals?type=9', '', 1, '2022-02-21 06:02:26', '2022-03-21 14:49:59'),
-(12, 52, 25, 'Gaopaiyi', NULL, 'peripherals?type=10', '', 1, '2022-02-21 06:02:26', '2022-03-21 14:49:59'),
-(13, 52, 26, 'CardReader', NULL, 'peripherals?type=11', '', 1, '2022-02-21 06:02:26', '2022-03-21 14:49:59'),
-(14, 52, 27, 'IDScanner', NULL, 'peripherals?type=12', '', 1, '2022-02-21 06:02:26', '2022-03-21 14:49:59'),
-(15, 52, 28, 'FIngers', NULL, 'peripherals?type=13', '', 1, '2022-02-21 06:02:26', '2022-03-21 14:49:59'),
-(16, 52, 29, 'Shouxieban', NULL, 'peripherals?type=14', '', 1, '2022-02-21 06:02:26', '2022-03-21 14:49:59'),
-(17, 52, 30, 'Shouxieping', NULL, 'peripherals?type=15', '', 1, '2022-02-21 06:02:26', '2022-03-21 14:49:59'),
-(18, 62, 41, 'WLANAdapters', NULL, 'peripherals?type=16', '', 1, '2022-02-21 06:02:26', '2022-03-21 15:03:28'),
-(19, 63, 43, 'UKeys', NULL, 'peripherals?type=17', '', 1, '2022-02-21 06:02:26', '2022-03-21 15:03:28'),
-(20, 0, 44, 'Others', NULL, NULL, '', 1, '2022-02-21 06:02:26', '2022-03-21 15:03:28'),
-(21, 20, 45, 'Manufactors', NULL, 'manufactors', '', 1, '2022-02-21 06:02:26', '2022-03-21 15:03:28'),
-(22, 20, 46, 'Brands', NULL, 'brands', '', 1, '2022-02-21 06:02:26', '2022-03-21 15:03:28'),
-(23, 20, 47, 'Chips', NULL, 'chips', '', 1, '2022-02-21 06:02:26', '2022-03-21 15:03:28'),
-(24, 20, 48, 'Releases', NULL, 'releases', '', 1, '2022-02-21 06:02:26', '2022-03-21 15:03:28'),
-(25, 20, 49, 'Types', NULL, 'types', '', 1, '2022-02-21 06:02:26', '2022-03-21 15:03:28'),
-(26, 20, 50, 'Specifications', NULL, 'specifications', '', 1, '2022-02-21 06:02:26', '2022-03-21 15:03:28'),
-(27, 20, 51, 'Statuses', NULL, 'statuses', '', 1, '2022-02-21 06:02:26', '2022-03-21 15:03:28'),
-(29, 0, 53, 'Requirements', 'fa-bicycle', NULL, '', 1, '2022-02-21 06:02:26', '2022-03-21 15:03:28'),
-(30, 0, 54, 'Tools', 'fa-wrench', NULL, '', 1, '2022-02-21 06:02:26', '2022-03-21 15:03:28'),
-(31, 30, 55, 'Solution_Query', NULL, 'solution_matches', '', 1, '2022-02-21 06:02:26', '2022-03-21 15:03:28'),
-(32, 0, 56, 'Admin', 'feather icon-settings', NULL, '', 1, '2022-02-21 06:02:26', '2022-03-21 15:03:28'),
-(33, 32, 57, 'Users', NULL, 'auth/users', '', 1, '2022-02-21 06:02:26', '2022-03-21 15:03:28'),
-(34, 32, 58, 'Roles', NULL, 'auth/roles', '', 1, '2022-02-21 06:02:26', '2022-03-21 15:03:28'),
-(35, 32, 59, 'Permission', NULL, 'auth/permissions', '', 1, '2022-02-21 06:02:26', '2022-03-21 15:03:28'),
-(36, 32, 60, 'Menu', NULL, 'auth/menu', '', 1, '2022-02-21 06:02:26', '2022-03-21 15:03:28'),
-(37, 32, 61, 'Extensions', NULL, 'auth/extensions', '', 1, '2022-02-21 06:02:26', '2022-03-21 15:03:28'),
-(38, 0, 62, 'Statistics', 'fa-bar-chart', 'statistics', '', 1, '2022-02-21 06:02:26', '2022-03-21 15:03:28'),
-(39, 20, 52, 'Stypes', NULL, '/stypes', '', 1, '2022-03-21 06:23:52', '2022-03-21 15:03:28'),
-(40, 5, 7, 'output_device_data_management', NULL, NULL, '', 1, '2022-03-21 14:39:18', '2022-03-21 14:49:33'),
-(41, 40, 9, 'laser_printer', NULL, NULL, '', 1, '2022-03-21 14:41:02', '2022-03-21 14:49:33'),
-(42, 40, 10, 'inkjet_printers', NULL, NULL, '', 1, '2022-03-21 14:42:43', '2022-03-21 14:49:33'),
-(43, 40, 11, 'intelligent_mfps', NULL, NULL, '', 1, NULL, '2022-03-21 14:49:33'),
-(44, 40, 12, 'dot_matrix_printers', NULL, NULL, '', 1, NULL, '2022-03-21 14:49:33'),
-(45, 40, 13, 'thermal_printers', NULL, NULL, '', 1, NULL, '2022-03-21 14:49:33'),
-(46, 40, 14, 'label_printers', NULL, NULL, '', 1, NULL, '2022-03-21 14:49:33'),
-(47, 40, 15, 'card_printers', NULL, NULL, '', 1, NULL, '2022-03-21 14:49:33'),
-(48, 40, 16, 'docking_station', NULL, NULL, '', 1, NULL, '2022-03-21 14:49:33'),
-(49, 40, 17, 'card_issuer', NULL, NULL, '', 1, NULL, '2022-03-21 14:49:33'),
-(50, 40, 18, 'earphone', NULL, NULL, '', 1, NULL, '2022-03-21 14:49:33'),
-(51, 40, 19, 'projector', NULL, NULL, '', 1, NULL, '2022-03-21 14:49:33'),
-(52, 5, 20, 'enter_device_data_management', NULL, NULL, '', 1, '2022-03-21 14:48:37', '2022-03-21 14:49:33'),
-(53, 52, 31, 'iris_devices', NULL, NULL, '', 1, '2022-03-21 14:51:16', '2022-03-21 15:03:28'),
-(54, 52, 32, 'fax_server', NULL, NULL, '', 1, '2022-03-21 14:51:29', '2022-03-21 15:03:28'),
-(55, 52, 33, 'pinpad', NULL, NULL, '', 1, NULL, '2022-03-21 15:03:28'),
-(56, 52, 34, 'face_recognition_camera', NULL, NULL, '', 1, NULL, '2022-03-21 15:03:28'),
-(57, 52, 35, 'keyboard_mouse', NULL, NULL, '', 1, NULL, '2022-03-21 15:03:28'),
-(58, 52, 36, 'microphone_speaker', NULL, NULL, '', 1, NULL, '2022-03-21 15:03:28'),
-(59, 52, 37, 'guiwaiqing', NULL, NULL, '', 1, NULL, '2022-03-21 15:03:28'),
-(60, 52, 38, 'speech_module', NULL, NULL, '', 1, NULL, '2022-03-21 15:03:28'),
-(61, 52, 39, 'interactive_terminal', NULL, NULL, '', 1, NULL, '2022-03-21 15:03:28'),
-(62, 5, 40, 'network_device_data_management', NULL, NULL, '', 1, '2022-03-21 15:02:45', '2022-03-21 15:03:28'),
-(63, 5, 42, 'hardware_and_software_device_data_management', NULL, NULL, '', 1, '2022-03-21 15:03:13', '2022-03-21 15:03:28'),
-(64, 63, 63, 'electronic_payment_tokenizer', NULL, NULL, '', 1, '2022-03-21 15:06:07', '2022-03-21 15:06:07'),
-(65, 63, 64, 'printing_controller', NULL, NULL, '', 1, NULL, NULL),
-(66, 63, 65, 'password_module', NULL, NULL, '', 1, NULL, NULL),
-(67, 63, 66, 'finger_veins', NULL, NULL, '', 1, NULL, NULL),
-(68, 5, 67, 'data_management_for_other_peripherals', NULL, NULL, '', 1, '2022-03-21 15:09:40', '2022-03-21 15:09:40'),
-(69, 68, 68, 'move_the_optical_drive', NULL, NULL, '', 1, '2022-03-21 15:10:00', '2022-03-21 15:10:00'),
-(70, 68, 69, 'hardware_companion_software', NULL, NULL, '', 1, '2022-03-21 15:10:20', '2022-03-21 15:10:20');
+INSERT INTO `admin_menu` VALUES (1, 0, 1, 'Index', 'feather icon-bar-chart-2', '/', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (2, 0, 2, 'Softwares_Management', NULL, NULL, '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (3, 2, 3, 'Software_Adaptions', NULL, 'sbinds', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (4, 2, 4, 'Softwares', NULL, 'softwares', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (5, 0, 5, 'Peripherals_Management', NULL, NULL, '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (6, 5, 6, 'Peripheral_Adaptions', NULL, 'pbinds', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (8, 52, 21, 'Scanners', NULL, 'peripherals?type=17', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (9, 52, 22, 'Touchscreens', NULL, 'peripherals?type=18', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (10, 52, 23, 'BarcodeScanners', NULL, 'peripherals?type=19', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (11, 52, 24, 'WebCams', NULL, 'peripherals?type=20', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (12, 52, 25, 'Gaopaiyi', NULL, 'peripherals?type=21', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (13, 52, 26, 'CardReader', NULL, 'peripherals?type=22', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (14, 52, 27, 'IDScanner', NULL, 'peripherals?type=23', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (15, 52, 28, 'FIngers', NULL, 'peripherals?type=24', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (16, 52, 29, 'Shouxieban', NULL, 'peripherals?type=25', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (17, 52, 30, 'Shouxieping', NULL, 'peripherals?type=26', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (18, 62, 41, 'WLANAdapters', NULL, 'peripherals?type=36', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (19, 63, 43, 'UKeys', NULL, 'peripherals?type=37', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (20, 0, 44, 'Others', NULL, NULL, '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (21, 20, 45, 'Manufactors', NULL, 'manufactors', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (22, 20, 46, 'Brands', NULL, 'brands', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (23, 20, 47, 'Chips', NULL, 'chips', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (24, 20, 48, 'Releases', NULL, 'releases', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (25, 20, 49, 'Types', NULL, 'types', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (26, 20, 50, 'Specifications', NULL, 'specifications', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (27, 20, 51, 'Statuses', NULL, 'statuses', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (29, 0, 53, 'Requirements', 'fa-bicycle', NULL, '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (30, 0, 54, 'Tools', 'fa-wrench', NULL, '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (31, 30, 55, 'Solution_Query', NULL, 'solution_matches', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (32, 0, 56, 'Admin', 'feather icon-settings', NULL, '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (33, 32, 57, 'Users', NULL, 'auth/users', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (34, 32, 58, 'Roles', NULL, 'auth/roles', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (35, 32, 59, 'Permission', NULL, 'auth/permissions', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (36, 32, 60, 'Menu', NULL, 'auth/menu', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (37, 32, 61, 'Extensions', NULL, 'auth/extensions', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (38, 0, 62, 'Statistics', 'fa-bar-chart', 'statistics', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (39, 20, 52, 'Stypes', NULL, '/stypes', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (40, 5, 7, 'output_device_data_management', NULL, NULL, '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (41, 40, 9, 'laser_printer', NULL, 'peripherals?type=6', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (42, 40, 10, 'inkjet_printers', NULL, 'peripherals?type=7', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (43, 40, 11, 'intelligent_mfps', NULL, 'peripherals?type=8', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (44, 40, 12, 'dot_matrix_printers', NULL, 'peripherals?type=9', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (45, 40, 13, 'thermal_printers', NULL, 'peripherals?type=10', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (46, 40, 14, 'label_printers', NULL, 'peripherals?type=11', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (47, 40, 15, 'card_printers', NULL, 'peripherals?type=12', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (48, 40, 16, 'docking_station', NULL, 'peripherals?type=13', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (49, 40, 17, 'card_issuer', NULL, 'peripherals?type=14', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (50, 40, 18, 'earphone', NULL, 'peripherals?type=15', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (51, 40, 19, 'projector', NULL, 'peripherals?type=16', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (52, 5, 20, 'enter_device_data_management', NULL, NULL, '', 1, '2022-02-21 06:02:25', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (53, 52, 31, 'iris_devices', NULL, 'peripherals?type=27', '', 1, '2022-02-21 06:02:25', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (54, 52, 32, 'fax_server', NULL, 'peripherals?type=28', '', 1, '2022-02-21 06:02:25', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (55, 52, 33, 'pinpad', NULL, 'peripherals?type=29', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (56, 52, 34, 'face_recognition_camera', NULL, 'peripherals?type=30', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (57, 52, 35, 'keyboard_mouse', NULL, 'peripherals?type=31', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (58, 52, 36, 'microphone_speaker', NULL, 'peripherals?type=32', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (59, 52, 37, 'guiwaiqing', NULL, 'peripherals?type=33', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (60, 52, 38, 'speech_module', NULL, 'peripherals?type=34', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (61, 52, 39, 'interactive_terminal', NULL, 'peripherals?type=35', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (62, 5, 40, 'network_device_data_management', NULL, NULL, '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (63, 5, 42, 'hardware_and_software_device_data_management', NULL, NULL, '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (64, 63, 63, 'electronic_payment_tokenizer', NULL, 'peripherals?type=38', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (65, 63, 64, 'printing_controller', NULL, 'peripherals?type=39', '', 1, '2022-02-21 06:02:25', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (66, 63, 65, 'password_module', NULL, 'peripherals?type=40', '', 1, '2022-02-21 06:02:25', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (67, 63, 66, 'finger_veins', NULL, 'peripherals?type=41', '', 1, '2022-02-21 06:02:25', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (68, 5, 67, 'data_management_for_other_peripherals', NULL, NULL, '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (69, 68, 68, 'move_the_optical_drive', NULL, 'peripherals?type=42', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (70, 68, 69, 'hardware_companion_software', NULL, 'peripherals?type=43', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
 
 -- ----------------------------
 -- Records of admin_permissions
@@ -121,41 +119,72 @@ INSERT INTO `admin_permissions` VALUES (53, '数据统计', 'statistics', '', '/
 -- ----------------------------
 -- Records of admin_permission_menu
 -- ----------------------------
-INSERT INTO `admin_permission_menu` VALUES (14, 5, '2022-03-18 17:33:22', '2022-03-18 17:33:22');
-INSERT INTO `admin_permission_menu` VALUES (14, 6, '2022-03-18 17:32:40', '2022-03-18 17:32:40');
-INSERT INTO `admin_permission_menu` VALUES (22, 5, '2022-03-18 17:35:24', '2022-03-18 17:35:24');
-INSERT INTO `admin_permission_menu` VALUES (22, 7, '2022-03-18 17:35:24', '2022-03-18 17:35:24');
-INSERT INTO `admin_permission_menu` VALUES (22, 8, '2022-03-18 17:35:24', '2022-03-18 17:35:24');
-INSERT INTO `admin_permission_menu` VALUES (22, 9, '2022-03-18 17:35:24', '2022-03-18 17:35:24');
-INSERT INTO `admin_permission_menu` VALUES (22, 10, '2022-03-18 17:35:24', '2022-03-18 17:35:24');
-INSERT INTO `admin_permission_menu` VALUES (22, 11, '2022-03-18 17:35:24', '2022-03-18 17:35:24');
-INSERT INTO `admin_permission_menu` VALUES (22, 12, '2022-03-18 17:35:24', '2022-03-18 17:35:24');
-INSERT INTO `admin_permission_menu` VALUES (22, 13, '2022-03-18 17:35:24', '2022-03-18 17:35:24');
-INSERT INTO `admin_permission_menu` VALUES (22, 14, '2022-03-18 17:35:24', '2022-03-18 17:35:24');
-INSERT INTO `admin_permission_menu` VALUES (22, 15, '2022-03-18 17:35:24', '2022-03-18 17:35:24');
-INSERT INTO `admin_permission_menu` VALUES (22, 16, '2022-03-18 17:35:24', '2022-03-18 17:35:24');
-INSERT INTO `admin_permission_menu` VALUES (22, 17, '2022-03-18 17:35:24', '2022-03-18 17:35:24');
-INSERT INTO `admin_permission_menu` VALUES (22, 18, '2022-03-18 17:35:24', '2022-03-18 17:35:24');
-INSERT INTO `admin_permission_menu` VALUES (22, 19, '2022-03-18 17:35:24', '2022-03-18 17:35:24');
-INSERT INTO `admin_permission_menu` VALUES (30, 2, '2022-03-18 17:35:39', '2022-03-18 17:35:39');
-INSERT INTO `admin_permission_menu` VALUES (30, 3, '2022-03-18 17:35:39', '2022-03-18 17:35:39');
-INSERT INTO `admin_permission_menu` VALUES (38, 2, '2022-03-18 17:35:51', '2022-03-18 17:35:51');
-INSERT INTO `admin_permission_menu` VALUES (38, 4, '2022-03-18 17:35:51', '2022-03-18 17:35:51');
-INSERT INTO `admin_permission_menu` VALUES (46, 20, '2022-03-18 17:36:06', '2022-03-18 17:36:06');
-INSERT INTO `admin_permission_menu` VALUES (46, 21, '2022-03-18 17:36:06', '2022-03-18 17:36:06');
-INSERT INTO `admin_permission_menu` VALUES (47, 20, '2022-03-18 17:36:12', '2022-03-18 17:36:12');
-INSERT INTO `admin_permission_menu` VALUES (47, 22, '2022-03-18 17:36:12', '2022-03-18 17:36:12');
-INSERT INTO `admin_permission_menu` VALUES (48, 20, '2022-03-18 17:36:17', '2022-03-18 17:36:17');
-INSERT INTO `admin_permission_menu` VALUES (48, 23, '2022-03-18 17:36:17', '2022-03-18 17:36:17');
-INSERT INTO `admin_permission_menu` VALUES (49, 20, '2022-03-18 17:36:22', '2022-03-18 17:36:22');
-INSERT INTO `admin_permission_menu` VALUES (49, 24, '2022-03-18 17:36:22', '2022-03-18 17:36:22');
-INSERT INTO `admin_permission_menu` VALUES (50, 20, '2022-03-18 17:36:28', '2022-03-18 17:36:28');
-INSERT INTO `admin_permission_menu` VALUES (50, 25, '2022-03-18 17:36:28', '2022-03-18 17:36:28');
-INSERT INTO `admin_permission_menu` VALUES (51, 20, '2022-03-18 17:36:34', '2022-03-18 17:36:34');
-INSERT INTO `admin_permission_menu` VALUES (51, 26, '2022-03-18 17:36:34', '2022-03-18 17:36:34');
-INSERT INTO `admin_permission_menu` VALUES (52, 20, '2022-03-18 17:36:40', '2022-03-18 17:36:40');
-INSERT INTO `admin_permission_menu` VALUES (52, 27, '2022-03-18 17:36:40', '2022-03-18 17:36:40');
-INSERT INTO `admin_permission_menu` VALUES (53, 38, '2022-03-18 17:36:51', '2022-03-18 17:36:51');
+INSERT INTO `admin_permission_menu` VALUES (1, 32, '2022-03-23 12:25:04', '2022-03-23 12:25:04');
+INSERT INTO `admin_permission_menu` VALUES (1, 33, '2022-03-23 12:25:04', '2022-03-23 12:25:04');
+INSERT INTO `admin_permission_menu` VALUES (1, 34, '2022-03-23 12:25:04', '2022-03-23 12:25:04');
+INSERT INTO `admin_permission_menu` VALUES (1, 35, '2022-03-23 12:25:04', '2022-03-23 12:25:04');
+INSERT INTO `admin_permission_menu` VALUES (1, 36, '2022-03-23 12:25:04', '2022-03-23 12:25:04');
+INSERT INTO `admin_permission_menu` VALUES (1, 37, '2022-03-23 12:25:04', '2022-03-23 12:25:04');
+INSERT INTO `admin_permission_menu` VALUES (14, 5, '2022-03-23 12:19:33', '2022-03-23 12:19:33');
+INSERT INTO `admin_permission_menu` VALUES (14, 6, '2022-03-23 12:19:33', '2022-03-23 12:19:33');
+INSERT INTO `admin_permission_menu` VALUES (22, 5, '2022-03-23 12:20:15', '2022-03-23 12:20:15');
+INSERT INTO `admin_permission_menu` VALUES (22, 8, '2022-03-23 12:20:15', '2022-03-23 12:20:15');
+INSERT INTO `admin_permission_menu` VALUES (22, 9, '2022-03-23 12:20:15', '2022-03-23 12:20:15');
+INSERT INTO `admin_permission_menu` VALUES (22, 10, '2022-03-23 12:20:15', '2022-03-23 12:20:15');
+INSERT INTO `admin_permission_menu` VALUES (22, 11, '2022-03-23 12:20:15', '2022-03-23 12:20:15');
+INSERT INTO `admin_permission_menu` VALUES (22, 12, '2022-03-23 12:20:15', '2022-03-23 12:20:15');
+INSERT INTO `admin_permission_menu` VALUES (22, 13, '2022-03-23 12:20:15', '2022-03-23 12:20:15');
+INSERT INTO `admin_permission_menu` VALUES (22, 14, '2022-03-23 12:20:15', '2022-03-23 12:20:15');
+INSERT INTO `admin_permission_menu` VALUES (22, 15, '2022-03-23 12:20:15', '2022-03-23 12:20:15');
+INSERT INTO `admin_permission_menu` VALUES (22, 16, '2022-03-23 12:20:15', '2022-03-23 12:20:15');
+INSERT INTO `admin_permission_menu` VALUES (22, 17, '2022-03-23 12:20:15', '2022-03-23 12:20:15');
+INSERT INTO `admin_permission_menu` VALUES (22, 18, '2022-03-23 12:20:15', '2022-03-23 12:20:15');
+INSERT INTO `admin_permission_menu` VALUES (22, 19, '2022-03-23 12:20:15', '2022-03-23 12:20:15');
+INSERT INTO `admin_permission_menu` VALUES (22, 40, '2022-03-23 12:20:15', '2022-03-23 12:20:15');
+INSERT INTO `admin_permission_menu` VALUES (22, 41, '2022-03-23 12:20:15', '2022-03-23 12:20:15');
+INSERT INTO `admin_permission_menu` VALUES (22, 42, '2022-03-23 12:20:15', '2022-03-23 12:20:15');
+INSERT INTO `admin_permission_menu` VALUES (22, 43, '2022-03-23 12:20:15', '2022-03-23 12:20:15');
+INSERT INTO `admin_permission_menu` VALUES (22, 44, '2022-03-23 12:20:15', '2022-03-23 12:20:15');
+INSERT INTO `admin_permission_menu` VALUES (22, 45, '2022-03-23 12:20:15', '2022-03-23 12:20:15');
+INSERT INTO `admin_permission_menu` VALUES (22, 46, '2022-03-23 12:20:15', '2022-03-23 12:20:15');
+INSERT INTO `admin_permission_menu` VALUES (22, 47, '2022-03-23 12:20:15', '2022-03-23 12:20:15');
+INSERT INTO `admin_permission_menu` VALUES (22, 48, '2022-03-23 12:20:15', '2022-03-23 12:20:15');
+INSERT INTO `admin_permission_menu` VALUES (22, 49, '2022-03-23 12:20:15', '2022-03-23 12:20:15');
+INSERT INTO `admin_permission_menu` VALUES (22, 50, '2022-03-23 12:20:15', '2022-03-23 12:20:15');
+INSERT INTO `admin_permission_menu` VALUES (22, 51, '2022-03-23 12:20:15', '2022-03-23 12:20:15');
+INSERT INTO `admin_permission_menu` VALUES (22, 52, '2022-03-23 12:20:15', '2022-03-23 12:20:15');
+INSERT INTO `admin_permission_menu` VALUES (22, 53, '2022-03-23 12:20:15', '2022-03-23 12:20:15');
+INSERT INTO `admin_permission_menu` VALUES (22, 54, '2022-03-23 12:20:15', '2022-03-23 12:20:15');
+INSERT INTO `admin_permission_menu` VALUES (22, 55, '2022-03-23 12:20:15', '2022-03-23 12:20:15');
+INSERT INTO `admin_permission_menu` VALUES (22, 56, '2022-03-23 12:20:15', '2022-03-23 12:20:15');
+INSERT INTO `admin_permission_menu` VALUES (22, 57, '2022-03-23 12:20:15', '2022-03-23 12:20:15');
+INSERT INTO `admin_permission_menu` VALUES (22, 58, '2022-03-23 12:20:15', '2022-03-23 12:20:15');
+INSERT INTO `admin_permission_menu` VALUES (22, 59, '2022-03-23 12:20:15', '2022-03-23 12:20:15');
+INSERT INTO `admin_permission_menu` VALUES (22, 60, '2022-03-23 12:20:15', '2022-03-23 12:20:15');
+INSERT INTO `admin_permission_menu` VALUES (22, 61, '2022-03-23 12:20:15', '2022-03-23 12:20:15');
+INSERT INTO `admin_permission_menu` VALUES (22, 62, '2022-03-23 12:20:15', '2022-03-23 12:20:15');
+INSERT INTO `admin_permission_menu` VALUES (22, 63, '2022-03-23 12:20:15', '2022-03-23 12:20:15');
+INSERT INTO `admin_permission_menu` VALUES (22, 64, '2022-03-23 12:20:15', '2022-03-23 12:20:15');
+INSERT INTO `admin_permission_menu` VALUES (22, 65, '2022-03-23 12:20:15', '2022-03-23 12:20:15');
+INSERT INTO `admin_permission_menu` VALUES (22, 66, '2022-03-23 12:20:15', '2022-03-23 12:20:15');
+INSERT INTO `admin_permission_menu` VALUES (22, 67, '2022-03-23 12:20:15', '2022-03-23 12:20:15');
+INSERT INTO `admin_permission_menu` VALUES (22, 68, '2022-03-23 12:20:15', '2022-03-23 12:20:15');
+INSERT INTO `admin_permission_menu` VALUES (22, 69, '2022-03-23 12:20:15', '2022-03-23 12:20:15');
+INSERT INTO `admin_permission_menu` VALUES (22, 70, '2022-03-23 12:20:15', '2022-03-23 12:20:15');
+INSERT INTO `admin_permission_menu` VALUES (30, 2, '2022-03-23 12:21:09', '2022-03-23 12:21:09');
+INSERT INTO `admin_permission_menu` VALUES (30, 3, '2022-03-23 12:21:09', '2022-03-23 12:21:09');
+INSERT INTO `admin_permission_menu` VALUES (38, 2, '2022-03-23 12:21:14', '2022-03-23 12:21:14');
+INSERT INTO `admin_permission_menu` VALUES (38, 4, '2022-03-23 12:21:14', '2022-03-23 12:21:14');
+INSERT INTO `admin_permission_menu` VALUES (45, 20, '2022-03-23 12:21:42', '2022-03-23 12:21:42');
+INSERT INTO `admin_permission_menu` VALUES (45, 21, '2022-03-23 12:21:42', '2022-03-23 12:21:42');
+INSERT INTO `admin_permission_menu` VALUES (45, 22, '2022-03-23 12:21:42', '2022-03-23 12:21:42');
+INSERT INTO `admin_permission_menu` VALUES (45, 23, '2022-03-23 12:21:42', '2022-03-23 12:21:42');
+INSERT INTO `admin_permission_menu` VALUES (45, 24, '2022-03-23 12:21:42', '2022-03-23 12:21:42');
+INSERT INTO `admin_permission_menu` VALUES (45, 25, '2022-03-23 12:21:42', '2022-03-23 12:21:42');
+INSERT INTO `admin_permission_menu` VALUES (45, 26, '2022-03-23 12:21:42', '2022-03-23 12:21:42');
+INSERT INTO `admin_permission_menu` VALUES (45, 27, '2022-03-23 12:21:42', '2022-03-23 12:21:42');
+INSERT INTO `admin_permission_menu` VALUES (45, 39, '2022-03-23 12:21:42', '2022-03-23 12:21:42');
+INSERT INTO `admin_permission_menu` VALUES (53, 38, '2022-03-23 12:22:01', '2022-03-23 12:22:01');
 
 -- ----------------------------
 -- Records of industries
@@ -211,23 +240,49 @@ INSERT INTO `statuses` VALUES (36, '其他原因', 5, '2022-02-21 14:02:26', '20
 -- ----------------------------
 -- Records of types
 -- ----------------------------
-INSERT INTO `types` VALUES (1, '输出设备', NULL, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `types` VALUES (2, '输入设备', NULL, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `types` VALUES (3, '网络设备', NULL, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `types` VALUES (4, '软硬件一体', NULL, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `types` VALUES (5, '打印机', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `types` VALUES (6, '扫描仪', 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `types` VALUES (7, '触摸屏', 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `types` VALUES (8, '扫描枪', 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `types` VALUES (9, '摄像头', 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `types` VALUES (10, '高拍仪', 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `types` VALUES (11, '读卡器', 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `types` VALUES (12, '身份证阅读机具', 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `types` VALUES (13, '指纹设备', 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `types` VALUES (14, '手写板', 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `types` VALUES (15, '手写屏', 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `types` VALUES (16, '无线网卡', 3, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `types` VALUES (17, 'UKey', 4, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `types` VALUES (1, '输出设备', 0, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `types` VALUES (2, '输入设备', 0, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `types` VALUES (3, '网络设备', 0, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `types` VALUES (4, '软硬件一体', 0, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `types` VALUES (5, '其它外设', 0, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `types` VALUES (6, '激光打印机', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `types` VALUES (7, '喷墨打印机', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `types` VALUES (8, '智能复合机/多功能一体机', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `types` VALUES (9, '针式打印机', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `types` VALUES (10, '热敏打印机', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `types` VALUES (11, '条码/标签打印机', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `types` VALUES (12, '证卡打印机', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `types` VALUES (13, '扩展坞', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `types` VALUES (14, '发卡机', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `types` VALUES (15, '耳机', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `types` VALUES (16, '投影仪', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `types` VALUES (17, '扫描仪', 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `types` VALUES (18, '触摸屏', 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `types` VALUES (19, '扫描枪', 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `types` VALUES (20, '摄像头', 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `types` VALUES (21, '高拍仪', 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `types` VALUES (22, '读卡器', 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `types` VALUES (23, '身份证阅读机具', 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `types` VALUES (24, '指纹设备', 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `types` VALUES (25, '手写板', 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `types` VALUES (26, '手写屏', 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `types` VALUES (27, '虹膜设备', 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `types` VALUES (28, '传真服务器', 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `types` VALUES (29, '密码键盘', 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `types` VALUES (30, '人脸识别摄像头', 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `types` VALUES (31, '键鼠', 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `types` VALUES (32, '麦克风音箱', 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `types` VALUES (33, '柜外清', 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `types` VALUES (34, '语音模块', 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `types` VALUES (35, '交互终端', 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `types` VALUES (36, '无线网卡', 3, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `types` VALUES (37, 'UKey', 4, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `types` VALUES (38, '电子支付密码器', 4, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `types` VALUES (39, '印控仪', 4, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `types` VALUES (40, '密码模块', 4, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `types` VALUES (41, '指静脉', 4, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `types` VALUES (42, '移动光驱', 5, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `types` VALUES (43, '硬件配套软件', 5, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
 
 -- ----------------------------
 -- Records of stypes
@@ -299,3 +354,79 @@ INSERT INTO `stypes` VALUES (64, '备份恢复', 7, '2022-03-17 20:33:11', '2022
 INSERT INTO `stypes` VALUES (65, '存储软件', 7, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
 INSERT INTO `stypes` VALUES (66, '其他', 7, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
 INSERT INTO `stypes` VALUES (67, '驱动', 8, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+
+-- ----------------------------
+-- Records of specifications
+-- ----------------------------
+INSERT INTO `specifications` VALUES (1, '支持双面', 6, 0, 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (2, '支持网络', 6, 0, 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (3, '最大幅面', 6, 0, 0, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (4, '支持双面', 7, 0, 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (5, '支持网络', 7, 0, 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (6, '最大幅面', 7, 0, 0, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (7, '支持双面', 8, 0, 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (8, '支持网络', 8, 0, 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (9, '最大幅面', 8, 0, 0, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (10, '支持串口/并口', 9, 0, 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (11, '支持打印存折/证卡', 9, 0, 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (12, '最大幅面', 9, 0, 0, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (13, '支持切割纸张', 10, 0, 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (14, '支持热转换打印', 10, 0, 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (15, '支持网络', 10, 0, 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (16, '支持彩色打印', 11, 0, 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (17, '支持热敏打印', 11, 0, 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (18, '支持网络', 11, 0, 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (19, '支持彩色', 12, 0, 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (20, '支持双面', 12, 0, 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (21, '支持网络', 12, 0, 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (22, '扫描分辨率', 17, 0, 0, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (23, '扫描类型', 17, 0, 0, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (24, '扫描速度', 17, 0, 0, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (25, '是否支持双面扫描', 17, 0, 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (26, '是否支持网络', 17, 0, 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (27, '硬件接口', 17, 0, 0, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (28, '最大幅面', 17, 0, 0, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (29, '屏幕尺寸', 18, 0, 0, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (30, '屏幕分辨率', 18, 0, 0, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (31, '屏幕类型', 18, 0, 0, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (32, '是否支持多点触控', 18, 0, 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (33, '硬件接口', 18, 0, 0, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (34, '识别类型', 19, 0, 0, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (35, '使用方式', 19, 0, 0, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (36, '是否支持中文', 19, 0, 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (37, '硬件接口', 19, 0, 0, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (38, '是否支持红外', 20, 0, 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (39, '像素', 20, 0, 0, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (40, '硬件接口', 20, 0, 0, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (41, '最大分辨率', 20, 0, 0, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (42, '拍照最大幅面', 21, 0, 0, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (43, '摄像头数目', 21, 0, 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (44, '像素', 21, 0, 0, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (45, '硬件接口', 21, 0, 0, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (46, '使用方式', 22, 0, 0, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (47, '是否支持磁条方式', 22, 0, 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (48, '是否支持写卡', 22, 0, 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (49, '硬件接口', 22, 0, 0, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (50, '支持卡片类型', 22, 0, 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (51, '是否支持二代证', 23, 0, 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (52, '是否支持写卡', 23, 0, 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (53, '硬件接口', 23, 0, 0, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (54, '模块类型', 24, 0, 0, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (55, '硬件接口', 24, 0, 0, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (56, '最大指纹保存量', 24, 0, 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (57, '感应板尺寸', 25, 0, 0, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (58, '感应板类型', 25, 0, 0, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (59, '硬件接口', 25, 0, 0, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (60, '屏幕尺寸', 26, 0, 0, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (61, '屏幕分辨率', 26, 0, 0, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (62, '屏幕类型', 26, 0, 0, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (63, '是否支持手指触控', 26, 0, 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (64, '硬件接口', 26, 0, 0, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (65, '上网速度', 36, 0, 0, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (66, '是否支持5G频段', 36, 0, 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (67, '是否支持AP功能', 36, 0, 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (68, '芯片类型', 36, 0, 0, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (69, '硬件接口', 36, 0, 0, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (70, '加密方式', 37, 0, 0, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (71, '是否是签章类', 37, 0, 2, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `specifications` VALUES (72, '硬件接口', 37, 0, 0, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
