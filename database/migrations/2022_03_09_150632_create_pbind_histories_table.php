@@ -16,10 +16,10 @@ class CreatePbindHistoriesTable extends Migration
         Schema::create('pbind_histories', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('pbind_id')
-                ->comment('PBind表ID')
-                ->constrained();
+            // PBindController脑瘫代码的后遗症
+            $table->unsignedBigInteger('pbind_id')->comment('PBind表ID');
             $table->foreignId('status_old')
+                ->nullable()
                 ->comment('修改前适配状态')
                 ->constrained('statuses', 'id');
             $table->foreignId('status_new')

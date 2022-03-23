@@ -20,7 +20,12 @@ class PhistoryTable extends LazyRenderable
         $data = array();
         foreach ($query as $key => $value) {
             $data[$key]['admin_users_id'] = $value['admin_users_id']['name'];
-            $data[$key]['status_old'] = $value['status_old']['name'];
+            if ($value['status_old'] == NULL) {
+                $data[$key]['status_old'] = '无';
+            } else {
+                $data[$key]['status_old'] = $value['status_old']['name'];
+            }
+            
             $data[$key]['status_new'] = $value['status_new']['name'];
             $data[$key]['comment'] = $value['comment'];
 
