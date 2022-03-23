@@ -14,6 +14,7 @@ return [
         'kernel_version' => '内核引用版本',
         'crossover_version' => 'Crossover版本',
         'box86_version' => 'Box86版本',
+        'appstre_soft'  => '是否软件商店应用',
         'bd' => '生态负责人',
         'am' => '适配负责人',
         'tsm' => '技术支撑负责人',

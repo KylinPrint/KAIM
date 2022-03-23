@@ -10,6 +10,7 @@ use App\Admin\Renderable\ReleaseTable;
 use App\Admin\Renderable\StatusTable;
 use App\Models\AdminUser;
 use App\Models\Chip;
+use App\Models\Manufactor;
 use App\Models\Release;
 use App\Models\Sbind;
 use App\Models\Software;
@@ -43,6 +44,9 @@ class SbindController extends AdminController
             $grid->column('softwares.name',__('软件名'))->width('15%');
             $grid->column('softwares.stypes_id',__('类型'))->display(function ($stypes_id) {
                 return Stype::where('id',$stypes_id)->pluck('name')->first();
+            });
+            $grid->column('softwares.manufactors_id',__('厂商名称'))->display(function ($manufactors) {
+                return Manufactor::where('id',$manufactors)->pluck('name')->first();
             });
             $grid->column('releases.name',__('操作系统版本'))->width('15%');
             $grid->column('os_subversion')->hide();
