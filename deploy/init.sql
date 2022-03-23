@@ -2,43 +2,76 @@
 -- Records of admin_menu
 -- ----------------------------
 TRUNCATE table `admin_menu`;
-INSERT INTO `admin_menu` VALUES (1, 0, 1, 'Index', 'feather icon-bar-chart-2', '/', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `admin_menu` VALUES (2, 0, 2, 'Softwares_Management', NULL, NULL, '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `admin_menu` VALUES (3, 2, 3, 'Software_Adaptions', NULL, 'sbinds', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `admin_menu` VALUES (4, 2, 4, 'Softwares', NULL, 'softwares', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `admin_menu` VALUES (5, 0, 5, 'Peripherals_Management', NULL, NULL, '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `admin_menu` VALUES (6, 5, 6, 'Peripheral_Adaptions', NULL, 'pbinds', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `admin_menu` VALUES (7, 5, 7, 'Printers', NULL, 'peripherals?type=5', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `admin_menu` VALUES (8, 5, 8, 'Scanners', NULL, 'peripherals?type=6', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `admin_menu` VALUES (9, 5, 9, 'Touchscreens', NULL, 'peripherals?type=7', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `admin_menu` VALUES (10, 5, 10, 'BarcodeScanners', NULL, 'peripherals?type=8', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `admin_menu` VALUES (11, 5, 11, 'WebCams', NULL, 'peripherals?type=9', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `admin_menu` VALUES (12, 5, 12, 'Gaopaiyi', NULL, 'peripherals?type=10', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `admin_menu` VALUES (13, 5, 13, 'CardReader', NULL, 'peripherals?type=11', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `admin_menu` VALUES (14, 5, 14, 'IDScanner', NULL, 'peripherals?type=12', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `admin_menu` VALUES (15, 5, 15, 'FIngers', NULL, 'peripherals?type=13', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `admin_menu` VALUES (16, 5, 16, 'Shouxieban', NULL, 'peripherals?type=14', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `admin_menu` VALUES (17, 5, 17, 'Shouxieping', NULL, 'peripherals?type=15', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `admin_menu` VALUES (18, 5, 18, 'WLANAdapters', NULL, 'peripherals?type=16', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `admin_menu` VALUES (19, 5, 19, 'UKeys', NULL, 'peripherals?type=17', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `admin_menu` VALUES (20, 0, 20, 'Others', NULL, NULL, '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `admin_menu` VALUES (21, 20, 21, 'Manufactors', NULL, 'manufactors', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `admin_menu` VALUES (22, 20, 22, 'Brands', NULL, 'brands', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `admin_menu` VALUES (23, 20, 23, 'Chips', NULL, 'chips', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `admin_menu` VALUES (24, 20, 24, 'Releases', NULL, 'releases', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `admin_menu` VALUES (25, 20, 25, 'Types', NULL, 'types', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `admin_menu` VALUES (26, 20, 26, 'Specifications', NULL, 'specifications', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `admin_menu` VALUES (27, 20, 27, 'Statuses', NULL, 'statuses', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `admin_menu` VALUES (29, 0, 29, 'Requirements', 'fa-bicycle', NULL, '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `admin_menu` VALUES (30, 0, 30, 'Tools', 'fa-wrench', NULL, '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `admin_menu` VALUES (31, 30, 31, 'Solution_Query', NULL, 'solution_matches', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `admin_menu` VALUES (32, 0, 32, 'Admin', 'feather icon-settings', NULL, '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `admin_menu` VALUES (33, 32, 33, 'Users', NULL, 'auth/users', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `admin_menu` VALUES (34, 32, 34, 'Roles', NULL, 'auth/roles', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `admin_menu` VALUES (35, 32, 35, 'Permission', NULL, 'auth/permissions', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `admin_menu` VALUES (36, 32, 36, 'Menu', NULL, 'auth/menu', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `admin_menu` VALUES (37, 32, 37, 'Extensions', NULL, 'auth/extensions', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `admin_menu` VALUES (38, 0, 38, 'Statistics', 'fa-bar-chart', 'statistics', '', 1, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
+INSERT INTO `admin_menu` (`id`, `parent_id`, `order`, `title`, `icon`, `uri`, `extension`, `show`, `created_at`, `updated_at`) VALUES
+(1, 0, 1, 'Index', 'feather icon-bar-chart-2', '/', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26'),
+(2, 0, 2, 'Softwares_Management', NULL, NULL, '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26'),
+(3, 2, 3, 'Software_Adaptions', NULL, 'sbinds', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26'),
+(4, 2, 4, 'Softwares', NULL, 'softwares', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26'),
+(5, 0, 5, 'Peripherals_Management', NULL, NULL, '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26'),
+(6, 5, 6, 'Peripheral_Adaptions', NULL, 'pbinds', '', 1, '2022-02-21 06:02:26', '2022-03-21 14:49:33'),
+(7, 40, 8, 'Printers', NULL, 'peripherals?type=5', '', 1, '2022-02-21 06:02:26', '2022-03-21 14:49:33'),
+(8, 52, 21, 'Scanners', NULL, 'peripherals?type=6', '', 1, '2022-02-21 06:02:26', '2022-03-21 14:49:33'),
+(9, 52, 22, 'Touchscreens', NULL, 'peripherals?type=7', '', 1, '2022-02-21 06:02:26', '2022-03-21 14:49:33'),
+(10, 52, 23, 'BarcodeScanners', NULL, 'peripherals?type=8', '', 1, '2022-02-21 06:02:26', '2022-03-21 14:49:33'),
+(11, 52, 24, 'WebCams', NULL, 'peripherals?type=9', '', 1, '2022-02-21 06:02:26', '2022-03-21 14:49:59'),
+(12, 52, 25, 'Gaopaiyi', NULL, 'peripherals?type=10', '', 1, '2022-02-21 06:02:26', '2022-03-21 14:49:59'),
+(13, 52, 26, 'CardReader', NULL, 'peripherals?type=11', '', 1, '2022-02-21 06:02:26', '2022-03-21 14:49:59'),
+(14, 52, 27, 'IDScanner', NULL, 'peripherals?type=12', '', 1, '2022-02-21 06:02:26', '2022-03-21 14:49:59'),
+(15, 52, 28, 'FIngers', NULL, 'peripherals?type=13', '', 1, '2022-02-21 06:02:26', '2022-03-21 14:49:59'),
+(16, 52, 29, 'Shouxieban', NULL, 'peripherals?type=14', '', 1, '2022-02-21 06:02:26', '2022-03-21 14:49:59'),
+(17, 52, 30, 'Shouxieping', NULL, 'peripherals?type=15', '', 1, '2022-02-21 06:02:26', '2022-03-21 14:49:59'),
+(18, 62, 41, 'WLANAdapters', NULL, 'peripherals?type=16', '', 1, '2022-02-21 06:02:26', '2022-03-21 15:03:28'),
+(19, 63, 43, 'UKeys', NULL, 'peripherals?type=17', '', 1, '2022-02-21 06:02:26', '2022-03-21 15:03:28'),
+(20, 0, 44, 'Others', NULL, NULL, '', 1, '2022-02-21 06:02:26', '2022-03-21 15:03:28'),
+(21, 20, 45, 'Manufactors', NULL, 'manufactors', '', 1, '2022-02-21 06:02:26', '2022-03-21 15:03:28'),
+(22, 20, 46, 'Brands', NULL, 'brands', '', 1, '2022-02-21 06:02:26', '2022-03-21 15:03:28'),
+(23, 20, 47, 'Chips', NULL, 'chips', '', 1, '2022-02-21 06:02:26', '2022-03-21 15:03:28'),
+(24, 20, 48, 'Releases', NULL, 'releases', '', 1, '2022-02-21 06:02:26', '2022-03-21 15:03:28'),
+(25, 20, 49, 'Types', NULL, 'types', '', 1, '2022-02-21 06:02:26', '2022-03-21 15:03:28'),
+(26, 20, 50, 'Specifications', NULL, 'specifications', '', 1, '2022-02-21 06:02:26', '2022-03-21 15:03:28'),
+(27, 20, 51, 'Statuses', NULL, 'statuses', '', 1, '2022-02-21 06:02:26', '2022-03-21 15:03:28'),
+(29, 0, 53, 'Requirements', 'fa-bicycle', NULL, '', 1, '2022-02-21 06:02:26', '2022-03-21 15:03:28'),
+(30, 0, 54, 'Tools', 'fa-wrench', NULL, '', 1, '2022-02-21 06:02:26', '2022-03-21 15:03:28'),
+(31, 30, 55, 'Solution_Query', NULL, 'solution_matches', '', 1, '2022-02-21 06:02:26', '2022-03-21 15:03:28'),
+(32, 0, 56, 'Admin', 'feather icon-settings', NULL, '', 1, '2022-02-21 06:02:26', '2022-03-21 15:03:28'),
+(33, 32, 57, 'Users', NULL, 'auth/users', '', 1, '2022-02-21 06:02:26', '2022-03-21 15:03:28'),
+(34, 32, 58, 'Roles', NULL, 'auth/roles', '', 1, '2022-02-21 06:02:26', '2022-03-21 15:03:28'),
+(35, 32, 59, 'Permission', NULL, 'auth/permissions', '', 1, '2022-02-21 06:02:26', '2022-03-21 15:03:28'),
+(36, 32, 60, 'Menu', NULL, 'auth/menu', '', 1, '2022-02-21 06:02:26', '2022-03-21 15:03:28'),
+(37, 32, 61, 'Extensions', NULL, 'auth/extensions', '', 1, '2022-02-21 06:02:26', '2022-03-21 15:03:28'),
+(38, 0, 62, 'Statistics', 'fa-bar-chart', 'statistics', '', 1, '2022-02-21 06:02:26', '2022-03-21 15:03:28'),
+(39, 20, 52, 'Stypes', NULL, '/stypes', '', 1, '2022-03-21 06:23:52', '2022-03-21 15:03:28'),
+(40, 5, 7, 'output_device_data_management', NULL, NULL, '', 1, '2022-03-21 14:39:18', '2022-03-21 14:49:33'),
+(41, 40, 9, 'laser_printer', NULL, NULL, '', 1, '2022-03-21 14:41:02', '2022-03-21 14:49:33'),
+(42, 40, 10, 'inkjet_printers', NULL, NULL, '', 1, '2022-03-21 14:42:43', '2022-03-21 14:49:33'),
+(43, 40, 11, 'intelligent_mfps', NULL, NULL, '', 1, NULL, '2022-03-21 14:49:33'),
+(44, 40, 12, 'dot_matrix_printers', NULL, NULL, '', 1, NULL, '2022-03-21 14:49:33'),
+(45, 40, 13, 'thermal_printers', NULL, NULL, '', 1, NULL, '2022-03-21 14:49:33'),
+(46, 40, 14, 'label_printers', NULL, NULL, '', 1, NULL, '2022-03-21 14:49:33'),
+(47, 40, 15, 'card_printers', NULL, NULL, '', 1, NULL, '2022-03-21 14:49:33'),
+(48, 40, 16, 'docking_station', NULL, NULL, '', 1, NULL, '2022-03-21 14:49:33'),
+(49, 40, 17, 'card_issuer', NULL, NULL, '', 1, NULL, '2022-03-21 14:49:33'),
+(50, 40, 18, 'earphone', NULL, NULL, '', 1, NULL, '2022-03-21 14:49:33'),
+(51, 40, 19, 'projector', NULL, NULL, '', 1, NULL, '2022-03-21 14:49:33'),
+(52, 5, 20, 'enter_device_data_management', NULL, NULL, '', 1, '2022-03-21 14:48:37', '2022-03-21 14:49:33'),
+(53, 52, 31, 'iris_devices', NULL, NULL, '', 1, '2022-03-21 14:51:16', '2022-03-21 15:03:28'),
+(54, 52, 32, 'fax_server', NULL, NULL, '', 1, '2022-03-21 14:51:29', '2022-03-21 15:03:28'),
+(55, 52, 33, 'pinpad', NULL, NULL, '', 1, NULL, '2022-03-21 15:03:28'),
+(56, 52, 34, 'face_recognition_camera', NULL, NULL, '', 1, NULL, '2022-03-21 15:03:28'),
+(57, 52, 35, 'keyboard_mouse', NULL, NULL, '', 1, NULL, '2022-03-21 15:03:28'),
+(58, 52, 36, 'microphone_speaker', NULL, NULL, '', 1, NULL, '2022-03-21 15:03:28'),
+(59, 52, 37, 'guiwaiqing', NULL, NULL, '', 1, NULL, '2022-03-21 15:03:28'),
+(60, 52, 38, 'speech_module', NULL, NULL, '', 1, NULL, '2022-03-21 15:03:28'),
+(61, 52, 39, 'interactive_terminal', NULL, NULL, '', 1, NULL, '2022-03-21 15:03:28'),
+(62, 5, 40, 'network_device_data_management', NULL, NULL, '', 1, '2022-03-21 15:02:45', '2022-03-21 15:03:28'),
+(63, 5, 42, 'hardware_and_software_device_data_management', NULL, NULL, '', 1, '2022-03-21 15:03:13', '2022-03-21 15:03:28'),
+(64, 63, 63, 'electronic_payment_tokenizer', NULL, NULL, '', 1, '2022-03-21 15:06:07', '2022-03-21 15:06:07'),
+(65, 63, 64, 'printing_controller', NULL, NULL, '', 1, NULL, NULL),
+(66, 63, 65, 'password_module', NULL, NULL, '', 1, NULL, NULL),
+(67, 63, 66, 'finger_veins', NULL, NULL, '', 1, NULL, NULL),
+(68, 5, 67, 'data_management_for_other_peripherals', NULL, NULL, '', 1, '2022-03-21 15:09:40', '2022-03-21 15:09:40'),
+(69, 68, 68, 'move_the_optical_drive', NULL, NULL, '', 1, '2022-03-21 15:10:00', '2022-03-21 15:10:00'),
+(70, 68, 69, 'hardware_companion_software', NULL, NULL, '', 1, '2022-03-21 15:10:20', '2022-03-21 15:10:20');
 
 -- ----------------------------
 -- Records of admin_permissions
