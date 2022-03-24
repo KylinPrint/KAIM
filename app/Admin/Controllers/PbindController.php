@@ -181,44 +181,18 @@ class PbindController extends AdminController
             $form->select('chips_id',__('芯片'))->options(Chip::all()->pluck('name','id'))->required();
             $form->text('solution',__('适配方案'));
             $form->select('adapt_source')
-                 ->options([
-                     '厂商主动申请' => '厂商主动申请',
-                     'BD主动拓展' => 'BD主动拓展',
-                     '行业营销中心引入' => '行业营销中心引入',
-                     '区域营销中心引入' => '区域营销中心引入',
-                     '最终客户反馈' => '最终客户反馈',
-                     '产品经理引入' => '产品经理引入',
-                     '厂商合作事业本部引入' => '厂商合作事业本部引入',
-                     '渠道部引入' => '渠道部引入',
-                     '相关机构反馈' => '相关机构反馈',
-                     '其他方式引入' => '其他方式引入'
-                    ])->required();
+                 ->options(config('kaim.adapt_source'))->required();
             $form->select('adapted_before')->options([0 => '否',1 => '是']);
             $form->select('statuses_id',__('状态'))->options(Status::where('parent','!=',null)->pluck('name','id'))->required();
             $form->text('statuses_comment', __('状态变更说明'));
             $form->select('admin_users_id')->options(AdminUser::all()->pluck('name', 'id'))
                 ->required()->default(Admin::user()->id);
             $form->select('class')
-                 ->options([
-                    'READY' => 'READY',
-                    'CERTIFICATION' => 'CERTIFICATION',
-                    'VALIDATION' => 'VALIDATION',
-                    'PM' => 'PM'
-                    ]);
+                 ->options(config('kaim.class'));
             $form->select('adaption_type')
-                 ->options([
-                    '原生适配' => '原生适配',
-                    '自研适配' => '自研适配',
-                    '开源适配' => '开源适配',
-                    '项目适配' => '项目适配'
-                    ]);
+                 ->options(config('kaim.adaption_type'));
             $form->select('test_type')
-                 ->options([
-                    '厂商自测' => '厂商自测',
-                    '视频复测' => '视频复测',
-                    '远程测试' => '远程测试',
-                    '麒麟适配测试' => '麒麟适配测试'
-                    ]);
+                 ->options(config('kaim.test_type'));
 
 
             $form->select('kylineco')->options([0 => '否',1 => '是'])->required();
