@@ -67,7 +67,6 @@ class SbindController extends AdminController
                     return PhistoryTable::make();
                 });
 
-            $grid->column('softname')->hide();
             $grid->column('solution');
             $grid->column('class')->hide();
             $grid->column('adaption_type');
@@ -151,7 +150,6 @@ class SbindController extends AdminController
             $show->field('adapted_before');
             $show->field('statuses_id');
             $show->field('admin_users_id');
-            $show->field('softname');
             $show->field('solution');
             $show->field('class');
             $show->field('adaption_type');
@@ -196,7 +194,6 @@ class SbindController extends AdminController
             $form->text('statuses_comment', __('状态变更说明'));
             $form->select('admin_users_id')->options(AdminUser::all()->pluck('name', 'id'))
                 ->required()->default(Admin::user()->id);
-            $form->text('softname');
             $form->text('solution');
             $form->select('class')
                  ->options([

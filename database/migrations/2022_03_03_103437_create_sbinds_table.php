@@ -32,7 +32,6 @@ class CreateSbindsTable extends Migration
                   ->comment('当前适配状态')
                   ->constrained();
             $table->unsignedBigInteger('admin_users_id')->nullable()->comment('当前适配状态责任人');
-            $table->string('softname')->nullable()->comment('软件包名');
             $table->string('solution')->nullable()->comment('适配方案');
             $table->string('class')->nullable()->comment('兼容等级[READY,CERTIFICATION,VALIDATION,PM]');
             $table->string('adaption_type')->nullable()->comment('适配类型[原生适配,自研适配,开源适配,项目适配]');

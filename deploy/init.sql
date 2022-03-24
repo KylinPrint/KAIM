@@ -86,7 +86,6 @@ INSERT INTO `admin_menu` VALUES (66, 63, 65, 'password_module', NULL, 'periphera
 INSERT INTO `admin_menu` VALUES (67, 63, 66, 'finger_veins', NULL, 'peripherals?type=41', '', 1, '2022-02-21 06:02:25', '2022-02-21 06:02:26');
 INSERT INTO `admin_menu` VALUES (68, 5, 67, 'data_management_for_other_peripherals', NULL, NULL, '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
 INSERT INTO `admin_menu` VALUES (69, 68, 68, 'move_the_optical_drive', NULL, 'peripherals?type=42', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (70, 68, 69, 'hardware_companion_software', NULL, 'peripherals?type=43', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
 
 -- ----------------------------
 -- Records of admin_permissions
@@ -187,7 +186,6 @@ INSERT INTO `admin_permission_menu` VALUES (22, 66, '2022-03-23 12:20:15', '2022
 INSERT INTO `admin_permission_menu` VALUES (22, 67, '2022-03-23 12:20:15', '2022-03-23 12:20:15');
 INSERT INTO `admin_permission_menu` VALUES (22, 68, '2022-03-23 12:20:15', '2022-03-23 12:20:15');
 INSERT INTO `admin_permission_menu` VALUES (22, 69, '2022-03-23 12:20:15', '2022-03-23 12:20:15');
-INSERT INTO `admin_permission_menu` VALUES (22, 70, '2022-03-23 12:20:15', '2022-03-23 12:20:15');
 INSERT INTO `admin_permission_menu` VALUES (30, 2, '2022-03-23 12:21:09', '2022-03-23 12:21:09');
 INSERT INTO `admin_permission_menu` VALUES (30, 3, '2022-03-23 12:21:09', '2022-03-23 12:21:09');
 INSERT INTO `admin_permission_menu` VALUES (38, 2, '2022-03-23 12:21:14', '2022-03-23 12:21:14');
@@ -552,7 +550,6 @@ INSERT INTO `types` VALUES (39, '印控仪', 4, '2022-02-21 14:02:26', '2022-02-
 INSERT INTO `types` VALUES (40, '密码模块', 4, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
 INSERT INTO `types` VALUES (41, '指静脉', 4, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
 INSERT INTO `types` VALUES (42, '移动光驱', 5, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `types` VALUES (43, '硬件配套软件', 5, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
 
 -- ----------------------------
 -- Records of stypes

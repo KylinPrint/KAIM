@@ -14,7 +14,8 @@ class HomeController extends Controller
     {
         return $content
             ->header('我的待办')
-            ->body($this->grid());
+            ->body($this->grid())
+            ->breadcrumb('我的待办');
     }
 
     protected function grid()
