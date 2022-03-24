@@ -104,7 +104,7 @@ class SoftwareController extends AdminController
         return Form::make(Software::with('manufactors','stypes'), function (Form $form) {
             $id = $form->model()->id;
             $form->display('id');
-            $form->text('name')->required()->rules("unique:softwares,name,version", [ 'unique' => '该外设名已存在' ]);
+            $form->text('name')->required()->rules("unique:softwares,name,$id", [ 'unique' => '该外设名已存在' ]);
             $form->select('manufactors_id')->options(Manufactor::all()->pluck('name','id'))->required();
             $form->text('version');
             $form->select('stypes_id', __('类型'))->options(Stype::where('parent','!=',null)->pluck('name','id'))->required();    
@@ -118,7 +118,7 @@ class SoftwareController extends AdminController
                     // 这一步非常重要，需要把数据库中查出来的二维数组转化成一维数组
                     return array_column($v, 'id');
             });
-            $form->select('appstre_soft')->options([0 => '否',1 => '是']);
+            $form->select('appstore_soft')->options([0 => '否',1 => '是']);
 
             $form->text('kernel_version');
             $form->text('crossover_version');
