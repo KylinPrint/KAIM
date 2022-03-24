@@ -42,11 +42,11 @@ class BrandController extends AdminController
     protected function detail($id)
     {
         return Show::make($id, new Brand(), function (Show $show) {
-            $show->field('id');
+            // $show->field('id');
             $show->field('name');
             $show->field('alias');
-            $show->field('created_at');
-            $show->field('updated_at');
+            // $show->field('created_at');
+            // $show->field('updated_at');
         });
     }
 

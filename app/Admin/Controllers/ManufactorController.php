@@ -45,11 +45,11 @@ class ManufactorController extends AdminController
     protected function detail($id)
     {
         return Show::make($id, new Manufactor(), function (Show $show) {
-            $show->field('id');
+            // $show->field('id');
             $show->field('name');
             $show->field('isconnected');
-            $show->field('created_at');
-            $show->field('updated_at');
+            // $show->field('created_at');
+            // $show->field('updated_at');
         });
     }
 
