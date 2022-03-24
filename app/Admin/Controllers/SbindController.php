@@ -183,8 +183,7 @@ class SbindController extends AdminController
             $form->select('adapted_before')->options([0 => '否',1 => '是']);
             $form->select('statuses_id')->options(Status::where('parent','!=',null)->pluck('name','id'))->required();
             $form->text('statuses_comment', __('状态变更说明'));
-            $form->select('admin_users_id')->options(AdminUser::all()->pluck('name', 'id'))
-                ->required()->default(Admin::user()->id);
+            $form->select('admin_users_id')->options(AdminUser::all()->pluck('name', 'id'))->default(Admin::user()->id);
             $form->text('solution');
             $form->select('class')
                 ->options(config('kaim.class'));
@@ -242,6 +241,7 @@ class SbindController extends AdminController
                         'updated_at' => $timestamp,
                     ]);
                 }
+                $form->deleteInput('statuses_comment');
             });
         });
     }

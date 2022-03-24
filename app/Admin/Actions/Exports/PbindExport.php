@@ -3,22 +3,10 @@
 namespace App\Admin\Actions\Exports;
 
 use App\Admin\Actions\Exports\BaseExport;
-use App\Models\Bind;
-use App\Models\Brand;
-use App\Models\Industry;
-use App\Models\Industry_Tag_Bind;
-use App\Models\Manufactor;
 use App\Models\Pbind;
 use App\Models\Peripheral;
-use App\Models\Project_Tag;
-use App\Models\Principle_Tag;
-use App\Models\Project_Tag_Bind;
-use App\Models\Solution;
 use App\Models\Type;
 use Illuminate\Support\Fluent;
-use Dcat\Admin\Grid\Exporters\AbstractExporter;
-use Dcat\Admin\Http\Displayers\Extensions\Name;
-use Illuminate\Support\Str;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
