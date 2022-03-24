@@ -19,7 +19,7 @@ class Software extends Model
     
     public function stypes()
     {
-        return $this->belongsTo(Type::class);
+        return $this->belongsTo(SType::class);
     } 
 
     public function sbinds()
