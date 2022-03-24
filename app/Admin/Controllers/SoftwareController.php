@@ -118,7 +118,7 @@ class SoftwareController extends AdminController
                     // 这一步非常重要，需要把数据库中查出来的二维数组转化成一维数组
                     return array_column($v, 'id');
             });
-            $form->select('appstre_soft')->options([0 => '否',1 => '是']);
+            $form->select('appstore_soft')->options([0 => '否',1 => '是']);
 
             $form->text('kernel_version');
             $form->text('crossover_version');
