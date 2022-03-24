@@ -106,6 +106,7 @@ class PbindController extends AdminController
             // $grid->column('created_at');
             $grid->column('updated_at')->sortable();
            
+            $grid->quickSearch('name', 'releases.name', 'chips.name', 'comment');
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->panel();
                 $filter->like('peripherals.name','设备名');

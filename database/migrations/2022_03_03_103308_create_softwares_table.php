@@ -37,7 +37,7 @@ class CreateSoftwaresTable extends Migration
                               
             $table->timestamps();
 
-            $table->unique(['name', 'version']);
+            $table->unique(['manufactors_id', 'name', 'version']);
         });
     }
 

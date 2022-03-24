@@ -95,7 +95,9 @@ class SbindController extends AdminController
             $grid->withBorder();
             $grid->showColumnSelector();
             
+            $grid->quickSearch('name', 'releases.name', 'chips.name', 'comment');
             $grid->filter(function (Grid\Filter $filter) {
+                $filter->panel();
                 $filter->like('softwares.name','软件名');
                 $filter->like('comment','备注');
                 $filter->equal('releases.id', '操作系统版本')

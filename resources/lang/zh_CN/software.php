@@ -10,7 +10,7 @@ return [
         'version' => '软件版本号',
         'packagename' => '包名',
         'stypes_id' => '软件分类',
-        'appstre_soft' => '是否为软件商店应用',
+        'appstore_soft' => '是否为软件商店应用',
         'kernel_version' => '内核引用版本',
         'crossover_version' => 'Crossover版本',
         'box86_version' => 'Box86版本',

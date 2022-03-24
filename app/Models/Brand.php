@@ -10,11 +10,6 @@ class Brand extends Model
 {
 	use HasDateTimeFormatter;    
 
-	public function manufactors()
-	{
-		return $this->belongsTo(Manufactor::class);
-	}
-
 	public function peripherals()
     {
         return $this->hasMany(Peripheral::class);

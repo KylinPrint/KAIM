@@ -18,9 +18,8 @@ class BrandController extends AdminController
      */
     protected function grid()
     {
-        return Grid::make(Brand::with(['manufactors']), function (Grid $grid) {
+        return Grid::make(new Brand(), function (Grid $grid) {
             // $grid->column('id')->sortable();
-            $grid->column('manufactors.name', __("厂商"));
             $grid->column('name');
             $grid->column('alias');
             $grid->column('created_at');
@@ -42,9 +41,8 @@ class BrandController extends AdminController
      */
     protected function detail($id)
     {
-        return Show::make($id, Brand::with(['manufactors']), function (Show $show) {
+        return Show::make($id, new Brand(), function (Show $show) {
             $show->field('id');
-            $show->field('manufactors.name', __("厂商"));
             $show->field('name');
             $show->field('alias');
             $show->field('created_at');
@@ -59,11 +57,10 @@ class BrandController extends AdminController
      */
     protected function form()
     {
-        return Form::make(Brand::with(['manufactors']), function (Form $form) {
+        return Form::make(new Brand(), function (Form $form) {
             $form->display('id');
             $form->text('name')->required();
             $form->text('alias');
-            $form->select('manufactors_id', __('厂商'))->options(Manufactor::all()->pluck('name','id'));
         
             $form->display('created_at');
             $form->display('updated_at');

@@ -42,7 +42,8 @@ class SoftwareController extends AdminController
             $grid->column('comment')->limit(50);
             $grid->column('created_at');
             $grid->column('updated_at')->sortable();
-        
+            
+            $grid->quickSearch('name', 'industries.name', 'comment');
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->panel();
                 $filter->like('name','产品名称');

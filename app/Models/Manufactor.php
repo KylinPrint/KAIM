@@ -18,8 +18,8 @@ class Manufactor extends Model
 		'isconnected',
 	];
 
-	public function brands()
+	public function peripherals()
     {
-        return $this->hasMany(Brand::class);
+        return $this->hasMany(Peripheral::class);
     }
 }

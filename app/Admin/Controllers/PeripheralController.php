@@ -5,6 +5,7 @@ namespace App\Admin\Controllers;
 use App\Admin\Renderable\IndustryTable;
 use App\Models\Brand;
 use App\Models\Industry;
+use App\Models\Manufactor;
 use App\Models\Peripheral;
 use App\Models\Specification;
 use App\Models\Type;
@@ -24,6 +25,10 @@ class PeripheralController extends AdminController
     {
         $urlArr = explode('type=',URL::full());
         $param = end($urlArr);
+
+        // 没说就是激光打印机
+        if((ctype_alnum($param)) == 0) { $param = 6; }
+        
         $header = Type::where('id', $param)->pluck('name')->first();
         return $content
             ->header($header)
@@ -43,98 +48,62 @@ class PeripheralController extends AdminController
             $urlArr = explode('type=',URL::full());
             $param = end($urlArr);
 
-            if((ctype_alnum($param)) == 0)
-            {
-                // $grid->column('id')->sortable();
-                $grid->column('name');
-                $grid->column('manufactors.name',__('厂商'));
-                $grid->column('brands.name', __('品牌'));
-                $grid->column('types.name', __('类型'));
-                $grid->column('release_date');
-                $grid->column('eosl_date');
-                $grid->column('comment');
-                $grid->column('industries')->pluck('name')->badge();
-                $grid->column('created_at');
-                $grid->column('updated_at')->sortable();
+            // 没说就是激光打印机
+            if((ctype_alnum($param)) == 0) { $param = 6; }
+
+            $grid->model()->setConstraints([
+                'type' => $param,
+            ]);
+            $grid->model()->where('types_id',$param);
+
+            // $grid->column('id')->sortable();
+            $grid->column('name');
+            $grid->column('manufactors.name',__('厂商'));
+            $grid->column('brands.name', __('品牌'));
+            $grid->column('types.name', __('类型'));
+            $grid->column('industries')->pluck('name')->badge();
+            $grid->column('release_date');
+            $grid->column('eosl_date');
+
+            $specs = Specification::where('types_id',$param)->get(['id', 'name', 'isrequired', 'field'])->toArray();
             
-                $grid->filter(function (Grid\Filter $filter) {
-                    $filter->like('name');
-                    $filter->like('brands.name');
-                    $filter->whereBetween('created_at', function ($query) {
-                        $start = $this->input['start'] ?? null;
-                        $end = $this->input['end'] ?? null;
-                    
-                        $query->whereHas('binds', function ($query) use ($start,$end) {
-                            if ($start !== null) {
-                                $query->where('created_at', '>=', $start);
-                            }
-                    
-                            if ($end !== null) {
-                                $query->where('created_at', '<=', $end);
-                            }
-                        });
-                    })->datetime()->width(3);
+            foreach ($specs as $value)
+            {
+                $grid->column($value['name'])->display(function() use ($value) {
+                    $res = Value::where([['peripherals_id',$this->id], ['specifications_id',$value['id']]])->pluck('value')->first();
+                    //处理布尔值
+                    if ($value['field'] == 2) {
+                        if ($res == "0") { return '否'; }
+                        else { return '是'; }
+                    } 
+                    else { return $res; }
                 });
             }
 
-            else
-            {
-                $grid->model()->setConstraints([
-                    'type' => $param,
-                ]);
-                $grid->model()->where('types_id',$param);
-
-                // $grid->column('id')->sortable();
-                $grid->column('name');
-                $grid->column('brands.name', __('品牌'));
-                $grid->column('types.name', __('类型'));
-                $grid->column('industries')->pluck('name')->badge();
-                $grid->column('release_date');
-                $grid->column('eosl_date');
-
-                $specs = Specification::where('types_id',$param)->get(['id', 'name', 'isrequired'])->toArray();
-                
-                foreach ($specs as $key => $value)
-                {
-                    $grid->column($value['name'])->display(function() use ($key, $value) {
-                        $res = Value::where([['peripherals_id',$this->id], ['specifications_id',$value['id']]])->pluck('value')->first();
-                        //处理布尔值
-                        if ($value['isrequired'] == 2) {
-                            if ($res == "0") {
-                                return '否';
-                            } else {
-                                return '是';
-                            }
-                        } else {
-                            return $res;
+            $grid->column('created_at');
+            $grid->column('updated_at')->sortable();
+        
+            $grid->quickSearch('name', 'industries.name', 'comment');
+            $grid->filter(function (Grid\Filter $filter) {
+                $filter->panel();
+                $filter->like('name','产品名称');
+                $filter->like('brands.name','品牌');
+                $filter->like('comment','备注');
+                $filter->whereBetween('created_at', function ($query) {
+                    $start = $this->input['start'] ?? null;
+                    $end = $this->input['end'] ?? null;
+            
+                    $query->whereHas('binds', function ($query) use ($start,$end) {
+                        if ($start !== null) {
+                            $query->where('created_at', '>=', $start);
+                        }
+            
+                        if ($end !== null) {
+                            $query->where('created_at', '<=', $end);
                         }
                     });
-                }
-
-                $grid->column('created_at');
-                $grid->column('updated_at')->sortable();
-            
-                $grid->filter(function (Grid\Filter $filter) {
-                    $filter->panel();
-                    $filter->like('name','产品名称');
-                    $filter->like('brands.name','品牌');
-                    $filter->like('comment','备注');
-                    $filter->whereBetween('created_at', function ($query) {
-                        $start = $this->input['start'] ?? null;
-                        $end = $this->input['end'] ?? null;
-                
-                        $query->whereHas('binds', function ($query) use ($start,$end) {
-                            if ($start !== null) {
-                                $query->where('created_at', '>=', $start);
-                            }
-                
-                            if ($end !== null) {
-                                $query->where('created_at', '<=', $end);
-                            }
-                        });
-                    })->datetime()->width(3);
-                });
-            }
+                })->datetime()->width(3);
+            });
         });
     }
 
@@ -150,6 +119,7 @@ class PeripheralController extends AdminController
         return Show::make($id, Peripheral::with(['brands','types']), function (Show $show) {
             $show->field('id');
             $show->field('name');
+            $show->field('manufactors.name', __('厂商'));
             $show->field('brands.name', __('品牌'));
             $show->field('types.name', __('类型'));
 
@@ -193,7 +163,7 @@ class PeripheralController extends AdminController
      */
     protected function form()
     {
-        return Form::make(Peripheral::with(['brands', 'types','values']), function (Form $form) {
+        return Form::make(Peripheral::with(['manufactors', 'brands', 'types', 'values']), function (Form $form) {
             $id = $form->model()->id;
             // TODO 参数的新增和修改好像哪里有问题
             $form->display('id');
@@ -201,12 +171,15 @@ class PeripheralController extends AdminController
                 $form->display('types_id', __('类型'))->with(function ($typesID) {
                     return Type::where('id', $typesID)->pluck('name')->first();
                 });
-            } else {
+            }
+            else
+            {
                 $urlArr = explode('type=',URL::full());
                 $typesID = end($urlArr);
                 $form->hidden('types_id')->default($typesID);
             }
             
+            $form->select('manufactors_id', __('厂商'))->options(Manufactor::all()->pluck('name','id'));
             $form->select('brands_id', __('品牌'))->options(Brand::all()->pluck('name','id'))->required();
             $form->text('name')->required()->rules("unique:peripherals,name,$id", [ 'unique' => '该外设名已存在' ]);
 

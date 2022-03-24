@@ -32,6 +32,8 @@ class CreatePeripheralsTable extends Migration
             $table->string('comment')->nullable()->comment('外设描述');
 
             $table->timestamps();
+
+            $table->unique(['brands_id', 'name']);
         });
     }
 

@@ -15,7 +15,7 @@ class CreateManufactorsTable extends Migration
     {
         Schema::create('manufactors', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->comment('厂商名称');
+            $table->string('name')->comment('厂商名称')->unique();
 
             $table->boolean('isconnected')->nullable()->comment('是否建联');
             
