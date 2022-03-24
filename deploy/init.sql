@@ -455,17 +455,6 @@ INSERT INTO `chips` (`id`, `name`, `arch`, `created_at`, `updated_at`) VALUES (1
 INSERT INTO `chips` (`id`, `name`, `arch`, `created_at`, `updated_at`) VALUES (11, '海思麒麟9006c', 'arm64', '2022-03-18 18:33:45', '2022-03-18 18:33:45');
 
 -- ----------------------------
--- Records of industries
--- ----------------------------
-INSERT INTO `industries` VALUES (1, '政务', '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `industries` VALUES (2, '金融', '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `industries` VALUES (3, '通信', '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `industries` VALUES (4, '交通', '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `industries` VALUES (5, '医疗', '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `industries` VALUES (6, '教育', '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-INSERT INTO `industries` VALUES (7, '电力', '2022-02-21 14:02:26', '2022-02-21 14:02:26');
-
--- ----------------------------
 -- Records of statuses
 -- ----------------------------
 INSERT INTO `statuses` VALUES (1, '未适配', NULL, '2022-02-21 14:02:26', '2022-02-21 14:02:26');
