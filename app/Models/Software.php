@@ -26,12 +26,4 @@ class Software extends Model
     {
         return $this->hasMany(Sbind::class, 'sotfwares_id');
     }
-
-    public function industries()
-    {
-        $pivotTable = 'software_industry'; // 中间表
-        $relatedModel = Industry::class; // 关联模型类名
-        return $this->belongsToMany($relatedModel, $pivotTable, 'softwares_id', 'industries_id')->withTimestamps();
-    }
-    
 }

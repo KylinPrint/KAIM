@@ -154,7 +154,7 @@ class PbindController extends AdminController
      */
     protected function detail($id)
     {
-        return Show::make($id, new Pbind(['peripherals','releases','chips','statuses']), function (Show $show) {
+        return Show::make($id, Pbind::with(['peripherals','releases','chips','statuses']), function (Show $show) {
             $show->field('peripherals.name',__('型号'));
             $show->field('releases.name',__('版本'));
             $show->field('chips.name',__('芯片'));
@@ -185,8 +185,7 @@ class PbindController extends AdminController
             $form->select('adapted_before')->options([0 => '否',1 => '是']);
             $form->select('statuses_id',__('状态'))->options(Status::where('parent','!=',null)->pluck('name','id'))->required();
             $form->text('statuses_comment', __('状态变更说明'));
-            $form->select('admin_users_id')->options(AdminUser::all()->pluck('name', 'id'))
-                ->required()->default(Admin::user()->id);
+            $form->select('admin_users_id')->options(AdminUser::all()->pluck('name', 'id'))->default(Admin::user()->id);
             $form->select('class')
                  ->options(config('kaim.class'));
             $form->select('adaption_type')

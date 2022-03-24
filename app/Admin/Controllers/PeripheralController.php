@@ -2,9 +2,7 @@
 
 namespace App\Admin\Controllers;
 
-use App\Admin\Renderable\IndustryTable;
 use App\Models\Brand;
-use App\Models\Industry;
 use App\Models\Manufactor;
 use App\Models\Peripheral;
 use App\Models\Specification;
@@ -61,7 +59,7 @@ class PeripheralController extends AdminController
             $grid->column('manufactors.name',__('厂商'));
             $grid->column('brands.name', __('品牌'));
             $grid->column('types.name', __('类型'));
-            $grid->column('industries')->pluck('name')->badge();
+            $grid->column('industries')->badge();
             $grid->column('release_date');
             $grid->column('eosl_date');
 
@@ -83,7 +81,7 @@ class PeripheralController extends AdminController
             $grid->column('created_at');
             $grid->column('updated_at')->sortable();
         
-            $grid->quickSearch('name', 'industries.name', 'comment');
+            $grid->quickSearch('name', 'industries', 'comment');
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->panel();
                 $filter->like('name','产品名称');
@@ -122,7 +120,7 @@ class PeripheralController extends AdminController
             $show->field('manufactors.name', __('厂商'));
             $show->field('brands.name', __('品牌'));
             $show->field('types.name', __('类型'));
-
+            $show->field('industries')->as(function ($industries) { return explode(',', $industries); })->badge();
             $show->field('release_date');
             $show->field('eosl_date');
 
@@ -182,18 +180,7 @@ class PeripheralController extends AdminController
             $form->select('manufactors_id', __('厂商'))->options(Manufactor::all()->pluck('name','id'));
             $form->select('brands_id', __('品牌'))->options(Brand::all()->pluck('name','id'))->required();
             $form->text('name')->required()->rules("unique:peripherals,name,$id", [ 'unique' => '该外设名已存在' ]);
-
-            $form->multipleSelectTable('industries')
-                ->title('行业')
-                ->from(IndustryTable::make())
-                ->model(Industry::class, 'id', 'name')
-                ->required()
-                ->customFormat(function ($v) {
-                    if (!$v) return [];
-                    // 这一步非常重要，需要把数据库中查出来的二维数组转化成一维数组
-                    return array_column($v, 'id');
-            });
-
+            $form->tags('industries')->options(config('kaim.industries'))->saving(function ($value) { return implode(',', $value); })->required();
             $form->date('release_date')->format('YYYY-MM-DD');
             $form->date('eosl_date')->format('YYYY-MM-DD');
 

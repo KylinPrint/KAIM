@@ -7,15 +7,10 @@ use App\Models\Sbind;
 use App\Models\Software;
 use App\Models\Type;
 use Illuminate\Support\Fluent;
-use Dcat\Admin\Grid\Exporters\AbstractExporter;
-use Dcat\Admin\Http\Displayers\Extensions\Name;
-use Illuminate\Support\Str;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
-
-use function PHPUnit\Framework\isEmpty;
 
 class SbindExport extends BaseExport implements WithMapping, WithHeadings, FromCollection
 {
