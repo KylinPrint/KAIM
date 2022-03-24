@@ -77,7 +77,7 @@ class SoftwareController extends AdminController
     protected function detail($id)
     {
         return Show::make($id, new Software(), function (Show $show) {
-            $show->field('id');
+            // $show->field('id');
             $show->field('name');
             $show->field('manufactors_id');
             $show->field('version');
@@ -89,8 +89,8 @@ class SoftwareController extends AdminController
             $show->field('am');
             $show->field('tsm');
             $show->field('comment');
-            $show->field('created_at');
-            $show->field('updated_at');
+            // $show->field('created_at');
+            // $show->field('updated_at');
         });
     }
 

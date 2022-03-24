@@ -43,13 +43,13 @@ class ReleaseController extends AdminController
     protected function detail($id)
     {
         return Show::make($id, new Release(), function (Show $show) {
-            $show->field('id');
+            // $show->field('id');
             $show->field('name');
             $show->field('abbr');
             $show->field('release_date');
             $show->field('eosl_date');
-            $show->field('created_at');
-            $show->field('updated_at');
+            // $show->field('created_at');
+            // $show->field('updated_at');
         });
     }
 

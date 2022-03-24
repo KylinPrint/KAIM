@@ -162,8 +162,8 @@ class PbindController extends AdminController
             $show->field('statuses.name',__('状态'));
             $show->field('class');
             $show->field('comment');
-            $show->field('created_at');
-            $show->field('updated_at');
+            // $show->field('created_at');
+            // $show->field('updated_at');
         });
     }
 

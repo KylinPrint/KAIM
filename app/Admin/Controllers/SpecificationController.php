@@ -56,7 +56,7 @@ class SpecificationController extends AdminController
     protected function detail($id)
     {
         return Show::make($id, Specification::with(['types']), function (Show $show) {
-            $show->field('id');
+            // $show->field('id');
             $show->field('name');
             $show->field('types.name', __('外设分类'));
             $show->field('isrequired')->as(function ($isrequired) {
@@ -73,8 +73,8 @@ class SpecificationController extends AdminController
                     return '布尔';
                 }
             });
-            $show->field('created_at');
-            $show->field('updated_at');
+            // $show->field('created_at');
+            // $show->field('updated_at');
         });
     }
 

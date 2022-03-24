@@ -143,7 +143,7 @@ class SbindController extends AdminController
     protected function detail($id)
     {
         return Show::make($id, new Sbind(), function (Show $show) {
-            $show->field('id');
+            // $show->field('id');
             $show->field('softwares_id');
             $show->field('releases_id');
             $show->field('os_subversion');
@@ -160,8 +160,8 @@ class SbindController extends AdminController
             $show->field('appstore');
             $show->field('iscert');
             $show->field('comment');
-            $show->field('created_at');
-            $show->field('updated_at');
+            // $show->field('created_at');
+            // $show->field('updated_at');
         });
     }
 

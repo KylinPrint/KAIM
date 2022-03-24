@@ -44,11 +44,11 @@ class StatusController extends AdminController
     protected function detail($id)
     {
         return Show::make($id, new Status(), function (Show $show) {
-            $show->field('id');
+            // $show->field('id');
             $show->field('name');
             $show->field('parent');
-            $show->field('created_at');
-            $show->field('updated_at');
+            // $show->field('created_at');
+            // $show->field('updated_at');
         });
     }
 
