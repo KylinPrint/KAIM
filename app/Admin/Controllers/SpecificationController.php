@@ -86,7 +86,7 @@ class SpecificationController extends AdminController
     protected function form()
     {
         return Form::make(Specification::with('types'), function (Form $form) {
-            $form->display('id');
+            // $form->display('id');
             $form->text('name')->required();
             $form->select('types_id', __('外设分类'))->options(Type::where('parent','!=',null)->pluck('name','id'))->required();
             $form->select('isrequired')->options([0 => '否',1 => '是'])->required();
@@ -96,8 +96,8 @@ class SpecificationController extends AdminController
                 2 => '布尔',
             ])->required();
         
-            $form->display('created_at');
-            $form->display('updated_at');
+            // $form->display('created_at');
+            // $form->display('updated_at');
         });
     }
 }

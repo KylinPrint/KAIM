@@ -58,12 +58,12 @@ class BrandController extends AdminController
     protected function form()
     {
         return Form::make(new Brand(), function (Form $form) {
-            $form->display('id');
+            // $form->display('id');
             $form->text('name')->required();
             $form->text('alias');
         
-            $form->display('created_at');
-            $form->display('updated_at');
+            // $form->display('created_at');
+            // $form->display('updated_at');
         });
     }
 }

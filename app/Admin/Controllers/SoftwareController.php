@@ -103,7 +103,7 @@ class SoftwareController extends AdminController
     {
         return Form::make(Software::with('manufactors','stypes'), function (Form $form) {
             $id = $form->model()->id;
-            $form->display('id');
+            // $form->display('id');
             $form->text('name')->required()->rules("unique:softwares,name,$id", [ 'unique' => '该外设名已存在' ]);
             $form->select('manufactors_id')->options(Manufactor::all()->pluck('name','id'))->required();
             $form->text('version');
@@ -118,8 +118,8 @@ class SoftwareController extends AdminController
             $form->text('tsm');
             $form->text('comment');
         
-            $form->display('created_at');
-            $form->display('updated_at');
+            // $form->display('created_at');
+            // $form->display('updated_at');
         });
     }
 }

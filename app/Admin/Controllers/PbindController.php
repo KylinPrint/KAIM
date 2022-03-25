@@ -202,8 +202,8 @@ class PbindController extends AdminController
 
             $form->text('comment');
         
-            $form->display('created_at');
-            $form->display('updated_at');
+            // $form->display('created_at');
+            // $form->display('updated_at');
 
             $form->saving(function (Form $form) {
                 $database_name = env('DB_DATABASE');

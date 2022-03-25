@@ -173,7 +173,7 @@ class SbindController extends AdminController
     protected function form()
     {
         return Form::make(Sbind::with('softwares','releases','chips'), function (Form $form) {
-            $form->display('id');
+            // $form->display('id');
             $form->select('softwares_id')->options(Software::all()->pluck('name','id'))->required();
             $form->select('releases_id')->options(Release::all()->pluck('name','id'))->required();
             $form->text('os_subversion');
@@ -199,8 +199,8 @@ class SbindController extends AdminController
 
             $form->text('comment');
         
-            $form->display('created_at');
-            $form->display('updated_at');
+            // $form->display('created_at');
+            // $form->display('updated_at');
             
             $form->saving(function (Form $form) {
                 $database_name = env('DB_DATABASE');
