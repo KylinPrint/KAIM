@@ -60,7 +60,7 @@ class StatusController extends AdminController
     protected function form()
     {
         return Form::make(new Status(), function (Form $form) {
-            $form->display('id');
+            // $form->display('id');
             $form->select('parent')
             ->options(Status::where('parent','=',null)
             ->pluck('name','id'))
@@ -68,8 +68,8 @@ class StatusController extends AdminController
             ;
             $form->text('name')->required();
         
-            $form->display('created_at');
-            $form->display('updated_at');
+            // $form->display('created_at');
+            // $form->display('updated_at');
         });
 
     }

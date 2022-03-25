@@ -57,7 +57,7 @@ class ChipController extends AdminController
     protected function form()
     {
         return Form::make(new Chip(), function (Form $form) {
-            $form->display('id');
+            // $form->display('id');
             $form->text('name')->required();
             $form->select('arch')
             ->options([
@@ -68,8 +68,8 @@ class ChipController extends AdminController
                 'sw64'          => 'sw64',
                ])->required();
         
-            $form->display('created_at');
-            $form->display('updated_at');
+            // $form->display('created_at');
+            // $form->display('updated_at');
         });
     }
 }

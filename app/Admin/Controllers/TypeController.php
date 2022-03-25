@@ -60,7 +60,7 @@ class TypeController extends AdminController
     protected function form()
     {
         return Form::make(new Type(), function (Form $form) {
-            $form->display('id');
+            // $form->display('id');
 
             if($form->isEditing())
             {
@@ -74,8 +74,8 @@ class TypeController extends AdminController
             }          
 
         
-            $form->display('created_at');
-            $form->display('updated_at');
+            // $form->display('created_at');
+            // $form->display('updated_at');
         });
     }
 
