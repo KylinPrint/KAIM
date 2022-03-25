@@ -72,9 +72,7 @@ class SbindExport extends BaseExport implements WithMapping, WithHeadings, FromC
         
         $SbindRow = new Fluent($row);
         $ids = $SbindRow->id;
-
-        $curIndustryStr = '';  //行业
-        $curIndustryArr = array();
+ 
 
         $ExportArr = array();
 
@@ -82,23 +80,6 @@ class SbindExport extends BaseExport implements WithMapping, WithHeadings, FromC
         $curSoftwareArr = Software::with('manufactors','types')->find($row['softwares_id']);
 
         $curParentTypeName = Type::where('id',$curSoftwareArr->types->parent)->pluck('name')->first();
-
-        $curSoftwareIndustryArr = 
-            Software::with('peripheral_industry')
-            ->whereHas('peripheral_industry',function($query) use ($curSoftwareArr){
-                $query->with('industries')->where('peripherals_id',$curSoftwareArr->id);
-            })->get();
-        
-        if($curSoftwareIndustryArr->count())
-        {
-
-            foreach($curSoftwareIndustryArr[0]->peripheral_industry as $value)
-            {
-                $curIndustry = $value->industries->name;
-                array_push($curIndustryArr,$curIndustry);
-            }
-            $curIndustryStr = implode(',',$curIndustryArr);
-        }
 
         $ExportArr['产品ID'] = '';
         $ExportArr['厂商名称'] = $curSoftwareArr->manufactors->name;
@@ -117,7 +98,7 @@ class SbindExport extends BaseExport implements WithMapping, WithHeadings, FromC
         $ExportArr['小版本号'] = $row['os_subversion'];
         $ExportArr['备注'] = $row['comment'];
         $ExportArr['是否计划适配产品'] = '';  //暂无字段
-        $ExportArr['行业'] = $curIndustryStr;
+        $ExportArr['行业'] = $curSoftwareArr->industries;
         $ExportArr['适配类型'] = $row['adaption_type'];
 
         return $ExportArr;

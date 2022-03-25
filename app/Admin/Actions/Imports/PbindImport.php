@@ -46,7 +46,6 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
 
         // unset($rows[0]);  //去掉表头
 
-        $IndustryArr = Industry::all()->pluck('name','id')->toArray();
 
         foreach($rows as $key => $row)
         {
@@ -114,41 +113,13 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
                     'types_id' => Type::where('name',$row['外设类型二'])->pluck('id')->first(),
                     'release_date' => date('Y-m-d',($row['发布日期']-25569)*24*3600),
                     'eosl_date' => date('Y-m-d',($row['服务终止日期']-25569)*24*3600),
+                    'industries' => $row['行业'],
                     'comment' => $row['外设描述'],
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s'),
                 ];
                 $curPeripheralId = DB::table('peripherals')->insertGetId($peripheralInsert);
             }
-
-            $curIndustryId = '';
-            foreach($IndustryArr as $id => $name)
-            {
-                if($name == $row['行业分类'])
-                {
-                    $curIndustryId = $id;
-                }
-            }
-
-            $curPeripheralIndustry = 
-                    PeripheralIndustry::where
-                    ([
-                        ['peripherals_id',$curPeripheralId],
-                        ['industries_id',$curIndustryId]
-                    ])->get();
-            if($curPeripheralIndustry->isEmpty())
-            {
-                $peripheralIndustryInsert = 
-                [
-                    'peripherals_id' => $curPeripheralId,
-                    'industries_id' => $curIndustryId,
-                    'created_at' => date('Y-m-d H:i:s'),
-                    'updated_at' => date('Y-m-d H:i:s'),
-                ];
-                DB::table('peripheral_industry')->insert($peripheralIndustryInsert);
-            }
-
-            
 
             $pbindInsert =
             [
@@ -164,6 +135,7 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
                 'os_subversion' => $row['操作系统小版本']?:'',
                 'statuses_id' => Status::where('name',$row['当前细分适配状态'])->pluck('id')->first(),
                 'class' => $row['兼容等级'],
+                'solution' => $row['适配方案'],
                 'comment' => $row['备注'],
                 'adapt_source' => $row['引入来源'],
                 'adapted_before' => $this->bools($row['是否适配过国产CPU']),

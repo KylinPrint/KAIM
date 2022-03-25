@@ -77,32 +77,11 @@ class PbindExport extends BaseExport implements WithMapping, WithHeadings, FromC
         $PbindRow = new Fluent($row);
         $ids = $PbindRow->id;
 
-        $curIndustryStr = '';  //行业
-        $curIndustryArr = array();
-
         $ExportArr = array();
         $curPbindsArr = Pbind::with('releases','chips','solutions','statuses')->find($row['id']);
 
-        //这两条查询应该能写成一条
+        
         $curPeripheralArr = Peripheral::with('brands','types')->find($row['peripherals_id']);
-        $curPeripheralIndustryArr = 
-            Peripheral::with('peripheral_industry')
-            ->whereHas('peripheral_industry',function($query) use ($curPeripheralArr){
-                $query->with('industries')->where('peripherals_id',$curPeripheralArr->id);
-            })->get();
-        
-        if($curPeripheralIndustryArr->count())
-        {
-            
-            foreach($curPeripheralIndustryArr[0]->peripheral_industry as $value)
-            {
-                $curIndustry = $value->industries->name;
-                array_push($curIndustryArr,$curIndustry);
-            }
-            $curIndustryStr = implode(',',$curIndustryArr);
-        }
-        
-
 
         $curParentTypeName = Type::where('id',$curPeripheralArr->types->parent)->pluck('name')->first();
         preg_match('/[0-9a-zA-Z]+/',$curPbindsArr->releases->name,$curSmallReleas);
@@ -112,6 +91,7 @@ class PbindExport extends BaseExport implements WithMapping, WithHeadings, FromC
         $ExportArr['产品名称'] = $curPeripheralArr->name;
         $ExportArr['分类1'] = $curParentTypeName;
         $ExportArr['分类2'] = $curPeripheralArr->types->name;
+        $a = 0;
         $ExportArr['适配系统'] = $curPbindsArr->releases->name;
         $ExportArr['芯片'] = $curPbindsArr->chips->name;
         $ExportArr['体系架构'] = $curPbindsArr->chips->arch;
@@ -124,7 +104,7 @@ class PbindExport extends BaseExport implements WithMapping, WithHeadings, FromC
         $ExportArr['小版本号'] = $curSmallReleas[0];
         $ExportArr['备注'] = $row['comment']?:'';
         $ExportArr['是否计划适配产品'] = '';  //muji
-        $ExportArr['行业'] = $curIndustryStr;
+        $ExportArr['行业'] = $curPeripheralArr->industries;
         $ExportArr['适配类型'] = $curPbindsArr->solutions->source;
 
 

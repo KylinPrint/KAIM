@@ -90,6 +90,7 @@ class SbindImport implements ToCollection, WithHeadingRow, WithValidation
                     'am' => $row['适配负责人'],
                     'tsm' => $row['技术支撑负责人'],
                     'comment' => $row['软件描述'],
+                    'industries' => $row['行业'],
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s'),
                 ];
@@ -124,7 +125,7 @@ class SbindImport implements ToCollection, WithHeadingRow, WithValidation
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ];
-
+            $a = 0;
             $sbindInsertUnique = 
             [
                 'softwares_id' => $curSoftwareId,
