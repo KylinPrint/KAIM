@@ -58,7 +58,7 @@ class StypeController extends AdminController
     protected function form()
     {
         return Form::make(new Stype(), function (Form $form) {
-            $form->display('id');
+            // $form->display('id');
 
             $form->text('name');
             if($form->isEditing())
@@ -72,8 +72,8 @@ class StypeController extends AdminController
                 $form->text('name');
             }
         
-            $form->display('created_at');
-            $form->display('updated_at');
+            // $form->display('created_at');
+            // $form->display('updated_at');
         });
         
     }

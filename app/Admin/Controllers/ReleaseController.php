@@ -61,14 +61,14 @@ class ReleaseController extends AdminController
     protected function form()
     {
         return Form::make(new Release(), function (Form $form) {
-            $form->display('id');
+            // $form->display('id');
             $form->text('name')->required();
             $form->text('abbr');
             $form->date('release_date')->format('YYYY-MM-DD');
             $form->date('eosl_date')->format('YYYY-MM-DD');
         
-            $form->display('created_at');
-            $form->display('updated_at');
+            // $form->display('created_at');
+            // $form->display('updated_at');
         });
     }
 }

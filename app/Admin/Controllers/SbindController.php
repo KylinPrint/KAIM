@@ -173,7 +173,7 @@ class SbindController extends AdminController
     protected function form()
     {
         return Form::make(Sbind::with('softwares','releases','chips'), function (Form $form) {
-            $form->display('id');
+            // $form->display('id');
             $form->select('softwares_id')->options(Software::all()->pluck('name','id'))->required();
             $form->select('releases_id')->options(Release::all()->pluck('name','id'))->required();
             $form->text('os_subversion');
@@ -183,8 +183,7 @@ class SbindController extends AdminController
             $form->select('adapted_before')->options([0 => '否',1 => '是']);
             $form->select('statuses_id')->options(Status::where('parent','!=',null)->pluck('name','id'))->required();
             $form->text('statuses_comment', __('状态变更说明'));
-            $form->select('admin_users_id')->options(AdminUser::all()->pluck('name', 'id'))
-                ->required()->default(Admin::user()->id);
+            $form->select('admin_users_id')->options(AdminUser::all()->pluck('name', 'id'))->default(Admin::user()->id);
             $form->text('solution');
             $form->select('class')
                 ->options(config('kaim.class'));
@@ -200,8 +199,8 @@ class SbindController extends AdminController
 
             $form->text('comment');
         
-            $form->display('created_at');
-            $form->display('updated_at');
+            // $form->display('created_at');
+            // $form->display('updated_at');
             
             $form->saving(function (Form $form) {
                 $database_name = env('DB_DATABASE');
@@ -242,6 +241,7 @@ class SbindController extends AdminController
                         'updated_at' => $timestamp,
                     ]);
                 }
+                $form->deleteInput('statuses_comment');
             });
         });
     }

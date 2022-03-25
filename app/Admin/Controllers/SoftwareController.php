@@ -2,7 +2,6 @@
 
 namespace App\Admin\Controllers;
 
-use App\Admin\Renderable\IndustryTable;
 use App\Models\Manufactor;
 use App\Models\Software;
 use App\Models\Stype;
@@ -27,7 +26,7 @@ class SoftwareController extends AdminController
             $grid->column('version');
 
             $grid->column('stypes.name',__('类型'));
-            $grid->column('industries')->pluck('name')->badge();
+            $grid->column('industries')->badge();
             $grid->column('appstore_soft')->display(function ($value) {
                 if ($value == '1')  { return '是'; }
                 else                { return '否'; }
@@ -43,7 +42,7 @@ class SoftwareController extends AdminController
             $grid->column('created_at');
             $grid->column('updated_at')->sortable();
             
-            $grid->quickSearch('name', 'industries.name', 'comment');
+            $grid->quickSearch('name', 'industries', 'comment');
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->panel();
                 $filter->like('name','产品名称');
@@ -82,6 +81,7 @@ class SoftwareController extends AdminController
             $show->field('manufactors_id');
             $show->field('version');
             $show->field('stypes_id');
+            $show->field('industries')->as(function ($industries) { return explode(',', $industries); })->badge();
             $show->field('kernel_version');
             $show->field('crossover_version');
             $show->field('box86_version');
@@ -103,23 +103,13 @@ class SoftwareController extends AdminController
     {
         return Form::make(Software::with('manufactors','stypes'), function (Form $form) {
             $id = $form->model()->id;
-            $form->display('id');
+            // $form->display('id');
             $form->text('name')->required()->rules("unique:softwares,name,$id", [ 'unique' => '该外设名已存在' ]);
             $form->select('manufactors_id')->options(Manufactor::all()->pluck('name','id'))->required();
             $form->text('version');
             $form->select('stypes_id', __('类型'))->options(Stype::where('parent','!=',null)->pluck('name','id'))->required();    
-            $form->multipleSelectTable('industries')
-                ->title('行业')
-                ->from(IndustryTable::make())
-                ->model(Industry::class, 'id', 'name')
-                ->required()
-                ->customFormat(function ($v) {
-                    if (!$v) return [];
-                    // 这一步非常重要，需要把数据库中查出来的二维数组转化成一维数组
-                    return array_column($v, 'id');
-            });
+            $form->tags('industries')->options(config('kaim.industries'))->saving(function ($value) { return implode(',', $value); })->required();
             $form->select('appstore_soft')->options([0 => '否',1 => '是']);
-
             $form->text('kernel_version');
             $form->text('crossover_version');
             $form->text('box86_version');
@@ -128,8 +118,8 @@ class SoftwareController extends AdminController
             $form->text('tsm');
             $form->text('comment');
         
-            $form->display('created_at');
-            $form->display('updated_at');
+            // $form->display('created_at');
+            // $form->display('updated_at');
         });
     }
 }
