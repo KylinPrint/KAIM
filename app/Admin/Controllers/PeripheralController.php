@@ -60,6 +60,8 @@ class PeripheralController extends AdminController
             $grid->column('brands.name', __('品牌'));
             $grid->column('types.name', __('类型'));
             $grid->column('industries')->badge();
+            $grid->column('vid');
+            $grid->column('pid');
             $grid->column('release_date');
             $grid->column('eosl_date');
 
@@ -72,7 +74,7 @@ class PeripheralController extends AdminController
                     //处理布尔值
                     if ($value['field'] == 2) {
                         if ($res == "0") { return '否'; }
-                        else { return '是'; }
+                        elseif ($res == "1") { return '是'; }
                     } 
                     else { return $res; }
                 });
@@ -121,6 +123,8 @@ class PeripheralController extends AdminController
             $show->field('brands.name', __('品牌'));
             $show->field('types.name', __('类型'));
             $show->field('industries')->as(function ($industries) { return explode(',', $industries); })->badge();
+            $show->field('vid');
+            $show->field('pid');
             $show->field('release_date');
             $show->field('eosl_date');
 
@@ -181,6 +185,8 @@ class PeripheralController extends AdminController
             $form->select('brands_id', __('品牌'))->options(Brand::all()->pluck('name','id'))->required();
             $form->text('name')->required()->rules("unique:peripherals,name,$id", [ 'unique' => '该外设名已存在' ]);
             $form->tags('industries')->options(config('kaim.industries'))->saving(function ($value) { return implode(',', $value); })->required();
+            $form->text('vid');
+            $form->text('pid');
             $form->date('release_date')->format('YYYY-MM-DD');
             $form->date('eosl_date')->format('YYYY-MM-DD');
 
@@ -197,7 +203,7 @@ class PeripheralController extends AdminController
                             $form->number($value['id'], $value['name']);
                         }
                         elseif ($value['field'] == 2) {
-                            $form->radio($value['id'], $value['name'])->options(['0' => '否', '1'=> '是'])->default('0');
+                            $form->radio($value['id'], $value['name'])->options(['0' => '否', '1'=> '是']);
                         }
                     }
                     else
@@ -209,7 +215,7 @@ class PeripheralController extends AdminController
                             $form->number($value['id'], $value['name'])->required();
                         }
                         elseif ($value['field'] == 2) {
-                            $form->radio($value['id'], $value['name'])->options(['0' => '否', '1'=> '是'])->default('0')->required();
+                            $form->radio($value['id'], $value['name'])->options(['0' => '否', '1'=> '是'])->required();
                         }
                     }
                 }
@@ -225,14 +231,18 @@ class PeripheralController extends AdminController
                     $timestamp = date("Y-m-d H:i:s");
                     $specs = Specification::where('types_id', $form->types_id)->get(['id'])->toArray();
 
-                    foreach ($specs as $key => $value) {
-                        DB::table('values')->insert([
-                            'peripherals_id' => $newID,
-                            'specifications_id' => $value['id'],
-                            'value' => $form->input($value['id']),
-                            'created_at' => $timestamp,
-                            'updated_at' => $timestamp,
-                        ]);
+                    foreach ($specs as $value) {
+                        $a = $form->input($value['id']);
+                        if ($a != "")
+                        {
+                            DB::table('values')->insert([
+                                'peripherals_id' => $newID,
+                                'specifications_id' => $value['id'],
+                                'value' => $form->input($value['id']),
+                                'created_at' => $timestamp,
+                                'updated_at' => $timestamp,
+                            ]);
+                        }
                         $form->deleteInput($value['id']);
                     }
                 }

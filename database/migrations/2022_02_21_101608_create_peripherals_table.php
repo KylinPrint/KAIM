@@ -28,6 +28,8 @@ class CreatePeripheralsTable extends Migration
                   ->comment('外设类型')
                   ->constrained();
             $table->string('industries')->nullable()->comment('行业');
+            $table->string('vid')->nullable()->comment('VID');
+            $table->string('pid')->nullable()->comment('PID');
             $table->date('release_date')->nullable()->comment('发布日期');
             $table->date('eosl_date')->nullable()->comment('服务终止日期');
             $table->string('comment')->nullable()->comment('外设描述');
