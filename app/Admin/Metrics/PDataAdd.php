@@ -3,12 +3,13 @@
 namespace App\Admin\Metrics;
 
 use App\Models\Pbind;
+use App\Models\Sbind;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Widgets\Metrics\Donut;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
-class DataAdd extends Donut
+class PDataAdd extends Donut
 {
     protected $labels = ['未适配','适配中','已适配','待验证','适配暂停'];
 
@@ -22,7 +23,7 @@ class DataAdd extends Donut
         $color = Admin::color();
         $colors = [$color->dark90(),$color->blue1(), $color->alpha('blue2', 0.5),$color->blue2(),$color->blue1()];
 
-        $this->title('新增适配数据');
+        $this->title('外设新增适配数据');
         $this->dropdown([
             '7' => 'Last 7 Days',
             '30' => 'Last Month',
@@ -72,21 +73,30 @@ class DataAdd extends Donut
         $curTimeBefor = now()->subDays($curOption)->toDateTimeString();
 
         // $AddNum = count(Pbind::all()->whereBetween('created_at',[$curTimeBefor,$curTime]));
-        $a1 = count(Pbind::whereHas('statuses', function (Builder $query){
-            $query->where('parent','1')->orWhere('id','1');
-        })->whereBetween('created_at',[$curTimeBefor,$curTime])->get());
-        $a2 = count(Pbind::whereHas('statuses', function (Builder $query){
-            $query->where('parent','2')->orWhere('id','2');
-        })->whereBetween('created_at',[$curTimeBefor,$curTime])->get());
-        $a3 = count(Pbind::whereHas('statuses', function (Builder $query){
-            $query->where('parent','3')->orWhere('id','3');
-        })->whereBetween('created_at',[$curTimeBefor,$curTime])->get());
-        $a4 = count(Pbind::whereHas('statuses', function (Builder $query){
-            $query->where('parent','4')->orWhere('id','4');
-        })->whereBetween('created_at',[$curTimeBefor,$curTime])->get());
-        $a5 = count(Pbind::whereHas('statuses', function (Builder $query){
-            $query->where('parent','5')->orWhere('id','5');
-        })->whereBetween('created_at',[$curTimeBefor,$curTime])->get());
+        $a1 = 
+            count(Pbind::whereHas('statuses', function (Builder $query){
+                $query->where('parent','1')->orWhere('id','1');
+            })->whereBetween('created_at',[$curTimeBefor,$curTime])->get());
+
+        $a2 = 
+            count(Pbind::whereHas('statuses', function (Builder $query){
+                $query->where('parent','2')->orWhere('id','2');
+            })->whereBetween('created_at',[$curTimeBefor,$curTime])->get());
+
+        $a3 = 
+            count(Pbind::whereHas('statuses', function (Builder $query){
+                $query->where('parent','3')->orWhere('id','3');
+            })->whereBetween('created_at',[$curTimeBefor,$curTime])->get());
+
+        $a4 = 
+            count(Pbind::whereHas('statuses', function (Builder $query){
+                $query->where('parent','4')->orWhere('id','4');
+            })->whereBetween('created_at',[$curTimeBefor,$curTime])->get());
+
+        $a5 = 
+            count(Pbind::whereHas('statuses', function (Builder $query){
+                $query->where('parent','5')->orWhere('id','5');
+            })->whereBetween('created_at',[$curTimeBefor,$curTime])->get());
  
 
         $this->withContent($a1,$a2,$a3,$a4,$a5);
