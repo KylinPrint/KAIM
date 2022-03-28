@@ -16,7 +16,7 @@ class CreateSoftwaresTable extends Migration
         Schema::create('softwares', function (Blueprint $table) {
             $table->id();
 
-            $table->string('name')->unique()->comment('软件名');
+            $table->string('name')->comment('软件名');
 
             $table->foreignId('manufactors_id')
                   ->comment('厂商名称')
