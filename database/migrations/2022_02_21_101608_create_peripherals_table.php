@@ -36,7 +36,7 @@ class CreatePeripheralsTable extends Migration
 
             $table->timestamps();
 
-            $table->unique(['brands_id', 'name']);
+            $table->unique(['brands_id', 'name','manufactors_id']);
         });
     }
 
