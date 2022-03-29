@@ -41,7 +41,7 @@ class PbindController extends AdminController
                 });
             }
 
-            if(!Admin::user()->can('pbinds-create'))
+            if(!Admin::user()->can('pbinds-edit'))
             {
                 $grid->disableCreateButton();
             }
@@ -106,7 +106,7 @@ class PbindController extends AdminController
             // $grid->column('created_at');
             $grid->column('updated_at')->sortable();
            
-            $grid->quickSearch('name', 'releases.name', 'chips.name', 'comment');
+            $grid->quickSearch('peripherals.name', 'releases.name', 'chips.name', 'comment');
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->panel();
                 $filter->like('peripherals.name','设备名');

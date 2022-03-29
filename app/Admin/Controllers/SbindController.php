@@ -95,7 +95,7 @@ class SbindController extends AdminController
             $grid->withBorder();
             $grid->showColumnSelector();
             
-            $grid->quickSearch('name', 'releases.name', 'chips.name', 'comment');
+            $grid->quickSearch('softwares.name', 'releases.name', 'chips.name', 'comment');
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->panel();
                 $filter->like('softwares.name','软件名');
@@ -212,7 +212,8 @@ class SbindController extends AdminController
                     $id = DB::select("
                         SELECT `AUTO_INCREMENT` FROM INFORMATION_SCHEMA.TABLES 
                         WHERE TABLE_SCHEMA = '$database_name' AND TABLE_NAME = 'sbinds'
-                    ")[0]->AUTO_INCREMENT;
+                    ");
+                    $a = $id;
                 }
                 else
                 {
