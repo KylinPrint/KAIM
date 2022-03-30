@@ -11,6 +11,7 @@ return [
         'types_id' => '分类',
         'release_date' => '发布日期',
         'eosl_date' => '服务终止日期',
+        'model' => '系统识别型号',
         'comment' => '外设描述',
         'industries' => '行业',
     ],

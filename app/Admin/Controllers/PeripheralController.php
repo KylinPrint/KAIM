@@ -62,6 +62,7 @@ class PeripheralController extends AdminController
             $grid->column('industries')->badge();
             $grid->column('vid');
             $grid->column('pid');
+            $grid->column('model');
             $grid->column('release_date');
             $grid->column('eosl_date');
 
@@ -187,6 +188,7 @@ class PeripheralController extends AdminController
             $form->tags('industries')->options(config('kaim.industries'))->saving(function ($value) { return implode(',', $value); })->required();
             $form->text('vid');
             $form->text('pid');
+            $form->text('model');
             $form->date('release_date')->format('YYYY-MM-DD');
             $form->date('eosl_date')->format('YYYY-MM-DD');
 
