@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Metrics\DataCount;
 use App\Admin\Metrics\PDataAdd;
 use App\Admin\Metrics\SDataAdd;
 use App\Http\Controllers\Controller;
@@ -17,6 +18,7 @@ class StatisticsController extends Controller
             ->body(function (Row $row) {
                 $row->column(4, new PDataAdd());
                 $row->column(4, new SDataAdd());
+                $row->column(4, new DataCount());
             });
     }
 }

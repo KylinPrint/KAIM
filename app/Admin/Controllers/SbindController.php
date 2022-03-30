@@ -194,8 +194,8 @@ class SbindController extends AdminController
             $form->select('kylineco')->options([0 => '否',1 => '是'])->required();
             $form->select('appstore')->options([0 => '否',1 => '是'])->required();
             $form->select('iscert')->options([0 => '否',1 => '是'])->required();
-            $form->date('start_time')->format('Y-m-d');
-            $form->date('complete_time')->format('Y-m-d');
+            $form->date('start_time')->format('Y-M-D');
+            $form->date('complete_time')->format('Y-M-D');
 
             $form->text('comment');
         
