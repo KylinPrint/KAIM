@@ -212,8 +212,7 @@ class SbindController extends AdminController
                     $id = DB::select("
                         SELECT `AUTO_INCREMENT` FROM INFORMATION_SCHEMA.TABLES 
                         WHERE TABLE_SCHEMA = '$database_name' AND TABLE_NAME = 'sbinds'
-                    ");
-                    $a = $id;
+                    ")[0]->AUTO_INCREMENT;
                 }
                 else
                 {
