@@ -77,15 +77,15 @@ class SbindExport extends BaseExport implements WithMapping, WithHeadings, FromC
         $ExportArr = array();
 
         $curSbindsArr = Sbind::with('releases','chips','softwares','statuses')->find($row['id']);
-        $curSoftwareArr = Software::with('manufactors','types')->find($row['softwares_id']);
+        $curSoftwareArr = Software::with('manufactors','stypes')->find($row['softwares_id']);
 
-        $curParentTypeName = Type::where('id',$curSoftwareArr->types->parent)->pluck('name')->first();
+        $curParentTypeName = Type::where('id',$curSoftwareArr->stypes->parent)->pluck('name')->first();
 
         $ExportArr['产品ID'] = '';
         $ExportArr['厂商名称'] = $curSoftwareArr->manufactors->name;
         $ExportArr['产品名称'] = $curSbindsArr->softwares->name;
         $ExportArr['分类1'] = $curParentTypeName;
-        $ExportArr['分类2'] = $curSoftwareArr->types->name;
+        $ExportArr['分类2'] = $curSoftwareArr->stypes->name;
         $ExportArr['适配系统'] = $curSbindsArr->releases->name;
         $ExportArr['芯片'] = $curSbindsArr->chips->name;
         $ExportArr['体系架构'] = $curSbindsArr->chips->arch;
