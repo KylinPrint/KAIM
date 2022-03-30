@@ -78,7 +78,7 @@ class PbindExport extends BaseExport implements WithMapping, WithHeadings, FromC
         $ids = $PbindRow->id;
 
         $ExportArr = array();
-        $curPbindsArr = Pbind::with('releases','chips','solutions','statuses')->find($row['id']);
+        $curPbindsArr = Pbind::with('releases','chips','statuses')->find($row['id']);
 
         
         $curPeripheralArr = Peripheral::with('brands','types')->find($row['peripherals_id']);
@@ -105,7 +105,7 @@ class PbindExport extends BaseExport implements WithMapping, WithHeadings, FromC
         $ExportArr['备注'] = $row['comment']?:'';
         $ExportArr['是否计划适配产品'] = '';  //muji
         $ExportArr['行业'] = $curPeripheralArr->industries;
-        $ExportArr['适配类型'] = $curPbindsArr->solutions->source;
+        $ExportArr['适配类型'] = $curPbindsArr->adaption_type ;
 
 
         return $ExportArr;
