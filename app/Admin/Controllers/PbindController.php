@@ -122,7 +122,7 @@ class PbindController extends AdminController
                     ->title('弹窗标题')
                     ->dialogWidth('50%')
                     ->model(Chip::class, 'id', 'name');
-                $filter->equal('statuses.id', '适配状态')
+                $filter->equal('statuses.parent', '适配状态')
                     ->multipleSelectTable(StatusTable::make(['id' => 'name']))
                     ->title('弹窗标题')
                     ->dialogWidth('50%')
