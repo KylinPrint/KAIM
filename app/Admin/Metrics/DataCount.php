@@ -13,7 +13,15 @@ use Illuminate\Http\Request;
 
 class DataCount extends Donut
 {
-    protected $labels = ['产品数据总数','适配数据总数'];
+    protected $labels = 
+    [
+        '产品数据总数',
+        '外设产品数据总数',
+        '软件产品数据总数',
+        '适配数据总数',
+        '外设适配数据总数',
+        '软件适配数据总数'
+    ];
 
     /**
      * 初始化卡片内容
@@ -75,14 +83,16 @@ class DataCount extends Donut
         $curTimeBefor = now()->subDays($curOption)->toDateTimeString();
 
         // $AddNum = count(Pbind::all()->whereBetween('created_at',[$curTimeBefor,$curTime]));
-        $a1 = 
-            count(Peripheral::all())+count(Software::all());
+        $a = count(Peripheral::all())+count(Software::all());
+        $a1 = count(Peripheral::all());
+        $a2 = count(Software::all());
 
-        $a2 = 
-        count(Sbind::all())+count(Pbind::all());
+        $b = count(Sbind::all())+count(Pbind::all());
+        $b1 = count(Sbind::all());
+        $b2 = count(Pbind::all());
  
 
-        $this->withContent($a1,$a2);
+        $this->withContent($a,$a1,$a2,$b,$b1,$b2);
 
         // 图表数据
 
@@ -111,7 +121,7 @@ class DataCount extends Donut
      *
      * @return $this
      */
-    protected function withContent($a1,$a2)
+    protected function withContent($a,$a1,$a2,$b,$b1,$b2)
     {
         // $content = parent::render();
 
@@ -120,22 +130,48 @@ class DataCount extends Donut
         $blue1 = Admin::color()->blue1();
 
         $style = 'margin-bottom: 8px';
-        $labelWidth = 120;
+        $labelWidth = 160;
 
         return $this->content(
             <<<HTML
+             
 <div class="d-flex pl-1 pr-1 pt-1" style="{$style}">
-    <div style="width: {$labelWidth}px">
+    <div style="width: 140px">
         <i class="fa fa-circle" style="color: $AddColor"></i> {$this->labels[0]}
+    </div>
+    <div>{$a}</div>
+</div>
+<div class="d-flex pl-1 pr-1 pt-1" style="{$style}">
+    <div style="width: {$labelWidth}px;text-indent:0.5em">
+        <i class="fa fa-circle" style="color: $blue1"></i> {$this->labels[1]}
     </div>
     <div>{$a1}</div>
 </div>
 <div class="d-flex pl-1 pr-1 pt-1" style="{$style}">
-    <div style="width: {$labelWidth}px">
-        <i class="fa fa-circle" style="color: $blue"></i> {$this->labels[1]}
+    <div style="width: {$labelWidth}px;text-indent:0.5em">
+        <i class="fa fa-circle" style="color: $blue1"></i> {$this->labels[2]}
     </div>
     <div>{$a2}</div>
 </div>
+<div class="d-flex pl-1 pr-1 pt-1" style="{$style}">
+    <div style="width: 140px">
+        <i class="fa fa-circle" style="color: $blue"></i> {$this->labels[3]}
+    </div>
+    <div>{$b}</div>
+</div>
+<div class="d-flex pl-1 pr-1 pt-1" style="{$style}">
+    <div style="width: {$labelWidth}px;text-indent:0.5em">
+        <i class="fa fa-circle" style="color: $blue1"></i> {$this->labels[4]}
+    </div>
+    <div>{$b1}</div>
+</div>
+<div class="d-flex pl-1 pr-1 pt-1" style="{$style}">
+    <div style="width: {$labelWidth}px;text-indent:0.5em">
+        <i class="fa fa-circle" style="color: $blue1"></i> {$this->labels[5]}
+    </div>
+    <div>{$b2}</div>
+</div>
+
 
 HTML
         );
