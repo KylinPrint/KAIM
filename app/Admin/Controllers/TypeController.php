@@ -64,8 +64,22 @@ class TypeController extends AdminController
 
             if($form->isEditing())
             {
-                $form->select('parent')->options(Type::where('parent','=',null)->pluck('name','id'))->load('name','/api/type');
-                $form->select('name');
+                $form->select('parent')->options(Type::where('parent','=',null)->pluck('name','id'))->load('name','/api/stype');
+                $form->select('name')->options(
+                    function (){
+
+                        $a = Type::all()->where('parent',$this->parent);
+
+                        if($a){
+                            $arr = array();
+  
+                            foreach($a as $b){
+                                $arr = $arr + [$b->id => $b->name];
+                            }
+                            return $arr;
+                        }
+                    }
+                );
             }
             else
             {

@@ -6,7 +6,7 @@ return [
     ],
     'fields' => [
         'name' => '类型名称',
-        'parent' => '父ID',
+        'parent' => '父级',
     ],
     'options' => [
     ],

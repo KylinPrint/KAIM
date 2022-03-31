@@ -19,9 +19,10 @@ class StypeController extends AdminController
     protected function grid()
     {
         return Grid::make(new Stype(), function (Grid $grid) {
-            // $grid->column('id')->sortable();
+            $grid->column('parent')->display(function($parent){
+                return Stype::where('id',$parent)->pluck('name')->first();
+            });
             $grid->column('name');
-            $grid->column('parent');
             $grid->column('created_at');
             $grid->column('updated_at')->sortable();
         
@@ -58,13 +59,27 @@ class StypeController extends AdminController
     protected function form()
     {
         return Form::make(new Stype(), function (Form $form) {
-            // $form->display('id');
+            $curname = $form->model()->name;
 
-            $form->text('name');
             if($form->isEditing())
             {
                 $form->select('parent')->options(Stype::where('parent','=',null)->pluck('name','id'))->load('name','/api/stype');
-                $form->select('name');
+                $form->select('name')->options(
+                    function (){
+
+                        $a = Stype::all()->where('parent',$this->parent);
+
+                        if($a){
+                            $arr = array();
+  
+                            foreach($a as $b){
+                                $arr = $arr + [$b->id => $b->name];
+                            }
+                            return $arr;
+                        }
+                    }
+                );
+
             }
             else
             {
