@@ -44,7 +44,7 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
     {
         set_time_limit(0);
 
-        // unset($rows[0]);  //去掉表头
+        unset($rows[0]);  //去掉表头
 
 
         foreach($rows as $key => $row)
@@ -94,7 +94,6 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
                 [
                     'name' => $row['品牌'],
                     'alias' => '',
-                    'manufactors_id' => $row['厂商'] == ''?'':$curManufactorId,
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s'),
                 ];
@@ -113,7 +112,7 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
                     'types_id' => Type::where('name',$row['外设类型二'])->pluck('id')->first(),
                     'release_date' => date('Y-m-d',($row['发布日期']-25569)*24*3600),
                     'eosl_date' => date('Y-m-d',($row['服务终止日期']-25569)*24*3600),
-                    'industries' => $row['行业'],
+                    'industries' => $row['行业分类'],
                     'comment' => $row['外设描述'],
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s'),
@@ -124,7 +123,6 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
             $pbindInsert =
             [
                 'peripherals_id' => $curPeripheralId,
-                'solution' => $row['方案名称'],
                 'chips_id' => 
                     Chip::where([
                         ['name',$row['芯片']],
@@ -135,7 +133,7 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
                 'os_subversion' => $row['操作系统小版本']?:'',
                 'statuses_id' => Status::where('name',$row['当前细分适配状态'])->pluck('id')->first(),
                 'class' => $row['兼容等级'],
-                'solution' => $row['适配方案'],
+                'solution' => $row['方案下载地址'],
                 'comment' => $row['备注'],
                 'adapt_source' => $row['引入来源'],
                 'adapted_before' => $this->bools($row['是否适配过国产CPU']),
