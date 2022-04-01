@@ -57,6 +57,9 @@ class PbindController extends AdminController
                 $grid->disableActions();
             }
 
+            // 默认按创建时间倒序排列
+            $grid->model()->orderBy('created_at', 'desc');
+
             $grid->showColumnSelector();  //后期可能根据权限显示
 
             $grid->column('peripherals.brands_id',__('品牌'))->display(function ($brand) {

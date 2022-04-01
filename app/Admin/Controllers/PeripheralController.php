@@ -53,6 +53,8 @@ class PeripheralController extends AdminController
                 'type' => $param,
             ]);
             $grid->model()->where('types_id',$param);
+            // 默认按创建时间倒序排列
+            $grid->model()->orderBy('created_at', 'desc');
 
             // $grid->column('id')->sortable();
             $grid->column('manufactors.name',__('厂商'));
@@ -184,7 +186,7 @@ class PeripheralController extends AdminController
             $form->select('manufactors_id', __('厂商'))->options(Manufactor::all()->pluck('name','id'));
             $form->select('brands_id', __('品牌'))->options(Brand::all()->pluck('name','id'))->required();
             $form->text('name')->required()->rules("unique:peripherals,name,$id", [ 'unique' => '该外设名已存在' ]);
-            $form->tags('industries')->options(config('kaim.industries'))->saving(function ($value) { return implode(',', $value); })->required();
+            $form->tags('industries')->options(config('kaim.industry'))->saving(function ($value) { return implode(',', $value); })->required();
             $form->text('vid');
             $form->text('pid');
             $form->text('model');

@@ -41,6 +41,9 @@ class SbindController extends AdminController
 
             $grid->export(new SbindExport());
 
+            // 默认按创建时间倒序排列
+            $grid->model()->orderBy('created_at', 'desc');
+
             $grid->column('softwares.manufactors_id',__('厂商名称'))->display(function ($manufactors) {
                 return Manufactor::where('id',$manufactors)->pluck('name')->first();
             });

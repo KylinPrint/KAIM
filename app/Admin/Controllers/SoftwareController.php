@@ -20,7 +20,8 @@ class SoftwareController extends AdminController
     protected function grid()
     {
         return Grid::make(Software::with(['manufactors','stypes']), function (Grid $grid) {
-            // $grid->column('id')->sortable();
+            // 默认按创建时间倒序排列
+            $grid->model()->orderBy('created_at', 'desc');
             $grid->column('name');
             $grid->column('manufactors.name',__('厂商'));
             $grid->column('version');
@@ -112,7 +113,7 @@ class SoftwareController extends AdminController
             $form->select('manufactors_id')->options(Manufactor::all()->pluck('name','id'))->required();
             $form->text('version');
             $form->select('stypes_id', __('类型'))->options(Stype::where('parent','!=',null)->pluck('name','id'))->required();    
-            $form->tags('industries')->options(config('kaim.industries'))->saving(function ($value) { return implode(',', $value); })->required();
+            $form->tags('industries')->options(config('kaim.industry'))->saving(function ($value) { return implode(',', $value); })->required();
             $form->select('appstore_soft')->options([0 => '否',1 => '是']);
             $form->text('kernel_version');
             $form->text('crossover_version');
