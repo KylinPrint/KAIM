@@ -41,21 +41,20 @@ class SbindController extends AdminController
 
             $grid->export(new SbindExport());
 
-            // $grid->column('id')->sortable();
-            $grid->column('softwares.name',__('软件名'))->width('15%');
-            $grid->column('softwares.stypes_id',__('类型'))->display(function ($stypes_id) {
-                return Stype::where('id',$stypes_id)->pluck('name')->first();
-            });
             $grid->column('softwares.manufactors_id',__('厂商名称'))->display(function ($manufactors) {
                 return Manufactor::where('id',$manufactors)->pluck('name')->first();
             });
+            $grid->column('softwares.name',__('软件名'))->width('15%');
+            $grid->column('softwares.stypes_id',__('软件类型'))->display(function ($stypes_id) {
+                return Stype::where('id',$stypes_id)->pluck('name')->first();
+            });
             $grid->column('releases.name',__('操作系统版本'))->width('15%');
             $grid->column('os_subversion')->hide();
-            $grid->column('chips.name',__('芯片'));
+            $grid->column('chips.name',__('芯片名称'));
             $grid->column('adapt_source');
             $grid->column('adapted_before')->display(function ($value) {
-                if ($value == '1')  { return '是'; }
-                else                { return '否'; }
+                if ($value == '1') { return '是'; }
+                elseif ($value == '0') { return '否'; }
             })->hide();
             $grid->column('statuses.parent', __('当前适配状态'))->display(function ($parent) {
                 return Status::where('id', $parent)->pluck('name')->first();
@@ -92,8 +91,6 @@ class SbindController extends AdminController
 
 
             $grid->scrollbarX();
-            $grid->addTableClass(['table-text-center']);
-            $grid->withBorder();
             $grid->showColumnSelector();
             
             $grid->quickSearch('softwares.name', 'releases.name', 'chips.name', 'comment');
@@ -143,26 +140,46 @@ class SbindController extends AdminController
      */
     protected function detail($id)
     {
-        return Show::make($id, new Sbind(), function (Show $show) {
-            // $show->field('id');
-            $show->field('softwares_id');
-            $show->field('releases_id');
+        return Show::make($id, Sbind::with(['softwares', 'releases', 'chips', 'statuses', 'admin_users']), function (Show $show) {
+            $show->field('softwares.manufactors_id', __('厂商名称'))->as(function ($manufactors_id) {
+                return Manufactor::where('id', $manufactors_id)->pluck('name')->first();
+            });
+            $show->field('softwares.name', __('软件名'));
+            $show->field('softwares.stypes_id', __('软件类型'))->as(function ($stypes_id) {
+                return Stype::where('id', $stypes_id)->pluck('name')->first();
+            });
+            $show->field('releases.name', __('操作系统版本'));
             $show->field('os_subversion');
-            $show->field('chips_id');
+            $show->field('chips.name', __('芯片名称'));
             $show->field('adapt_source');
-            $show->field('adapted_before');
-            $show->field('statuses_id');
-            $show->field('admin_users_id');
+            $show->field('adapted_before')->as(function ($adapted_before) {
+                if ($adapted_before == '1') { return '是'; }
+                elseif ($adapted_before == '0') { return '否'; }
+            });
+            $show->field('statuses.parent', __('当前适配状态'))->as(function ($parent) {
+                return Status::where('id', $parent)->pluck('name')->first();
+            });
+            $show->field('statuses.name', __('当前细分适配状态'));
+            $show->field('admin_users.name', __('当前适配状态责任人'));
             $show->field('solution');
             $show->field('class');
             $show->field('adaption_type');
             $show->field('test_type');
-            $show->field('kylineco');
-            $show->field('appstore');
-            $show->field('iscert');
+            $show->field('kylineco')->as(function ($kylineco) {
+                if ($kylineco == '1') { return '是'; }
+                elseif ($kylineco == '0') { return '否'; }
+            });
+            $show->field('appstore')->as(function ($appstore) {
+                if ($appstore == '1') { return '是'; }
+                elseif ($appstore == '0') { return '否'; }
+            });
+            $show->field('iscert')->as(function ($iscert) {
+                if ($iscert == '1') { return '是'; }
+                elseif ($iscert == '0') { return '否'; }
+            });
+            $show->field('start_time');
+            $show->field('complete_time');
             $show->field('comment');
-            // $show->field('created_at');
-            // $show->field('updated_at');
         });
     }
 

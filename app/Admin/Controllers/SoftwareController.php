@@ -75,13 +75,17 @@ class SoftwareController extends AdminController
      */
     protected function detail($id)
     {
-        return Show::make($id, new Software(), function (Show $show) {
+        return Show::make($id, Software::with(['manufactors', 'stypes']), function (Show $show) {
             // $show->field('id');
             $show->field('name');
-            $show->field('manufactors_id');
+            $show->field('manufactors.name', __('厂商'));
             $show->field('version');
-            $show->field('stypes_id');
+            $show->field('stypes.name', __('分类'));
             $show->field('industries')->as(function ($industries) { return explode(',', $industries); })->badge();
+            $show->field('appstore_soft')->as(function ($appstore_soft) {
+                if ($appstore_soft == '1') { return '是'; }
+                elseif ($appstore_soft == '0') { return '否'; }
+            });
             $show->field('kernel_version');
             $show->field('crossover_version');
             $show->field('box86_version');

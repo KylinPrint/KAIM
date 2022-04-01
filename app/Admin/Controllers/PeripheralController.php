@@ -55,9 +55,9 @@ class PeripheralController extends AdminController
             $grid->model()->where('types_id',$param);
 
             // $grid->column('id')->sortable();
-            $grid->column('name');
             $grid->column('manufactors.name',__('厂商'));
             $grid->column('brands.name', __('品牌'));
+            $grid->column('name');
             $grid->column('types.name', __('类型'));
             $grid->column('industries')->badge();
             $grid->column('vid');
@@ -169,7 +169,6 @@ class PeripheralController extends AdminController
         return Form::make(Peripheral::with(['manufactors', 'brands', 'types', 'values']), function (Form $form) {
             $id = $form->model()->id;
             // TODO 参数的新增和修改好像哪里有问题
-            // $form->display('id');
             if ($form->isEditing()) {
                 $form->display('types_id', __('类型'))->with(function ($typesID) {
                     return Type::where('id', $typesID)->pluck('name')->first();

@@ -59,23 +59,21 @@ class PbindController extends AdminController
 
             $grid->showColumnSelector();  //后期可能根据权限显示
 
+            $grid->column('peripherals.brands_id',__('品牌'))->display(function ($brand) {
+                return Brand::where('id', $brand)->pluck('name')->first();
+            });
             $grid->column('peripherals.name',__('外设型号'));
             // 脑瘫代码
             $grid->column('peripherals.types_id',__('外设类型'))->display(function ($type) {
                 return Type::where('id', $type)->pluck('name')->first();
             });
-            $grid->column('peripherals.brands_id',__('品牌'))->display(function ($brand) {
-                return Brand::where('id', $brand)->pluck('name')->first();
-            });
             $grid->column('releases.name',__('操作系统版本'));
             $grid->column('os_subversion')->hide();
             $grid->column('chips.name',__('芯片'));
-            $grid->column('solution', __('适配方案'));
-            $grid->column('class')->hide();
             $grid->column('adapt_source');
             $grid->column('adapted_before')->display(function ($value) {
-                if ($value == '1')  { return '是'; }
-                else                { return '否'; }
+                if ($value == '1') { return '是'; }
+                elseif ($value == '0') { return '否'; }
             })->hide();
             $grid->column('statuses.parent', __('当前适配状态'))->display(function ($parent) {
                     return Status::where('id', $parent)->pluck('name')->first();
@@ -87,6 +85,9 @@ class PbindController extends AdminController
                 ->modal(function () {
                     return PhistoryTable::make();
                 });
+            
+            $grid->column('solution', __('适配方案'));
+            $grid->column('class')->hide();
             $grid->column('adaption_type');
             $grid->column('test_type');
             $grid->column('kylineco')->display(function ($value) {
@@ -156,15 +157,45 @@ class PbindController extends AdminController
     protected function detail($id)
     {
         return Show::make($id, Pbind::with(['peripherals','releases','chips','statuses']), function (Show $show) {
+            $show->field('peripherals.brands_id', __('品牌'))->as(function ($brand) {
+                return Brand::where('id', $brand)->pluck('name')->first();
+            });
             $show->field('peripherals.name',__('型号'));
-            $show->field('releases.name',__('版本'));
+            $show->field('peripherals.types_id', __('外设类型'))->as(function ($type) {
+                return Type::where('id', $type)->pluck('name')->first();
+            });
+            $show->field('releases.name',__('操作系统版本'));
+            $show->field('os_subversion');
             $show->field('chips.name',__('芯片'));
-            $show->field('solution',__('解决方案'));
-            $show->field('statuses.name',__('状态'));
+            $show->field('adapt_source');
+            $show->field('adapted_before')->as(function ($adapted_before) {
+                if ($adapted_before == '1') { return '是'; }
+                elseif ($adapted_before == '0') { return '否'; }
+            });
+            $show->field('statuses.parent', __('当前适配状态'))->as(function ($parent) {
+                return Status::where('id', $parent)->pluck('name')->first();
+            });
+            $show->field('statuses.name', __('当前细分适配状态'));
+            $show->field('admin_users.name', __('当前适配状态责任人'));
+            $show->field('solution');
             $show->field('class');
+            $show->field('adaption_type');
+            $show->field('test_type');
+            $show->field('kylineco')->as(function ($kylineco) {
+                if ($kylineco == '1') { return '是'; }
+                elseif ($kylineco == '0') { return '否'; }
+            });
+            $show->field('appstore')->as(function ($appstore) {
+                if ($appstore == '1') { return '是'; }
+                elseif ($appstore == '0') { return '否'; }
+            });
+            $show->field('iscert')->as(function ($iscert) {
+                if ($iscert == '1') { return '是'; }
+                elseif ($iscert == '0') { return '否'; }
+            });
+            $show->field('start_time');
+            $show->field('complete_time');
             $show->field('comment');
-            // $show->field('created_at');
-            // $show->field('updated_at');
         });
     }
 
