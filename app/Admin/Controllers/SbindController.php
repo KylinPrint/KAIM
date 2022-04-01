@@ -22,6 +22,7 @@ use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
 use Dcat\Admin\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 
 class SbindController extends AdminController
 {
@@ -174,7 +175,15 @@ class SbindController extends AdminController
     {
         return Form::make(Sbind::with('softwares','releases','chips'), function (Form $form) {
             // $form->display('id');
-            $form->select('softwares_id')->options(Software::all()->pluck('name','id'))->required();
+            $form->select('softwares_id')->options(function ($id) {
+                $software = Software::find($id);
+            
+                if ($software) {
+                    return [$software->id => $software->name];
+                }
+            })
+            ->ajax('api/softwares')
+            ->required();
             $form->select('releases_id')->options(Release::all()->pluck('name','id'))->required();
             $form->text('os_subversion');
             $form->select('chips_id')->options(Chip::all()->pluck('name','id'))->required();
@@ -244,5 +253,11 @@ class SbindController extends AdminController
                 $form->deleteInput('statuses_comment');
             });
         });
+    }
+    public function sPaginate(Request $request)
+    {
+        $q = $request->get('q');
+
+        return Software::where('name', 'like', "%$q%")->paginate(null, ['id', 'name as text']);
     }
 }

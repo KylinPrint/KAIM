@@ -22,6 +22,7 @@ use App\Models\Brand;
 use App\Models\Type;
 use Dcat\Admin\Admin;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 
 class PbindController extends AdminController
 {
@@ -175,7 +176,17 @@ class PbindController extends AdminController
     protected function form()
     {
         return Form::make(Pbind::with(['peripherals','releases','chips','statuses']), function (Form $form) {
-            $form->select('peripherals_id',__('型号'))->options(Peripheral::all()->pluck('name','id'))->required();
+            $form->select('peripherals_id',__('型号'))
+            ->options(function ($id) {
+                $peripheral = Peripheral::find($id);
+            
+                if ($peripheral) {
+                    return [$peripheral->id => $peripheral->name];
+                }
+            })
+            ->ajax('api/peripherals')
+            ->required();
+
             $form->select('releases_id',__('版本'))->options(Release::all()->pluck('name','id'))->required();
             $form->text('os_subversion');
             $form->select('chips_id',__('芯片'))->options(Chip::all()->pluck('name','id'))->required();
@@ -249,4 +260,11 @@ class PbindController extends AdminController
             });
         });
     }
+    public function pPaginate(Request $request)
+    {
+        $q = $request->get('q');
+
+        return Peripheral::where('name', 'like', "%$q%")->paginate(null, ['id', 'name as text']);
+    }
+
 }

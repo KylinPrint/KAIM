@@ -18,6 +18,8 @@ Route::group([
     $router->get('/api/type',[App\Admin\Controllers\TypeController::class,'getName']);
     $router->get('/api/stype',[App\Admin\Controllers\StypeController::class,'getName']);
     $router->get('/api/status',[App\Admin\Controllers\StatusController::class,'getName']);
+    $router->get('/api/peripherals',[App\Admin\Controllers\PbindController::class,'pPaginate']);
+    $router->get('/api/softwares',[App\Admin\Controllers\SbindController::class,'sPaginate']);
 
     // 软件
     $router->resource('softwares', SoftwareController::class);
