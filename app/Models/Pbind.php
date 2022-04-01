@@ -10,6 +10,20 @@ class Pbind extends Model
 {
 	use HasDateTimeFormatter;    
 
+	protected $fillable = 
+	[
+		'peripherals_id',
+		'releases_id',
+		'chips_id',
+		'adapt_source',
+		'adapted_before',
+		'statuses_id',
+		'admin_users_id',
+		'kylineco',
+		'appstore',
+		'iscert',
+	];
+
 	public function peripherals()
     {
         return $this->belongsTo(Peripheral::class);

@@ -10,6 +10,10 @@ class Brand extends Model
 {
 	use HasDateTimeFormatter;    
 
+    protected $fillable = [
+        'name',
+    ];
+
 	public function peripherals()
     {
         return $this->hasMany(Peripheral::class);

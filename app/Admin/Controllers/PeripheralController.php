@@ -83,6 +83,10 @@ class PeripheralController extends AdminController
                 });
             }
 
+            $grid->column('bd');
+            $grid->column('am');
+            $grid->column('tsm');
+
             $grid->column('created_at');
             $grid->column('updated_at')->sortable();
         
@@ -130,6 +134,9 @@ class PeripheralController extends AdminController
             $show->field('pid');
             $show->field('release_date');
             $show->field('eosl_date');
+            $show->field('bd');
+            $show->field('am');
+            $show->field('tsm');
 
             $show->binds(__('参数'), function ($model) {
                 $grid = new Grid(Value::with(['peripherals','specifications']));
@@ -154,10 +161,6 @@ class PeripheralController extends AdminController
                 // });	
                 return $grid;
             });
-
-            // $show->field('created_at');
-            // $show->field('updated_at');
-
         });
     }
 
@@ -192,6 +195,9 @@ class PeripheralController extends AdminController
             $form->text('model');
             $form->date('release_date')->format('YYYY-MM-DD');
             $form->date('eosl_date')->format('YYYY-MM-DD');
+            $form->text('bd')->required();
+            $form->text('am');
+            $form->text('tsm');
 
             if ($form->isCreating()) {
                 // 脑瘫参数写法

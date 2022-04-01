@@ -9,8 +9,15 @@ use Illuminate\Database\Eloquent\Model;
 class Software extends Model
 {
 	use HasDateTimeFormatter;
+
     protected $table = 'softwares';
 
+    protected $fillable = [
+		'name',
+        'manufactors_id',
+        'stypes_id',
+        'industries',
+	];
 
     public function manufactors()
     {

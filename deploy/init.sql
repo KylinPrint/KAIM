@@ -114,7 +114,7 @@ INSERT INTO `admin_permissions` VALUES (36, '厂商信息管理-试运行', 'man
 INSERT INTO `admin_permissions` VALUES (37, '品牌信息管理-试运行', 'brands-all', NULL, '/brands*', 37, 35, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
 INSERT INTO `admin_permissions` VALUES (38, '芯片信息管理-试运行', 'chips-all', NULL, '/chips*', 38, 35, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
 INSERT INTO `admin_permissions` VALUES (39, '系统信息管理-试运行', 'release-all', NULL, '/releases*', 39, 35, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_permissions` VALUES (40, '分类信息管理-试运行', 'types-all', NULL, '/types*', 40, 35, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_permissions` VALUES (40, '分类信息管理-试运行', 'types-all', NULL, '/*types*', 40, 35, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
 INSERT INTO `admin_permissions` VALUES (41, '参数名管理-试运行', 'specifications-all', NULL, '/specifications*', 41, 35, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
 INSERT INTO `admin_permissions` VALUES (42, '状态信息管理-试运行', 'status-all', NULL, '/statuses*', 42, 35, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
 INSERT INTO `admin_permissions` VALUES (43, '实用工具', 'tools', NULL, NULL, 43, 0, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
@@ -663,14 +663,14 @@ INSERT INTO `statuses` VALUES (36, '其他原因', 5, '2022-02-21 14:02:26', '20
 -- ----------------------------
 -- Records of stypes
 -- ----------------------------
-INSERT INTO `stypes` VALUES (1, '日常办公', NULL, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
-INSERT INTO `stypes` VALUES (2, '多媒体软件', NULL, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
-INSERT INTO `stypes` VALUES (3, '基础软件', NULL, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
-INSERT INTO `stypes` VALUES (4, '安全防护', NULL, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
-INSERT INTO `stypes` VALUES (5, '业务软件', NULL, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
-INSERT INTO `stypes` VALUES (6, '开发测试', NULL, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
-INSERT INTO `stypes` VALUES (7, '存储备份', NULL, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
-INSERT INTO `stypes` VALUES (8, '其他', NULL, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (1, '日常办公', 0, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (2, '多媒体软件', 0, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (3, '基础软件', 0, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (4, '安全防护', 0, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (5, '业务软件', 0, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (6, '开发测试', 0, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (7, '存储备份', 0, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
+INSERT INTO `stypes` VALUES (8, '其他', 0, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
 INSERT INTO `stypes` VALUES (9, '即时通讯', 1, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
 INSERT INTO `stypes` VALUES (10, '浏览器', 1, '2022-03-17 20:33:11', '2022-03-17 20:33:11');
 INSERT INTO `stypes` VALUES (11, '流式版式软件', 1, '2022-03-17 20:33:11', '2022-03-17 20:33:11');

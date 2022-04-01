@@ -30,7 +30,7 @@ class CreateSoftwaresTable extends Migration
             $table->string('kernel_version')->nullable()->comment('内核引用版本');
             $table->string('crossover_version')->nullable()->comment('Crossover版本');
             $table->string('box86_version')->nullable()->comment('Box86版本');
-            $table->string('bd')->comment('Business Development, 生态负责人');
+            $table->string('bd')->nullable()->comment('Business Development, 生态负责人');
             $table->string('am')->nullable()->comment('Adaption Manager, 适配负责人');
             $table->string('tsm')->nullable()->comment('Technical Support Manager, 技术支撑负责人');
             $table->string('comment')->nullable()->comment('软件描述');
