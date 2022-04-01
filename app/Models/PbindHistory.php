@@ -10,6 +10,14 @@ class PbindHistory extends Model
 {
     use HasDateTimeFormatter;
 
+    protected $fillable = [
+        'pbind_id',
+        'status_old',
+        'status_new',
+        'admin_users_id',
+        'comment',
+    ];
+
     public function pbinds()
     {
         return $this->belongsTo(Pbind::class);

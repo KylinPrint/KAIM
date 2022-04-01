@@ -63,7 +63,7 @@ class StypeController extends AdminController
 
             if($form->isEditing())
             {
-                $form->select('parent')->options(Stype::where('parent','=',null)->pluck('name','id'))->load('name','/api/stype');
+                $form->select('parent')->options(Stype::where('parent', 0)->pluck('name','id'))->load('name','/api/stype');
                 $form->select('name')->options(
                     function (){
 
@@ -83,7 +83,7 @@ class StypeController extends AdminController
             }
             else
             {
-                $form->select('parent')->options(Stype::where('parent','=',null)->pluck('name','id'));
+                $form->select('parent')->options(Stype::where('parent', 0)->pluck('name','id'));
                 $form->text('name');
             }
         

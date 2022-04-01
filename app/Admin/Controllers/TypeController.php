@@ -64,7 +64,7 @@ class TypeController extends AdminController
 
             if($form->isEditing())
             {
-                $form->select('parent')->options(Type::where('parent','=',null)->pluck('name','id'))->load('name','/api/stype');
+                $form->select('parent')->options(Type::where('parent', 0)->pluck('name','id'))->load('name','/api/type');
                 $form->select('name')->options(
                     function (){
 
@@ -83,7 +83,7 @@ class TypeController extends AdminController
             }
             else
             {
-                $form->select('parent')->options(Type::where('parent','=',null)->pluck('name','id'));
+                $form->select('parent')->options(Type::where('parent', 0)->pluck('name','id'));
                 $form->text('name');
             }          
 

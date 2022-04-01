@@ -33,6 +33,9 @@ class CreatePeripheralsTable extends Migration
             $table->string('model')->nullable()->comment('系统识别型号');
             $table->date('release_date')->nullable()->comment('发布日期');
             $table->date('eosl_date')->nullable()->comment('服务终止日期');
+            $table->string('bd')->nullable()->comment('Business Development, 生态负责人');
+            $table->string('am')->nullable()->comment('Adaption Manager, 适配负责人');
+            $table->string('tsm')->nullable()->comment('Technical Support Manager, 技术支撑负责人');
             $table->string('comment')->nullable()->comment('外设描述');
 
             $table->timestamps();

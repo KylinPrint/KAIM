@@ -112,7 +112,7 @@ class SoftwareController extends AdminController
             $form->text('name')->required()->rules("unique:softwares,name,$id", [ 'unique' => '该外设名已存在' ]);
             $form->select('manufactors_id')->options(Manufactor::all()->pluck('name','id'))->required();
             $form->text('version');
-            $form->select('stypes_id', __('类型'))->options(Stype::where('parent','!=',null)->pluck('name','id'))->required();    
+            $form->select('stypes_id', __('类型'))->options(Stype::where('parent', '!=', 0)->pluck('name','id'))->required();    
             $form->tags('industries')->options(config('kaim.industry'))->saving(function ($value) { return implode(',', $value); })->required();
             $form->select('appstore_soft')->options([0 => '否',1 => '是']);
             $form->text('kernel_version');
