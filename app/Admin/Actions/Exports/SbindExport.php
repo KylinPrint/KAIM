@@ -92,7 +92,7 @@ class SbindExport extends BaseExport implements WithMapping, WithHeadings, FromC
         $ExportArr['体系架构'] = $curSbindsArr->chips->arch;
         $ExportArr['兼容等级'] = $curSbindsArr->class?:'';
         $ExportArr['测试时间'] = '';  //暂无字段
-        $ExportArr['适配状态'] = $curSbindsArr->statuses->name;
+        $ExportArr['适配状态'] = $this->getParent($curSbindsArr->statuses->parent);;
         $ExportArr['安装包名称'] = $row['softname'];
         $ExportArr['下载地址'] = $row['solution'];
         $ExportArr['产品描述'] = $curSoftwareArr->comment;
@@ -113,5 +113,22 @@ class SbindExport extends BaseExport implements WithMapping, WithHeadings, FromC
     {
         list($usec,$sec) = explode(" ",microtime());
         return ((float)$usec + (float)$sec);
+    }
+
+    public function getParent($sid)
+    {
+        switch($sid)
+        {
+            case 1:
+                return '未适配';
+            case 2:
+                return '适配中';
+            case 3:
+                return '已适配'; 
+            case 4:
+                return '待验证';
+            case 5:
+                return '适配暂停';   
+        }
     }
 }
