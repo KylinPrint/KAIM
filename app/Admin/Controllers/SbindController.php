@@ -5,7 +5,7 @@ namespace App\Admin\Controllers;
 use App\Admin\Actions\Exports\SbindExport;
 use App\Admin\Actions\Modal\SbindModal;
 use App\Admin\Renderable\ChipTable;
-use App\Admin\Renderable\PhistoryTable;
+use App\Admin\Renderable\ShistoryTable;
 use App\Admin\Renderable\ReleaseTable;
 use App\Admin\Renderable\StatusTable;
 use App\Models\AdminUser;
@@ -65,7 +65,7 @@ class SbindController extends AdminController
             $grid->column('histories')
                 ->display('查看')
                 ->modal(function () {
-                    return PhistoryTable::make();
+                    return ShistoryTable::make();
                 });
 
             $grid->column('solution');

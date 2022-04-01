@@ -28,8 +28,8 @@ class SoftwareController extends AdminController
             $grid->column('stypes.name',__('类型'));
             $grid->column('industries')->badge();
             $grid->column('appstore_soft')->display(function ($value) {
-                if ($value == '1')  { return '是'; }
-                else                { return '否'; }
+                if ($value == '1') { return '是'; }
+                elseif ($value == '0') { return '否'; }
             });
 
             $grid->column('kernel_version');
