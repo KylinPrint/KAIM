@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSrequestsTable extends Migration
+class CreatePrequestsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,14 @@ class CreateSrequestsTable extends Migration
      */
     public function up()
     {
-        Schema::create('s_requests', function (Blueprint $table) {
+        Schema::create('p_requests', function (Blueprint $table) {
             $table->id();
             $table->string('source')->comment('需求来源');
-            $table->foreignId('manufactor_id')
-                  ->comment('厂商名称')
-                  ->constrained();
-            $table->string('name')->comment('产品名称');
+            $table->string('manufactor')->comment('厂商名称');
+            $table->string('brand')->comment('品牌名称');
+            $table->string('name')->comment('外设名称');
 
-            $table->foreignId('stype_id')
+            $table->foreignId('type_id')
                   ->comment('软件分类')
                   ->constrained();
             $table->string('industry')->comment('涉及行业');
@@ -41,10 +40,10 @@ class CreateSrequestsTable extends Migration
             $table->string('requester_contact')->comment('需求提出人联系方式');
             $table->string('status')->comment('处理状态[已提交,处理中,已处理,暂停处理,已拒绝,已关闭]');
             $table->unsignedBigInteger('bd_id')->comment('生态负责人');
-            $table->foreignId('sbind_id')
-                ->nullable()
-                ->comment('软件关联信息')
-                ->constrained();
+            $table->foreignId('pbind_id')
+                  ->nullable()
+                  ->comment('外设关联信息')
+                  ->constrained();
             $table->string('comment')->nullable()->comment('备注');
 
             $table->timestamps();
@@ -58,6 +57,6 @@ class CreateSrequestsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('s_requests');
+        Schema::dropIfExists('p_requests');
     }
 }

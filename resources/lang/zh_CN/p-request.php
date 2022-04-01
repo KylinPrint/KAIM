@@ -2,19 +2,17 @@
  
 return [
     'labels' => [
-        'SRequest' => '软件需求',
-        's-request' => '软件需求',
+        'PRequest' => '外设需求',
+        'p-request' => '外设需求',
     ],
     'fields' => [
         'source' => '需求来源',
-        'manufactor_id' => '厂商名称',
-        'manufactor' => [
-            'name' => '厂商名称',
-        ],
+        'manufactor' => '厂商名称',
+        'brand' => '品牌名称',
         'name' => '产品名称',
-        'stype_id' => '产品类型',
-        'stype' => [
-            'name' => '产品类型',
+        'type_id' => '外设分类',
+        'type' => [
+            'name' => '外设类型',
         ],
         'industry' => '涉及行业',
         'release_id' => '操作系统版本',
@@ -35,7 +33,7 @@ return [
         'requester_contact' => '需求提出人联系方式',
         'status' => '处理状态',
         'history' => '处理历史',
-        'sbind_id' => '软件适配信息',
+        'pbind_id' => '外设适配信息',
         'bd_id' => '生态负责人',
         'bd' => [
             'name' => '生态负责人',

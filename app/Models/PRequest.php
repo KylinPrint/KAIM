@@ -6,13 +6,11 @@ use Dcat\Admin\Traits\HasDateTimeFormatter;
 
 use Illuminate\Database\Eloquent\Model;
 
-class SRequest extends Model
+class PRequest extends Model
 {
 	use HasDateTimeFormatter;
 
-	public function manufactor() { return $this->belongsTo(Manufactor::class); }
-
-	public function stype() { return $this->belongsTo(Stype::class); }
+	public function type() { return $this->belongsTo(Type::class); }
 
 	public function release() { return $this->belongsTo(Release::class); }
 

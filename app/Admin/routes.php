@@ -39,6 +39,10 @@ Route::group([
     $router->resource('specifications',SpecificationController::class);
     $router->resource('statuses',StatusController::class);
 
+    // 需求
+    $router->resource('srequests',SRequestController::class);
+    $router->resource('prequests',PRequestController::class);
+
     // 小工具
     $router->resource('solution_matches',SolutionMatchController::class);
 
