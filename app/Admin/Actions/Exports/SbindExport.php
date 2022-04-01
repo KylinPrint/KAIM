@@ -23,6 +23,7 @@ class SbindExport extends BaseExport implements WithMapping, WithHeadings, FromC
         $this->fileName = $this->fileName.'_'.date('Y-M-D_H:i:s').'.xlsx';//拼接下载文件名称
         $this->titles = 
         [   
+            '产品ID',
             '厂商名称',
             '产品名称',
             '分类1',
