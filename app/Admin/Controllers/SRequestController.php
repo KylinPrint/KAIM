@@ -30,6 +30,17 @@ class SRequestController extends AdminController
     protected function grid()
     {
         return Grid::make(SRequest::with(['manufactor', 'stype', 'release', 'chip', 'bd']), function (Grid $grid) {
+
+            if(!Admin::user()->can('srequests-edit'))
+            {
+                $grid->disableCreateButton();
+            }
+            
+            if(!Admin::user()->can('srequests-action'))
+            {
+                $grid->disableActions();
+            }
+
             $grid->column('source');
             $grid->column('manufactor.name');
             $grid->column('name');

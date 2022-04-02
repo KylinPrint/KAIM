@@ -32,6 +32,17 @@ class PRequestController extends AdminController
     protected function grid()
     {
         return Grid::make(PRequest::with(['type', 'release', 'chip', 'bd']), function (Grid $grid) {
+
+            if(!Admin::user()->can('prequests-edit'))
+            {
+                $grid->disableCreateButton();
+            }
+            
+            if(!Admin::user()->can('prequests-action'))
+            {
+                $grid->disableActions();
+            }
+
             $grid->column('source');
             $grid->column('manufactor');
             $grid->column('brand');

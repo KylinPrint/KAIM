@@ -35,11 +35,27 @@ class SbindController extends AdminController
     {
         return Grid::make(Sbind::with('softwares','releases','chips','admin_users','statuses'), function (Grid $grid) {
 
-            $grid->tools(function  (Grid\Tools  $tools)  { 
-                $tools->append(new SbindModal()); 
-            });
+            if(Admin::user()->can('sbinds-import'))
+            {
+                $grid->tools(function  (Grid\Tools  $tools)  { 
+                    $tools->append(new SbindModal()); 
+                });
+            }
+            
+            if(!Admin::user()->can('sbinds-edit'))
+            {
+                $grid->disableCreateButton();
+            }
 
-            $grid->export(new SbindExport());
+            if(Admin::user()->can('sbinds-export'))
+            {
+                $grid->export(new SbindExport());
+            }
+            
+            if(!Admin::user()->can('sbinds-action'))
+            {
+                $grid->disableActions();
+            }
 
             // 默认按创建时间倒序排列
             $grid->model()->orderBy('created_at', 'desc');
