@@ -70,6 +70,8 @@ INSERT INTO `admin_menu` VALUES (65, 63, 65, 'Roles', NULL, 'auth/roles', '', 1,
 INSERT INTO `admin_menu` VALUES (66, 63, 66, 'Permission', NULL, 'auth/permissions', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
 INSERT INTO `admin_menu` VALUES (67, 63, 67, 'Menu', NULL, 'auth/menu', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
 INSERT INTO `admin_menu` VALUES (68, 63, 68, 'Extensions', NULL, 'auth/extensions', '', 0, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (69, 59, 69, '软件需求管理', NULL, 'srequests', '', 1, '2022-04-01 16:20:19', '2022-04-01 16:20:19');
+INSERT INTO `admin_menu` VALUES (70, 59, 70, '外设需求管理', NULL, 'prequests', '', 1, '2022-04-01 16:20:44', '2022-04-01 16:20:44');
 
 -- ----------------------------
 -- Records of admin_permissions

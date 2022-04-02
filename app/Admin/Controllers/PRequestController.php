@@ -2,17 +2,19 @@
 
 namespace App\Admin\Controllers;
 
-use App\Admin\Renderable\SRhistoryTable;
+use App\Admin\Renderable\PRhistoryTable;
 use App\Models\AdminUser;
+use App\Models\Brand;
 use App\Models\Chip;
 use App\Models\Manufactor;
 use App\Models\Release;
-use App\Models\Sbind;
-use App\Models\SbindHistory;
+use App\Models\Pbind;
+use App\Models\PbindHistory;
+use App\Models\Peripheral;
 use App\Models\Software;
-use App\Models\SRequest;
+use App\Models\PRequest;
 use App\Models\Status;
-use App\Models\Stype;
+use App\Models\Type;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
@@ -20,7 +22,7 @@ use Dcat\Admin\Show;
 use Dcat\Admin\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\DB;
 
-class SRequestController extends AdminController
+class PRequestController extends AdminController
 {
     /**
      * Make a grid builder.
@@ -29,11 +31,12 @@ class SRequestController extends AdminController
      */
     protected function grid()
     {
-        return Grid::make(SRequest::with(['manufactor', 'stype', 'release', 'chip', 'bd']), function (Grid $grid) {
+        return Grid::make(PRequest::with(['type', 'release', 'chip', 'bd']), function (Grid $grid) {
             $grid->column('source');
-            $grid->column('manufactor.name');
+            $grid->column('manufactor');
+            $grid->column('brand');
             $grid->column('name');
-            $grid->column('stype.name');
+            $grid->column('type.name');
             $grid->column('industry')->badge();
             $grid->column('release.name');
             $grid->column('chip.name');
@@ -49,15 +52,14 @@ class SRequestController extends AdminController
             $grid->column('history')
                 ->display('查看')
                 ->modal(function () {
-                    return SRhistoryTable::make();
+                    return PRhistoryTable::make();
             });
-            $grid->column('sbind_id')->display(function ($sbind_id) {
-                $href = admin_url('sbinds/'.$sbind_id);
+            $grid->column('pbind_id')->display(function ($pbind_id) {
+                $href = admin_url('pbinds/'.$pbind_id);
                 return "<a href='$href'>点击查看</a>";
             });
             $grid->column('bd.name');
             $grid->column('comment');
-            $grid->column('created_at');
         });
     }
 
@@ -70,11 +72,12 @@ class SRequestController extends AdminController
      */
     protected function detail($id)
     {
-        return Show::make($id, SRequest::with(['manufactor', 'stype', 'release', 'chip', 'bd']), function (Show $show) {
+        return Show::make($id, PRequest::with(['type', 'release', 'chip', 'bd']), function (Show $show) {
             $show->field('source');
-            $show->field('manufactor.name');
+            $show->field('manufactor');
+            $show->field('brand');
             $show->field('name');
-            $show->field('stype.name');
+            $show->field('type.name');
             $show->field('industry');
             $show->field('release.name');
             $show->field('chip.name');
@@ -100,16 +103,16 @@ class SRequestController extends AdminController
      */
     protected function form()
     {
-        return Form::make(SRequest::with(['manufactor', 'stype', 'release', 'chip', 'bd']), function (Form $form) {
+        return Form::make(PRequest::with(['type', 'release', 'chip', 'bd']), function (Form $form) {
             if ($form->isCreating()) {
                 // 新增需求
                 $form->select('source')
                     ->options(config('kaim.adapt_source'))->required();
-                $form->select('manufactor_id')
-                    ->options(Manufactor::all()->pluck('name', 'id'))->required();
-                    $form->text('name')->required();
-                $form->select('stype_id')
-                    ->options(Stype::all()->pluck('name', 'id'))->required();
+                $form->text('manufactor')->required();
+                $form->text('brand')->required();
+                $form->text('name')->required();
+                $form->select('type_id')
+                    ->options(Type::where('parent', '!=', 0)->pluck('name', 'id'))->required();
                 $form->tags('industry')
                     ->options(config('kaim.industry'))
                     ->saving(function ($value) { return implode(',', $value); })->required();
@@ -145,9 +148,10 @@ class SRequestController extends AdminController
                     // TODO 改为暂停处理还能改回处理中吗
                     case '已提交':
                         $form->display('source');
-                        $form->display('manufactor.name');
+                        $form->display('manufactor');
+                        $form->display('brand');
                         $form->display('name');
-                        $form->display('stype.name');
+                        $form->display('type.name');
                         $form->display('industry');
                         $form->display('release.name');
                         $form->display('chip.name');
@@ -170,7 +174,7 @@ class SRequestController extends AdminController
                                 $form->select('kylineco')->options([0 => '否', 1 => '是']);
                                 $form->select('appstore')->options([0 => '否', 1 => '是']);
                                 $form->select('iscert')->options([0 => '否', 1 => '是']);
-                                $form->hidden('sbind_id');
+                                $form->hidden('pbind_id');
                             })
                             ->options([
                                 '处理中' => '处理中',
@@ -181,9 +185,10 @@ class SRequestController extends AdminController
                     
                     default:
                         $form->display('source');
-                        $form->display('manufactor.name');
+                        $form->display('manufactor');
+                        $form->display('brand');
                         $form->display('name');
-                        $form->display('stype.name');
+                        $form->display('type.name');
                         $form->display('industry');
                         $form->display('release.name');
                         $form->display('chip.name');
@@ -209,32 +214,51 @@ class SRequestController extends AdminController
                 if($form->isEditing()) {
                     $id = $form->getKey();
                     // 取当前状态
-                    $status_current = DB::table('s_requests')->where('id', $id)->value('status');
+                    $status_current = DB::table('p_requests')->where('id', $id)->value('status');
                     $status_coming = $form->status;
                     $timestamp = date("Y-m-d H:i:s");
                     
                     if ($form->status == '处理中') {
-                        // 查询Software记录是否存在
-                        $software_id = Software::where('name', $form->model()->name)->pluck('id')->first();
-                        if (!$software_id) {
-                            $software = Software::create([
-                                'name' => $form->model()->name,
-                                'manufactors_id' => $form->model()->manufactor_id,
-                                'stypes_id' => $form->model()->stype_id,
-                                'industries' => $form->model()->industry,
+                        // 查询Manufactor记录是否存在
+                        $manufactor_id = Manufactor::where('name', $form->model()->manufactor)->pluck('id')->first();
+                        if (!$manufactor_id) {
+                            $manufactor = Manufactor::create([
+                                'name' => $form->model()->manufactor
                             ]);
-                            $software_id = $software->id;
+                            $manufactor_id = $manufactor->id;
                         }
 
-                        // 查询SBind记录是否存在
-                        $sbind_id = Sbind::where([
-                            [ 'softwares_id', $software_id ],
+                        // 查询Brand记录是否存在
+                        $brand_id = Brand::where('name', $form->model()->brand)->pluck('id')->first();
+                        if (!$brand_id) {
+                            $brand = Brand::create([
+                                'name' => $form->model()->brand
+                            ]);
+                            $brand_id = $brand->id;
+                        }
+
+                        // 查询Peripheral记录是否存在 
+                        $peripheral_id = Peripheral::where('name', $form->model()->name)->pluck('id')->first();
+                        if (!$peripheral_id) {
+                            $peripheral = Peripheral::create([
+                                'name' => $form->model()->name,
+                                'manufactors_id' => $manufactor_id,
+                                'brands_id' => $brand_id,
+                                'types_id' => $form->model()->type_id,
+                                'industries' => $form->model()->industry,
+                            ]);
+                            $peripheral_id = $peripheral->id;
+                        }
+
+                        // 查询PBind记录是否存在
+                        $pbind_id = Pbind::where([
+                            [ 'peripherals_id', $peripheral_id ],
                             [ 'releases_id', $form->model()->release_id ],
                             [ 'chips_id', $form->model()->chip_id ],
                         ])->pluck('id')->first();
-                        if (!$sbind_id) {
-                            $sbind = Sbind::create([
-                                'softwares_id' => $software_id,
+                        if (!$pbind_id) {
+                            $pbind = Pbind::create([
+                                'peripherals_id'=> $peripheral_id,
                                 'releases_id' => $form->model()->release_id,
                                 'chips_id' => $form->model()->chip_id,
                                 'adapt_source' => $form->model()->source,
@@ -244,9 +268,9 @@ class SRequestController extends AdminController
                                 'appstore' => $form->model()->appstore,
                                 'iscert' => $form->model()->iscert,
                             ]);
-                            $sbind_id = $sbind->id;
-                            SbindHistory::create([
-                                'sbind_id' => $sbind_id,
+                            $pbind_id = $pbind->id;
+                            PbindHistory::create([
+                                'pbind_id' => $pbind_id,
                                 'status_old' => NULL,
                                 'status_new' => $form->statuses_id,
                                 'admin_users_id' => $form->admin_users_id,
@@ -254,13 +278,13 @@ class SRequestController extends AdminController
                             ]);
                         }
                         // 填充关联数据
-                        $form->sbind_id = $sbind_id;
+                        $form->pbind_id = $pbind_id;
                     }
 
                     // 需求状态变更记录
                     if ($status_coming != $status_current) {
-                        DB::table('s_request_histories')->insert([
-                            's_request_id' => $id,
+                        DB::table('p_request_histories')->insert([
+                            'p_request_id' => $id,
                             'status_old' => $status_current,
                             'status_new' => $status_coming,
                             'operator' => Admin::user()->id,
