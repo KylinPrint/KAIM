@@ -123,7 +123,7 @@ class PeripheralController extends AdminController
      */
     protected function detail($id)
     {
-        return Show::make($id, Peripheral::with(['brands','types']), function (Show $show) {
+        return Show::make($id, Peripheral::with(['brands','types','manufactors']), function (Show $show) {
             // $show->field('id');
             $show->field('name');
             $show->field('manufactors.name', __('厂商'));
