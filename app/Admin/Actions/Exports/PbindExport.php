@@ -96,7 +96,7 @@ class PbindExport extends BaseExport implements WithMapping, WithHeadings, FromC
         $ExportArr['芯片'] = $curPbindsArr->chips->name;
         $ExportArr['体系架构'] = $curPbindsArr->chips->arch;
         $ExportArr['兼容等级'] = $curPbindsArr->class?:'';
-        $ExportArr['测试时间'] = '';         //muji
+        $ExportArr['测试时间'] = $curPbindsArr->start_time?:'';         //muji
         $ExportArr['适配状态'] = $this->getParent($curPbindsArr->statuses->parent);
         $ExportArr['安装包名称'] = $curPbindsArr->solution_name;
         $ExportArr['下载地址'] = $curPbindsArr->solution;

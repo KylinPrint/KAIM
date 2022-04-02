@@ -91,7 +91,7 @@ class SbindExport extends BaseExport implements WithMapping, WithHeadings, FromC
         $ExportArr['芯片'] = $curSbindsArr->chips->name;
         $ExportArr['体系架构'] = $curSbindsArr->chips->arch;
         $ExportArr['兼容等级'] = $curSbindsArr->class?:'';
-        $ExportArr['测试时间'] = '';  //暂无字段
+        $ExportArr['测试时间'] = $curSbindsArr->start_time?:'';  
         $ExportArr['适配状态'] = $this->getParent($curSbindsArr->statuses->parent);;
         $ExportArr['安装包名称'] = $row['softname'];
         $ExportArr['下载地址'] = $row['solution'];
