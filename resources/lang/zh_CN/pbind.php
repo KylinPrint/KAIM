@@ -15,6 +15,8 @@ return [
         'adapted_before' => '是否适配过国产CPU',
         'statuses_id' => '当前适配状态',
         'admin_users_id' => '当前适配状态责任人',
+        'softname' => '安装包名',
+        'solution' => '适配方案',
         'class' => '兼容等级',
         'adaption_type' => '适配类型',
         'test_type' => '测试方式',
