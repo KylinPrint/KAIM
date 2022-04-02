@@ -33,6 +33,7 @@ class PRequestController extends AdminController
     {
         return Grid::make(PRequest::with(['type', 'release', 'chip', 'bd']), function (Grid $grid) {
 
+            $grid->paginate(10);
             if(!Admin::user()->can('prequests-edit'))
             {
                 $grid->disableCreateButton();

@@ -35,6 +35,7 @@ class SbindController extends AdminController
     {
         return Grid::make(Sbind::with('softwares','releases','chips','admin_users','statuses'), function (Grid $grid) {
 
+            $grid->paginate(10);
             if(Admin::user()->can('sbinds-import'))
             {
                 $grid->tools(function  (Grid\Tools  $tools)  { 

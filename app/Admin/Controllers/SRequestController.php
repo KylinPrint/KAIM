@@ -31,6 +31,7 @@ class SRequestController extends AdminController
     {
         return Grid::make(SRequest::with(['manufactor', 'stype', 'release', 'chip', 'bd']), function (Grid $grid) {
 
+            $grid->paginate(10);
             if(!Admin::user()->can('srequests-edit'))
             {
                 $grid->disableCreateButton();

@@ -20,6 +20,8 @@ class SoftwareController extends AdminController
     protected function grid()
     {
         return Grid::make(Software::with(['manufactors','stypes']), function (Grid $grid) {
+
+            $grid->paginate(10);
             // 默认按创建时间倒序排列
             $grid->model()->orderBy('created_at', 'desc');
             $grid->column('name');

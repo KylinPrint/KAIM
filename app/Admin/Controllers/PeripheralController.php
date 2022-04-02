@@ -46,6 +46,7 @@ class PeripheralController extends AdminController
             $urlArr = explode('type=',URL::full());
             $param = end($urlArr);
 
+            $grid->paginate(10);
             // 没说就是激光打印机
             if((ctype_alnum($param)) == 0) { $param = 6; }
 
