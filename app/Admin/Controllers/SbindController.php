@@ -221,7 +221,7 @@ class SbindController extends AdminController
             ->ajax('api/softwares')
             ->required();
             $form->select('releases_id')->options(Release::all()->pluck('name','id'))->required();
-            $form->text('os_subversion');
+            $form->text('os_subversion')->help('例如：V10SP1-Build01-0326');
             $form->select('chips_id')->options(Chip::all()->pluck('name','id'))->required();
             $form->select('adapt_source')
                 ->options(config('kaim.adapt_source'))->required();
