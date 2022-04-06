@@ -47,7 +47,7 @@ class HomeController extends Controller
                 elseif ($this->type == "软件需求") { $type = 'srequests'; }
                 elseif ($this->type == "外设需求") { $type = 'prequests'; }
                 $href = admin_url($type.'/'.$this->id);
-                return "<a href='$href'>处理</a>";
+                return "<a href='$href'>去处理</a>";
             });
 
             $grid->disableActions();
