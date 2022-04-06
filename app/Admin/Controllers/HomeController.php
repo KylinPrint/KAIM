@@ -2,7 +2,6 @@
 
 namespace App\Admin\Controllers;
 
-use App\Admin\Actions\Others\JumpInfo;
 use App\Http\Controllers\Controller;
 use App\Models\Chip;
 use App\Models\Manufactor;
