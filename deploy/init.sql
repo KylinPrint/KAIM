@@ -1,77 +1,77 @@
 -- ----------------------------
 -- Records of admin_menu
 -- ----------------------------
-TRUNCATE TABLE `admin_menu`;
+TRUNCATE TABLE `admin_menu`
 INSERT INTO `admin_menu` VALUES (1, 0, 1, 'Index', 'feather icon-bar-chart-2', '/', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (2, 0, 2, '软件适配数据', NULL, NULL, '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (3, 2, 3, '软件适配管理', NULL, 'sbinds', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (4, 2, 4, '软件数据管理', NULL, 'softwares', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (5, 0, 5, '外设适配数据', NULL, NULL, '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (6, 5, 6, '外设适配管理', NULL, 'pbinds', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (7, 5, 7, '输出设备数据管理', NULL, NULL, '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (8, 7, 8, '激光打印机', NULL, 'peripherals?type=6', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (9, 7, 9, '喷墨打印机', NULL, 'peripherals?type=7', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (10, 7, 10, '智能复合机/多功能一体机', NULL, 'peripherals?type=8', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (11, 7, 11, '针式打印机', NULL, 'peripherals?type=9', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (12, 7, 12, '热敏打印机', NULL, 'peripherals?type=10', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (13, 7, 13, '条码/标签打印机', NULL, 'peripherals?type=11', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (14, 7, 14, '证卡打印机', NULL, 'peripherals?type=12', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (15, 7, 15, '扩展坞', NULL, 'peripherals?type=13', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (16, 7, 16, '发卡机', NULL, 'peripherals?type=14', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (17, 7, 17, '耳机', NULL, 'peripherals?type=15', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (18, 7, 18, '投影仪', NULL, 'peripherals?type=16', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (19, 5, 19, '输入设备数据管理', NULL, NULL, '', 1, '2022-02-21 06:02:25', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (20, 19, 20, '扫描仪', NULL, 'peripherals?type=17', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (21, 19, 21, '触摸屏', NULL, 'peripherals?type=18', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (22, 19, 22, '扫描枪', NULL, 'peripherals?type=19', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (23, 19, 23, '摄像头', NULL, 'peripherals?type=20', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (24, 19, 24, '高拍仪', NULL, 'peripherals?type=21', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (25, 19, 25, '读卡器', NULL, 'peripherals?type=22', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (26, 19, 26, '身份证阅读机具', NULL, 'peripherals?type=23', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (27, 19, 27, '指纹设备', NULL, 'peripherals?type=24', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (28, 19, 28, '手写板', NULL, 'peripherals?type=25', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (29, 19, 29, '手写屏', NULL, 'peripherals?type=26', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (30, 19, 30, '虹膜设备', NULL, 'peripherals?type=27', '', 1, '2022-02-21 06:02:25', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (31, 19, 31, '传真服务器', NULL, 'peripherals?type=28', '', 1, '2022-02-21 06:02:25', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (32, 19, 32, '传真机', NULL, 'peripherals?type=29', '', 1, '2022-02-21 06:02:25', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (33, 19, 33, '密码键盘', NULL, 'peripherals?type=30', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (34, 19, 34, '人脸识别摄像头', NULL, 'peripherals?type=31', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (35, 19, 35, '键鼠', NULL, 'peripherals?type=32', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (36, 19, 36, '麦克风音箱', NULL, 'peripherals?type=33', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (37, 19, 37, '柜外清', NULL, 'peripherals?type=34', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (38, 19, 38, '语音模块', NULL, 'peripherals?type=35', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (39, 19, 39, '交互终端', NULL, 'peripherals?type=36', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (40, 5, 40, '网络设备数据管理', NULL, NULL, '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (41, 40, 41, '无线网卡', NULL, 'peripherals?type=37', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (42, 5, 42, '软硬件一体设备数据管理', NULL, NULL, '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (43, 42, 43, 'UKey', NULL, 'peripherals?type=38', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (44, 42, 44, '电子支付密码器', NULL, 'peripherals?type=39', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (45, 42, 45, '印控仪', NULL, 'peripherals?type=40', '', 1, '2022-02-21 06:02:25', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (46, 42, 46, '密码模块', NULL, 'peripherals?type=41', '', 1, '2022-02-21 06:02:25', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (47, 42, 47, '指静脉', NULL, 'peripherals?type=42', '', 1, '2022-02-21 06:02:25', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (48, 5, 48, '其它外设数据管理', NULL, NULL, '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (49, 48, 49, '移动光驱', NULL, 'peripherals?type=43', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (50, 0, 50, '其它信息', NULL, NULL, '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (51, 50, 51, '厂商信息管理', NULL, 'manufactors', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (52, 50, 52, '品牌信息管理', NULL, 'brands', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (53, 50, 53, '芯片信息管理', NULL, 'chips', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (54, 50, 54, '操作系统版本管理', NULL, 'releases', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (55, 50, 55, '软件分类管理', NULL, 'stypes', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (56, 50, 56, '外设分类管理', NULL, 'types', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (57, 50, 57, '外设参数管理', NULL, 'specifications', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (58, 50, 58, '适配状态管理', NULL, 'statuses', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (59, 0, 59, '需求管理', 'fa-bicycle', NULL, '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (2, 0, 2, '软件适配数据', 'fa-tv', NULL, '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (3, 2, 3, '软件适配管理', 'fa-angle-double-right', 'sbinds', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (4, 2, 4, '软件数据管理', 'fa-angle-double-right', 'softwares', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (5, 0, 5, '外设适配数据', 'fa-tv', NULL, '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (6, 5, 6, '外设适配管理', 'fa-angle-double-right', 'pbinds', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (7, 5, 7, '输出设备数据管理', 'fa-align-justify', NULL, '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (8, 7, 8, '激光打印机', 'fa-angle-double-right', 'peripherals?type=6', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (9, 7, 9, '喷墨打印机', 'fa-angle-double-right', 'peripherals?type=7', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (10, 7, 10, '智能复合机/多功能一体机', 'fa-angle-double-right', 'peripherals?type=8', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (11, 7, 11, '针式打印机', 'fa-angle-double-right', 'peripherals?type=9', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (12, 7, 12, '热敏打印机', 'fa-angle-double-right', 'peripherals?type=10', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (13, 7, 13, '条码/标签打印机', 'fa-angle-double-right', 'peripherals?type=11', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (14, 7, 14, '证卡打印机', 'fa-angle-double-right', 'peripherals?type=12', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (15, 7, 15, '扩展坞', 'fa-angle-double-right', 'peripherals?type=13', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (16, 7, 16, '发卡机', 'fa-angle-double-right', 'peripherals?type=14', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (17, 7, 17, '耳机', 'fa-angle-double-right', 'peripherals?type=15', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (18, 7, 18, '投影仪', 'fa-angle-double-right', 'peripherals?type=16', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (19, 5, 19, '输入设备数据管理', 'fa-align-justify', NULL, '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (20, 19, 20, '扫描仪', 'fa-angle-double-right', 'peripherals?type=17', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (21, 19, 21, '触摸屏', 'fa-angle-double-right', 'peripherals?type=18', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (22, 19, 22, '扫描枪', 'fa-angle-double-right', 'peripherals?type=19', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (23, 19, 23, '摄像头', 'fa-angle-double-right', 'peripherals?type=20', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (24, 19, 24, '高拍仪', 'fa-angle-double-right', 'peripherals?type=21', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (25, 19, 25, '读卡器', 'fa-angle-double-right', 'peripherals?type=22', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (26, 19, 26, '身份证阅读机具', 'fa-angle-double-right', 'peripherals?type=23', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (27, 19, 27, '指纹设备', 'fa-angle-double-right', 'peripherals?type=24', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (28, 19, 28, '手写板', 'fa-angle-double-right', 'peripherals?type=25', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (29, 19, 29, '手写屏', 'fa-angle-double-right', 'peripherals?type=26', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (30, 19, 30, '虹膜设备', 'fa-angle-double-right', 'peripherals?type=27', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (31, 19, 31, '传真服务器', 'fa-angle-double-right', 'peripherals?type=28', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (32, 19, 32, '传真机', 'fa-angle-double-right', 'peripherals?type=29', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (33, 19, 33, '密码键盘', 'fa-angle-double-right', 'peripherals?type=30', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (34, 19, 34, '人脸识别摄像头', 'fa-angle-double-right', 'peripherals?type=31', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (35, 19, 35, '键鼠', 'fa-angle-double-right', 'peripherals?type=32', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (36, 19, 36, '麦克风音箱', 'fa-angle-double-right', 'peripherals?type=33', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (37, 19, 37, '柜外清', 'fa-angle-double-right', 'peripherals?type=34', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (38, 19, 38, '语音模块', 'fa-angle-double-right', 'peripherals?type=35', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (39, 19, 39, '交互终端', 'fa-angle-double-right', 'peripherals?type=36', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (40, 5, 40, '网络设备数据管理', 'fa-align-justify', NULL, '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (41, 40, 41, '无线网卡', 'fa-angle-double-right', 'peripherals?type=37', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (42, 5, 42, '软硬件一体设备数据管理', 'fa-align-justify', NULL, '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (43, 42, 43, 'UKey', 'fa-angle-double-right', 'peripherals?type=38', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (44, 42, 44, '电子支付密码器', 'fa-angle-double-right', 'peripherals?type=39', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (45, 42, 45, '印控仪', 'fa-angle-double-right', 'peripherals?type=40', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (46, 42, 46, '密码模块', 'fa-angle-double-right', 'peripherals?type=41', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (47, 42, 47, '指静脉', 'fa-angle-double-right', 'peripherals?type=42', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (48, 5, 48, '其它外设数据管理', 'fa-align-justify', NULL, '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (49, 48, 49, '移动光驱', 'fa-angle-double-right', 'peripherals?type=43', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (50, 0, 50, '其它信息', 'fa-tv', NULL, '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (51, 50, 51, '厂商信息管理', 'fa-angle-double-right', 'manufactors', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (52, 50, 52, '品牌信息管理', 'fa-angle-double-right', 'brands', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (53, 50, 53, '芯片信息管理', 'fa-angle-double-right', 'chips', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (54, 50, 54, '操作系统版本管理', 'fa-angle-double-right', 'releases', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (55, 50, 55, '软件分类管理', 'fa-angle-double-right', 'stypes', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (56, 50, 56, '外设分类管理', 'fa-angle-double-right', 'types', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (57, 50, 57, '外设参数管理', 'fa-angle-double-right', 'specifications', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (58, 50, 58, '适配状态管理', 'fa-angle-double-right', 'statuses', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (59, 0, 59, '需求管理', 'fa-tv', NULL, '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
 INSERT INTO `admin_menu` VALUES (60, 0, 60, '实用工具', 'fa-wrench', NULL, '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (61, 60, 61, '解决方案快速筛查', NULL, 'solution_matches', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (61, 60, 61, '解决方案快速筛查', 'fa-angle-double-right', 'solution_matches', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
 INSERT INTO `admin_menu` VALUES (62, 0, 62, '数据统计', 'fa-bar-chart', 'statistics', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
 INSERT INTO `admin_menu` VALUES (63, 0, 63, 'Admin', 'feather icon-settings', NULL, '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (64, 63, 64, 'Users', NULL, 'auth/users', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (65, 63, 65, 'Roles', NULL, 'auth/roles', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (66, 63, 66, 'Permission', NULL, 'auth/permissions', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (67, 63, 67, 'Menu', NULL, 'auth/menu', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (64, 63, 64, 'Users', 'fa-angle-double-right', 'auth/users', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (65, 63, 65, 'Roles', 'fa-angle-double-right', 'auth/roles', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (66, 63, 66, 'Permission', 'fa-angle-double-right', 'auth/permissions', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (67, 63, 67, 'Menu', 'fa-angle-double-right', 'auth/menu', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
 INSERT INTO `admin_menu` VALUES (68, 63, 68, 'Extensions', NULL, 'auth/extensions', '', 0, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (69, 59, 69, '软件需求管理', NULL, 'srequests', '', 1, '2022-04-01 16:20:19', '2022-04-01 16:20:19');
-INSERT INTO `admin_menu` VALUES (70, 59, 70, '外设需求管理', NULL, 'prequests', '', 1, '2022-04-01 16:20:44', '2022-04-01 16:20:44');
+INSERT INTO `admin_menu` VALUES (69, 59, 69, '软件需求管理', 'fa-tv', 'srequests', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (70, 59, 70, '外设需求管理', 'fa-tv', 'prequests', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
 
 -- ----------------------------
 -- Records of admin_permissions
@@ -122,6 +122,9 @@ INSERT INTO `admin_permissions` VALUES (42, '状态信息管理-试运行', 'sta
 INSERT INTO `admin_permissions` VALUES (43, '实用工具', 'tools', NULL, NULL, 43, 0, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
 INSERT INTO `admin_permissions` VALUES (44, '解决方案快速筛查', 'solution-match', NULL, '/solution_matches*', 44, 43, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
 INSERT INTO `admin_permissions` VALUES (45, '数据统计', 'statistics', NULL, '/statistics*', 45, 0, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_permissions` VALUES (46, 'API', 'API', '', '', 46, 0, '2022-04-01 16:50:54', '2022-04-01 16:50:54');
+INSERT INTO `admin_permissions` VALUES (47, 'P分页', 'pPag', '', '/api/peripherals*', 47, 46, '2022-04-01 16:54:10', '2022-04-01 16:55:11');
+INSERT INTO `admin_permissions` VALUES (48, 'S分页', 'sPag', '', '/api/softwares*', 48, 46, '2022-04-01 16:55:02', '2022-04-01 16:55:11');
 
 -- ----------------------------
 -- Records of admin_role_menu
@@ -484,6 +487,8 @@ INSERT INTO `admin_role_permissions` VALUES (3, 41, '2022-02-21 06:02:26', '2022
 INSERT INTO `admin_role_permissions` VALUES (3, 42, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
 INSERT INTO `admin_role_permissions` VALUES (3, 44, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
 INSERT INTO `admin_role_permissions` VALUES (3, 45, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_role_permissions` VALUES (3, 47, '2022-04-01 16:55:35', '2022-04-01 16:55:35');
+INSERT INTO `admin_role_permissions` VALUES (3, 48, '2022-04-01 16:55:35', '2022-04-01 16:55:35');
 INSERT INTO `admin_role_permissions` VALUES (4, 8, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
 INSERT INTO `admin_role_permissions` VALUES (4, 9, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
 INSERT INTO `admin_role_permissions` VALUES (4, 10, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
@@ -517,6 +522,8 @@ INSERT INTO `admin_role_permissions` VALUES (4, 41, '2022-02-21 06:02:26', '2022
 INSERT INTO `admin_role_permissions` VALUES (4, 42, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
 INSERT INTO `admin_role_permissions` VALUES (4, 44, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
 INSERT INTO `admin_role_permissions` VALUES (4, 45, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_role_permissions` VALUES (4, 47, '2022-04-01 16:57:54', '2022-04-01 16:57:54');
+INSERT INTO `admin_role_permissions` VALUES (4, 48, '2022-04-01 16:57:54', '2022-04-01 16:57:54');
 INSERT INTO `admin_role_permissions` VALUES (5, 8, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
 INSERT INTO `admin_role_permissions` VALUES (5, 9, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
 INSERT INTO `admin_role_permissions` VALUES (5, 10, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
@@ -550,6 +557,8 @@ INSERT INTO `admin_role_permissions` VALUES (5, 41, '2022-02-21 06:02:26', '2022
 INSERT INTO `admin_role_permissions` VALUES (5, 42, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
 INSERT INTO `admin_role_permissions` VALUES (5, 44, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
 INSERT INTO `admin_role_permissions` VALUES (5, 45, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_role_permissions` VALUES (5, 47, '2022-04-01 17:12:12', '2022-04-01 17:12:12');
+INSERT INTO `admin_role_permissions` VALUES (5, 48, '2022-04-01 17:12:12', '2022-04-01 17:12:12');
 INSERT INTO `admin_role_permissions` VALUES (6, 8, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
 INSERT INTO `admin_role_permissions` VALUES (6, 9, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
 INSERT INTO `admin_role_permissions` VALUES (6, 10, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
@@ -583,6 +592,8 @@ INSERT INTO `admin_role_permissions` VALUES (6, 41, '2022-02-21 06:02:26', '2022
 INSERT INTO `admin_role_permissions` VALUES (6, 42, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
 INSERT INTO `admin_role_permissions` VALUES (6, 44, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
 INSERT INTO `admin_role_permissions` VALUES (6, 45, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_role_permissions` VALUES (6, 47, '2022-04-01 17:12:20', '2022-04-01 17:12:20');
+INSERT INTO `admin_role_permissions` VALUES (6, 48, '2022-04-01 17:12:20', '2022-04-01 17:12:20');
 
 -- ----------------------------
 -- Records of admin_roles
