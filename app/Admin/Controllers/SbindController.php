@@ -86,7 +86,8 @@ class SbindController extends AdminController
                 ->modal(function () {
                     return ShistoryTable::make();
                 });
-
+            
+            $grid->column('solution_name', __('安装包名'));
             $grid->column('solution');
             $grid->column('class')->hide();
             $grid->column('adaption_type');
