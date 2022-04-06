@@ -125,15 +125,15 @@ INSERT INTO `admin_permissions` VALUES (45, '数据统计', 'statistics', NULL, 
 INSERT INTO `admin_permissions` VALUES (46, 'API', 'API', '', '', 46, 0, '2022-04-01 16:50:54', '2022-04-01 16:50:54');
 INSERT INTO `admin_permissions` VALUES (47, 'P分页', 'pPag', '', '/api/peripherals*', 47, 46, '2022-04-01 16:54:10', '2022-04-01 16:55:11');
 INSERT INTO `admin_permissions` VALUES (48, 'S分页', 'sPag', '', '/api/softwares*', 48, 46, '2022-04-01 16:55:02', '2022-04-01 16:55:11');
-INSERT INTO `admin_permissions` VALUES (49, '软件需求管理权限', 'srequests', '', '/srequests*', 49, 0, '2022-04-02 08:29:04', '2022-04-02 08:30:14'),
-INSERT INTO `admin_permissions` VALUES (50, '软件需求管理-查看', 'srequests-get', 'GET', '/srequests', 50, 49, '2022-04-02 08:31:30', '2022-04-02 08:31:30'),
-INSERT INTO `admin_permissions` VALUES (51, '软件需求管理-编辑', 'srequests-edit', 'GET,POST,PUT', '/srequests*', 51, 49, '2022-04-02 08:33:20', '2022-04-02 08:35:45'),
-INSERT INTO `admin_permissions` VALUES (52, '软件需求管理-删除', 'srequests-delete', 'DELETE', '/srequests*', 52, 49, '2022-04-02 08:34:12', '2022-04-02 08:34:12'),
-INSERT INTO `admin_permissions` VALUES (53, '软件需求管理-操作', 'srequests-action', '', '', 53, 49, '2022-04-02 08:35:36', '2022-04-02 08:35:36'),
-INSERT INTO `admin_permissions` VALUES (54, '外设需求管理权限', 'prequests', '', '/prequests*', 54, 0, '2022-04-02 08:36:19', '2022-04-02 08:37:25'),
-INSERT INTO `admin_permissions` VALUES (55, '外设需求管理-查看', 'prequests-get', 'GET', '/prequests', 55, 54, '2022-04-02 08:37:15', '2022-04-02 08:37:15'),
-INSERT INTO `admin_permissions` VALUES (56, '外设需求管理-编辑', 'prequests-edit', 'GET,POST,PUT', '/prequests*', 56, 54, '2022-04-02 08:37:15', '2022-04-02 08:37:15'),
-INSERT INTO `admin_permissions` VALUES (57, '外设需求管理-删除', 'prequests-delete', 'DELETE', '/prequests*', 57, 54, '2022-04-02 08:37:15', '2022-04-02 08:37:15'),
+INSERT INTO `admin_permissions` VALUES (49, '软件需求管理权限', 'srequests', '', '/srequests*', 49, 0, '2022-04-02 08:29:04', '2022-04-02 08:30:14');
+INSERT INTO `admin_permissions` VALUES (50, '软件需求管理-查看', 'srequests-get', 'GET', '/srequests', 50, 49, '2022-04-02 08:31:30', '2022-04-02 08:31:30');
+INSERT INTO `admin_permissions` VALUES (51, '软件需求管理-编辑', 'srequests-edit', 'GET,POST,PUT', '/srequests*', 51, 49, '2022-04-02 08:33:20', '2022-04-02 08:35:45');
+INSERT INTO `admin_permissions` VALUES (52, '软件需求管理-删除', 'srequests-delete', 'DELETE', '/srequests*', 52, 49, '2022-04-02 08:34:12', '2022-04-02 08:34:12');
+INSERT INTO `admin_permissions` VALUES (53, '软件需求管理-操作', 'srequests-action', '', '', 53, 49, '2022-04-02 08:35:36', '2022-04-02 08:35:36');
+INSERT INTO `admin_permissions` VALUES (54, '外设需求管理权限', 'prequests', '', '/prequests*', 54, 0, '2022-04-02 08:36:19', '2022-04-02 08:37:25');
+INSERT INTO `admin_permissions` VALUES (55, '外设需求管理-查看', 'prequests-get', 'GET', '/prequests', 55, 54, '2022-04-02 08:37:15', '2022-04-02 08:37:15');
+INSERT INTO `admin_permissions` VALUES (56, '外设需求管理-编辑', 'prequests-edit', 'GET,POST,PUT', '/prequests*', 56, 54, '2022-04-02 08:37:15', '2022-04-02 08:37:15');
+INSERT INTO `admin_permissions` VALUES (57, '外设需求管理-删除', 'prequests-delete', 'DELETE', '/prequests*', 57, 54, '2022-04-02 08:37:15', '2022-04-02 08:37:15');
 INSERT INTO `admin_permissions` VALUES (58, '外设需求管理-操作', 'prequests-action', '', '', 58, 54, '2022-04-02 08:37:15', '2022-04-02 08:37:15');
 
 -- ----------------------------
