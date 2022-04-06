@@ -16,9 +16,8 @@ class CreateSbindHistoriesTable extends Migration
         Schema::create('sbind_histories', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('sbind_id')
-                ->comment('PBind表ID')
-                ->constrained();
+            // SBindController脑瘫代码的后遗症
+            $table->unsignedBigInteger('sbind_id')->comment('SBind表ID');
             $table->foreignId('status_old')
                 ->nullable()
                 ->comment('修改前适配状态')

@@ -16,9 +16,7 @@ class CreateSrequestsTable extends Migration
         Schema::create('s_requests', function (Blueprint $table) {
             $table->id();
             $table->string('source')->comment('需求来源');
-            $table->foreignId('manufactor_id')
-                  ->comment('厂商名称')
-                  ->constrained();
+            $table->string('manufactor')->comment('厂商名称');
             $table->string('name')->comment('产品名称');
 
             $table->foreignId('stype_id')

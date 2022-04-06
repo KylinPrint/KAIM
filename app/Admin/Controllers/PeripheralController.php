@@ -151,15 +151,7 @@ class PeripheralController extends AdminController
                 $grid->column('specifications.name', __('参数名'));
                 $grid->column('value', __('参数'));
                 $grid->disableActions();
-                // $grid->actions(function ($actions) {
-                //     $actions->disableDelete();
-                //     $actions->disableEdit();     
-                //     $actions->disableView();
-                //     $curStr = '<a href = "/admin/values/'.$actions->row['solutions_id'].'">详情</a>';
-                //     $actions->append($curStr);
-                //     //$actions->append(new JumpInfo($actions->row['id']));
-    
-                // });	
+
                 return $grid;
             });
         });

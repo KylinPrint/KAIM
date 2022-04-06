@@ -11,7 +11,6 @@ use App\Models\Release;
 use App\Models\Pbind;
 use App\Models\PbindHistory;
 use App\Models\Peripheral;
-use App\Models\Software;
 use App\Models\PRequest;
 use App\Models\Status;
 use App\Models\Type;

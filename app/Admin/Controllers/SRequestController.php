@@ -29,7 +29,7 @@ class SRequestController extends AdminController
      */
     protected function grid()
     {
-        return Grid::make(SRequest::with(['manufactor', 'stype', 'release', 'chip', 'bd']), function (Grid $grid) {
+        return Grid::make(SRequest::with(['stype', 'release', 'chip', 'bd']), function (Grid $grid) {
 
             $grid->paginate(10);
             if(!Admin::user()->can('srequests-edit'))
@@ -43,7 +43,7 @@ class SRequestController extends AdminController
             }
 
             $grid->column('source');
-            $grid->column('manufactor.name');
+            $grid->column('manufactor');
             $grid->column('name');
             $grid->column('stype.name');
             $grid->column('industry')->badge();
@@ -82,9 +82,9 @@ class SRequestController extends AdminController
      */
     protected function detail($id)
     {
-        return Show::make($id, SRequest::with(['manufactor', 'stype', 'release', 'chip', 'bd']), function (Show $show) {
+        return Show::make($id, SRequest::with(['stype', 'release', 'chip', 'bd']), function (Show $show) {
             $show->field('source');
-            $show->field('manufactor.name');
+            $show->field('manufactor');
             $show->field('name');
             $show->field('stype.name');
             $show->field('industry');
@@ -112,13 +112,12 @@ class SRequestController extends AdminController
      */
     protected function form()
     {
-        return Form::make(SRequest::with(['manufactor', 'stype', 'release', 'chip', 'bd']), function (Form $form) {
+        return Form::make(SRequest::with(['stype', 'release', 'chip', 'bd']), function (Form $form) {
             if ($form->isCreating()) {
                 // 新增需求
                 $form->select('source')
                     ->options(config('kaim.adapt_source'))->required();
-                $form->select('manufactor_id')
-                    ->options(Manufactor::all()->pluck('name', 'id'))->required();
+                $form->text('manufactor')->required();
                     $form->text('name')->required();
                 $form->select('stype_id')
                     ->options(Stype::all()->pluck('name', 'id'))->required();
@@ -157,7 +156,7 @@ class SRequestController extends AdminController
                     // TODO 改为暂停处理还能改回处理中吗
                     case '已提交':
                         $form->display('source');
-                        $form->display('manufactor.name');
+                        $form->display('manufactor');
                         $form->display('name');
                         $form->display('stype.name');
                         $form->display('industry');
@@ -193,7 +192,7 @@ class SRequestController extends AdminController
                     
                     default:
                         $form->display('source');
-                        $form->display('manufactor.name');
+                        $form->display('manufactor');
                         $form->display('name');
                         $form->display('stype.name');
                         $form->display('industry');
@@ -226,12 +225,21 @@ class SRequestController extends AdminController
                     $timestamp = date("Y-m-d H:i:s");
                     
                     if ($form->status == '处理中') {
+                        // 查询Manufactor记录是否存在
+                        $manufactor_id = Manufactor::where('name', $form->model()->manufactor)->pluck('id')->first();
+                        if (!$manufactor_id) {
+                            $manufactor = Manufactor::create([
+                                'name' => $form->model()->manufactor
+                            ]);
+                            $manufactor_id = $manufactor->id;
+                        }
+
                         // 查询Software记录是否存在
                         $software_id = Software::where('name', $form->model()->name)->pluck('id')->first();
                         if (!$software_id) {
                             $software = Software::create([
                                 'name' => $form->model()->name,
-                                'manufactors_id' => $form->model()->manufactor_id,
+                                'manufactors_id' => $manufactor_id,
                                 'stypes_id' => $form->model()->stype_id,
                                 'industries' => $form->model()->industry,
                             ]);

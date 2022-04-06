@@ -10,8 +10,6 @@ class SRequest extends Model
 {
 	use HasDateTimeFormatter;
 
-	public function manufactor() { return $this->belongsTo(Manufactor::class); }
-
 	public function stype() { return $this->belongsTo(Stype::class); }
 
 	public function release() { return $this->belongsTo(Release::class); }

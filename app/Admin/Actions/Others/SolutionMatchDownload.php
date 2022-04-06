@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Admin\Actions;
+namespace App\Admin\Actions\Others;
 
 use Dcat\Admin\Actions\Response;
 use Dcat\Admin\Traits\HasPermissions;
@@ -29,7 +29,6 @@ class SolutionMatchDownload extends RowAction
      *
      * @return Response
      */
-
     public function handle(Request $request)
     {
         //dump($this->getKey());

@@ -3,7 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Admin\Actions\Modal\SolutionMatchModal;
-use App\Admin\Actions\SolutionMatchDownload;
+use App\Admin\Actions\Others\SolutionMatchDownload;
 use App\Models\SolutionMatch;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
@@ -33,8 +33,6 @@ class SolutionMatchController extends AdminController
                 $actions->disableView();
                 $actions->disableEdit();
                 $actions->disableQuickEdit();
-    
-                $rowArray = $actions->row->toArray();
 
                 $actions->append(new SolutionMatchDownload());
                           

@@ -7,10 +7,7 @@ return [
     ],
     'fields' => [
         'source' => '需求来源',
-        'manufactor_id' => '厂商名称',
-        'manufactor' => [
-            'name' => '厂商名称',
-        ],
+        'manufactor' => '厂商名称',
         'name' => '产品名称',
         'stype_id' => '产品类型',
         'stype' => [

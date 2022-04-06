@@ -21,9 +21,8 @@ class ManufactorController extends AdminController
             // $grid->column('id')->sortable();
             $grid->column('name');
             $grid->column('isconnected')->display(function ($isconnected) {
-                if     ($isconnected == '0') { return '否'; }
-                elseif ($isconnected == '1') { return '是'; }
-                else { return '否'; }
+                if     ($isconnected == '1') { return '是'; }
+                elseif ($isconnected == '0') { return '否'; }
             });
             $grid->column('created_at');
             $grid->column('updated_at')->sortable();
