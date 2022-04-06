@@ -1,7 +1,7 @@
 -- ----------------------------
 -- Records of admin_menu
 -- ----------------------------
-TRUNCATE TABLE `admin_menu`
+TRUNCATE TABLE `admin_menu`;
 INSERT INTO `admin_menu` VALUES (1, 0, 1, 'Index', 'feather icon-bar-chart-2', '/', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
 INSERT INTO `admin_menu` VALUES (2, 0, 2, '软件适配数据', 'fa-tv', NULL, '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
 INSERT INTO `admin_menu` VALUES (3, 2, 3, '软件适配管理', 'fa-angle-double-right', 'sbinds', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
