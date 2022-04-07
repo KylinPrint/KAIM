@@ -34,9 +34,9 @@ return [
         'status' => '处理状态',
         'history' => '处理历史',
         'pbind_id' => '外设适配信息',
-        'bd_id' => '生态负责人',
+        'bd_id' => '需求接收人',
         'bd' => [
-            'name' => '生态负责人',
+            'name' => '需求接收人',
         ],
         'comment' => '备注',
         'statuses_id' => '当前适配状态',
