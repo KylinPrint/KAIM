@@ -3,7 +3,7 @@
 -- ----------------------------
 TRUNCATE TABLE `admin_menu`;
 INSERT INTO `admin_menu` VALUES (1, 0, 1, 'Index', 'feather icon-bar-chart-2', '/', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_menu` VALUES (2, 0, 2, 'Softwares', 'fa-tv', NULL, '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_menu` VALUES (2, 0, 2, 'Software', 'fa-tv', NULL, '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
 INSERT INTO `admin_menu` VALUES (3, 2, 3, 'Software Adaption', 'fa-angle-double-right', 'sbinds', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
 INSERT INTO `admin_menu` VALUES (4, 2, 4, 'Software Data', 'fa-angle-double-right', 'softwares', '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
 INSERT INTO `admin_menu` VALUES (5, 0, 5, 'Peripheral', 'fa-tv', NULL, '', 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
