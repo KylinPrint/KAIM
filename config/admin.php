@@ -187,7 +187,7 @@ return [
 
         // The global Grid column selector setting.
         'column_selector' => [
-            'store' => Dcat\Admin\Grid\ColumnSelector\SessionStore::class,
+            'store' => Dcat\Admin\Grid\ColumnSelector\CacheStore::class,
             'store_params' => [
                 'driver' => 'file',
             ],
@@ -234,7 +234,7 @@ return [
     'menu' => [
         'cache' => [
             // enable cache or not
-            'enable' => false,
+            'enable' => true,
             'store'  => 'file',
         ],
 
