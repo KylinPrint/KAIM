@@ -86,7 +86,7 @@ class SRequestController extends AdminController
                 $filter->where('sbind',function ($query){
                     $query->whereHas('sbinds', function ($query){
                         $query->whereHas('statuses', function ($query){
-                            $query->where('parent', 'like', "%{$this->input}%");
+                            $query->where('parent', "%{$this->input}%");
                         });
                     });
                 },'适配状态')->select([

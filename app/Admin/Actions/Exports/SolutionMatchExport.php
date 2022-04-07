@@ -31,11 +31,12 @@ class SolutionMatchExport implements FromCollection, WithHeadings
         $this->data = $curMatchArr;
 
         $this->headings = [
-            '品类',
+            '分类1',
+            '分类2',
             '厂商' ,
             '型号' ,
             '系统版本' ,
-            '系统架构' ,
+            '芯片' ,
             '匹配型号结果' ,
         ];
         $this->file = $file;

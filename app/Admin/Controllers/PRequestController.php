@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Actions\Modal\PRequestModal;
 use App\Admin\Renderable\PRhistoryTable;
 use App\Admin\Renderable\StatusTable;
 use App\Models\AdminUser;
@@ -34,6 +35,11 @@ class PRequestController extends AdminController
         return Grid::make(PRequest::with(['type', 'release', 'chip', 'bd','pbinds']), function (Grid $grid) {
 
             $grid->paginate(10);
+
+            $grid->tools(function  (Grid\Tools  $tools)  { 
+                $tools->append(new PRequestModal()); 
+            });
+
             if(!Admin::user()->can('prequests-edit'))
             {
                 $grid->disableCreateButton();
@@ -88,7 +94,7 @@ class PRequestController extends AdminController
                 $filter->where('pbind',function ($query){
                     $query->whereHas('pbinds', function ($query){
                         $query->whereHas('statuses', function ($query){
-                            $query->where('parent', 'like', "%{$this->input}%");
+                            $query->where('parent',"%{$this->input}%");
                         });
                     });
                 },'适配状态')->select([
