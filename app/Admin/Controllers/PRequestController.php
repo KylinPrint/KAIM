@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Admin\Renderable\PRhistoryTable;
+use App\Admin\Renderable\StatusTable;
 use App\Models\AdminUser;
 use App\Models\Brand;
 use App\Models\Chip;
@@ -30,7 +31,7 @@ class PRequestController extends AdminController
      */
     protected function grid()
     {
-        return Grid::make(PRequest::with(['type', 'release', 'chip', 'bd']), function (Grid $grid) {
+        return Grid::make(PRequest::with(['type', 'release', 'chip', 'bd','pbinds']), function (Grid $grid) {
 
             $grid->paginate(10);
             if(!Admin::user()->can('prequests-edit'))
@@ -84,19 +85,31 @@ class PRequestController extends AdminController
                     '已拒绝' => '已拒绝',
                     '已关闭' => '已关闭',]);
 
+                $filter->where('pbind',function ($query){
+                    $query->whereHas('pbinds', function ($query){
+                        $query->whereHas('statuses', function ($query){
+                            $query->where('parent', 'like', "%{$this->input}%");
+                        });
+                    });
+                },'适配状态')->select([
+                    '未适配',
+                    '适配中',
+                    '已适配',
+                    '待验证',
+                    '适配暂停',]);
+
                 $filter->whereBetween('created_at', function ($query) {
                     $start = $this->input['start'] ?? null;
                     $end = $this->input['end'] ?? null;
             
-                    $query->whereHas('binds', function ($query) use ($start,$end) {
-                        if ($start !== null) {
-                            $query->where('created_at', '>=', $start);
-                        }
-            
-                        if ($end !== null) {
-                            $query->where('created_at', '<=', $end);
-                        }
-                    });
+                    if ($start !== null) {
+                        $query->where('created_at', '>=', $start);
+                    }
+        
+                    if ($end !== null) {
+                        $query->where('created_at', '<=', $end);
+                    }
+
                 })->datetime()->width(3);
             });
         });

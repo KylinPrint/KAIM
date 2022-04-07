@@ -17,4 +17,6 @@ class PRequest extends Model
 	public function chip() { return $this->belongsTo(Chip::class); }
 
 	public function bd() { return $this->belongsTo(AdminUser::class); }
+
+	public function pbinds() { return $this->belongsTo(Pbind::class); }
 }

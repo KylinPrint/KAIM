@@ -133,7 +133,7 @@ class PbindController extends AdminController
                     ->title('弹窗标题')
                     ->dialogWidth('50%')
                     ->model(Status::class, 'id', 'name');
-                $filter->whereBetween('updated_at', function ($query) {
+                $filter->whereBetween('created_at', function ($query) {
                         $start = $this->input['start'] ?? null;
                         $end = $this->input['end'] ?? null;
                     
