@@ -71,6 +71,34 @@ class PRequestController extends AdminController
             });
             $grid->column('bd.name');
             $grid->column('comment');
+
+            $grid->filter(function (Grid\Filter $filter) {
+                $filter->panel();
+                $filter->like('comment','需求描述');
+                $filter->in('status','处理状态')
+                ->multipleSelect([
+                    '已提交' => '已提交',
+                    '处理中' => '处理中',
+                    '已处理' => '已处理',
+                    '暂停处理' => '暂停处理',
+                    '已拒绝' => '已拒绝',
+                    '已关闭' => '已关闭',]);
+
+                $filter->whereBetween('created_at', function ($query) {
+                    $start = $this->input['start'] ?? null;
+                    $end = $this->input['end'] ?? null;
+            
+                    $query->whereHas('binds', function ($query) use ($start,$end) {
+                        if ($start !== null) {
+                            $query->where('created_at', '>=', $start);
+                        }
+            
+                        if ($end !== null) {
+                            $query->where('created_at', '<=', $end);
+                        }
+                    });
+                })->datetime()->width(3);
+            });
         });
     }
 
