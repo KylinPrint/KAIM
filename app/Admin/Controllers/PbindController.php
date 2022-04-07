@@ -231,7 +231,7 @@ class PbindController extends AdminController
                  ->options(config('kaim.adapt_source'))->required();
             $form->select('adapted_before')->options([0 => '否',1 => '是']);
             $form->select('statuses_id',__('状态'))->options(Status::where('parent','!=',null)->pluck('name','id'))->required();
-            $form->text('statuses_comment', __('状态变更说明'));
+            $form->text('statuses_comment', __('适配状态变更说明'));
             $form->select('admin_users_id')->options(AdminUser::all()->pluck('name', 'id'))->default(Admin::user()->id);
             $form->text('solution_name');
             $form->text('solution');
