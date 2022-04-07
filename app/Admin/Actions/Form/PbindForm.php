@@ -30,7 +30,8 @@ class PbindForm extends Form
 
     public function form()
     {
-        $this->file('file', '上传数据（Excel）')->rules('required', ['required' => '文件不能为空'])->move('admin/upload');
+        $this->file('file', '上传数据(Excel)')->rules('required', ['required' => '文件不能为空'])->move('admin/upload')
+            ->help('<a href="/template/p_import.xlsx" target="_blank">点击此处</a>下载导入模板');
 
     }
 

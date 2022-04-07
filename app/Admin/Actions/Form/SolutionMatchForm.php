@@ -57,7 +57,8 @@ class SolutionMatchForm extends Form
 
     public function form()
     {
-        $this->file('file', '上传数据（Excel）')->rules('required', ['required' => '文件不能为空'])->move('/');
+        $this->file('file', '上传数据(Excel)')->rules('required', ['required' => '文件不能为空'])->move('/')
+            ->help('<a href="/template/solution_match.xlsx" target="_blank">点击此处</a>下载导入模板');
     }
 
     public function getmicrotime()

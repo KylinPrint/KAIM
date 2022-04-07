@@ -52,7 +52,7 @@ class AgainSolutionMatchForm extends Form
 
     public function form()
     {
-        $this->file('file', '上传数据（Excel）')->rules('required', ['required' => '文件不能为空'])->move('/');
+        $this->file('file', '上传数据(Excel)')->rules('required', ['required' => '文件不能为空'])->move('/');
     }
 
     public function getmicrotime()

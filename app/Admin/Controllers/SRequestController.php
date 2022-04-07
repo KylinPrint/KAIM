@@ -42,6 +42,8 @@ class SRequestController extends AdminController
                 $grid->disableActions();
             }
 
+            $grid->showColumnSelector();
+
             $grid->column('source');
             $grid->column('manufactor');
             $grid->column('name');
@@ -64,8 +66,9 @@ class SRequestController extends AdminController
                     return SRhistoryTable::make();
             });
             $grid->column('sbind_id')->display(function ($sbind_id) {
-                $href = admin_url('sbinds/'.$sbind_id);
-                return "<a href='$href'>点击查看</a>";
+                if ($sbind_id) {
+                    return "<a href=" . admin_url('sbinds/'.$sbind_id) . ">点击查看</a>";
+                }
             });
             $grid->column('bd.name');
             $grid->column('comment');
@@ -183,76 +186,61 @@ class SRequestController extends AdminController
                     ->options(AdminUser::all()->pluck('name', 'id'))->required();
                 $form->text('comment');
             } else {
-                // 编辑需求
-                // 按当前需求状态分类
-                switch ($form->model()->status) {
-                    // TODO 已拒绝和已关闭不允许编辑
-                    case "已拒绝":
-                        break;
-                    
-                    case '已关闭':
-                        break;
-                    
-                    // TODO 改为暂停处理还能改回处理中吗
-                    case '已提交':
-                        $form->display('source');
-                        $form->display('manufactor');
-                        $form->display('name');
-                        $form->display('stype.name');
-                        $form->display('industry');
-                        $form->display('release.name');
-                        $form->display('chip.name');
-                        $form->display('project_name');
-                        $form->display('amount');
-                        $form->display('project_status');
-                        $form->display('level');
-                        $form->display('manufactor_contact');
-                        $form->display('et');
-                        $form->display('requester_name');
-                        $form->display('requester_contact');
-                        $form->display('bd.name');
-                        $form->display('comment');
+                // 不可编辑的部分
+                $form->display('source');
+                $form->display('manufactor');
+                $form->display('name');
+                $form->display('stype.name');
+                $form->display('industry');
+                $form->display('release.name');
+                $form->display('chip.name');
+                $form->display('project_name');
+                $form->display('amount');
+                $form->display('project_status');
+                $form->display('level');
+                $form->display('manufactor_contact');
+                $form->display('et');
+                $form->display('requester_name');
+                $form->display('requester_contact');
+                $form->display('bd.name');
+                $form->display('comment');
 
-                        $form->select('status')
-                            ->when('处理中', function (Form $form) {
-                                $form->select('statuses_id')->options(Status::where('parent','!=',null)->pluck('name','id'));
-                                $form->text('statuses_comment');
-                                $form->select('admin_users_id')->options(AdminUser::all()->pluck('name', 'id'));
-                                $form->select('kylineco')->options([0 => '否', 1 => '是']);
-                                $form->select('appstore')->options([0 => '否', 1 => '是']);
-                                $form->select('iscert')->options([0 => '否', 1 => '是']);
-                                $form->hidden('sbind_id');
-                            })
-                            ->options([
-                                '处理中' => '处理中',
-                                '已拒绝' => '已拒绝',
-                            ])->required();
-                        $form->text('status_comment', __('状态变更说明'))->required();
-                        break;
-                    
-                    default:
-                        $form->display('source');
-                        $form->display('manufactor');
-                        $form->display('name');
-                        $form->display('stype.name');
-                        $form->display('industry');
-                        $form->display('release.name');
-                        $form->display('chip.name');
-                        $form->display('project_name');
-                        $form->display('amount');
-                        $form->display('project_status');
-                        $form->display('level');
-                        $form->display('manufactor_contact');
-                        $form->display('et');
-                        $form->display('requester_name');
-                        $form->display('requester_contact');
-                        $form->display('bd.name');
-                        $form->display('comment');
-
-                        $form->select('status')
-                            ->options(config('kaim.request_status'))->required();
-                        $form->text('status_comment', __('需求状态变更说明'))->required();
-                        break;
+                // 已关闭的需求不允许编辑
+                if ($form->model()->status != '已关闭') {
+                    // 按当前需求状态分类
+                    $form->select('status')
+                        ->when('处理中', function (Form $form) {
+                            $form->select('statuses_id')->options(Status::where('parent','!=',null)->pluck('name','id'))
+                                ->rules('required_if:status,处理中',['required_if' => '请填写此字段'])
+                                ->setLabelClass(['asterisk']);
+                            $form->text('statuses_comment')
+                                ->rules('required_if:status,处理中',['required_if' => '请填写此字段'])
+                                ->setLabelClass(['asterisk']);
+                            $form->select('admin_users_id')->options(AdminUser::all()->pluck('name', 'id'))
+                                ->rules('required_if:status,处理中',['required_if' => '请填写此字段'])
+                                ->setLabelClass(['asterisk']);
+                            $form->select('kylineco')->options([0 => '否', 1 => '是'])
+                                ->rules('required_if:status,处理中',['required_if' => '请填写此字段'])
+                                ->setLabelClass(['asterisk']);
+                            $form->select('appstore')->options([0 => '否', 1 => '是'])
+                                ->rules('required_if:status,处理中',['required_if' => '请填写此字段'])
+                                ->setLabelClass(['asterisk']);
+                            $form->select('iscert')->options([0 => '否', 1 => '是'])
+                                ->rules('required_if:status,处理中',['required_if' => '请填写此字段'])
+                                ->setLabelClass(['asterisk']);
+                            $form->hidden('pbind_id');
+                        })
+                        ->options(function () use ($form) {
+                            $status_option = config('kaim.request_status');
+                            // 脑瘫代码，极致享受
+                            if (in_array($form->model()->status, ['处理中', '已处理', '暂停处理', '已拒绝'])) { unset($status_option['已提交']); }
+                            if (in_array($form->model()->status, ['处理中', '已处理', '已拒绝'])) { unset($status_option['处理中']); }
+                            if (in_array($form->model()->status, ['已提交', '已拒绝'])) { unset($status_option['已处理']); }
+                            if (in_array($form->model()->status, ['已提交', '已处理', '已拒绝'])) { unset($status_option['暂停处理']); }
+                            if (in_array($form->model()->status, ['处理中', '已处理', '暂停处理'])) { unset($status_option['已拒绝']); }
+                            return $status_option;
+                        })->required();
+                    $form->text('status_comment', __('状态变更说明'))->required();
                 }
             }
             
@@ -300,9 +288,9 @@ class SRequestController extends AdminController
                                 'adapt_source' => $form->model()->source,
                                 'statuses_id' => $form->statuses_id,
                                 'admin_users_id' => $form->admin_users_id,
-                                'kylineco' => $form->model()->kylineco,
-                                'appstore' => $form->model()->appstore,
-                                'iscert' => $form->model()->iscert,
+                                'kylineco' => $form->kylineco,
+                                'appstore' => $form->appstore,
+                                'iscert' => $form->iscert,
                             ]);
                             $sbind_id = $sbind->id;
                             SbindHistory::create([

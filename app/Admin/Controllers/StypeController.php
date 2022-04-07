@@ -26,10 +26,7 @@ class StypeController extends AdminController
             $grid->column('created_at');
             $grid->column('updated_at')->sortable();
         
-            $grid->filter(function (Grid\Filter $filter) {
-                $filter->equal('id');
-        
-            });
+            $grid->quickSearch('name');
         });
     }
 

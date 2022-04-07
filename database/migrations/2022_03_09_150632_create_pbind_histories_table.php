@@ -16,7 +16,7 @@ class CreatePbindHistoriesTable extends Migration
         Schema::create('pbind_histories', function (Blueprint $table) {
             $table->id();
 
-            // PBindController脑瘫代码的后遗症
+            // PBindController脑瘫代码的后遗症,删除PBinds时不会同步删除pbind_histories的关联数据
             $table->unsignedBigInteger('pbind_id')->comment('PBind表ID');
             $table->foreignId('status_old')
                 ->nullable()
