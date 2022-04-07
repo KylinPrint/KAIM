@@ -73,7 +73,7 @@ class SRequestController extends AdminController
 
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->panel();
-                $filter->like('comment','需求描述');
+                $filter->like('name','产品名称');
                 $filter->in('status','处理状态')
                 ->multipleSelect([
                     '已提交' => '已提交',
