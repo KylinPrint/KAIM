@@ -142,15 +142,14 @@ class PeripheralController extends AdminController
             $show->binds(__('参数'), function ($model) {
                 $grid = new Grid(Value::with(['peripherals','specifications']));
     
-                $grid->setActionClass(Grid\Displayers\Actions::class);
-    
                 $grid->model()->where('peripherals_id', $model->id);
-                $grid->disableFilter();
-                $grid->disableCreateButton();
                 
                 $grid->column('specifications.name', __('参数名'));
                 $grid->column('value', __('参数'));
+
                 $grid->disableActions();
+                $grid->disableCreateButton();
+                $grid->disableRefreshButton();
 
                 return $grid;
             });

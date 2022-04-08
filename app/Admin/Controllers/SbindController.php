@@ -13,6 +13,7 @@ use App\Models\Chip;
 use App\Models\Manufactor;
 use App\Models\Release;
 use App\Models\Sbind;
+use App\Models\SbindHistory;
 use App\Models\Software;
 use App\Models\Status;
 use App\Models\Stype;
@@ -201,6 +202,24 @@ class SbindController extends AdminController
             $show->field('start_time');
             $show->field('complete_time');
             $show->field('comment');
+
+            $show->relation('histories', function ($model) {
+                $grid = new Grid(SbindHistory::with(['status_old', 'status_new', 'admin_users_id']));
+            
+                $grid->model()->where('sbind_id', $model->id);
+            
+                $grid->column('admin_users_id.name', __('处理人'));
+                $grid->column('status_old.name', __('修改前状态'));
+                $grid->column('status_new.name', __('修改后状态'));
+                $grid->column('comment');
+                $grid->updated_at();
+
+                $grid->disableActions();
+                $grid->disableCreateButton();
+                $grid->disableRefreshButton();
+                        
+                return $grid;
+            });
         });
     }
 
@@ -277,7 +296,7 @@ class SbindController extends AdminController
                     $status_current = DB::table('sbinds')->where('id', $id)->value('statuses_id');
                 }
 
-                if ($status_coming != $status_current) {
+                if ($status_coming != $status_current || $form->statuses_comment) {
                     DB::table('sbind_histories')->insert([
                         'sbind_id' => $id,
                         'status_old' => $status_current,
