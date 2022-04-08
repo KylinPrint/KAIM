@@ -83,16 +83,18 @@ class DataCount extends Donut
         $curTimeBefor = now()->subDays($curOption)->toDateTimeString();
 
         // $AddNum = count(Pbind::all()->whereBetween('created_at',[$curTimeBefor,$curTime]));
-        $a = count(Peripheral::all())+count(Software::all());
-        $a1 = count(Peripheral::all());
-        $a2 = count(Software::all());
+        $peripheral_count = Peripheral::count();
+        $software_count = Software::count();
+        $product_count = $peripheral_count + $software_count;
 
-        $b = count(Sbind::all())+count(Pbind::all());
-        $b1 = count(Sbind::all());
-        $b2 = count(Pbind::all());
+        $sbind_count = Sbind::count();
+        $pbind_count = Pbind::count();
+        $bind_count = $sbind_count + $pbind_count;
  
 
-        $this->withContent($a,$a1,$a2,$b,$b1,$b2);
+        $this->withContent(
+            $product_count, $peripheral_count, $software_count,
+            $bind_count ,$sbind_count ,$pbind_count);
 
         // 图表数据
 
