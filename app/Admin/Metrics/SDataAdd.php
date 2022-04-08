@@ -21,7 +21,7 @@ class SDataAdd extends Donut
         parent::init();
 
         $color = Admin::color();
-        $colors = [$color->dark90(),$color->alpha('blue2', 0.5), $color->blue1(),$color->alpha('blue2', 0.5),$color->blue1()];
+        $colors = [$color->red(),$color->yellow(), $color->green(),$color->blue(),$color->gray()];
 
         $this->title('软件新增适配数据');
         $this->dropdown([
@@ -97,9 +97,12 @@ class SDataAdd extends Donut
             Sbind::whereHas('statuses', function (Builder $query){
                 $query->where('parent','5')->orWhere('id','5');
             })->whereBetween('created_at',[$curTimeBefor,$curTime])->count();
+        
+        $color = Admin::color();
+        $colors = [$color->red(),$color->yellow(), $color->green(),$color->blue(),$color->gray()];
  
 
-        $this->withContent($a1,$a2,$a3,$a4,$a5);
+        $this->withContent($a1,$a2,$a3,$a4,$a5,$colors);
 
         // 图表数据
 
@@ -127,13 +130,9 @@ class SDataAdd extends Donut
      *
      * @return $this
      */
-    protected function withContent($a1,$a2,$a3,$a4,$a5)
+    protected function withContent($a1,$a2,$a3,$a4,$a5,$colors)
     {
         // $content = parent::render();
-
-        $AddColor = Admin::color()->dark90();
-        $blue = Admin::color()->alpha('blue2', 0.5);
-        $blue1 = Admin::color()->blue1();
 
         $style = 'margin-bottom: 8px';
         $labelWidth = 120;
@@ -142,31 +141,31 @@ class SDataAdd extends Donut
             <<<HTML
 <div class="d-flex pl-1 pr-1 pt-1" style="{$style}">
     <div style="width: {$labelWidth}px">
-        <i class="fa fa-circle" style="color: $AddColor"></i> {$this->labels[0]}
+        <i class="fa fa-circle" style="color: $colors[0]"></i> {$this->labels[0]}
     </div>
     <div>{$a1}</div>
 </div>
 <div class="d-flex pl-1 pr-1 pt-1" style="{$style}">
     <div style="width: {$labelWidth}px">
-        <i class="fa fa-circle" style="color: $blue"></i> {$this->labels[1]}
+        <i class="fa fa-circle" style="color: $colors[1]"></i> {$this->labels[1]}
     </div>
     <div>{$a2}</div>
 </div>
 <div class="d-flex pl-1 pr-1 pt-1" style="{$style}">
     <div style="width: {$labelWidth}px">
-        <i class="fa fa-circle" style="color: $blue1"></i> {$this->labels[2]}
+        <i class="fa fa-circle" style="color: $colors[2]"></i> {$this->labels[2]}
     </div>
     <div>{$a3}</div>
 </div>
 <div class="d-flex pl-1 pr-1 pt-1" style="{$style}">
     <div style="width: {$labelWidth}px">
-        <i class="fa fa-circle" style="color: $blue"></i> {$this->labels[3]}
+        <i class="fa fa-circle" style="color: $colors[3]"></i> {$this->labels[3]}
     </div>
     <div>{$a4}</div>
 </div>
 <div class="d-flex pl-1 pr-1 pt-1" style="{$style}">
     <div style="width: {$labelWidth}px">
-        <i class="fa fa-circle" style="color: $blue1"></i> {$this->labels[4]}
+        <i class="fa fa-circle" style="color: $colors[4]"></i> {$this->labels[4]}
     </div>
     <div>{$a5}</div>
 </div>
