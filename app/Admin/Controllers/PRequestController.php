@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Actions\Exports\PRequestExport;
 use App\Admin\Actions\Modal\PRequestModal;
 use App\Admin\Renderable\PRhistoryTable;
 use App\Models\AdminUser;
@@ -38,6 +39,8 @@ class PRequestController extends AdminController
             $grid->tools(function  (Grid\Tools  $tools)  { 
                 $tools->append(new PRequestModal()); 
             });
+
+            $grid->export(new PRequestExport());
 
             if(!Admin::user()->can('prequests-edit'))
             {

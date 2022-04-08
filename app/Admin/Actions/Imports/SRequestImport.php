@@ -22,7 +22,7 @@ use Maatwebsite\Excel\Imports\HeadingRowFormatter;
 use function PHPUnit\Framework\isEmpty;
 
 HeadingRowFormatter::default('none');
-class PRequestImport implements ToCollection, WithHeadingRow, WithValidation
+class SRequestImport implements ToCollection, WithHeadingRow, WithValidation
 {
     /**
      * @param array $row
@@ -43,7 +43,6 @@ class PRequestImport implements ToCollection, WithHeadingRow, WithValidation
             ( 
                 !($row['需求来源']&&
                 $row['厂商名称']&&
-                $row['品牌名称']&&
                 $row['产品名称']&&
                 $row['分类三']&&
                 $row['涉及行业']&&
@@ -58,11 +57,10 @@ class PRequestImport implements ToCollection, WithHeadingRow, WithValidation
                 throw new RequiredNotFoundException($key);
             }
 
-            $PRequestInsert =
+            $SRequestInsert =
             [
                 'source' => $row['需求来源'],
                 'manufactor' => $row['厂商名称'],
-                'brand' => $row['品牌名称'],
                 'name' => $row['产品名称'],
                 'type_id' => Type::where('name',$row['分类三'])->pluck('id')->first(),
                 'industry' => $row['涉及行业'],
@@ -94,7 +92,7 @@ class PRequestImport implements ToCollection, WithHeadingRow, WithValidation
             // {
             //     return $query->where($pbindInsertUnique);
             // });
-            DB::table('p_requests')->insert($PRequestInsert);
+            DB::table('s_requests')->insert($SRequestInsert);
   
         }
         
