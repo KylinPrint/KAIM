@@ -32,6 +32,11 @@ class SRequestController extends AdminController
         return Grid::make(SRequest::with(['stype', 'release', 'chip', 'bd']), function (Grid $grid) {
 
             $grid->paginate(10);
+
+            // $grid->tools(function  (Grid\Tools  $tools)  { 
+            //     $tools->append(new SRequestModal()); 
+            // });
+
             if(!Admin::user()->can('srequests-edit'))
             {
                 $grid->disableCreateButton();
