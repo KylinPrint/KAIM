@@ -8,7 +8,6 @@ use App\Models\Sbind;
 use App\Models\Software;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Widgets\Metrics\Donut;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
 class DataCount extends Donut
@@ -34,30 +33,11 @@ class DataCount extends Donut
         $colors = [$color->dark90(),$color->blue1(), $color->alpha('blue2', 0.5),$color->blue2(),$color->blue1()];
 
         $this->title('适配数据总数统计');
-        // $this->dropdown([
-        //     '7' => 'Last 7 Days',
-        //     '30' => 'Last Month',
-        //     '365' => 'Last Year',
-        // ]);
         $this->chartLabels($this->labels);
         // 设置图表颜色
         $this->chartColors($colors);
 
         $this->chartHeight(150);
-
-        //显示图标百分百
-        // $this->chart([
-        //     'dataLabels' => [
-        //         'enabled' => true,
-        //         'formatter' => JavaScript::make(
-        //             <<<JS
-        //             function (val,options){
-        //                 return val.toFixed(1)+'%';
-        //             }
-        //             JS
-        //         )
-        //     ]
-        // ]);
 
         $this->chart->style('margin: 15px 15px 0 0;width: 200px;float:right;');
     }
@@ -78,29 +58,17 @@ class DataCount extends Donut
      */
     public function handle(Request $request)
     {
-        $curOption = $request->get('option')?:'7';
-        $curTime = now();
-        $curTimeBefor = now()->subDays($curOption)->toDateTimeString();
-
-        // $AddNum = count(Pbind::all()->whereBetween('created_at',[$curTimeBefor,$curTime]));
         $peripheral_count = Peripheral::count();
         $software_count = Software::count();
         $product_count = $peripheral_count + $software_count;
 
-        $sbind_count = Sbind::count();
         $pbind_count = Pbind::count();
-        $bind_count = $sbind_count + $pbind_count;
+        $sbind_count = Sbind::count();
+        $bind_count = $pbind_count + $sbind_count;
  
-
         $this->withContent(
             $product_count, $peripheral_count, $software_count,
-            $bind_count ,$sbind_count ,$pbind_count);
-
-        // 图表数据
-
-        //$this->withChart([$a1,$a2,$a3,$a4,$a5]);
-
-
+            $bind_count ,$pbind_count ,$sbind_count);
     }
 
     /**

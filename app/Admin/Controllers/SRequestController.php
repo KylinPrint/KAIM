@@ -2,6 +2,8 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Actions\Exports\SRequestExport;
+use App\Admin\Actions\Modal\SRequestModal;
 use App\Admin\Renderable\SRhistoryTable;
 use App\Models\AdminUser;
 use App\Models\Chip;
@@ -33,10 +35,6 @@ class SRequestController extends AdminController
 
             $grid->paginate(10);
 
-            // $grid->tools(function  (Grid\Tools  $tools)  { 
-            //     $tools->append(new SRequestModal()); 
-            // });
-
             if(!Admin::user()->can('srequests-edit'))
             {
                 $grid->disableCreateButton();
@@ -45,6 +43,17 @@ class SRequestController extends AdminController
             if(!Admin::user()->can('srequests-action'))
             {
                 $grid->disableActions();
+            }
+
+            $grid->tools(function  (Grid\Tools  $tools)  { 
+                $tools->append(new SRequestModal()); 
+            });
+
+            $grid->export(new SRequestExport());
+
+            if(!Admin::user()->can('prequests-edit'))
+            {
+                $grid->disableCreateButton();
             }
 
             $grid->showColumnSelector();
