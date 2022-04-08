@@ -12,9 +12,19 @@ class PRhistoryTable extends LazyRenderable
     {
         $id = $this->key;
         
-        $data = PRequestHistory::where('p_request_id', $id)
-            ->get(['operator', 'status_old', 'status_new', 'comment', 'updated_at'])
+        $query = PRequestHistory::with(['operator'])
+            ->where('p_request_id', $id)
+            ->get()
             ->toArray();
+        
+        $data = array();
+        foreach ($query as $key => $value) {
+            $data[$key]['operator'] = $value['operator']['name'];
+            $data[$key]['status_old'] = $value['status_old'];
+            $data[$key]['status_new'] = $value['status_new'];
+            $data[$key]['comment'] = $value['comment'];
+            $data[$key]['updated_at'] = $value['updated_at'];
+        }
         
         $title = [
             '处理人',

@@ -11,4 +11,6 @@ class SRequestHistory extends Model
 	use HasDateTimeFormatter;
 	
 	protected $table = 's_request_histories';
+
+	public function operator() { return $this->belongsTo(AdminUser::class, 'operator'); }
 }
