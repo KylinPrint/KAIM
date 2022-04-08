@@ -88,8 +88,8 @@ class DataCount extends Donut
         $a2 = count(Software::all());
 
         $b = count(Sbind::all())+count(Pbind::all());
-        $b1 = count(Sbind::all());
-        $b2 = count(Pbind::all());
+        $b1 = count(Pbind::all());
+        $b2 = count(Sbind::all());
  
 
         $this->withContent($a,$a1,$a2,$b,$b1,$b2);
