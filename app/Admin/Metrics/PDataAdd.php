@@ -74,29 +74,29 @@ class PDataAdd extends Donut
 
         // $AddNum = count(Pbind::all()->whereBetween('created_at',[$curTimeBefor,$curTime]));
         $a1 = 
-            count(Pbind::whereHas('statuses', function (Builder $query){
+            Pbind::whereHas('statuses', function (Builder $query){
                 $query->where('parent','1')->orWhere('id','1');
-            })->whereBetween('created_at',[$curTimeBefor,$curTime])->get());
+            })->whereBetween('created_at',[$curTimeBefor,$curTime])->count();
 
         $a2 = 
-            count(Pbind::whereHas('statuses', function (Builder $query){
+            Pbind::whereHas('statuses', function (Builder $query){
                 $query->where('parent','2')->orWhere('id','2');
-            })->whereBetween('created_at',[$curTimeBefor,$curTime])->get());
+            })->whereBetween('created_at',[$curTimeBefor,$curTime])->count();
 
         $a3 = 
-            count(Pbind::whereHas('statuses', function (Builder $query){
+            Pbind::whereHas('statuses', function (Builder $query){
                 $query->where('parent','3')->orWhere('id','3');
-            })->whereBetween('created_at',[$curTimeBefor,$curTime])->get());
+            })->whereBetween('created_at',[$curTimeBefor,$curTime])->count();
 
         $a4 = 
-            count(Pbind::whereHas('statuses', function (Builder $query){
+            Pbind::whereHas('statuses', function (Builder $query){
                 $query->where('parent','4')->orWhere('id','4');
-            })->whereBetween('created_at',[$curTimeBefor,$curTime])->get());
+            })->whereBetween('created_at',[$curTimeBefor,$curTime])->count();
 
         $a5 = 
-            count(Pbind::whereHas('statuses', function (Builder $query){
+            Pbind::whereHas('statuses', function (Builder $query){
                 $query->where('parent','5')->orWhere('id','5');
-            })->whereBetween('created_at',[$curTimeBefor,$curTime])->get());
+            })->whereBetween('created_at',[$curTimeBefor,$curTime])->count();
  
 
         $this->withContent($a1,$a2,$a3,$a4,$a5);
