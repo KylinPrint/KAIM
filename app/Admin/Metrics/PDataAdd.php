@@ -21,7 +21,7 @@ class PDataAdd extends Donut
         parent::init();
 
         $color = Admin::color();
-        $colors = [$color->dark90(),$color->blue1(), $color->alpha('blue2', 0.5),$color->blue2(),$color->blue1()];
+        $colors = [$color->dark90(),$color->blue(), $color->blue1(),$color->blue(),$color->blue1()];
 
         $this->title('外设新增适配数据');
         $this->dropdown([
