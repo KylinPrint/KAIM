@@ -186,26 +186,60 @@ class SRequestController extends AdminController
                     ->options(AdminUser::all()->pluck('name', 'id'))->required();
                 $form->text('comment');
             } else {
-                // 不可编辑的部分
-                $form->display('source');
-                $form->display('manufactor');
-                $form->display('name');
-                $form->display('stype.name');
-                $form->display('industry');
-                $form->display('release.name');
-                $form->display('chip.name');
-                $form->display('project_name');
-                $form->display('amount');
-                $form->display('project_status');
-                $form->display('level');
-                $form->display('manufactor_contact');
-                $form->display('et');
-                $form->display('requester_name');
-                $form->display('requester_contact');
-                $form->display('bd.name');
-                $form->display('comment');
+                
+                if ($form->model()->status == '已提交')
+                {
+                    $form->select('source')
+                        ->options(config('kaim.adapt_source'))->required();
+                    $form->text('manufactor')->required();
+                        $form->text('name')->required();
+                    $form->select('stype_id')
+                        ->options(Stype::all()->pluck('name', 'id'))->required();
+                    $form->tags('industry')
+                        ->options(config('kaim.industry'))
+                        ->saving(function ($value) { return implode(',', $value); })->required();
+                    $form->select('release_id')
+                        ->options(Release::all()->pluck('name', 'id'))->required();
+                    $form->select('chip_id')
+                        ->options(Chip::all()->pluck('name', 'id'))->required();
+                    $form->text('project_name');
+                    $form->text('amount');
+                    $form->select('project_status')
+                        ->options(config('kaim.project_status'));
+                    $form->select('level')
+                        ->options(config('kaim.project_level'))->required();
+                    $form->text('manufactor_contact');
+                    $form->date('et')->required();
+                    $form->text('requester_name')->required();
+                    $form->text('requester_contact')->required();
+                    $form->hidden('status')->value('已提交');
+                    $form->select('bd_id')
+                        ->options(AdminUser::all()->pluck('name', 'id'))->required();
+                    $form->text('comment');
+                }
+                else
+                {
+                    // 除已提交状态外不可编辑的区域
+                    $form->display('source');
+                    $form->display('manufactor');
+                    $form->display('name');
+                    $form->display('stype.name');
+                    $form->display('industry');
+                    $form->display('release.name');
+                    $form->display('chip.name');
+                    $form->display('project_name');
+                    $form->display('amount');
+                    $form->display('project_status');
+                    $form->display('level');
+                    $form->display('manufactor_contact');
+                    $form->display('et');
+                    $form->display('requester_name');
+                    $form->display('requester_contact');
+                    $form->display('bd.name');
+                    $form->display('comment');    
+                }
 
-                // 已关闭的需求不允许编辑
+                // 已关闭的需求不允许编辑状态
                 if ($form->model()->status != '已关闭') {
                     // 按当前需求状态分类
                     $form->select('status')
@@ -228,7 +262,7 @@ class SRequestController extends AdminController
                             $form->select('iscert')->options([0 => '否', 1 => '是'])
                                 ->rules('required_if:status,处理中',['required_if' => '请填写此字段'])
                                 ->setLabelClass(['asterisk']);
-                            $form->hidden('pbind_id');
+                            $form->hidden('sbind_id');
                         })
                         ->options(function () use ($form) {
                             $status_option = config('kaim.request_status');
@@ -254,22 +288,22 @@ class SRequestController extends AdminController
                     
                     if ($form->status == '处理中') {
                         // 查询Manufactor记录是否存在
-                        $manufactor_id = Manufactor::where('name', $form->model()->manufactor)->pluck('id')->first();
+                        $manufactor_id = Manufactor::where('name', $form->manufactor)->pluck('id')->first();
                         if (!$manufactor_id) {
                             $manufactor = Manufactor::create([
-                                'name' => $form->model()->manufactor
+                                'name' => $form->manufactor
                             ]);
                             $manufactor_id = $manufactor->id;
                         }
 
                         // 查询Software记录是否存在
-                        $software_id = Software::where('name', $form->model()->name)->pluck('id')->first();
+                        $software_id = Software::where('name', $form->name)->pluck('id')->first();
                         if (!$software_id) {
                             $software = Software::create([
-                                'name' => $form->model()->name,
+                                'name' => $form->name,
                                 'manufactors_id' => $manufactor_id,
-                                'stypes_id' => $form->model()->stype_id,
-                                'industries' => $form->model()->industry,
+                                'stypes_id' => $form->stype_id,
+                                'industries' => $form->industry,
                             ]);
                             $software_id = $software->id;
                         }
@@ -277,15 +311,15 @@ class SRequestController extends AdminController
                         // 查询SBind记录是否存在
                         $sbind_id = Sbind::where([
                             [ 'softwares_id', $software_id ],
-                            [ 'releases_id', $form->model()->release_id ],
-                            [ 'chips_id', $form->model()->chip_id ],
+                            [ 'releases_id', $form->release_id ],
+                            [ 'chips_id', $form->chip_id ],
                         ])->pluck('id')->first();
                         if (!$sbind_id) {
                             $sbind = Sbind::create([
                                 'softwares_id' => $software_id,
-                                'releases_id' => $form->model()->release_id,
-                                'chips_id' => $form->model()->chip_id,
-                                'adapt_source' => $form->model()->source,
+                                'releases_id' => $form->release_id,
+                                'chips_id' => $form->chip_id,
+                                'adapt_source' => $form->source,
                                 'statuses_id' => $form->statuses_id,
                                 'admin_users_id' => $form->admin_users_id,
                                 'kylineco' => $form->kylineco,

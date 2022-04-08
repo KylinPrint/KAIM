@@ -196,25 +196,59 @@ class PRequestController extends AdminController
                     ->options(AdminUser::all()->pluck('name', 'id'))->required();
                 $form->text('comment');
             } else {
-                // 不可编辑的部分
-                $form->display('source');
-                $form->display('manufactor');
-                $form->display('brand');
-                $form->display('name');
-                $form->display('type.name');
-                $form->display('industry');
-                $form->display('release.name');
-                $form->display('chip.name');
-                $form->display('project_name');
-                $form->display('amount');
-                $form->display('project_status');
-                $form->display('level');
-                $form->display('manufactor_contact');
-                $form->display('et');
-                $form->display('requester_name');
-                $form->display('requester_contact');
-                $form->display('bd.name');
-                $form->display('comment');
+                if ($form->model()->status == '已提交')
+                {
+                    $form->select('source')
+                        ->options(config('kaim.adapt_source'))->required();
+                    $form->text('manufactor')->required();
+                    $form->text('brand')->required();
+                    $form->text('name')->required();
+                    $form->select('type_id')
+                        ->options(Type::where('parent', '!=', 0)->pluck('name', 'id'))->required();
+                    $form->tags('industry')
+                        ->options(config('kaim.industry'))
+                        ->saving(function ($value) { return implode(',', $value); })->required();
+                    $form->select('release_id')
+                        ->options(Release::all()->pluck('name', 'id'))->required();
+                    $form->select('chip_id')
+                        ->options(Chip::all()->pluck('name', 'id'))->required();
+                    $form->text('project_name');
+                    $form->text('amount');
+                    $form->select('project_status')
+                        ->options(config('kaim.project_status'));
+                    $form->select('level')
+                        ->options(config('kaim.project_level'))->required();
+                    $form->text('manufactor_contact');
+                    $form->date('et')->required();
+                    $form->text('requester_name')->required();
+                    $form->text('requester_contact')->required();
+                    $form->hidden('status')->value('已提交');
+                    $form->select('bd_id')
+                        ->options(AdminUser::all()->pluck('name', 'id'))->required();
+                    $form->text('comment');
+                }
+                else
+                {
+                    // 除已提交状态外不可编辑的区域
+                    $form->display('source');
+                    $form->display('manufactor');
+                    $form->display('brand');
+                    $form->display('name');
+                    $form->display('type.name');
+                    $form->display('industry');
+                    $form->display('release.name');
+                    $form->display('chip.name');
+                    $form->display('project_name');
+                    $form->display('amount');
+                    $form->display('project_status');
+                    $form->display('level');
+                    $form->display('manufactor_contact');
+                    $form->display('et');
+                    $form->display('requester_name');
+                    $form->display('requester_contact');
+                    $form->display('bd.name');
+                    $form->display('comment');
+                }
 
                 // 已关闭的需求不允许编辑
                 if ($form->model()->status != '已关闭') {
@@ -265,32 +299,32 @@ class PRequestController extends AdminController
                     
                     if ($form->status == '处理中') {
                         // 查询Manufactor记录是否存在
-                        $manufactor_id = Manufactor::where('name', $form->model()->manufactor)->pluck('id')->first();
+                        $manufactor_id = Manufactor::where('name', $form->manufactor)->pluck('id')->first();
                         if (!$manufactor_id) {
                             $manufactor = Manufactor::create([
-                                'name' => $form->model()->manufactor
+                                'name' => $form->manufactor
                             ]);
                             $manufactor_id = $manufactor->id;
                         }
 
                         // 查询Brand记录是否存在
-                        $brand_id = Brand::where('name', $form->model()->brand)->pluck('id')->first();
+                        $brand_id = Brand::where('name', $form->brand)->pluck('id')->first();
                         if (!$brand_id) {
                             $brand = Brand::create([
-                                'name' => $form->model()->brand
+                                'name' => $form->brand
                             ]);
                             $brand_id = $brand->id;
                         }
 
                         // 查询Peripheral记录是否存在 
-                        $peripheral_id = Peripheral::where('name', $form->model()->name)->pluck('id')->first();
+                        $peripheral_id = Peripheral::where('name', $form->name)->pluck('id')->first();
                         if (!$peripheral_id) {
                             $peripheral = Peripheral::create([
-                                'name' => $form->model()->name,
+                                'name' => $form->name,
                                 'manufactors_id' => $manufactor_id,
                                 'brands_id' => $brand_id,
-                                'types_id' => $form->model()->type_id,
-                                'industries' => $form->model()->industry,
+                                'types_id' => $form->type_id,
+                                'industries' => $form->industry,
                             ]);
                             $peripheral_id = $peripheral->id;
                         }
@@ -298,15 +332,15 @@ class PRequestController extends AdminController
                         // 查询PBind记录是否存在
                         $pbind_id = Pbind::where([
                             [ 'peripherals_id', $peripheral_id ],
-                            [ 'releases_id', $form->model()->release_id ],
-                            [ 'chips_id', $form->model()->chip_id ],
+                            [ 'releases_id', $form->release_id ],
+                            [ 'chips_id', $form->chip_id ],
                         ])->pluck('id')->first();
                         if (!$pbind_id) {
                             $pbind = Pbind::create([
                                 'peripherals_id'=> $peripheral_id,
-                                'releases_id' => $form->model()->release_id,
-                                'chips_id' => $form->model()->chip_id,
-                                'adapt_source' => $form->model()->source,
+                                'releases_id' => $form->release_id,
+                                'chips_id' => $form->chip_id,
+                                'adapt_source' => $form->source,
                                 'statuses_id' => $form->statuses_id,
                                 'admin_users_id' => $form->admin_users_id,
                                 'kylineco' => $form->kylineco,
