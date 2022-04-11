@@ -12,5 +12,13 @@ class PRequestHistory extends Model
 	
 	protected $table = 'p_request_histories';
 
+	protected $fillable = [
+        'p_request_id',
+        'status_old',
+        'status_new',
+        'operator',
+        'comment',
+    ];
+
 	public function operator() { return $this->belongsTo(AdminUser::class, 'operator'); }
 }

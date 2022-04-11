@@ -298,19 +298,16 @@ class PbindController extends AdminController
                 else
                 {
                     // 取当前状态
-                    $status_current = DB::table('pbinds')->where('id', $id)->value('statuses_id');
+                    $status_current = $form->model()->statuses_id;
                 }
                 
                 if ($status_coming != $status_current || $form->statuses_comment) {
-                    DB::table('pbind_histories')->insert([
+                    PbindHistory::create([
                         'pbind_id' => $id,
                         'status_old' => $status_current,
                         'status_new' => $status_coming,
                         'admin_users_id' => Admin::user()->id,
                         'comment' => $form->statuses_comment,
-
-                        'created_at' => $timestamp,
-                        'updated_at' => $timestamp,
                     ]);
                 }
                 $form->deleteInput('statuses_comment');

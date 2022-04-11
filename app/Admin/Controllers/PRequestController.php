@@ -25,7 +25,6 @@ use Dcat\Admin\Show;
 use Dcat\Admin\Http\Controllers\AdminController;
 use Dcat\Admin\Layout\Content;
 use Dcat\Admin\Widgets\Alert;
-use Illuminate\Support\Facades\DB;
 
 class PRequestController extends AdminController
 {
@@ -285,10 +284,13 @@ class PRequestController extends AdminController
                     $form->display('requester_contact');
                     $form->display('bd.name');
                     $form->display('comment');
+                }
 
-                    // 按当前需求状态分类
-                    $form->select('status')
-                        ->when('处理中', function (Form $form) {
+                // 按当前需求状态分类
+                $form->select('status')
+                    ->when('处理中', function (Form $form) {
+                        // 由处理中修改为处理中时不显示以下字段
+                        if ($form->model()->status != '处理中') {
                             $form->select('statuses_id')->options(Status::where('parent','!=',null)->pluck('name','id'))
                                 ->rules('required_if:status,处理中',['required_if' => '请填写此字段'])
                                 ->setLabelClass(['asterisk']);
@@ -308,30 +310,29 @@ class PRequestController extends AdminController
                                 ->rules('required_if:status,处理中',['required_if' => '请填写此字段'])
                                 ->setLabelClass(['asterisk']);
                             $form->hidden('pbind_id');
-                        })
-                        ->options(function () use ($form) {
-                            $status_option = config('kaim.request_status');
-                            // 脑瘫代码，极致享受
-                            if (in_array($form->model()->status, ['处理中', '已处理', '暂停处理', '已拒绝'])) { unset($status_option['已提交']); }
-                            if (in_array($form->model()->status, ['已处理', '已拒绝'])) { unset($status_option['处理中']); }
-                            if (in_array($form->model()->status, ['已提交', '已拒绝'])) { unset($status_option['已处理']); }
-                            if (in_array($form->model()->status, ['已提交', '已处理', '已拒绝'])) { unset($status_option['暂停处理']); }
-                            if (in_array($form->model()->status, ['处理中', '已处理', '暂停处理'])) { unset($status_option['已拒绝']); }
-                            return $status_option;
-                        })->required();
-                    $form->text('status_comment', __('状态变更说明'))->required();
-                }
+                        }
+                    })
+                    ->options(function () use ($form) {
+                        $status_option = config('kaim.request_status');
+                        // 脑瘫代码，极致享受
+                        if (in_array($form->model()->status, ['处理中', '已处理', '暂停处理', '已拒绝'])) { unset($status_option['已提交']); }
+                        if (in_array($form->model()->status, ['已处理', '已拒绝'])) { unset($status_option['处理中']); }
+                        if (in_array($form->model()->status, ['已提交', '已拒绝'])) { unset($status_option['已处理']); }
+                        if (in_array($form->model()->status, ['已提交', '已处理', '已拒绝'])) { unset($status_option['暂停处理']); }
+                        if (in_array($form->model()->status, ['处理中', '已处理', '暂停处理'])) { unset($status_option['已拒绝']); }
+                        return $status_option;
+                    })->required();
+                $form->text('status_comment', __('状态变更说明'))->required();
             }
             
             $form->saving(function (Form $form) {
                 if($form->isEditing()) {
                     $id = $form->getKey();
                     // 取当前状态
-                    $status_current = DB::table('p_requests')->where('id', $id)->value('status');
+                    $status_current = $form->model()->status;
                     $status_coming = $form->status;
-                    $timestamp = date("Y-m-d H:i:s");
                     
-                    if ($form->status == '处理中') {
+                    if ($status_coming == '处理中' && ($status_coming != $status_current)) {
                         // 查询Manufactor记录是否存在
                         $manufactor_id = Manufactor::where('name', $form->manufactor)->pluck('id')->first();
                         if (!$manufactor_id) {
@@ -358,7 +359,7 @@ class PRequestController extends AdminController
                                 'manufactors_id' => $manufactor_id,
                                 'brands_id' => $brand_id,
                                 'types_id' => $form->type_id,
-                                'industries' => $form->industry,
+                                'industries' => implode(',', array_filter($form->industry)),
                             ]);
                             $peripheral_id = $peripheral->id;
                         }
@@ -395,16 +396,13 @@ class PRequestController extends AdminController
                     }
 
                     // 需求状态变更记录
-                    if ($status_coming != $status_current || $form->statuses_comment) {
-                        DB::table('p_request_histories')->insert([
+                    if ($status_coming != $status_current || $form->status_comment) {
+                        PRequestHistory::create([
                             'p_request_id' => $id,
                             'status_old' => $status_current,
                             'status_new' => $status_coming,
                             'operator' => Admin::user()->id,
                             'comment' => $form->status_comment,
-    
-                            'created_at' => $timestamp,
-                            'updated_at' => $timestamp,
                         ]);
                     }
                     
