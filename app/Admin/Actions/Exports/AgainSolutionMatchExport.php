@@ -128,7 +128,10 @@ class AgainSolutionMatchExport implements FromCollection, WithHeadings
                     { 
                         $curMatchArr[$i]['解决方案名'] = $curPbind->solution_name;
                         $curMatchArr[$i]['解决方案详情'] = $curPbind->solution;
-                        $curMatchArr[$i]['适配状态'] = $this->getParent($curPbind->statuses->parent);     
+                        $curPstatus_parent = $curPbind->statuses->parent;
+                        $curPstatus_id = $curPbind->statuses->id;
+                        $curPstatus_sid = $curPstatus_parent == 0 ? $curPstatus_id : $curPstatus_parent;
+                        $curMatchArr[$i]['适配状态'] = $this->getParent($curPstatus_sid);     
                     }
                 }
                 else
@@ -176,7 +179,10 @@ class AgainSolutionMatchExport implements FromCollection, WithHeadings
                     {
                         $curMatchArr[$i]['解决方案名'] = $curSbind->solution_name;
                         $curMatchArr[$i]['解决方案详情'] = $curSbind->solution;
-                        $curMatchArr[$i]['适配状态'] = $this->getParent($curSbind->statuses->parent);
+                        $curSstatus_parent = $curSbind->statuses->parent;
+                        $curSstatus_id = $curSbind->statuses->id;
+                        $curSstatus_sid = $curSstatus_parent == 0 ? $curSstatus_id : $curSstatus_parent;
+                        $curMatchArr[$i]['适配状态'] = $this->getParent($curSstatus_sid);
                     }
                 }
                 else
