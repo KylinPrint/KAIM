@@ -39,24 +39,26 @@ class PRequestImport implements ToCollection, WithHeadingRow, WithValidation
 
         foreach($rows as $key => $row)
         {
-            if
-            ( 
-                !($row['需求来源']&&
-                $row['厂商名称']&&
-                $row['品牌名称']&&
-                $row['产品名称']&&
-                $row['分类三']&&
-                $row['涉及行业']&&
-                $row['操作系统版本']&&
-                $row['芯片']&&
-                $row['紧急程度']&&
-                $row['期望完成日期']&&
-                $row['需求提出人']&&
-                $row['需求提出人联系方式']&&
-                $row['需求接收人'])
-            ){
-                throw new RequiredNotFoundException($key);
-            }
+            // if
+            // ( 
+            //     !($row['需求来源']&&
+            //     $row['厂商名称']&&
+            //     $row['品牌名称']&&
+            //     $row['产品名称']&&
+            //     $row['分类三']&&
+            //     $row['涉及行业']&&
+            //     $row['操作系统版本']&&
+            //     $row['芯片']&&
+            //     $row['紧急程度']&&
+            //     $row['期望完成日期']&&
+            //     $row['需求提出人']&&
+            //     $row['需求提出人联系方式']&&
+            //     $row['需求接收人'])
+            // ){
+            //     throw new RequiredNotFoundException($key);
+            // }
+
+            if(!$row['需求来源']){continue;}  //TODO 上边写的异常抛出后不继续执行，待检查
 
 
             $PRequestInsert =
