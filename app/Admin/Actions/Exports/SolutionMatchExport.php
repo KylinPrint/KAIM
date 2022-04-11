@@ -10,6 +10,8 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use App\Models\Brand;
 use App\Models\Manufactor;
 use App\Models\Peripheral;
+use App\Models\Software;
+use App\Models\Stype;
 use App\Models\Type;
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 use PHPUnit\Framework\Constraint\IsEmpty;
@@ -33,7 +35,7 @@ class SolutionMatchExport implements FromCollection, WithHeadings
         $this->headings = [
             '分类1',
             '分类2',
-            '厂商' ,
+            '品牌' ,
             '型号' ,
             '系统版本' ,
             '芯片' ,
@@ -74,14 +76,14 @@ class SolutionMatchExport implements FromCollection, WithHeadings
             [
                 '分类1' => $curInput['分类1'],  //软件、外设
                 '分类2' => $curInput['分类2'],  //具体分类  打印机、扫描仪
-                '厂商' => $curInput['厂商'],
+                '品牌' => $curInput['品牌'],
                 '型号' => $curInput['型号'],
                 '系统版本' => $curInput['系统版本'],
                 '芯片' => $curInput['芯片'],
                 '匹配型号结果' => '暂无该型号数据',
             ];
 
-            if(empty($curInput['厂商'])){
+            if(empty($curInput['品牌'])){
                 $curMatchArr[$i]['匹配型号结果'] = '请核实产品品牌';
                 ++$i;
                 continue;
@@ -90,7 +92,7 @@ class SolutionMatchExport implements FromCollection, WithHeadings
             if($curInput['分类1'] == '外设')
             {
     
-                $curBrandId = (Brand::where('name',$curInput['厂商'])->pluck('id')->first())?:(Brand::where('alias',$curInput['厂商'])->pluck('id')->first());
+                $curBrandId = (Brand::where('name',$curInput['品牌'])->pluck('id')->first())?:(Brand::where('alias',$curInput['品牌'])->pluck('id')->first());
                 $curTypeId = Type::where('name',$curInput['分类2'])->pluck('id')->first();
                 
                 if(empty($curBrandId)){
@@ -101,30 +103,38 @@ class SolutionMatchExport implements FromCollection, WithHeadings
 
                 preg_match('/\d+/',$curInput['型号'],$InputNum);
 
-                $curDeviceModelArr = Peripheral::where([
-                    ['model','like','%'.$InputNum[0].'%'],
+                $curDeviceNameArr = Peripheral::where([
+                    ['name','like','%'.$InputNum[0].'%'],
                     ['brands_id',$curBrandId],
                     ['types_id',$curTypeId],
                 ])->pluck('model');
 
-                if($curDeviceModelArr->isEmpty()){++$i;continue;}
-                $curMatchArr[$i]['匹配型号结果'] = implode('/',$curDeviceModelArr->toArray());
+                if($curDeviceNameArr->isEmpty()){++$i;continue;}
+                $curMatchArr[$i]['匹配型号结果'] = implode('/',$curDeviceNameArr->toArray());
                 ++$i;
             }
 
-            // if($curInput['分类1'] == '软件')
-            // {
-            //     $curManufactorId = (Manufactor::where('name',$curInput['厂商'])->pluck('id')->first())?:(Manufactor::where('alias',$curInput['厂商'])->pluck('id')->first());
-            //     $curTypeId = Type::where('name',$curInput['分类2'])->pluck('id')->first();
+            if($curInput['分类1'] == '软件')
+            {
+                $curManufactorId = (Manufactor::where('name',$curInput['品牌'])->pluck('id')->first());
+                $curStypeId = Stype::where('name',$curInput['分类2'])->pluck('id')->first();
                 
-            //     if(empty($curManufactorId)){
-            //         $curMatchArr[$i]['匹配型号结果'] = '请核实产品品牌或添加新品牌';
-            //         ++$i;
-            //         continue;
-            //     }
+                if(empty($curManufactorId)){
+                    $curMatchArr[$i]['匹配型号结果'] = '请核实产品品牌或添加新品牌';
+                    ++$i;
+                    continue;
+                }
 
-            //     //软件型号怎么筛
-            // }
+                $curSoftwareNameArr = Software::where([
+                    ['name','like','%'.$curInput['型号'].'%'],
+                    ['manufactors_id',$curManufactorId],
+                    ['stypes_id',$curStypeId]
+                ]);
+
+                if($curSoftwareNameArr->isEmpty()){++$i;continue;}
+                $curMatchArr[$i]['匹配型号结果'] = implode('/',$curSoftwareNameArr->toArray());
+                ++$i;
+            }
             
         }
 

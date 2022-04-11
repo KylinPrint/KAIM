@@ -10,6 +10,7 @@ use App\Models\Manufactor;
 use App\Models\Peripheral;
 use App\Models\Release;
 use App\Models\Status;
+use App\Models\Stype;
 use App\Models\Type;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -34,7 +35,7 @@ class SRequestImport implements ToCollection, WithHeadingRow, WithValidation
     {
         set_time_limit(0);
 
-        unset($rows[0]);  //去掉表头
+        //unset($rows[0]);  去掉表头
 
 
         foreach($rows as $key => $row)
@@ -62,7 +63,7 @@ class SRequestImport implements ToCollection, WithHeadingRow, WithValidation
                 'source' => $row['需求来源'],
                 'manufactor' => $row['厂商名称'],
                 'name' => $row['产品名称'],
-                'type_id' => Type::where('name',$row['分类三'])->pluck('id')->first(),
+                'type_id' => Stype::where('name',$row['分类三'])->pluck('id')->first(),
                 'industry' => $row['涉及行业'],
                 'release_id' => Release::where('name',$row['操作系统版本'])->pluck('id')->first(),
                 'chip_id' => Chip::where('name',$row['芯片'])->pluck('id')->first(),
