@@ -76,6 +76,7 @@ class SolutionMatchExport implements FromCollection, WithHeadings
             [
                 '分类1' => $curInput['分类1'],  //软件、外设
                 '分类2' => $curInput['分类2'],  //具体分类  打印机、扫描仪
+                '厂商' => $curInput['厂商'],
                 '品牌' => $curInput['品牌'],
                 '型号' => $curInput['型号'],
                 '系统版本' => $curInput['系统版本'],
@@ -83,14 +84,15 @@ class SolutionMatchExport implements FromCollection, WithHeadings
                 '匹配型号结果' => '暂无该型号数据',
             ];
 
-            if(empty($curInput['品牌'])){
-                $curMatchArr[$i]['匹配型号结果'] = '请核实产品品牌';
-                ++$i;
-                continue;
-            }
+            
 
             if($curInput['分类1'] == '外设')
             {
+                if(empty($curInput['品牌'])){
+                    $curMatchArr[$i]['匹配型号结果'] = '请填写产品品牌';
+                    ++$i;
+                    continue;
+                }
     
                 $curBrandId = (Brand::where('name',$curInput['品牌'])->pluck('id')->first())?:(Brand::where('alias',$curInput['品牌'])->pluck('id')->first());
                 $curTypeId = Type::where('name',$curInput['分类2'])->pluck('id')->first();
@@ -116,6 +118,12 @@ class SolutionMatchExport implements FromCollection, WithHeadings
 
             if($curInput['分类1'] == '软件')
             {
+                if(empty($curInput['厂商'])){
+                    $curMatchArr[$i]['匹配型号结果'] = '请填写产品品牌';
+                    ++$i;
+                    continue;
+                }
+
                 $curManufactorId = (Manufactor::where('name',$curInput['品牌'])->pluck('id')->first());
                 $curStypeId = Stype::where('name',$curInput['分类2'])->pluck('id')->first();
                 

@@ -79,17 +79,19 @@ class SRequestImport implements ToCollection, WithHeadingRow, WithValidation
                 'updated_at' => date('Y-m-d H:i:s'),
             ];
             
-            //暂未做唯一校验
-            // $pbindInsertUnique = 
-            // [
-            //     'peripherals_id' => $curPeripheralId,
-            //     'chips_id' => Chip::where('name',$row['芯片'])->pluck('id')->first(),
-            //     'releases_id' => Release::where('name',$row['操作系统版本'])->pluck('id')->first(),
-            // ];
-            // Rule::unique('pbinds')->where(function ($query) use ($pbindInsertUnique)
-            // {
-            //     return $query->where($pbindInsertUnique);
-            // });
+            $srequestInsertUnique = 
+            [   
+                'manufactor' => $row['厂商名称'], 
+                'name' => $row['产品名称'], 
+                'chips_id' => Chip::where('name',$row['芯片'])->pluck('id')->first(),
+                'releases_id' => Release::where('name',$row['操作系统版本'])->pluck('id')->first(),
+            ];
+            
+            Rule::unique('s_requests')->where(function ($query) use ($srequestInsertUnique)
+            {
+                return $query->where($srequestInsertUnique);
+            });
+
             DB::table('s_requests')->insert($SRequestInsert);
   
         }
