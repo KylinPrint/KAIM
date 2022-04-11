@@ -17,6 +17,7 @@ return [
         'admin_users_id' => '当前适配状态责任人',
         'softname' => '安装包名',
         'solution' => '适配方案',
+        'solution_name' => '安装包名称',
         'class' => '兼容等级',
         'adaption_type' => '适配类型',
         'test_type' => '测试方式',
