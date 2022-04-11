@@ -45,6 +45,7 @@ return [
         'kylineco' => '是否上传生态网站',
         'appstore' => '是否上架软件商店',
         'iscert' => '是否互认证',
+        'histories' => '需求处理记录',
     ],
     'options' => [
     ],
