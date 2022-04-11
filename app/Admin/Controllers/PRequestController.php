@@ -14,13 +14,17 @@ use App\Models\Pbind;
 use App\Models\PbindHistory;
 use App\Models\Peripheral;
 use App\Models\PRequest;
+use App\Models\PRequestHistory;
 use App\Models\Status;
 use App\Models\Type;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Form;
+use Dcat\Admin\Form\Field\Button;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
 use Dcat\Admin\Http\Controllers\AdminController;
+use Dcat\Admin\Layout\Content;
+use Dcat\Admin\Widgets\Alert;
 use Illuminate\Support\Facades\DB;
 
 class PRequestController extends AdminController
@@ -157,6 +161,24 @@ class PRequestController extends AdminController
             $show->field('bd.name');
             $show->field('comment');
             $show->field('created_at');
+
+            $show->relation('histories', function ($model) {
+                $grid = new Grid(PRequestHistory::with(['operator']));
+            
+                $grid->model()->where('p_request_id', $model->id);
+            
+                $grid->column('operator.name', __('处理人'));
+                $grid->column('status_old', __('修改前状态'));
+                $grid->column('status_new', __('修改后状态'));
+                $grid->column('comment');
+                $grid->updated_at();
+
+                $grid->disableActions();
+                $grid->disableCreateButton();
+                $grid->disableRefreshButton();
+                        
+                return $grid;
+            });
         });
     }
 
@@ -198,9 +220,9 @@ class PRequestController extends AdminController
                 $form->select('bd_id')
                     ->options(AdminUser::all()->pluck('name', 'id'))->required();
                 $form->text('comment');
-            } else {
-                if ($form->model()->status == '已提交')
-                {
+            }
+            else {
+                if ($form->model()->status == '已提交') {
                     $form->select('source')
                         ->options(config('kaim.adapt_source'))->required();
                     $form->text('manufactor')->required();
@@ -225,13 +247,25 @@ class PRequestController extends AdminController
                     $form->date('et')->required();
                     $form->text('requester_name')->required();
                     $form->text('requester_contact')->required();
-                    $form->hidden('status')->value('已提交');
                     $form->select('bd_id')
                         ->options(AdminUser::all()->pluck('name', 'id'))->required();
                     $form->text('comment');
                 }
-                else
-                {
+                else {
+                    // 已关闭的需求不允许编辑
+                    if ($form->model()->status == '已关闭') {
+                        admin_exit(
+                            Content::make()
+                                ->body(Alert::make('已关闭的需求不允许编辑')->info())
+                                ->body('
+                                    <button onclick="history.back()" class="btn btn-primary btn-mini btn-outline" style="margin-right:3px">
+                                        <i class="feather icon-corner-up-left"></i>
+                                        <span class="d-none d-sm-inline">&nbsp; 返回</span>
+                                    </button>
+                                ')
+                        );
+                    }
+
                     // 除已提交状态外不可编辑的区域
                     $form->display('source');
                     $form->display('manufactor');
@@ -251,10 +285,7 @@ class PRequestController extends AdminController
                     $form->display('requester_contact');
                     $form->display('bd.name');
                     $form->display('comment');
-                }
 
-                // 已关闭的需求不允许编辑
-                if ($form->model()->status != '已关闭') {
                     // 按当前需求状态分类
                     $form->select('status')
                         ->when('处理中', function (Form $form) {
@@ -282,7 +313,7 @@ class PRequestController extends AdminController
                             $status_option = config('kaim.request_status');
                             // 脑瘫代码，极致享受
                             if (in_array($form->model()->status, ['处理中', '已处理', '暂停处理', '已拒绝'])) { unset($status_option['已提交']); }
-                            if (in_array($form->model()->status, ['处理中', '已处理', '已拒绝'])) { unset($status_option['处理中']); }
+                            if (in_array($form->model()->status, ['已处理', '已拒绝'])) { unset($status_option['处理中']); }
                             if (in_array($form->model()->status, ['已提交', '已拒绝'])) { unset($status_option['已处理']); }
                             if (in_array($form->model()->status, ['已提交', '已处理', '已拒绝'])) { unset($status_option['暂停处理']); }
                             if (in_array($form->model()->status, ['处理中', '已处理', '暂停处理'])) { unset($status_option['已拒绝']); }
@@ -364,7 +395,7 @@ class PRequestController extends AdminController
                     }
 
                     // 需求状态变更记录
-                    if ($status_coming != $status_current) {
+                    if ($status_coming != $status_current || $form->statuses_comment) {
                         DB::table('p_request_histories')->insert([
                             'p_request_id' => $id,
                             'status_old' => $status_current,
