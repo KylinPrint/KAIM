@@ -245,7 +245,6 @@ class PbindController extends AdminController
             $form->select('releases_id',__('版本'))->options(Release::all()->pluck('name','id'))->required();
             $form->text('os_subversion')->help('例如：V10SP1-Build01-0326');
             $form->select('chips_id',__('芯片'))->options(Chip::all()->pluck('name','id'))->required();
-            $form->text('solution',__('适配方案'));
             $form->select('adapt_source')
                  ->options(config('kaim.adapt_source'))->required();
             $form->select('adapted_before')->options([0 => '否',1 => '是']);
