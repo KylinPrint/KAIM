@@ -67,11 +67,12 @@ class HomeController extends Controller
         $prequests = PRequest::select('id', 'manufactor', 'name', 'release_id', 'chip_id', 'status', 'updated_at')->where('bd_id', Admin::user()->id)->get()->toarray();
 
         foreach ($sbinds as $sbind) {
+            $software = Software::find($sbind['softwares_id']);
             $data[] = [
                 'id' => $sbind['id'],
                 'type' => '软件适配',
-                'manufactor' => Manufactor::find($sbind['softwares_id'])->value('name'),
-                'name' => Software::find($sbind['softwares_id'])->value('name'),
+                'manufactor' => Manufactor::find($software->value('manufactors_id'))->value('name'),
+                'name' => $software->value('name'),
                 'release' => Release::find($sbind['releases_id'])->value('name'),
                 'chip' => Chip::find($sbind['chips_id'])->value('name'),
                 'status' => Status::find($sbind['statuses_id'])->value('name'),
@@ -80,11 +81,12 @@ class HomeController extends Controller
         }
 
         foreach ($pbinds as $pbind) {
+            $peripheral = Peripheral::find($pbind['peripherals_id']);
             $data[] = [
                 'id' => $pbind['id'],
                 'type' => '外设适配',
-                'manufactor' => Manufactor::find($pbind['peripherals_id'])->value('name'),
-                'name' => Peripheral::find($pbind['peripherals_id'])->value('name'),
+                'manufactor' => Manufactor::find($peripheral->value('manufactors_id'))->value('name'),
+                'name' => $peripheral->value('name'),
                 'release' => Release::find($pbind['releases_id'])->value('name'),
                 'chip' => Chip::find($pbind['chips_id'])->value('name'),
                 'status' => Status::find($pbind['statuses_id'])->value('name'),
