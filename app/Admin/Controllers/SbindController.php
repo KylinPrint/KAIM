@@ -183,6 +183,7 @@ class SbindController extends AdminController
             });
             $show->field('statuses.name', __('当前细分适配状态'));
             $show->field('admin_users.name', __('当前适配状态责任人'));
+            $show->field('solution_name');
             $show->field('solution');
             $show->field('class');
             $show->field('adaption_type');

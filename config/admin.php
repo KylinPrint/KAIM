@@ -300,6 +300,10 @@ return [
         'menu_table' => 'admin_menu',
         'menu_model' => Dcat\Admin\Models\Menu::class,
 
+        //测试下
+        'types_table' => 'types',
+        'types_model' => App\Models\Type::class,
+
         // Pivot table for table above.
         'role_users_table'       => 'admin_role_users',
         'role_permissions_table' => 'admin_role_permissions',
