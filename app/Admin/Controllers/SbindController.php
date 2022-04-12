@@ -118,6 +118,19 @@ class SbindController extends AdminController
             $grid->quickSearch('softwares.name', 'releases.name', 'chips.name', 'comment');
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->panel();
+
+                // 这块有待优化
+                $TypeModel = config('admin.database.stypes_model');
+                $filter->where('sbind',function ($query){
+                    $query->whereHas('softwares', function ($query){
+                        $query->whereHas('stypes', function ($query){
+                            if($this->input>8){$query->where('id', $this->input);}
+                            else{$query->where('parent', $this->input);}
+                        });
+                    });
+                },'软件类型')->select($TypeModel::selectOptions());
+
+
                 $filter->like('softwares.name','软件名');
                 $filter->like('comment','备注');
                 $filter->equal('releases.id', '操作系统版本')

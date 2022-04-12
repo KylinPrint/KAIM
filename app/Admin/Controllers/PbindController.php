@@ -116,6 +116,18 @@ class PbindController extends AdminController
             $grid->quickSearch('peripherals.name', 'releases.name', 'chips.name', 'comment');
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->panel();
+
+                // 这块有待优化
+                $TypeModel = config('admin.database.types_model');
+                $filter->where('pbind',function ($query){
+                    $query->whereHas('peripherals', function ($query){
+                        $query->whereHas('types', function ($query){
+                            if($this->input>5){$query->where('id', $this->input);}
+                            else{$query->where('parent', $this->input);}
+                        });
+                    });
+                },'外设类型')->select($TypeModel::selectOptions());
+
                 $filter->like('peripherals.name','设备名');
                 $filter->like('solution','解决方案');
                 $filter->like('comment','备注');
