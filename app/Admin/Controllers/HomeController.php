@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Brand;
 use App\Models\Chip;
 use App\Models\Manufactor;
 use App\Models\Pbind;
@@ -35,7 +36,7 @@ class HomeController extends Controller
             $grid->model()->orderBy('updated_at');
 
             $grid->column('type');
-            $grid->column('manufactor', __('厂商名称'));
+            $grid->column('manufactor', __('厂商/品牌'));
             $grid->column('name', __('产品名称'));
             $grid->column('release', __('操作系统版本'));
             $grid->column('chip', __('芯片名称'));
@@ -85,7 +86,8 @@ class HomeController extends Controller
             $data[] = [
                 'id' => $pbind['id'],
                 'type' => '外设适配',
-                'manufactor' => Manufactor::find($peripheral->value('manufactors_id'))->value('name'),
+                // 外设的厂商键实际值为品牌
+                'manufactor' => Brand::find($peripheral->value('brands_id'))->value('name'),
                 'name' => $peripheral->value('name'),
                 'release' => Release::find($pbind['releases_id'])->value('name'),
                 'chip' => Chip::find($pbind['chips_id'])->value('name'),
