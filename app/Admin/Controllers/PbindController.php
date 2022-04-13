@@ -123,6 +123,7 @@ class PbindController extends AdminController
                     $query->whereHas('peripherals', function ($query){
                         $query->whereHas('types', function ($query){
                             if($this->input>5){$query->where('id', $this->input);}
+                            elseif($this->input == 0){}
                             else{$query->where('parent', $this->input);}
                         });
                     });

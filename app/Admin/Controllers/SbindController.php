@@ -125,6 +125,7 @@ class SbindController extends AdminController
                     $query->whereHas('softwares', function ($query){
                         $query->whereHas('stypes', function ($query){
                             if($this->input>8){$query->where('id', $this->input);}
+                            elseif($this->input == 0){}
                             else{$query->where('parent', $this->input);}
                         });
                     });

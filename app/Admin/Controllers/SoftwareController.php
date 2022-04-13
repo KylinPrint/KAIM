@@ -48,6 +48,17 @@ class SoftwareController extends AdminController
             $grid->quickSearch('name', 'industries', 'comment');
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->panel();
+
+                // 这块有待优化
+                $TypeModel = config('admin.database.stypes_model');
+                $filter->where('software',function ($query){
+                    $query->whereHas('stypes', function ($query){
+                        if($this->input > 8){$query->where('id', $this->input);}
+                        elseif($this->input == 0){}
+                        else{$query->where('parent', $this->input);}
+                    });
+                },'软件类型')->select($TypeModel::selectOptions());
+
                 $filter->like('name','产品名称');
                 $filter->like('manufactors.name','厂商');
                 $filter->like('comment','备注');
