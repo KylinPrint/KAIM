@@ -117,7 +117,7 @@ class PbindController extends AdminController
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->panel();
 
-                // 这块有待优化
+                // 树状下拉  这块有待优化
                 $TypeModel = config('admin.database.types_model');
                 $filter->where('pbind',function ($query){
                     $query->whereHas('peripherals', function ($query){

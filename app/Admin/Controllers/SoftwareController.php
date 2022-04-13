@@ -49,7 +49,7 @@ class SoftwareController extends AdminController
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->panel();
 
-                // 这块有待优化
+                // 树状下拉  这块有待优化
                 $TypeModel = config('admin.database.stypes_model');
                 $filter->where('software',function ($query){
                     $query->whereHas('stypes', function ($query){
