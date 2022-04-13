@@ -108,7 +108,7 @@ return [
     'choose_image'          => '选择图片',
     'more'                  => '更多',
     'deny'                  => '无权访问',
-    'administrator'         => '管理员',
+    'administrator'         => '用户',
     'roles'                 => '角色',
     'permissions'           => '权限',
     'slug'                  => '标识',

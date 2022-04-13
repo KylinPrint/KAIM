@@ -28,6 +28,9 @@ class ManufactorController extends AdminController
             $grid->column('updated_at')->sortable();
         
             $grid->quickSearch('name');
+            $grid->selector(function (Grid\Tools\Selector $selector) {
+                $selector->selectOne('isconnected', '是否建联', [0 => '否',1 => '是',]);
+            });
         });
     }
 
