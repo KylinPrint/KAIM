@@ -4,6 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Admin\Actions\Exports\PbindExport;
 use App\Admin\Actions\Modal\PbindModal;
+use App\Admin\Actions\Others\PStatusBatch;
 use App\Models\Chip;
 use App\Models\Pbind;
 use App\Models\Peripheral;
@@ -41,6 +42,11 @@ class PbindController extends AdminController
             {
                 $grid->tools(function  (Grid\Tools  $tools)  { 
                     $tools->append(new PbindModal()); 
+
+                    $tools->batch(function ($batch) 
+                    {
+                        $batch->add(new PStatusBatch());
+                    });
                 });
             }
 
