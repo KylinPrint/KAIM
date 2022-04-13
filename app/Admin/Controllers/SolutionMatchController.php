@@ -21,6 +21,8 @@ class SolutionMatchController extends AdminController
     {
         return Grid::make(new SolutionMatch(), function (Grid $grid) {
 
+            $grid->model()->orderBy('created_at');
+
             $grid->disableCreateButton();
             
             $grid->tools(function (Grid\Tools $tools) { 
@@ -43,11 +45,8 @@ class SolutionMatchController extends AdminController
             $grid->column('path');
             $grid->column('created_at');
             $grid->column('updated_at')->sortable();
-        
-            $grid->filter(function (Grid\Filter $filter) {
-                $filter->like('title','文件名');
             
-            });
+            $grid->quickSearch('title','path');
         });
     }
 
