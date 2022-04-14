@@ -63,6 +63,7 @@ class SRequestImport implements ToCollection, WithHeadingRow, WithValidation
                 'stype_id' => Stype::where('name',$row['分类三'])->pluck('id')->first(),
                 'industry' => $row['涉及行业'],
                 'release_id' => Release::where('name',$row['操作系统版本'])->pluck('id')->first(),
+                'os_subversion' => $row['操作系统小版本号'],
                 'chip_id' => Chip::where('name',$row['芯片'])->pluck('id')->first(),
                 'project_name' => $row['项目名称'],
                 'amount' => $row['涉及数量'],

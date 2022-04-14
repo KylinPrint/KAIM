@@ -44,7 +44,7 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
     {
         set_time_limit(0);
 
-        unset($rows[0]);  //去掉表头
+        // unset($rows[0]);  //去掉表头
 
 
         foreach($rows as $key => $row)
