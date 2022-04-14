@@ -34,7 +34,7 @@ class SbindImport implements ToCollection, WithHeadingRow, WithValidation
     {
         set_time_limit(0);
 
-        unset($row[0]);  //去掉表头
+        // unset($row[0]);  //去掉表头
 
         foreach($rows as $key => $row)
         {

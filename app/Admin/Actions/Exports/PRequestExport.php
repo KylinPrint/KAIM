@@ -30,6 +30,7 @@ class PRequestExport extends BaseExport implements WithMapping, WithHeadings, Fr
             '外设类型' ,
             '涉及行业' ,
             '操作系统版本' ,
+            '操作系统小版本号',
             '芯片' ,
             '项目名称' ,
             '涉及数量' ,
@@ -95,6 +96,7 @@ class PRequestExport extends BaseExport implements WithMapping, WithHeadings, Fr
         $CacheArr['外设类型'] = $curPRquest->type->name;
         $CacheArr['涉及行业'] = $curPRquest->industry;
         $CacheArr['操作系统版本'] = $curPRquest->release->name;
+        $CacheArr['操作系统小版本号'] = $curPRquest->os_subversion;
         $CacheArr['芯片'] = $curPRquest->chip->name;
         $CacheArr['项目名称'] = $curPRquest->project_name;
         $CacheArr['涉及数量'] = $curPRquest->amount;  
@@ -116,6 +118,7 @@ class PRequestExport extends BaseExport implements WithMapping, WithHeadings, Fr
             $ExportArr[$i]['外设类型'] = $CacheArr['外设类型'];
             $ExportArr[$i]['涉及行业'] = $CacheArr['涉及行业'];
             $ExportArr[$i]['操作系统版本'] = $CacheArr['操作系统版本'];
+            $ExportArr[$i]['操作系统小版本号'] = $CacheArr['操作系统小版本号'];
             $ExportArr[$i]['芯片'] = $CacheArr['芯片'];
             $ExportArr[$i]['项目名称'] = $CacheArr['项目名称'];
             $ExportArr[$i]['涉及数量'] = $CacheArr['涉及数量'];  

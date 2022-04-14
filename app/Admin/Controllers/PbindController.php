@@ -160,19 +160,19 @@ class PbindController extends AdminController
                     ->dialogWidth('50%')
                     ->model(Status::class, 'id', 'name');
                 $filter->whereBetween('created_at', function ($query) {
-                        $start = $this->input['start'] ?? null;
-                        $end = $this->input['end'] ?? null;
-                    
-                        $query->whereHas('binds', function ($query) use ($start,$end) {
-                            if ($start !== null) {
-                                $query->where('updated_at', '>=', $start);
-                            }
-                    
-                            if ($end !== null) {
-                                $query->where('updated_at', '<=', $end);
-                            }
-                        });
-                    })->datetime()->width(3);
+                    $start = $this->input['start'] ?? null;
+                    $end = $this->input['end'] ?? null;
+                
+                    $query->whereHas('binds', function ($query) use ($start,$end) {
+                        if ($start !== null) {
+                            $query->where('updated_at', '>=', $start);
+                        }
+                
+                        if ($end !== null) {
+                            $query->where('updated_at', '<=', $end);
+                        }
+                    });
+                })->datetime()->width(3);
             });
         });
     }
