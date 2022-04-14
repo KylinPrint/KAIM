@@ -38,17 +38,21 @@ class PbindController extends AdminController
         return Grid::make(Pbind::with(['peripherals','releases','chips','statuses','admin_users']), function (Grid $grid) {
 
             $grid->paginate(10);
-            if(Admin::user()->can('pbinds-import'))
-            {
-                $grid->tools(function  (Grid\Tools  $tools)  { 
-                    $tools->append(new PbindModal()); 
 
+            $grid->tools(function  (Grid\Tools  $tools)  { 
+                if(Admin::user()->can('pbinds-import'))
+                {
+                    $tools->append(new PbindModal()); 
+                }
+                
+                if(Admin::user()->can('pbinds-edit'))
+                {
                     $tools->batch(function ($batch) 
                     {
                         $batch->add(new PStatusBatch());
                     });
-                });
-            }
+                }
+            });
 
             if(!Admin::user()->can('pbinds-edit'))
             {
