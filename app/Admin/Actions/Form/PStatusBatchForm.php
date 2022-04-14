@@ -64,7 +64,7 @@ class PStatusBatchForm extends Form implements LazyRenderable
     {
         //弹窗界面
         $this->select('statuses_id',__('状态'))->options(Status::where('parent','!=',null)->pluck('name','id'))->required();
-        $this->textarea('comment')->required();
+        $this->textarea('comment',__('状态变更说明'))->required();
         //批量选择的行的值传递
         $this->hidden('id')->attribute('id', 'batchsp-id'); //批量选择的行的id通过隐藏元素 提交时一并传递过去
         

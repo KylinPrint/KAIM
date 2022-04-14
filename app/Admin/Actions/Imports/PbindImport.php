@@ -70,6 +70,10 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
             ){
                 throw new RequiredNotFoundException($key);
             }
+
+            if(!$row['外设型号']){continue;}  //TODO 上边写的异常抛出后不继续执行，待检查
+
+            $curtime = date('Y-m-d H:i:s');
             
             if($row['厂商'] != '')
             {
@@ -80,8 +84,8 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
                     [
                         'name' => $row['厂商'],
                         'isconnected' => '0',
-                        'created_at' => date('Y-m-d H:i:s'),
-                        'updated_at' => date('Y-m-d H:i:s'),
+                        'created_at' => $curtime,
+                        'updated_at' => $curtime,
                     ];
                     $curManufactorId = DB::table('manufactors')->insertGetId($manufactorInsert);
                 }
@@ -94,8 +98,8 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
                 [
                     'name' => $row['品牌'],
                     'alias' => '',
-                    'created_at' => date('Y-m-d H:i:s'),
-                    'updated_at' => date('Y-m-d H:i:s'),
+                    'created_at' => $curtime,
+                    'updated_at' => $curtime,
                 ];
                 $curBrandId = DB::table('brands')->insertGetId($brandInsert);
             }
@@ -114,8 +118,8 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
                     'eosl_date' => date('Y-m-d',($row['服务终止日期']-25569)*24*3600),
                     'industries' => $row['行业分类'],
                     'comment' => $row['外设描述'],
-                    'created_at' => date('Y-m-d H:i:s'),
-                    'updated_at' => date('Y-m-d H:i:s'),
+                    'created_at' => $curtime,
+                    'updated_at' => $curtime,
                 ];
                 $curPeripheralId = DB::table('peripherals')->insertGetId($peripheralInsert);
             }
@@ -143,8 +147,8 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
                 'kylineco' => $this->bools($row['是否上传生态网站']),
                 'appstore' => $this->bools($row['是否上架软件商店']),
                 'iscert' => $this->bools($row['是否互认证']),
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s'),
+                'created_at' => $curtime,
+                'updated_at' => $curtime,
             ];
             $pbindInsertUnique = 
             [
@@ -156,8 +160,19 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
             {
                 return $query->where($pbindInsertUnique);
             });
-            DB::table('pbinds')->insert($pbindInsert);
-  
+            $curPbindId = DB::table('pbinds')->insertGetId($pbindInsert);
+
+            $pbindhistory = 
+            [
+                'pbind_id' => $curPbindId,
+                'status_old' => null,
+                'status_new' => $pbindInsert['statuses_id'],
+                'admin_users_id' => $pbindInsert['admin_users_id'],
+                'comment' => null,
+                'created_at' => $curtime,
+                'updated_at' => $curtime,
+            ];
+            DB::table('pbind_histories')->inset($pbindhistory);
         }
         
     }
