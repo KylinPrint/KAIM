@@ -36,19 +36,23 @@ class HomeController extends Controller
             $grid->model()->orderBy('updated_at');
 
             $grid->column('type');
-            $grid->column('manufactor', __('厂商/品牌'));
-            $grid->column('name', __('产品名称'));
-            $grid->column('release', __('操作系统版本'));
-            $grid->column('chip', __('芯片名称'));
-            $grid->column('status', __('当前状态'));
+            $grid->column('manufactor');
+            $grid->column('name');
+            $grid->column('release');
+            $grid->column('chip');
+            $grid->column('status');
             $grid->updated_at()->sortable();
-            $grid->column('操作')->display(function () {
+            $grid->column('action')->display(function () {
                 if     ($this->type == "软件适配") { $type = 'sbinds'; }
                 elseif ($this->type == "外设适配") { $type = 'pbinds'; }
                 elseif ($this->type == "软件需求") { $type = 'srequests'; }
                 elseif ($this->type == "外设需求") { $type = 'prequests'; }
                 $href = admin_url($type.'/'.$this->id);
-                return "<a href='$href'>去处理</a>";
+                return "
+                    <button data-action='refresh' class='btn btn-primary btn-outline'>
+                        <a href='$href'> 去处理</a>
+                    </button>
+                ";
             });
 
             $grid->disableActions();
