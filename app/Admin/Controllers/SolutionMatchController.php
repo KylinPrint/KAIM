@@ -63,8 +63,6 @@ class SolutionMatchController extends AdminController
             // $show->field('id');
             $show->field('title');
             $show->field('path');
-            // $show->field('created_at');
-            // $show->field('updated_at');
         });
     }
 

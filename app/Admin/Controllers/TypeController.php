@@ -44,8 +44,6 @@ class TypeController extends AdminController
             // $show->field('id');
             $show->field('name');
             $show->field('parent');
-            // $show->field('created_at');
-            // $show->field('updated_at');
         });
     }
 
@@ -83,10 +81,6 @@ class TypeController extends AdminController
                 $form->select('parent')->options(Type::where('parent', 0)->pluck('name','id'));
                 $form->text('name');
             }          
-
-        
-            // $form->display('created_at');
-            // $form->display('updated_at');
         });
     }
 

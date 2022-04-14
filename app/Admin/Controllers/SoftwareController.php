@@ -107,8 +107,6 @@ class SoftwareController extends AdminController
             $show->field('am');
             $show->field('tsm');
             $show->field('comment');
-            // $show->field('created_at');
-            // $show->field('updated_at');
         });
     }
 
@@ -135,9 +133,6 @@ class SoftwareController extends AdminController
             $form->text('am');
             $form->text('tsm');
             $form->text('comment');
-        
-            // $form->display('created_at');
-            // $form->display('updated_at');
         });
     }
 }

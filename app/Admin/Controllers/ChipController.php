@@ -41,8 +41,6 @@ class ChipController extends AdminController
             // $show->field('id');
             $show->field('name');
             $show->field('arch');
-            // $show->field('created_at');
-            // $show->field('updated_at');
         });
     }
 
@@ -64,9 +62,6 @@ class ChipController extends AdminController
                 'loongarch64'   => 'loongarch64',
                 'sw64'          => 'sw64',
                ])->required();
-        
-            // $form->display('created_at');
-            // $form->display('updated_at');
         });
     }
 }

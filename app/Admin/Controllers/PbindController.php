@@ -120,7 +120,6 @@ class PbindController extends AdminController
             $grid->column('start_time');
             $grid->column('complete_time');
             $grid->column('comment')->limit()->hide();       
-            // $grid->column('created_at');
             $grid->column('updated_at')->sortable();
            
             $grid->quickSearch('peripherals.name', 'releases.name', 'chips.name', 'comment');
@@ -289,16 +288,11 @@ class PbindController extends AdminController
             $form->select('iscert')->options([0 => '否',1 => '是'])->required();
             $form->date('start_time')->format('Y-M-D');
             $form->date('complete_time')->format('Y-M-D');
-
             $form->text('comment');
         
-            // $form->display('created_at');
-            // $form->display('updated_at');
-
             $form->saving(function (Form $form) {
                 $database_name = env('DB_DATABASE');
                 $status_coming = $form->statuses_id;
-                $timestamp = date("Y-m-d H:i:s");
                 
                 if ($form->isCreating()) {
                     // 脑瘫代码
@@ -312,7 +306,6 @@ class PbindController extends AdminController
                     $id = $form->getKey();
                 }
                 
-
                 // 判断当前为新增还是修改
                 if ($form->isCreating()) {
                     $status_current = NULL;
