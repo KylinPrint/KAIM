@@ -66,6 +66,7 @@ class SRequestController extends AdminController
             $grid->column('stype.name');
             $grid->column('industry')->badge();
             $grid->column('release.name');
+            $grid->column('os_subversion');
             $grid->column('chip.name');
             $grid->column('project_name');
             $grid->column('amount');
@@ -148,6 +149,7 @@ class SRequestController extends AdminController
             $show->field('stype.name');
             $show->field('industry');
             $show->field('release.name');
+            $show->field('os_subversion');
             $show->field('chip.name');
             $show->field('project_name');
             $show->field('amount');
@@ -203,6 +205,7 @@ class SRequestController extends AdminController
                     ->saving(function ($value) { return implode(',', $value); })->required();
                 $form->select('release_id')
                     ->options(Release::all()->pluck('name', 'id'))->required();
+                $form->text('os_subversion')->help('例如:V10SP1-Build01-0326');
                 $form->select('chip_id')
                     ->options(Chip::all()->pluck('name', 'id'))->required();
                 $form->text('project_name');
@@ -233,6 +236,7 @@ class SRequestController extends AdminController
                         ->saving(function ($value) { return implode(',', $value); })->required();
                     $form->select('release_id')
                         ->options(Release::all()->pluck('name', 'id'))->required();
+                    $form->text('os_subversion')->help('例如:V10SP1-Build01-0326');
                     $form->select('chip_id')
                         ->options(Chip::all()->pluck('name', 'id'))->required();
                     $form->text('project_name');
@@ -271,6 +275,7 @@ class SRequestController extends AdminController
                     $form->display('stype.name');
                     $form->display('industry');
                     $form->display('release.name');
+                    $form->display('os_subversion');
                     $form->display('chip.name');
                     $form->display('project_name');
                     $form->display('amount');
@@ -362,6 +367,7 @@ class SRequestController extends AdminController
                             $sbind = Sbind::create([
                                 'softwares_id' => $software_id,
                                 'releases_id' => $form->release_id,
+                                'os_subversion' => $form->os_subversion,
                                 'chips_id' => $form->chip_id,
                                 'adapt_source' => $form->source,
                                 'statuses_id' => $form->statuses_id,

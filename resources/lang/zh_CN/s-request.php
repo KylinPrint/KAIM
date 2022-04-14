@@ -18,6 +18,7 @@ return [
         'release' => [
             'name' => '操作系统版本',
         ],
+        'os_subversion' => '操作系统小版本号',
         'chip_id' => '芯片',
         'chip' => [
             'name' => '芯片'
