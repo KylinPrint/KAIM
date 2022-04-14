@@ -4,6 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Admin\Actions\Exports\SbindExport;
 use App\Admin\Actions\Modal\SbindModal;
+use App\Admin\Actions\Others\SStatusBatch;
 use App\Admin\Renderable\ChipTable;
 use App\Admin\Renderable\ShistoryTable;
 use App\Admin\Renderable\ReleaseTable;
@@ -40,8 +41,20 @@ class SbindController extends AdminController
             if(Admin::user()->can('sbinds-import'))
             {
                 $grid->tools(function  (Grid\Tools  $tools)  { 
-                    $tools->append(new SbindModal()); 
+                    if(Admin::user()->can('sbinds-import'))
+                    {
+                        $tools->append(new SbindModal()); 
+                    }         
+
+                    if(Admin::user()->can('pbinds-edit'))
+                    {
+                        $tools->batch(function ($batch) 
+                        {
+                            $batch->add(new SStatusBatch());
+                        });
+                    }
                 });
+                
             }
             
             if(!Admin::user()->can('sbinds-edit'))
