@@ -33,7 +33,7 @@ public function render()
             ->title($this->title)
             ->body($form)
             ->onLoad($this->getModalScript())
-            ->button($this->title);
+            ->button('<a><i class="feather icon-edit-1"></i> ' . $this->title . '</a>');
     }
  
  
