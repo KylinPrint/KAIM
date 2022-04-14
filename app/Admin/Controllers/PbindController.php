@@ -121,6 +121,9 @@ class PbindController extends AdminController
             $grid->column('complete_time');
             $grid->column('comment')->limit()->hide();       
             $grid->column('updated_at')->sortable();
+
+            $grid->scrollbarX();
+            $grid->showColumnSelector();
            
             $grid->quickSearch('peripherals.name', 'releases.name', 'chips.name', 'comment');
             $grid->filter(function (Grid\Filter $filter) {
