@@ -14,6 +14,7 @@ class Pbind extends Model
 	[
 		'peripherals_id',
 		'releases_id',
+		'os_subversion',
 		'chips_id',
 		'adapt_source',
 		'adapted_before',

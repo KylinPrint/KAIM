@@ -19,7 +19,6 @@ use App\Models\Status;
 use App\Models\Type;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Form;
-use Dcat\Admin\Form\Field\Button;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
 use Dcat\Admin\Http\Controllers\AdminController;
@@ -64,6 +63,7 @@ class PRequestController extends AdminController
             $grid->column('type.name');
             $grid->column('industry')->badge();
             $grid->column('release.name');
+            $grid->column('os_subversion');
             $grid->column('chip.name');
             $grid->column('project_name');
             $grid->column('amount');
@@ -147,6 +147,7 @@ class PRequestController extends AdminController
             $show->field('type.name');
             $show->field('industry');
             $show->field('release.name');
+            $show->field('os_subversion');
             $show->field('chip.name');
             $show->field('project_name');
             $show->field('amount');
@@ -203,6 +204,7 @@ class PRequestController extends AdminController
                     ->saving(function ($value) { return implode(',', $value); })->required();
                 $form->select('release_id')
                     ->options(Release::all()->pluck('name', 'id'))->required();
+                $form->text('os_subversion')->help('例如:V10SP1-Build01-0326');
                 $form->select('chip_id')
                     ->options(Chip::all()->pluck('name', 'id'))->required();
                 $form->text('project_name');
@@ -234,6 +236,7 @@ class PRequestController extends AdminController
                         ->saving(function ($value) { return implode(',', $value); })->required();
                     $form->select('release_id')
                         ->options(Release::all()->pluck('name', 'id'))->required();
+                    $form->text('os_subversion')->help('例如:V10SP1-Build01-0326');
                     $form->select('chip_id')
                         ->options(Chip::all()->pluck('name', 'id'))->required();
                     $form->text('project_name');
@@ -273,6 +276,7 @@ class PRequestController extends AdminController
                     $form->display('type.name');
                     $form->display('industry');
                     $form->display('release.name');
+                    $form->display('os_subversion');
                     $form->display('chip.name');
                     $form->display('project_name');
                     $form->display('amount');
@@ -374,6 +378,7 @@ class PRequestController extends AdminController
                             $pbind = Pbind::create([
                                 'peripherals_id'=> $peripheral_id,
                                 'releases_id' => $form->release_id,
+                                'os_subversion' => $form->os_subversion,
                                 'chips_id' => $form->chip_id,
                                 'adapt_source' => $form->source,
                                 'statuses_id' => $form->statuses_id,
