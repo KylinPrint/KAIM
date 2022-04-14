@@ -42,9 +42,9 @@ class SbindImport implements ToCollection, WithHeadingRow, WithValidation
             ( 
                 !($row['厂商']&&
                 $row['品牌']&&
-                $row['外设型号']&&
-                $row['外设类型一']&&
-                $row['外设类型二']&&
+                $row['软件名称']&&
+                $row['软件分类一']&&
+                $row['软件分类二']&&
                 $row['行业分类']&&
                 $row['操作系统版本']&&
                 $row['芯片']&&
@@ -60,6 +60,10 @@ class SbindImport implements ToCollection, WithHeadingRow, WithValidation
                 throw new RequiredNotFoundException($key);
             }
 
+            if(!$row['软件名称']){continue;}  //TODO 上边写的异常抛出后不继续执行，待检查
+
+            $curtime = date('Y-m-d H:i:s');
+
             $curManufactorId = Manufactor::where('name',$row['厂商名称'])->pluck('id')->first();
             if(empty($curManufactorId))
             {
@@ -67,8 +71,8 @@ class SbindImport implements ToCollection, WithHeadingRow, WithValidation
                 [
                     'name' => $row['厂商名称'],
                     'isconnected' => '',
-                    'created_at' => date('Y-m-d H:i:s'),
-                    'updated_at' => date('Y-m-d H:i:s'),
+                    'created_at' => $curtime,
+                    'updated_at' => $curtime,
                 ];
                 $curManufactorId = DB::table('manufactors')->insertGetId($manufactorInsert);
             }
@@ -82,7 +86,7 @@ class SbindImport implements ToCollection, WithHeadingRow, WithValidation
                     'name' => $row['软件名称'],
                     'manufactors_id' => $curManufactorId,
                     'version' => $row['软件版本号'],
-                    'types_id' => Type::where('name',$row['外设类型二'])->pluck('id')->first(),
+                    'types_id' => Type::where('name',$row['软件分类二'])->pluck('id')->first(),
                     'kernel_version' => $row['引用版本'],
                     'crossover_version' => $row['Crossover版本'],
                     'box86_version' => $row['Box86版本'],
@@ -91,10 +95,10 @@ class SbindImport implements ToCollection, WithHeadingRow, WithValidation
                     'tsm' => $row['技术支撑负责人'],
                     'comment' => $row['软件描述'],
                     'industries' => $row['行业'],
-                    'created_at' => date('Y-m-d H:i:s'),
-                    'updated_at' => date('Y-m-d H:i:s'),
+                    'created_at' => $curtime,
+                    'updated_at' => $curtime,
                 ];
-                $curSoftwareId = DB::table('peripherals')->insertGetId($softwareInsert);
+                $curSoftwareId = DB::table('softwares')->insertGetId($softwareInsert);
             }
 
             
@@ -122,8 +126,8 @@ class SbindImport implements ToCollection, WithHeadingRow, WithValidation
                 'appstore' => $this->bools($row['是否上架软件商店']),
                 'iscert' => $row['是否互认证'],
                 'comment' => $row['备注'],
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s'),
+                'created_at' => $curtime,
+                'updated_at' => $curtime,
             ];
             $a = 0;
             $sbindInsertUnique = 
@@ -132,12 +136,24 @@ class SbindImport implements ToCollection, WithHeadingRow, WithValidation
                 'chips_id' => $row['芯片'],
                 'releases_id' => $row['适配系统'],
             ];
-            Rule::unique('pbinds')->where(function ($query) use ($sbindInsertUnique)
+            Rule::unique('sbinds')->where(function ($query) use ($sbindInsertUnique)
             {
                 return $query->where($sbindInsertUnique);
             });
-            DB::table('pbinds')->insert($sbindInsert);
-  
+
+            $curSbindId = DB::table('sbinds')->insertGetId($sbindInsert);
+
+            $sbindhistory = 
+            [
+                'sbind_id' => $curSbindId,
+                'status_old' => null,
+                'status_new' => $sbindInsert['statuses_id'],
+                'admin_users_id' => $sbindInsert['admin_users_id'],
+                'comment' => null,
+                'created_at' => $curtime,
+                'updated_at' => $curtime,
+            ];
+            DB::table('sbind_histories')->inset($sbindhistory);
         }
         
     }
