@@ -70,8 +70,6 @@ class SpecificationController extends AdminController
                     return '布尔';
                 }
             });
-            // $show->field('created_at');
-            // $show->field('updated_at');
         });
     }
 
@@ -92,9 +90,6 @@ class SpecificationController extends AdminController
                 1 => '数字',
                 2 => '布尔',
             ])->required();
-        
-            // $form->display('created_at');
-            // $form->display('updated_at');
         });
     }
 }

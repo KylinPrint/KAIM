@@ -45,8 +45,6 @@ class ReleaseController extends AdminController
             $show->field('abbr');
             $show->field('release_date');
             $show->field('eosl_date');
-            // $show->field('created_at');
-            // $show->field('updated_at');
         });
     }
 
@@ -63,9 +61,6 @@ class ReleaseController extends AdminController
             $form->text('abbr');
             $form->date('release_date')->format('YYYY-MM-DD');
             $form->date('eosl_date')->format('YYYY-MM-DD');
-        
-            // $form->display('created_at');
-            // $form->display('updated_at');
         });
     }
 }

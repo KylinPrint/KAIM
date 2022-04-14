@@ -44,8 +44,6 @@ class StatusController extends AdminController
             // $show->field('id');
             $show->field('name');
             $show->field('parent');
-            // $show->field('created_at');
-            // $show->field('updated_at');
         });
     }
 
@@ -64,9 +62,6 @@ class StatusController extends AdminController
             #->load('name','/api/status')
             ;
             $form->text('name')->required();
-        
-            // $form->display('created_at');
-            // $form->display('updated_at');
         });
 
     }

@@ -42,8 +42,6 @@ class BrandController extends AdminController
             // $show->field('id');
             $show->field('name');
             $show->field('alias');
-            // $show->field('created_at');
-            // $show->field('updated_at');
         });
     }
 
@@ -58,9 +56,6 @@ class BrandController extends AdminController
             // $form->display('id');
             $form->text('name')->required();
             $form->text('alias');
-        
-            // $form->display('created_at');
-            // $form->display('updated_at');
         });
     }
 }

@@ -47,8 +47,6 @@ class ManufactorController extends AdminController
             // $show->field('id');
             $show->field('name');
             $show->field('isconnected');
-            // $show->field('created_at');
-            // $show->field('updated_at');
         });
     }
 
@@ -63,9 +61,6 @@ class ManufactorController extends AdminController
             // $form->display('id');
             $form->text('name')->required();
             $form->select('isconnected')->options([0 => '否',1 => '是']);
-        
-            // $form->display('created_at');
-            // $form->display('updated_at');
         });
     }
 }
