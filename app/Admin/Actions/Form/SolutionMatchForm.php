@@ -4,16 +4,11 @@ namespace App\Admin\Actions\Form;
 
 use App\Admin\Actions\Exports\SolutionMatchExport;
 use App\Admin\Actions\Imports\SolutionMatchImport;
-use App\Models\Solution;
-use App\Models\Printer;
-use App\Models\Bind;
-use App\Models\Brand;
+use App\Models\SolutionMatch;
+use Dcat\Admin\Admin;
 use Dcat\Admin\Widgets\Form;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
-
-use function PHPUnit\Framework\isEmpty;
 
 ini_set('max_execution_time', 600);
 ini_set('upload_max_filesize', '8M');
@@ -24,47 +19,37 @@ class SolutionMatchForm extends Form
     public function handle(array $input)
     {
         try {
-            //上传文件位置，这里默认是在storage中，如有修改请对应替换
-            $file = storage_path('app/public/'.$input['file']);
+            // 提取上传文件内容
+            // 写的导入处理类SolutionMatchImport没生效，原因未明
+            $array = (Excel::toArray(new SolutionMatchImport, storage_path('app/public/'.$input['file'])))[0];
 
-            //写的导入处理类SolutionMatchImport没生效，原因未明
-            $array = (Excel::toArray(new SolutionMatchImport,$file))[0];
+            // 删除上传的临时文件
+            Storage::disk('public')->delete($input['file']);
 
+            // 产品名称标准化后的文件名
+            $storeFileName = '产品名称标准化_' . $input['admin_user_name'] . '_' .date('ymd-His') . '.xlsx';
             
-
-            $disk = Storage::disk('local');
-            $disk -> delete('public'.$input['file']);
-
-            $storeFile = substr(strrchr($input['file'],'/'),1);
-            $storeFileName = 'match/'.substr($storeFile,0,strrpos($storeFile,'.')).'_型号筛查结果_'.date('Y-m-d_H:i:s').'.xlsx';
-            
-            
-            $time_start = $this->getmicrotime();
-            (new SolutionMatchExport($array,$file))->store($storeFileName,'admin');
-            $time_end = $this->getmicrotime();
-            $time = $time_end - $time_start;
+            // 产品名称标准化
+            (new SolutionMatchExport($array,null))->store('solution-match/' . $storeFileName, 'public');
            
+            // 标准化结果文件名存入数据库
+            SolutionMatch::create([
+                'title' => $storeFileName,
+            ]);
 
-            DB::insert('INSERT INTO solution_matches(title,path) VALUES ("'.$storeFile.'","'.$storeFileName.'")');
-
-            return $this->response()->success('数据处理成功')->refresh();
+            return $this->response()->success('产品名称标准化完成')->refresh();
 
         } catch (\Exception $e) {
-    
             return $this->response()->error($e->getMessage()); 
         }
     }
 
     public function form()
     {
-        $this->file('file', '上传数据(Excel)')->rules('required', ['required' => '文件不能为空'])->move('/')
+        $this->file('file', __('上传数据(Excel)'))
+            ->autoUpload()
+            ->rules('required', ['required' => '文件不能为空'])
             ->help('<a href="/template/solution_match.xlsx" target="_blank">点击此处</a>下载导入模板,对导入数据进行型号标准化，可能输出多个可能型号，请自行筛选。');
+        $this->hidden('admin_user_name')->value(Admin::user()->name);
     }
-
-    public function getmicrotime()
-    {
-        list($usec,$sec) = explode(" ",microtime());
-        return ((float)$usec + (float)$sec);
-    }
-
 }

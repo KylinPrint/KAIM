@@ -9,6 +9,7 @@ use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
 use Dcat\Admin\Http\Controllers\AdminController;
+use Illuminate\Support\Facades\Storage;
 
 class SolutionMatchController extends AdminController
 {
@@ -20,8 +21,7 @@ class SolutionMatchController extends AdminController
     protected function grid()
     {
         return Grid::make(new SolutionMatch(), function (Grid $grid) {
-
-            $grid->model()->orderBy('created_at');
+            $grid->model()->orderBy('created_at', 'desc');
 
             $grid->disableCreateButton();
             
@@ -34,53 +34,28 @@ class SolutionMatchController extends AdminController
             $grid->actions(function (Grid\Displayers\Actions $actions) {
                 $actions->disableView();
                 $actions->disableEdit();
-                $actions->disableQuickEdit();
 
                 $actions->append(new SolutionMatchDownload());
                           
             });
 
-            // $grid->column('id')->sortable();
             $grid->column('title');
-            $grid->column('path');
             $grid->column('created_at');
-            $grid->column('updated_at')->sortable();
             
             $grid->quickSearch('title','path');
         });
     }
 
-    /**
-     * Make a show builder.
-     *
-     * @param mixed $id
-     *
-     * @return Show
-     */
-    protected function detail($id)
-    {
-        return Show::make($id, new SolutionMatch(), function (Show $show) {
-            // $show->field('id');
-            $show->field('title');
-            $show->field('path');
-        });
-    }
-
-    /**
-     * Make a form builder.
-     *
-     * @return Form
-     */
     protected function form()
     {
         return Form::make(new SolutionMatch(), function (Form $form) {
-            // $form->display('id');
-            // $form->text('title');
-            // $form->text('path');
-        
-            // $form->display('created_at');
-            // $form->display('updated_at');
-
+            // 同步删除文件
+            $form->deleting(function (Form $form) {
+                foreach ($form->model()->toArray() as $file)
+                {
+                    Storage::disk('public')->delete('solution-match/' . $file['title']);
+                }
+            });
         });
     }
 }
