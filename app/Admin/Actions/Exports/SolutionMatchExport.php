@@ -35,6 +35,7 @@ class SolutionMatchExport implements FromCollection, WithHeadings
         $this->headings = [
             '分类1',
             '分类2',
+            '厂商',
             '品牌' ,
             '产品名称' ,
             '系统版本' ,
