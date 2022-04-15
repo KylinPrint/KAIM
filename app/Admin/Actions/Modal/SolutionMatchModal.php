@@ -29,7 +29,7 @@ class SolutionMatchModal extends AbstractTool
 
         return <<<HTML
 <span class="grid-expand1" data-toggle="modal" data-target="#{$id1}">
-   <a href="javascript:void(0)"><button class="btn btn-outline-info ">型号标准化</button></a>
+   <a href="javascript:void(0)"><button class="btn btn-outline-info ">产品名称标准化</button></a>
 </span>
 <span class="grid-expand2" data-toggle="modal" data-target="#{$id2}">
    <a href="javascript:void(0)"><button class="btn btn-outline-info ">自动筛查适配详情</button></a>
