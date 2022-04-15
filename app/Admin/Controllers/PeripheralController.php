@@ -15,22 +15,45 @@ use Dcat\Admin\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use Dcat\Admin\Layout\Content;
-
+use Dcat\Admin\Layout\Row;
+use Dcat\Admin\Widgets\Dropdown;
 
 class PeripheralController extends AdminController
 {
     public function index(Content $content)
     {
+        $types = array();
+        $options = array();
+        foreach (Type::select('id', 'name', 'parent')->get()->toarray() as $query) {
+            if ($query['parent']) {
+                array_push($options, $query['id']);
+            }
+            $types[$query['id']]['name'] = $query['name'];
+            $types[$query['id']]['parent'] = $query['parent'];
+        }
+
         $urlArr = explode('type=',URL::full());
         $param = end($urlArr);
 
-        // 没说就是激光打印机
-        if((ctype_alnum($param)) == 0) { $param = 6; }
+        // type设置默认值防止不带参数访问外设页面
+        if(!ctype_alnum($param)) { $param = $options[0]; }
         
-        $header = Type::where('id', $param)->pluck('name')->first();
+        $dropdown = Dropdown::make($options)
+            ->button('选择外设分类') // 设置按钮
+            ->buttonClass('btn btn-white  waves-effect') // 设置按钮样式
+            ->click($types[$types[$param]['parent']]['name'] . ' -> ' . $types[$param]['name']) // 默认选项
+            ->map(function ($id) use ($types) {
+                // 格式化菜单选项
+                $url = admin_url('peripherals?type='.$id);
+                $label = $types[$types[$id]['parent']]['name'] . ' -> ' . $types[$id]['name'];
+                return "<a href='$url'>{$label}</a>";
+            });
+        
         return $content
-            ->header($header)
+            ->header('外设')
             ->description('列表')
+            ->body($dropdown)
+            ->body('<p>')
             ->body($this->grid());
     }
 
@@ -176,6 +199,7 @@ class PeripheralController extends AdminController
                 $urlArr = explode('type=',URL::full());
                 $typesID = end($urlArr);
                 $form->hidden('types_id')->default($typesID);
+                $form->title(Type::where('id', $typesID)->pluck('name')->first());
             }
             
             $form->select('manufactors_id', __('厂商'))->options(Manufactor::all()->pluck('name','id'));
