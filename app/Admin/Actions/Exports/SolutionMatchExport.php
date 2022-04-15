@@ -36,7 +36,7 @@ class SolutionMatchExport implements FromCollection, WithHeadings
             '分类1',
             '分类2',
             '品牌' ,
-            '型号' ,
+            '产品名称' ,
             '系统版本' ,
             '芯片' ,
             '匹配型号结果' ,
@@ -78,7 +78,7 @@ class SolutionMatchExport implements FromCollection, WithHeadings
                 '分类2' => $curInput['分类2'],  //具体分类  打印机、扫描仪
                 '厂商' => $curInput['厂商'],
                 '品牌' => $curInput['品牌'],
-                '型号' => $curInput['型号'],
+                '产品名称' => $curInput['产品名称'],
                 '系统版本' => $curInput['系统版本'],
                 '芯片' => $curInput['芯片'],
                 '匹配型号结果' => '暂无该型号数据',
@@ -103,7 +103,7 @@ class SolutionMatchExport implements FromCollection, WithHeadings
                     continue;
                 }
 
-                preg_match('/\d+/',$curInput['型号'],$InputNum);
+                preg_match('/\d+/',$curInput['产品名称'],$InputNum);
 
                 $curDeviceNameArr = Peripheral::where([
                     ['name','like','%'.$InputNum[0].'%'],
@@ -134,7 +134,7 @@ class SolutionMatchExport implements FromCollection, WithHeadings
                 }
 
                 $curSoftwareNameArr = Software::where([
-                    ['name','like','%'.$curInput['型号'].'%'],
+                    ['name','like','%'.$curInput['产品名称'].'%'],
                     ['manufactors_id',$curManufactorId],
                     ['stypes_id',$curStypeId]
                 ]);

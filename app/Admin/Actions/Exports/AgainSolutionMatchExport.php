@@ -36,7 +36,7 @@ class AgainSolutionMatchExport implements FromCollection, WithHeadings
 
         $this->headings = [
             '厂商' ,
-            '型号' ,
+            '产品名称' ,
             '系统版本' ,
             '系统架构' ,
             '解决方案名' ,
@@ -79,7 +79,7 @@ class AgainSolutionMatchExport implements FromCollection, WithHeadings
                 '分类2' => $curInput['分类2'],  //具体分类  打印机、扫描仪
                 '厂商' => $curInput['厂商'],
                 '品牌' => $curInput['品牌'],
-                '型号' => $curInput['型号'],
+                '产品名称' => $curInput['产品名称'],
                 '系统版本' => $curInput['系统版本'],
                 '芯片' => $curInput['芯片'],
                 '解决方案名' => '暂无适配方案',
@@ -108,7 +108,7 @@ class AgainSolutionMatchExport implements FromCollection, WithHeadings
                 }
 
                 $curPeripheralId = Peripheral::where([
-                    ['name','=',$curInput['型号']],
+                    ['name','=',$curInput['产品名称']],
                     ['brands_id',$curBrandId],
                     ['types_id',$curTypeId],])
                 ->pluck('id')
@@ -159,7 +159,7 @@ class AgainSolutionMatchExport implements FromCollection, WithHeadings
                 }
 
                 $curSoftwareId = Software::where([
-                    ['name','=',$curInput['型号']],
+                    ['name','=',$curInput['产品名称']],
                     ['manufactors_id',$curManufactorId],
                     ['stypes_id',$curStypeId],])
                 ->pluck('id')
