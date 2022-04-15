@@ -5,13 +5,12 @@ namespace App\Admin\Actions\Exports;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
-use App\Models\Solution;
-use App\Models\Printer;
-use App\Models\Bind;
 use App\Models\Brand;
+use App\Models\Chip;
 use App\Models\Manufactor;
 use App\Models\Pbind;
 use App\Models\Peripheral;
+use App\Models\Release;
 use App\Models\Sbind;
 use App\Models\Software;
 use App\Models\Stype;
@@ -116,15 +115,18 @@ class AgainSolutionMatchExport implements FromCollection, WithHeadings
                     ['types_id',$curTypeId],])
                 ->pluck('id')
                 ->first();
+
+                $curReleaseId = Release::where('name',$curInput['系统版本'])->pluck('id')->first();
+                $curChipId = Chip::where('name',$curInput['芯片'])->pluck('id')->first();
     
                 if($curPeripheralId)
                 {
                     $curPbind = Pbind::where([
                         ['peripherals_id','=',$curPeripheralId],
-                        ['releases_id',$curInput['系统版本']],
-                        ['chips_id',$curInput['芯片']],])
+                        ['releases_id',$curReleaseId],
+                        ['chips_id',$curChipId],])
                     ->with('peripherals','releases','chips','statuses')
-                    ->get();
+                    ->first();
                     
                     //暂未加适配状态
                     if($curPbind->count())

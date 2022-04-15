@@ -110,7 +110,7 @@ class SolutionMatchExport implements FromCollection, WithHeadings
                     ['name','like','%'.$InputNum[0].'%'],
                     ['brands_id',$curBrandId],
                     ['types_id',$curTypeId],
-                ])->pluck('model');
+                ])->pluck('name');
 
                 if($curDeviceNameArr->isEmpty()){++$i;continue;}
                 $curMatchArr[$i]['匹配型号结果'] = implode('/',$curDeviceNameArr->toArray());
