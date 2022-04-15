@@ -68,7 +68,7 @@ class PDataAdd extends Donut
      */
     public function handle(Request $request)
     {
-        $curOption = $request->get('option')?:'7';
+        $curOption = $request->get('option')?:'30';
         $curTime = now();
         $curTimeBefor = now()->subDays($curOption)->toDateTimeString();
 
