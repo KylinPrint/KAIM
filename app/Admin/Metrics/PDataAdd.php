@@ -25,8 +25,8 @@ class PDataAdd extends Donut
 
         $this->title('外设新增适配数据');
         $this->dropdown([
-            '7' => 'Last 7 Days',
             '30' => 'Last Month',
+            '7' => 'Last 7 Days',
             '365' => 'Last Year',
         ]);
         $this->chartLabels($this->labels);
