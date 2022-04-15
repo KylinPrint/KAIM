@@ -40,7 +40,7 @@ class SolutionMatchDownload extends RowAction
 
         $filename = basename($filePath);
 
-        return $this->response()->download(url('uploads/'.$filePath));
+        return $this->response()->download(url('app/public/match/'.$filePath));
 
     }
 
