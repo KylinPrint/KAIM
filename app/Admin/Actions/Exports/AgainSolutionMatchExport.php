@@ -101,7 +101,7 @@ class AgainSolutionMatchExport implements FromCollection, WithHeadings
                 }
     
                 $curBrandId = (Brand::where('name','like','%'.$curInput['品牌'].'%')->pluck('id')->first())?:(Brand::where('alias',$curInput['品牌'])->pluck('id')->first());
-                $curTypeId = Type::where('name',$curInput['分类2'])->pluck('id')->first();
+
                 
                 if(empty($curBrandId)){
                     $curMatchArr[$i]['匹配型号结果'] = '请核实产品品牌或添加新品牌';
@@ -111,8 +111,7 @@ class AgainSolutionMatchExport implements FromCollection, WithHeadings
 
                 $curPeripheralId = Peripheral::where([
                     ['name','=',$curInput['产品名称']],
-                    ['brands_id',$curBrandId],
-                    ['types_id',$curTypeId],])
+                    ['brands_id',$curBrandId],])
                 ->pluck('id')
                 ->first();
 
@@ -127,10 +126,13 @@ class AgainSolutionMatchExport implements FromCollection, WithHeadings
                         ['chips_id',$curChipId],])
                     ->with('peripherals','releases','chips','statuses')
                     ->first();
+
+                    $curPeripheral = Peripheral::with('types')->find($curPeripheralId);
                     
                     //暂未加适配状态
                     if($curPbind->count())
                     { 
+                        $curMatchArr[$i]['分类2'] = $curPeripheral->types->name;
                         $curMatchArr[$i]['解决方案名'] = $curPbind->solution_name;
                         $curMatchArr[$i]['解决方案详情'] = $curPbind->solution;
                         $curPstatus_parent = $curPbind->statuses->parent;
@@ -181,10 +183,13 @@ class AgainSolutionMatchExport implements FromCollection, WithHeadings
                         ['chips_id',$curChipId],])
                     ->with('softwares','releases','chips','statuses')
                     ->first();
+
+                    $curSoftware = Software::with('stypes')->find($curSoftwareId);
                     
                     //暂未加适配状态
                     if($curSbind->count())
                     {
+                        $curMatchArr[$i]['分类2'] = $curSoftware->stypes->name;
                         $curMatchArr[$i]['解决方案名'] = $curSbind->solution_name;
                         $curMatchArr[$i]['解决方案详情'] = $curSbind->solution;
                         $curSstatus_parent = $curSbind->statuses->parent;
