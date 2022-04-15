@@ -31,17 +31,11 @@ class SolutionMatchDownload extends RowAction
      */
     public function handle(Request $request)
     {
-        //dump($this->getKey());
-
-        $fileId = $this->getKey();
+        $id = $this->getKey();
         
-        
-        $filePath = SolutionMatch::where('id',$fileId)->pluck('path')->first();
+        $filePath = SolutionMatch::find($id)->title;
 
-        $filename = basename($filePath);
-
-        return $this->response()->download(url('app/public/'.$filePath));
-
+        return $this->response()->download(url('storage/solution-match/'.$filePath));
     }
 
     /**
