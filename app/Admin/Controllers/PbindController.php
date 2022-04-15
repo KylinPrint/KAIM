@@ -141,6 +141,31 @@ class PbindController extends AdminController
                     });
                 },'外设类型')->select($TypeModel::selectOptions());
 
+                $filter->where('test', function ($query) {
+                    if($this->input == 1)
+                    {
+                        $curUserCtreateArr = PbindHistory::where([
+                            ['admin_users_id',Admin::user()->id],
+                            ['status_old',null]])->pluck('pbind_id')->toArray();
+
+                        $query->whereIn('id',array_unique($curUserCtreateArr));
+                    }
+                    else 
+                    { 
+                        $curUserIncludedArr = array_merge(
+                            PbindHistory::where('admin_users_id',Admin::user()->id)
+                            ->pluck('pbind_id')
+                            ->toArray(),
+                            Pbind::where('admin_users_id',Admin::user()->id)
+                            ->pluck('id')
+                            ->toArray());  
+                        $query->whereIn('id',array_unique($curUserIncludedArr));
+                    }
+                },'与我关联')->select([
+                    1 => '我创建的',
+                    2 => '我参与的'
+                ]);
+
                 $filter->like('peripherals.name','设备名');
                 $filter->like('solution','解决方案');
                 $filter->like('comment','备注');

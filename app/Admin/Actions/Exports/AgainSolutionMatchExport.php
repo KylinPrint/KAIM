@@ -136,7 +136,7 @@ class AgainSolutionMatchExport implements FromCollection, WithHeadings
                         $curPstatus_parent = $curPbind->statuses->parent;
                         $curPstatus_id = $curPbind->statuses->id;
                         $curPstatus_sid = $curPstatus_parent == 0 ? $curPstatus_id : $curPstatus_parent;
-                        $curMatchArr[$i]['适配状态'] = $this->getParent($curPstatus_sid);     
+                        $curMatchArr[$i]['适配状态'] = $this->getParent($curPstatus_sid);
                     }
                 }
                 else
@@ -169,15 +169,18 @@ class AgainSolutionMatchExport implements FromCollection, WithHeadings
                     ['stypes_id',$curStypeId],])
                 ->pluck('id')
                 ->first();
+
+                $curReleaseId = Release::where('name',$curInput['系统版本'])->pluck('id')->first();
+                $curChipId = Chip::where('name',$curInput['芯片'])->pluck('id')->first();
     
                 if($curSoftwareId)
                 {
                     $curSbind = Sbind::where([
                         ['softwares_id','=',$curSoftwareId],
-                        ['releases_id',$curInput['系统版本']],
-                        ['chips_id',$curInput['芯片']],])
+                        ['releases_id',$curReleaseId],
+                        ['chips_id',$curChipId],])
                     ->with('softwares','releases','chips','statuses')
-                    ->get();
+                    ->first();
                     
                     //暂未加适配状态
                     if($curSbind->count())

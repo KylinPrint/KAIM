@@ -46,7 +46,7 @@ class SbindController extends AdminController
                         $tools->append(new SbindModal()); 
                     }         
 
-                    if(Admin::user()->can('pbinds-edit'))
+                    if(Admin::user()->can('sbinds-edit'))
                     {
                         $tools->batch(function ($batch) 
                         {
@@ -54,7 +54,6 @@ class SbindController extends AdminController
                         });
                     }
                 });
-                
             }
             
             if(!Admin::user()->can('sbinds-edit'))
@@ -144,6 +143,31 @@ class SbindController extends AdminController
                     });
                 },'软件类型')->select($TypeModel::selectOptions());
 
+
+                $filter->where('test', function ($query) {
+                    if($this->input == 1)
+                    {
+                        $curUserCtreateArr = SbindHistory::where([
+                            ['admin_users_id',Admin::user()->id],
+                            ['status_old',null]])->pluck('sbind_id')->toArray();
+
+                        $query->whereIn('id',array_unique($curUserCtreateArr));
+                    }
+                    else 
+                    { 
+                        $curUserIncludedArr = array_merge(
+                            SbindHistory::where('admin_users_id',Admin::user()->id)
+                            ->pluck('sbind_id')
+                            ->toArray(),
+                            Sbind::where('admin_users_id',Admin::user()->id)
+                            ->pluck('id')
+                            ->toArray());  
+                        $query->whereIn('id',array_unique($curUserIncludedArr));
+                    }
+                },'与我关联')->select([
+                    1 => '我创建的',
+                    2 => '我参与的'
+                ]);
 
                 $filter->like('softwares.name','软件名');
                 $filter->like('comment','备注');
