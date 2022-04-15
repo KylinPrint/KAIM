@@ -95,7 +95,7 @@ class SolutionMatchExport implements FromCollection, WithHeadings
                     continue;
                 }
     
-                $curBrandId = (Brand::where('name',$curInput['品牌'])->pluck('id')->first())?:(Brand::where('alias',$curInput['品牌'])->pluck('id')->first());
+                $curBrandId = (Brand::where('name','like','%'.$curInput['品牌'].'%')->pluck('id')->first())?:(Brand::where('alias',$curInput['品牌'])->pluck('id')->first());
                 $curTypeId = Type::where('name',$curInput['分类2'])->pluck('id')->first();
                 
                 if(empty($curBrandId)){
