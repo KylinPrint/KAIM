@@ -127,12 +127,12 @@ class SbindController extends AdminController
             $grid->scrollbarX();
             $grid->showColumnSelector();
             
-            $grid->quickSearch('softwares.name', 'releases.name', 'chips.name', 'comment');
+            $grid->quickSearch('softwares.name', 'solution', 'comment');
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->panel();
+                $filter->expand();
 
                 // 树状下拉  这块有待优化
-                $TypeModel = config('admin.database.stypes_model');
                 $filter->where('sbind',function ($query){
                     $query->whereHas('softwares', function ($query){
                         $query->whereHas('stypes', function ($query){
@@ -141,51 +141,30 @@ class SbindController extends AdminController
                             else{$query->where('parent', $this->input);}
                         });
                     });
-                },'软件类型')->select($TypeModel::selectOptions());
+                },'软件类型')->select(config('admin.database.stypes_model')::selectOptions())
+                ->width(4);
 
-
-                $filter->where('test', function ($query) {
-                    if($this->input == 1)
-                    {
-                        $curUserCtreateArr = SbindHistory::where([
-                            ['admin_users_id',Admin::user()->id],
-                            ['status_old',null]])->pluck('sbind_id')->toArray();
-
-                        $query->whereIn('id',array_unique($curUserCtreateArr));
-                    }
-                    else 
-                    { 
-                        $curUserIncludedArr = array_merge(
-                            SbindHistory::where('admin_users_id',Admin::user()->id)
-                            ->pluck('sbind_id')
-                            ->toArray(),
-                            Sbind::where('admin_users_id',Admin::user()->id)
-                            ->pluck('id')
-                            ->toArray());  
-                        $query->whereIn('id',array_unique($curUserIncludedArr));
-                    }
-                },'与我关联')->select([
-                    1 => '我创建的',
-                    2 => '我参与的'
-                ]);
-
-                $filter->like('softwares.name','软件名');
-                $filter->like('comment','备注');
                 $filter->equal('releases.id', '操作系统版本')
                     ->multipleSelectTable(ReleaseTable::make(['id' => 'name']))
                     ->title('弹窗标题')
                     ->dialogWidth('50%')
-                    ->model(Release::class, 'id', 'name');
+                    ->model(Release::class, 'id', 'name')
+                    ->width(3);
+
                 $filter->equal('chips.id', '芯片')
                     ->multipleSelectTable(ChipTable::make(['id' => 'name']))
                     ->title('弹窗标题')
                     ->dialogWidth('50%')
-                    ->model(Chip::class, 'id', 'name');
+                    ->model(Chip::class, 'id', 'name')
+                    ->width(3);
+
                 $filter->equal('statuses.parent', '适配状态')
                     ->multipleSelectTable(StatusTable::make(['id' => 'name']))
                     ->title('弹窗标题')
                     ->dialogWidth('50%')
-                    ->model(Status::class, 'id', 'name');
+                    ->model(Status::class, 'id', 'name')
+                    ->width(2);
+
                 $filter->whereBetween('created_at', function ($query) {
                         $start = $this->input['start'] ?? null;
                         $end = $this->input['end'] ?? null;
@@ -199,8 +178,33 @@ class SbindController extends AdminController
                                 $query->where('updated_at', '<=', $end);
                             }
                         });
-                    })->datetime()->width(3);
-            });
+                    })->datetime()->width(4);
+
+                    $filter->where('related', function ($query) {
+                        if($this->input == 1)
+                        {
+                            $curUserCtreateArr = SbindHistory::where([
+                                ['admin_users_id',Admin::user()->id],
+                                ['status_old',null]])->pluck('sbind_id')->toArray();
+    
+                            $query->whereIn('id',array_unique($curUserCtreateArr));
+                        }
+                        else 
+                        { 
+                            $curUserIncludedArr = array_merge(
+                                SbindHistory::where('admin_users_id',Admin::user()->id)
+                                ->pluck('sbind_id')
+                                ->toArray(),
+                                Sbind::where('admin_users_id',Admin::user()->id)
+                                ->pluck('id')
+                                ->toArray());  
+                            $query->whereIn('id',array_unique($curUserIncludedArr));
+                        }
+                    }, __('与我有关'))->select([
+                        1 => '我创建的',
+                        2 => '我参与的'
+                    ])->width(2);
+                });
         });
     }
 

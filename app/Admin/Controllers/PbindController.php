@@ -125,12 +125,12 @@ class PbindController extends AdminController
             $grid->scrollbarX();
             $grid->showColumnSelector();
            
-            $grid->quickSearch('peripherals.name', 'releases.name', 'chips.name', 'comment');
+            $grid->quickSearch('peripherals.name', 'solution', 'comment');
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->panel();
+                $filter->expand();
 
                 // 树状下拉  这块有待优化
-                $TypeModel = config('admin.database.types_model');
                 $filter->where('pbind',function ($query){
                     $query->whereHas('peripherals', function ($query){
                         $query->whereHas('types', function ($query){
@@ -139,9 +139,46 @@ class PbindController extends AdminController
                             else{$query->where('parent', $this->input);}
                         });
                     });
-                },'外设类型')->select($TypeModel::selectOptions());
+                },'外设类型')->select(config('admin.database.types_model')::selectOptions())
+                ->width(4);
 
-                $filter->where('test', function ($query) {
+                $filter->equal('releases.id', '操作系统版本')
+                    ->multipleSelectTable(ReleaseTable::make(['id' => 'name']))
+                    ->title('操作系统版本')
+                    ->dialogWidth('50%')
+                    ->model(Release::class, 'id', 'name')
+                    ->width(3);
+
+                $filter->equal('chips.id', '芯片')
+                    ->multipleSelectTable(ChipTable::make(['id' => 'name']))
+                    ->title('芯片')
+                    ->dialogWidth('50%')
+                    ->model(Chip::class, 'id', 'name')
+                    ->width(3);
+
+                $filter->equal('statuses.parent', '适配状态')
+                    ->multipleSelectTable(StatusTable::make(['id' => 'name']))
+                    ->title('适配状态')
+                    ->dialogWidth('50%')
+                    ->model(Status::class, 'id', 'name')
+                    ->width(2);
+
+                $filter->whereBetween('created_at', function ($query) {
+                    $start = $this->input['start'] ?? null;
+                    $end = $this->input['end'] ?? null;
+                
+                    $query->whereHas('binds', function ($query) use ($start,$end) {
+                        if ($start !== null) {
+                            $query->where('updated_at', '>=', $start);
+                        }
+                
+                        if ($end !== null) {
+                            $query->where('updated_at', '<=', $end);
+                        }
+                    });
+                })->datetime()->width(4);
+
+                $filter->where('related', function ($query) {
                     if($this->input == 1)
                     {
                         $curUserCtreateArr = PbindHistory::where([
@@ -161,43 +198,10 @@ class PbindController extends AdminController
                             ->toArray());  
                         $query->whereIn('id',array_unique($curUserIncludedArr));
                     }
-                },'与我关联')->select([
+                }, __('与我有关'))->select([
                     1 => '我创建的',
                     2 => '我参与的'
-                ]);
-
-                $filter->like('peripherals.name','设备名');
-                $filter->like('solution','解决方案');
-                $filter->like('comment','备注');
-                $filter->equal('releases.id', '操作系统版本')
-                    ->multipleSelectTable(ReleaseTable::make(['id' => 'name']))
-                    ->title('弹窗标题')
-                    ->dialogWidth('50%')
-                    ->model(Release::class, 'id', 'name');
-                $filter->equal('chips.id', '芯片')
-                    ->multipleSelectTable(ChipTable::make(['id' => 'name']))
-                    ->title('弹窗标题')
-                    ->dialogWidth('50%')
-                    ->model(Chip::class, 'id', 'name');
-                $filter->equal('statuses.parent', '适配状态')
-                    ->multipleSelectTable(StatusTable::make(['id' => 'name']))
-                    ->title('弹窗标题')
-                    ->dialogWidth('50%')
-                    ->model(Status::class, 'id', 'name');
-                $filter->whereBetween('created_at', function ($query) {
-                    $start = $this->input['start'] ?? null;
-                    $end = $this->input['end'] ?? null;
-                
-                    $query->whereHas('binds', function ($query) use ($start,$end) {
-                        if ($start !== null) {
-                            $query->where('updated_at', '>=', $start);
-                        }
-                
-                        if ($end !== null) {
-                            $query->where('updated_at', '<=', $end);
-                        }
-                    });
-                })->datetime()->width(3);
+                ])->width(2);
             });
         });
     }
