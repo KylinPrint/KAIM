@@ -127,7 +127,7 @@ class SbindController extends AdminController
             $grid->scrollbarX();
             $grid->showColumnSelector();
             
-            $grid->quickSearch('softwares.name', 'releases.name', 'chips.name', 'comment');
+            $grid->quickSearch('softwares.name', 'solution', 'comment');
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->panel();
                 $filter->expand();
