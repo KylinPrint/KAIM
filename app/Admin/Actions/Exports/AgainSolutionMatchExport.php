@@ -35,7 +35,10 @@ class AgainSolutionMatchExport implements FromCollection, WithHeadings
         $this->data = $curMatchArr;
 
         $this->headings = [
-            '厂商' ,
+            '分类1',
+            '分类2',
+            '厂商',
+            '品牌',
             '产品名称' ,
             '系统版本' ,
             '系统架构' ,
