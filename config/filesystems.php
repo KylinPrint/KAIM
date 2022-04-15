@@ -30,6 +30,13 @@ return [
 
     'disks' => [
 
+        'admin' => [
+            'driver' => 'local',
+            'root' => public_path('app/public'),
+            'visibility' => 'public',
+            'url' => env('APP_URL').'/uploads',
+        ],
+
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app'),
