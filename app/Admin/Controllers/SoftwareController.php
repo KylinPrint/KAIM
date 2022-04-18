@@ -121,7 +121,21 @@ class SoftwareController extends AdminController
             $id = $form->model()->id;
             // $form->display('id');
             $form->text('name')->required()->rules("unique:softwares,name,$id", [ 'unique' => '该外设名已存在' ]);
-            $form->select('manufactors_id')->options(Manufactor::all()->pluck('name','id'))->required();
+            $form->select('manufactors_id')->options(function () {
+                $manufactors = Manufactor::all()->pluck('name','id');
+                $options = [ 0 => '自定义' ];
+                foreach ($manufactors as $key => $value) {
+                    $options[$key] = $value;
+                }
+                return $options;
+            })
+            ->when(0, function (Form $form) {
+                $form->text('new_manufactor', __('新厂商名'))
+                    ->rules(['unique:manufactors,name', 'required_if:manufactors_id,0'], ['unique' => '厂商已存在', 'required_if' => '请填写此字段'])
+                    ->setLabelClass(['asterisk']);;
+                $form->select('isconnected', __('是否建联'))->options([0 => '否', 1 => '是']);
+            })
+            ->required();
             $form->text('version');
             $form->select('stypes_id', __('类型'))->options(Stype::where('parent', '!=', 0)->pluck('name','id'))->required();    
             $form->tags('industries')->options(config('kaim.industry'))->saving(function ($value) { return implode(',', $value); })->required();
@@ -133,6 +147,17 @@ class SoftwareController extends AdminController
             $form->text('am');
             $form->text('tsm');
             $form->text('comment');
+
+            $form->saving(function (Form $form) {
+                if ($form->new_manufactor) {
+                    $new_manufactor = Manufactor::create([
+                        'name' => $form->new_manufactor,
+                        'isconnected' => $form->isconnected,
+                    ]);
+                    $form->manufactors_id = $new_manufactor->id;
+                }
+                $form->deleteInput(['new_manufactor', 'isconnected']);
+            });
         });
     }
 }
