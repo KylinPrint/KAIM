@@ -23,6 +23,7 @@ use App\Models\Brand;
 use App\Models\PbindHistory;
 use App\Models\Type;
 use Dcat\Admin\Admin;
+use Dcat\Admin\Widgets\Card;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
@@ -101,7 +102,13 @@ class PbindController extends AdminController
                     return PhistoryTable::make();
                 });
             $grid->column('solution_name', __('安装包名'));
-            $grid->column('solution', __('适配方案'));
+            $grid->column('solution')->expand(function (Grid\Displayers\Expand $expand) {
+                
+                $expand->button('详情');
+                $card = new Card(null, $this->solution);    
+                return "<div style='padding:10px 10px 0;text-align:center;line-height:40px'>$card</div>";
+
+            });
             $grid->column('class')->hide();
             $grid->column('adaption_type');
             $grid->column('test_type');
@@ -122,8 +129,10 @@ class PbindController extends AdminController
             $grid->column('comment')->limit()->hide();       
             $grid->column('updated_at')->sortable();
 
+            //各种设置
             $grid->scrollbarX();
             $grid->showColumnSelector();
+            $grid->setActionClass(Grid\Displayers\ContextMenuActions::class);
            
             $grid->quickSearch('peripherals.name', 'solution', 'comment');
             $grid->filter(function (Grid\Filter $filter) {

@@ -26,7 +26,8 @@ class SRequestExport extends BaseExport implements WithMapping, WithHeadings, Fr
             '需求来源' ,
             '厂商名称' ,
             '产品名称' ,
-            '外设类型' ,
+            '产品版本',
+            '产品类型' ,
             '涉及行业' ,
             '操作系统版本' ,
             '操作系统小版本号',
@@ -91,7 +92,8 @@ class SRequestExport extends BaseExport implements WithMapping, WithHeadings, Fr
         $CacheArr['需求来源'] = $curSRquest->source;
         $CacheArr['厂商名称'] = $curSRquest->manufactor;
         $CacheArr['产品名称'] = $curSRquest->name;
-        $CacheArr['外设类型'] = $curSRquest->type->name;
+        $CacheArr['产品版本'] = $curSRquest->version;
+        $CacheArr['产品类型'] = $curSRquest->type->name;
         $CacheArr['涉及行业'] = $curSRquest->industry;
         $CacheArr['操作系统版本'] = $curSRquest->release->name;
         $CacheArr['操作系统小版本号'] = $curSRquest->os_subversion;
@@ -112,7 +114,8 @@ class SRequestExport extends BaseExport implements WithMapping, WithHeadings, Fr
             $ExportArr[$i]['需求来源'] = $CacheArr['需求来源'];
             $ExportArr[$i]['厂商名称'] = $CacheArr['厂商名称'];
             $ExportArr[$i]['产品名称'] = $CacheArr['产品名称'];
-            $ExportArr[$i]['外设类型'] = $CacheArr['外设类型'];
+            $ExportArr[$i]['产品版本'] = $CacheArr['产品版本'];
+            $ExportArr[$i]['产品类型'] = $CacheArr['产品类型'];
             $ExportArr[$i]['涉及行业'] = $CacheArr['涉及行业'];
             $ExportArr[$i]['操作系统版本'] = $CacheArr['操作系统版本'];
             $ExportArr[$i]['操作系统小版本号'] = $CacheArr['操作系统小版本号'];

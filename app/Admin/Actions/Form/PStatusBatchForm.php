@@ -48,10 +48,12 @@ class PStatusBatchForm extends Form implements LazyRenderable
             'admin_users_id' => Admin::user()->id,
             'comment' => $comment,
           ]);
+
+          $pbind->statuses_id = $statuses_id;
+          $pbind->save();
         }
 
-        $pbind->statuses_id = $statuses_id;
-        $pbind->save();
+        
       }
         
       return $this->response()->success('提交成功')->refresh();         

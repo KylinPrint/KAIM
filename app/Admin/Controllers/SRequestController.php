@@ -146,6 +146,7 @@ class SRequestController extends AdminController
             $show->field('source');
             $show->field('manufactor');
             $show->field('name');
+            $show->field('version');
             $show->field('stype.name');
             $show->field('industry');
             $show->field('release.name');
@@ -197,7 +198,8 @@ class SRequestController extends AdminController
                 $form->select('source')
                     ->options(config('kaim.adapt_source'))->required();
                 $form->text('manufactor')->required();
-                    $form->text('name')->required();
+                $form->text('name')->required();
+                $form->text('version')->require();
                 $form->select('stype_id')
                     ->options(Stype::all()->pluck('name', 'id'))->required();
                 $form->tags('industry')
@@ -228,7 +230,8 @@ class SRequestController extends AdminController
                     $form->select('source')
                         ->options(config('kaim.adapt_source'))->required();
                     $form->text('manufactor')->required();
-                        $form->text('name')->required();
+                    $form->text('name')->required();
+                    $form->text('version')->require();
                     $form->select('stype_id')
                         ->options(Stype::all()->pluck('name', 'id'))->required();
                     $form->tags('industry')
@@ -272,6 +275,7 @@ class SRequestController extends AdminController
                     $form->display('source');
                     $form->display('manufactor');
                     $form->display('name');
+                    $form->display('version');
                     $form->display('stype.name');
                     $form->display('industry');
                     $form->display('release.name');

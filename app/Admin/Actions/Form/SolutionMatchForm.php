@@ -49,7 +49,7 @@ class SolutionMatchForm extends Form
         $this->file('file', __('上传数据(Excel)'))
             ->autoUpload()
             ->rules('required', ['required' => '文件不能为空'])
-            ->help('<a href="/template/solution_match.xlsx" target="_blank">点击此处</a>下载导入模板,对导入数据进行型号标准化，可能输出多个可能型号，请自行筛选。');
+            ->help('<a href="/template/solution_match.xlsx" target="_blank">点击此处</a>下载导入模板,对导入数据进行型号标准化，可能输出多个可能型号，请自行筛选后填入‘产品名称’列。');
         $this->hidden('admin_user_name')->value(Admin::user()->name);
     }
 }

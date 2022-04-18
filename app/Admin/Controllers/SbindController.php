@@ -23,6 +23,7 @@ use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
 use Dcat\Admin\Http\Controllers\AdminController;
+use Dcat\Admin\Widgets\Card;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
@@ -81,7 +82,7 @@ class SbindController extends AdminController
             $grid->column('softwares.stypes_id',__('软件类型'))->display(function ($stypes_id) {
                 return Stype::where('id',$stypes_id)->pluck('name')->first();
             });
-            $grid->column('releases.name',__('操作系统版本'))->width('15%');
+            $grid->column('releases.name',__('操作系统版本'));
             $grid->column('os_subversion')->hide();
             $grid->column('chips.name',__('芯片名称'));
             $grid->column('adapt_source');
@@ -101,7 +102,14 @@ class SbindController extends AdminController
                 });
             
             $grid->column('solution_name', __('安装包名'));
-            $grid->column('solution');
+            $grid->column('solution')->expand(function (Grid\Displayers\Expand $expand) {
+                
+                $expand->button('详情');
+                $card = new Card(null, $this->solution);    
+                return "<div style='padding:10px 10px 0;text-align:center;line-height:40px'>$card</div>";
+
+            });
+
             $grid->column('class')->hide();
             $grid->column('adaption_type');
             $grid->column('test_type');
@@ -123,9 +131,10 @@ class SbindController extends AdminController
             $grid->column('created_at')->hide();
             $grid->column('updated_at')->sortable()->hide();
 
-
+            //各种设置
             $grid->scrollbarX();
             $grid->showColumnSelector();
+            $grid->setActionClass(Grid\Displayers\ContextMenuActions::class);
             
             $grid->quickSearch('softwares.name', 'solution', 'comment');
             $grid->filter(function (Grid\Filter $filter) {

@@ -9,6 +9,7 @@ return [
         'source' => '需求来源',
         'manufactor' => '厂商名称',
         'name' => '产品名称',
+        'version' => '产品版本',
         'stype_id' => '产品类型',
         'stype' => [
             'name' => '产品类型',
