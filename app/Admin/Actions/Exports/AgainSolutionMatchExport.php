@@ -43,7 +43,7 @@ class AgainSolutionMatchExport implements FromCollection, WithHeadings
             '系统架构' ,
             '解决方案名' ,
             '解决方案详情' ,
-            '适配状态'
+            '适配状态',
         ];
         $this->file = $file;
     }
@@ -95,16 +95,16 @@ class AgainSolutionMatchExport implements FromCollection, WithHeadings
             {
 
                 if(empty($curInput['品牌'])){
-                    $curMatchArr[$i]['匹配型号结果'] = '请填写产品品牌';
+                    $curMatchArr[$i]['解决方案详情'] = '请填写产品品牌';
                     ++$i;
                     continue;
                 }
     
                 $curBrandId = (Brand::where('name','like','%'.$curInput['品牌'].'%')->pluck('id')->first())?:(Brand::where('alias',$curInput['品牌'])->pluck('id')->first());
-
+                
                 
                 if(empty($curBrandId)){
-                    $curMatchArr[$i]['匹配型号结果'] = '请核实产品品牌或添加新品牌';
+                    $curMatchArr[$i]['解决方案详情'] = '请核实产品品牌或添加新品牌';
                     ++$i;
                     continue;
                 }
@@ -125,13 +125,12 @@ class AgainSolutionMatchExport implements FromCollection, WithHeadings
                         ['releases_id',$curReleaseId],
                         ['chips_id',$curChipId],])
                     ->with('peripherals','releases','chips','statuses')
-                    ->first();
-
-                    $curPeripheral = Peripheral::with('types')->find($curPeripheralId);
+                    ->first();           
                     
-                    //暂未加适配状态
                     if($curPbind)
                     { 
+                        $curPeripheral = Peripheral::with('types')->find($curPeripheralId);
+
                         $curMatchArr[$i]['分类2'] = $curPeripheral->types->name;
                         $curMatchArr[$i]['解决方案名'] = $curPbind->solution_name;
                         $curMatchArr[$i]['解决方案详情'] = $curPbind->solution;
@@ -143,7 +142,26 @@ class AgainSolutionMatchExport implements FromCollection, WithHeadings
                 }
                 else
                 {
-                    $curMatchArr[$i]['解决方案详情'] = '暂无该型号记录,或核实型号后重新上传';
+                    $curPbind = Pbind::where([
+                        ['peripherals_id','=',$curPeripheralId],
+                        ['solution_name','like','%'.'系统集成'.'%'],])
+                    ->with('peripherals','releases','chips','statuses')
+                    ->first();
+
+                    if($curPbind)
+                    {
+                        $curPeripheral = Peripheral::with('types')->find($curPeripheralId);
+
+                        $curMatchArr[$i]['分类2'] = $curPeripheral->types->name;
+                        $curMatchArr[$i]['解决方案名'] = $curPbind->solution_name;
+                        $curMatchArr[$i]['解决方案详情'] = '已匹配'.' '.$curPbind->releases->name.' '.$curPbind->chips->name.' 上系统集成方案：'.$curPbind->solution;
+                        $curMatchArr[$i]['适配状态'] = '待验证';
+                    }
+                    else
+                    {
+                        $curMatchArr[$i]['解决方案详情'] = '暂无该型号记录,或核实型号后重新上传';
+                    }
+                    
                 }      
                 ++$i;
             }
@@ -186,7 +204,6 @@ class AgainSolutionMatchExport implements FromCollection, WithHeadings
 
                     $curSoftware = Software::with('stypes')->find($curSoftwareId);
                     
-                    //暂未加适配状态
                     if($curSbind)
                     {
                         $curMatchArr[$i]['分类2'] = $curSoftware->stypes->name;
