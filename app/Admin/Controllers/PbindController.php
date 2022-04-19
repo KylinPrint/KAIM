@@ -187,6 +187,14 @@ class PbindController extends AdminController
                     });
                 })->datetime()->width(4);
 
+                $filter->where('brand', function ($query) {
+                    $query->whereHas('peripherals', function ($query) {
+                        $query->whereHas('brands', function ($query) {
+                            $query->where('name', 'like',"%{$this->input}%");
+                        });
+                    });
+                }, '品牌')->width(4);
+
                 $filter->where('related', function ($query) {
                     if($this->input == 1)
                     {
