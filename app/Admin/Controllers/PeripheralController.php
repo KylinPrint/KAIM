@@ -22,6 +22,7 @@ class PeripheralController extends AdminController
 {
     public function index(Content $content)
     {
+        // 生成下拉菜单选项
         $types = array();
         $options = array();
         foreach (Type::select('id', 'name', 'parent')->get()->toarray() as $query) {
@@ -38,6 +39,7 @@ class PeripheralController extends AdminController
         // type设置默认值防止不带参数访问外设页面
         if(!ctype_alnum($param)) { $param = $options[0]; }
         
+        // 创建下拉菜单
         $dropdown = Dropdown::make($options)
             ->button('选择外设分类') // 设置按钮
             ->buttonClass('btn btn-white  waves-effect') // 设置按钮样式
@@ -52,8 +54,9 @@ class PeripheralController extends AdminController
         return $content
             ->header('外设')
             ->description('列表')
-            ->body($dropdown)
-            ->body('<p>')
+            // 暂时隐藏下拉菜单
+            // ->body($dropdown)
+            // ->body('<p>')
             ->body($this->grid());
     }
 
