@@ -199,7 +199,7 @@ class SRequestController extends AdminController
                     ->options(config('kaim.adapt_source'))->required();
                 $form->text('manufactor')->required();
                 $form->text('name')->required();
-                $form->text('version')->require();
+                $form->text('version')->required();
                 $form->select('stype_id')
                     ->options(Stype::all()->pluck('name', 'id'))->required();
                 $form->tags('industry')
@@ -231,7 +231,7 @@ class SRequestController extends AdminController
                         ->options(config('kaim.adapt_source'))->required();
                     $form->text('manufactor')->required();
                     $form->text('name')->required();
-                    $form->text('version')->require();
+                    $form->text('version')->required();
                     $form->select('stype_id')
                         ->options(Stype::all()->pluck('name', 'id'))->required();
                     $form->tags('industry')
