@@ -15,6 +15,7 @@ yarn-error.log
 
 # Dcat-Admin
 dcat_admin_ide_helper.php
+/dcat-admin-extensions
 
 # Docker
 docker-compose.override.yml
