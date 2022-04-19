@@ -130,7 +130,7 @@ class AgainSolutionMatchExport implements FromCollection, WithHeadings
                     $curPeripheral = Peripheral::with('types')->find($curPeripheralId);
                     
                     //暂未加适配状态
-                    if($curPbind->count())
+                    if($curPbind)
                     { 
                         $curMatchArr[$i]['分类2'] = $curPeripheral->types->name;
                         $curMatchArr[$i]['解决方案名'] = $curPbind->solution_name;
@@ -187,7 +187,7 @@ class AgainSolutionMatchExport implements FromCollection, WithHeadings
                     $curSoftware = Software::with('stypes')->find($curSoftwareId);
                     
                     //暂未加适配状态
-                    if($curSbind->count())
+                    if($curSbind)
                     {
                         $curMatchArr[$i]['分类2'] = $curSoftware->stypes->name;
                         $curMatchArr[$i]['解决方案名'] = $curSbind->solution_name;
