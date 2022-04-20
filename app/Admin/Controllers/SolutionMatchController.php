@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Storage;
 
 class SolutionMatchController extends AdminController
 {
+    protected $description = ['index'  => '文件会在生成7天后删除，请及时保存.',];
     /**
      * Make a grid builder.
      *
@@ -21,6 +22,7 @@ class SolutionMatchController extends AdminController
     protected function grid()
     {
         return Grid::make(new SolutionMatch(), function (Grid $grid) {
+
             $grid->model()->orderBy('created_at', 'desc');
 
             $grid->disableCreateButton();
