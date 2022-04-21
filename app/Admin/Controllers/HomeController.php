@@ -76,7 +76,7 @@ class HomeController extends Controller
             $data[] = [
                 'id' => $sbind['id'],
                 'type' => '软件适配',
-                'manufactor' => Manufactor::find($software->countmanufactors_id)->name,
+                'manufactor' => Manufactor::find($software->manufactors_id)->name,
                 'name' => $software->name,
                 'release' => Release::find($sbind['releases_id'])->name,
                 'chip' => Chip::find($sbind['chips_id'])->name,
