@@ -95,7 +95,7 @@ class SolutionMatchExport implements FromCollection, WithHeadings
                     continue;
                 }
     
-                $curBrandId = (Brand::where('name','like','%'.$curInput['品牌'].'%')->pluck('id')->first())?:(Brand::where('alias',$curInput['品牌'])->pluck('id')->first());
+                $curBrandId = (Brand::where('name','like','%'.$curInput['品牌'].'%')->pluck('id')->first())?:(Brand::where('alias','like','%'.$curInput['品牌'].'%')->pluck('id')->first());
                 
                 if(empty($curBrandId)){
                     $curMatchArr[$i]['匹配型号结果'] = '请核实产品品牌或添加新品牌';
@@ -105,10 +105,18 @@ class SolutionMatchExport implements FromCollection, WithHeadings
 
                 preg_match('/\d+/',$curInput['产品名称'],$InputNum);
 
-                $curDeviceNameArr = Peripheral::where([
-                    ['name','like','%'.$InputNum[0].'%'],
-                    ['brands_id',$curBrandId],
-                ])->pluck('name');
+                if(!$InputNum){
+                    $curDeviceNameArr = Peripheral::where([
+                        ['name','like','%'.$curInput['产品名称'].'%'],
+                        ['brands_id',$curBrandId],
+                    ])->pluck('name');
+                }
+                else{
+                    $curDeviceNameArr = Peripheral::where([
+                        ['name','like','%'.$InputNum[0].'%'],
+                        ['brands_id',$curBrandId],
+                    ])->pluck('name');
+                }
 
                 if($curDeviceNameArr->isEmpty()){++$i;continue;}
                 $curMatchArr[$i]['匹配型号结果'] = implode('/',$curDeviceNameArr->toArray());
