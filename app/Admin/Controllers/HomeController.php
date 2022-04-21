@@ -49,8 +49,8 @@ class HomeController extends Controller
                 elseif ($this->type == "外设需求") { $type = 'prequests'; }
                 $href = admin_url($type.'/'.$this->id);
                 return "
-                    <button data-action='refresh' class='btn btn-primary btn-outline'>
-                        <a href='$href'> 去处理</a>
+                    <button onclick=\"window.location.href='$href'\" class=\"btn btn-primary btn-outline\">
+                        去处理
                     </button>
                 ";
             });
@@ -76,11 +76,11 @@ class HomeController extends Controller
             $data[] = [
                 'id' => $sbind['id'],
                 'type' => '软件适配',
-                'manufactor' => Manufactor::find($software->value('manufactors_id'))->value('name'),
-                'name' => $software->value('name'),
-                'release' => Release::find($sbind['releases_id'])->value('name'),
-                'chip' => Chip::find($sbind['chips_id'])->value('name'),
-                'status' => Status::find($sbind['statuses_id'])->value('name'),
+                'manufactor' => Manufactor::find($software->countmanufactors_id)->name,
+                'name' => $software->name,
+                'release' => Release::find($sbind['releases_id'])->name,
+                'chip' => Chip::find($sbind['chips_id'])->name,
+                'status' => Status::find($sbind['statuses_id'])->name,
                 'updated_at' => $sbind['updated_at'],
             ];
         }
@@ -91,11 +91,11 @@ class HomeController extends Controller
                 'id' => $pbind['id'],
                 'type' => '外设适配',
                 // 外设的厂商键实际值为品牌
-                'manufactor' => Brand::find($peripheral->value('brands_id'))->value('name'),
-                'name' => $peripheral->value('name'),
-                'release' => Release::find($pbind['releases_id'])->value('name'),
-                'chip' => Chip::find($pbind['chips_id'])->value('name'),
-                'status' => Status::find($pbind['statuses_id'])->value('name'),
+                'manufactor' => Brand::find($peripheral->brands_id)->name,
+                'name' => $peripheral->name,
+                'release' => Release::find($pbind['releases_id'])->name,
+                'chip' => Chip::find($pbind['chips_id'])->name,
+                'status' => Status::find($pbind['statuses_id'])->name,
                 'updated_at' => $pbind['updated_at'],
             ];
         }
@@ -106,8 +106,8 @@ class HomeController extends Controller
                 'type' => '软件需求',
                 'manufactor' => $srequest['manufactor'],
                 'name' => $srequest['name'],
-                'release' => Release::find($srequest['release_id'])->value('name'),
-                'chip' => Chip::find($srequest['chip_id'])->value('name'),
+                'release' => Release::find($srequest['release_id'])->name,
+                'chip' => Chip::find($srequest['chip_id'])->name,
                 'status' => $srequest['status'],
                 'updated_at' => $srequest['updated_at'],
             ];
@@ -119,13 +119,13 @@ class HomeController extends Controller
                 'type' => '外设需求',
                 'manufactor' => $prequest['manufactor'],
                 'name' => $prequest['name'],
-                'release' => Release::find($prequest['release_id'])->value('name'),
-                'chip' => Chip::find($prequest['chip_id'])->value('name'),
+                'release' => Release::find($prequest['release_id'])->name,
+                'chip' => Chip::find($prequest['chip_id'])->name,
                 'status' => $prequest['status'],
                 'updated_at' => $prequest['updated_at'],
             ];
         }
-        
+
         return $data;
     }
 }
