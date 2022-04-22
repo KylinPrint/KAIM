@@ -8,6 +8,7 @@ use App\Models\Chip;
 use App\Models\Manufactor;
 use App\Models\Release;
 use App\Models\Sbind;
+use App\Models\SbindHistory;
 use App\Models\Software;
 use App\Models\Status;
 use App\Models\Type;
@@ -101,8 +102,6 @@ class SbindImport implements ToCollection, WithHeadingRow, WithValidation
                 $curSoftwareId = DB::table('softwares')->insertGetId($softwareInsert);
             }
 
-            
-
             $sbindInsert =
             [
                 'softwares_id' => $curSoftwareId,
@@ -129,31 +128,75 @@ class SbindImport implements ToCollection, WithHeadingRow, WithValidation
                 'created_at' => $curtime,
                 'updated_at' => $curtime,
             ];
-            $a = 0;
+            
             $sbindInsertUnique = 
             [
                 'softwares_id' => $curSoftwareId,
                 'chips_id' => $row['芯片'],
                 'releases_id' => $row['适配系统'],
             ];
-            Rule::unique('sbinds')->where(function ($query) use ($sbindInsertUnique)
+
+            $a = Sbind::updateOrCreate(
+                $sbindInsertUnique,
+                [
+                    'os_subversion' => $row['操作系统小版本号']?:'',
+                    'releases_id' => Release::where('name',$row['操作系统版本'])->pluck('id')->first(),
+                    'adapt_source' => $row['引入来源'],
+                    'adapted_before' => $this->bools($row['是否适配过国产CPU']),
+                    'statuses_id' => Status::where('name',$row['当前细分适配状态'])->pluck('id')->first(),
+                    'admin_users_id' => AdminUser::where('name',$row['当前适配状态责任人'])->pluck('id')->first(),
+                    'softname' => $row['安装包名称'],
+                    'solution' => $row['安装包下载地址'],
+                    'class' => $row['兼容等级'],
+                    'adaption_type' => $row['适配类型'],
+                    'test_type' => $row['测试方式'],
+                    'kylineco' => $this->bools($row['是否上传生态网站']),
+                    'appstore' => $this->bools($row['是否上架软件商店']),
+                    'iscert' => $row['是否互认证'],
+                    'comment' => $row['备注'],
+                    'updated_at' => $curtime,
+                ]
+            );
+
+            $curSbindId = $a->id;
+            $b = $a->wasRecentlyCreated;
+            $c = $a->wasChanged();
+
+            if($b)
             {
-                return $query->where($sbindInsertUnique);
-            });
+                $sbindhistory = 
+                [
+                    'sbind_id' => $curSbindId,
+                    'status_old' => null,
+                    'status_new' => $sbindInsert['statuses_id'],
+                    'admin_users_id' => $sbindInsert['admin_users_id'],
+                    'comment' => null,
+                    'created_at' => $curtime,
+                    'updated_at' => $curtime,
+                ];
 
-            $curSbindId = DB::table('sbinds')->insertGetId($sbindInsert);
+                DB::table('sbind_histories')->inset($sbindhistory);
+            }
 
-            $sbindhistory = 
-            [
-                'sbind_id' => $curSbindId,
-                'status_old' => null,
-                'status_new' => $sbindInsert['statuses_id'],
-                'admin_users_id' => $sbindInsert['admin_users_id'],
-                'comment' => null,
-                'created_at' => $curtime,
-                'updated_at' => $curtime,
-            ];
-            DB::table('sbind_histories')->inset($sbindhistory);
+            if(!$b && $c)
+            {
+                $curHistoryId = SbindHistory::where('sbind_id',$curSbindId)->orderBy('id','DESC')->pluck('status_new')->first();
+                if($curHistoryId != $sbindInsert['statuses_id'])
+                {
+                    $sbindhistory = 
+                [
+                    'sbind_id' => $curSbindId,
+                    'status_old' => $curHistoryId,
+                    'status_new' => $sbindInsert['statuses_id'],
+                    'admin_users_id' => $sbindInsert['admin_users_id'],
+                    'comment' => null,
+                    'created_at' => $curtime,
+                    'updated_at' => $curtime,
+                ];
+                DB::table('sbind_histories')->insert($sbindhistory);
+                }
+            }
+            
         }
         
     }
