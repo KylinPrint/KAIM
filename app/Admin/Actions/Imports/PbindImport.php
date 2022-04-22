@@ -92,13 +92,13 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
                 }
             }
 
-            $curBrandId = Brand::where('name',$row['品牌'])->pluck('id')->first();
+            $curBrandId = Brand::where('name','like','%'.$row['品牌'].'%')->pluck('id')->first();
             if(empty($curBrandId))
             {
                 $brandInsert = 
                 [
                     'name' => $row['品牌'],
-                    'alias' => '',
+                    'alias' => null,
                     'created_at' => $curtime,
                     'updated_at' => $curtime,
                 ];
