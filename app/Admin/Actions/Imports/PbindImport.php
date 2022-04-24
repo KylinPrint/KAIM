@@ -104,7 +104,6 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
                 ];
                 $curBrandId = DB::table('brands')->insertGetId($brandInsert);
             }
-            
 
             $curPeripheralId = Peripheral::where('name',$row['外设型号'])->pluck('id')->first();
             if(empty($curPeripheralId))
@@ -115,8 +114,8 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
                     'manufactors_id' => isset($curManufactorId) ? $curManufactorId : null,
                     'brands_id' => $curBrandId,
                     'types_id' => Type::where('name',$row['外设类型二'])->pluck('id')->first(),
-                    'release_date' => date('Y-m-d',($row['发布日期']-25569)*24*3600),
-                    'eosl_date' => date('Y-m-d',($row['服务终止日期']-25569)*24*3600),
+                    'release_date' => $row['发布日期'] ? date('Y-m-d',($row['发布日期']-25569)*24*3600):null,
+                    'eosl_date' => $row['服务终止日期'] ? date('Y-m-d',($row['服务终止日期']-25569)*24*3600):null,
                     'industries' => $row['行业分类'],
                     'comment' => $row['外设描述'],
                     'created_at' => $curtime,
@@ -127,14 +126,6 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
 
             $pbindInsert =
             [
-                'peripherals_id' => $curPeripheralId,
-                'chips_id' => 
-                    Chip::where([
-                        ['name',$row['芯片']],
-                        ['arch','like','%'.$row['架构'].'%']
-                    ])->pluck('id')
-                    ->first(),
-                'releases_id' => Release::where('name',$row['操作系统版本'])->pluck('id')->first(),
                 'os_subversion' => $row['操作系统小版本']?:'',
                 'statuses_id' => Status::where('name',$row['当前细分适配状态'])->pluck('id')->first(),
                 'class' => $row['兼容等级'],
@@ -149,47 +140,24 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
                 'kylineco' => $this->bools($row['是否上传生态网站']),
                 'appstore' => $this->bools($row['是否上架软件商店']),
                 'iscert' => $this->bools($row['是否互认证']),
-                'created_at' => $curtime,
+                'start_time' => $row['适配开始时间'] ? date('Y-m-d',($row['适配开始时间']-25569)*24*3600):null,
+                'complete_time' => $row['适配完成时间'] ? date('Y-m-d',($row['适配完成时间']-25569)*24*3600):null,
                 'updated_at' => $curtime,
             ];
-            // $pbindInsertUnique = 
-            // [
-            //     'peripherals_id' => $curPeripheralId,
-            //     'chips_id' => Chip::where('name',$row['芯片'])->pluck('id')->first(),
-            //     'releases_id' => Release::where('name',$row['操作系统版本'])->pluck('id')->first(),
-            // ];
+            $pbindInsertUnique = 
+            [
+                'peripherals_id' => $curPeripheralId,
+                'chips_id' => Chip::where('name','like','%'.$row['芯片'].'%')->pluck('id')->first(),
+                'releases_id' => Release::where('name',$row['操作系统版本'])->pluck('id')->first(),
+            ];
             
-            $a = Pbind::updateOrCreate(
-                [
-                    'peripherals_id' => $curPeripheralId,
-                    'chips_id' => Chip::where('name',$row['芯片'])->pluck('id')->first(),
-                    'releases_id' => Release::where('name',$row['操作系统版本'])->pluck('id')->first(),
-                ],
-                [
-                    'os_subversion' => $row['操作系统小版本']?:'',
-                    'statuses_id' => $pbindInsert['statuses_id'],
-                    'class' => $pbindInsert['class'],
-                    'solution_name' => $pbindInsert['solution_name'],
-                    'solution' => $pbindInsert['solution'],
-                    'comment' => $pbindInsert['comment'],
-                    'adapt_source' => $pbindInsert['adapt_source'],
-                    'adapted_before' => $pbindInsert['adapted_before'],
-                    'admin_users_id' => $pbindInsert['admin_users_id'],
-                    'adaption_type' => $pbindInsert['adaption_type'],
-                    'test_type' => $pbindInsert['test_type'],
-                    'kylineco' => $pbindInsert['kylineco'],
-                    'appstore' => $pbindInsert['appstore'],
-                    'iscert' => $pbindInsert['iscert'],
-                    'updated_at' => $curtime,
-                ]
-            );
-
-
-            //暂时未添加更新判断
+            $a = Pbind::updateOrCreate($pbindInsertUnique,$pbindInsert);
+     
             $curPbindId = $a->id;
             $b = $a->wasRecentlyCreated;
             $c = $a->wasChanged();
 
+            //新增数据
             if($b)
             {
                 $pbindhistory = 
@@ -204,23 +172,25 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
                 ];
                 DB::table('pbind_histories')->insert($pbindhistory);
             }
+
+            //更新数据
             if(!$b && $c)
             {
                 $curHistoryId = PbindHistory::where('pbind_id',$curPbindId)->orderBy('id','DESC')->pluck('status_new')->first();
-                if($curHistoryId != $pbindInsert['statuses_id'])
-                {
-                    $pbindhistory = 
+                
+                $pbindhistory = 
                 [
-                    'pbind_id' => $curPbindId,
-                    'status_old' => $curHistoryId,
-                    'status_new' => $pbindInsert['statuses_id'],
-                    'admin_users_id' => $pbindInsert['admin_users_id'],
-                    'comment' => null,
-                    'created_at' => $curtime,
-                    'updated_at' => $curtime,
+                'pbind_id' => $curPbindId,
+                'status_old' => $curHistoryId,
+                'status_new' => $pbindInsert['statuses_id'],
+                'admin_users_id' => $pbindInsert['admin_users_id'],
+                'comment' => null,
+                'created_at' => $curtime,
+                'updated_at' => $curtime,
                 ];
+
                 DB::table('pbind_histories')->insert($pbindhistory);
-                }
+                
             }
            
         }

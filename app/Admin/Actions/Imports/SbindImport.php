@@ -104,14 +104,7 @@ class SbindImport implements ToCollection, WithHeadingRow, WithValidation
 
             $sbindInsert =
             [
-                'softwares_id' => $curSoftwareId,
-                'chips_id' => Chip::where([
-                    ['name',$row['芯片']],
-                    ['arch',$row['架构']]
-                ])->pluck('id')
-                ->first(),
                 'os_subversion' => $row['操作系统小版本号']?:'',
-                'releases_id' => Release::where('name',$row['操作系统版本'])->pluck('id')->first(),
                 'adapt_source' => $row['引入来源'],
                 'adapted_before' => $this->bools($row['是否适配过国产CPU']),
                 'statuses_id' => Status::where('name',$row['当前细分适配状态'])->pluck('id')->first(),
@@ -125,38 +118,21 @@ class SbindImport implements ToCollection, WithHeadingRow, WithValidation
                 'appstore' => $this->bools($row['是否上架软件商店']),
                 'iscert' => $row['是否互认证'],
                 'comment' => $row['备注'],
-                'created_at' => $curtime,
                 'updated_at' => $curtime,
             ];
             
             $sbindInsertUnique = 
             [
                 'softwares_id' => $curSoftwareId,
-                'chips_id' => $row['芯片'],
-                'releases_id' => $row['适配系统'],
+                'chips_id' => Chip::where([
+                    ['name','like','%'.$row['芯片'].'%'],
+                    ['arch',$row['架构']]
+                ])->pluck('id')
+                ->first(),
+                'releases_id' => Release::where('name',$row['操作系统版本'])->pluck('id')->first(),
             ];
 
-            $a = Sbind::updateOrCreate(
-                $sbindInsertUnique,
-                [
-                    'os_subversion' => $row['操作系统小版本号']?:'',
-                    'releases_id' => Release::where('name',$row['操作系统版本'])->pluck('id')->first(),
-                    'adapt_source' => $row['引入来源'],
-                    'adapted_before' => $this->bools($row['是否适配过国产CPU']),
-                    'statuses_id' => Status::where('name',$row['当前细分适配状态'])->pluck('id')->first(),
-                    'admin_users_id' => AdminUser::where('name',$row['当前适配状态责任人'])->pluck('id')->first(),
-                    'softname' => $row['安装包名称'],
-                    'solution' => $row['安装包下载地址'],
-                    'class' => $row['兼容等级'],
-                    'adaption_type' => $row['适配类型'],
-                    'test_type' => $row['测试方式'],
-                    'kylineco' => $this->bools($row['是否上传生态网站']),
-                    'appstore' => $this->bools($row['是否上架软件商店']),
-                    'iscert' => $row['是否互认证'],
-                    'comment' => $row['备注'],
-                    'updated_at' => $curtime,
-                ]
-            );
+            $a = Sbind::updateOrCreate($sbindInsertUnique,$sbindInsert);
 
             $curSbindId = $a->id;
             $b = $a->wasRecentlyCreated;
@@ -181,9 +157,8 @@ class SbindImport implements ToCollection, WithHeadingRow, WithValidation
             if(!$b && $c)
             {
                 $curHistoryId = SbindHistory::where('sbind_id',$curSbindId)->orderBy('id','DESC')->pluck('status_new')->first();
-                if($curHistoryId != $sbindInsert['statuses_id'])
-                {
-                    $sbindhistory = 
+                
+                $sbindhistory = 
                 [
                     'sbind_id' => $curSbindId,
                     'status_old' => $curHistoryId,
@@ -194,7 +169,7 @@ class SbindImport implements ToCollection, WithHeadingRow, WithValidation
                     'updated_at' => $curtime,
                 ];
                 DB::table('sbind_histories')->insert($sbindhistory);
-                }
+                
             }
             
         }
