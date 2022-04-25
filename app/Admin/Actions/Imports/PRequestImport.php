@@ -9,9 +9,11 @@ use App\Models\Chip;
 use App\Models\Manufactor;
 use App\Models\Peripheral;
 use App\Models\PRequest;
+use App\Models\PRequestHistory;
 use App\Models\Release;
 use App\Models\Status;
 use App\Models\Type;
+use Dcat\Admin\Admin;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
@@ -82,7 +84,7 @@ class PRequestImport implements ToCollection, WithHeadingRow, WithValidation
             ];
             
             
-            $prequestInsertUnique = 
+            $pRequestInsertUnique = 
             [   
                 'manufactor' => $row['厂商名称'],
                 'brand' => $row['品牌名称'], 
@@ -92,11 +94,28 @@ class PRequestImport implements ToCollection, WithHeadingRow, WithValidation
             ];
             
 
-            $a = PRequest::updateOrCreate($prequestInsertUnique,$PRequestInsert);
+            $a = PRequest::updateOrCreate($pRequestInsertUnique,$PRequestInsert);
+            $curPrequestId = $a->id;
+            $b = $a->wasRecentlyCreated;
+            $c = $a->wasChanged();
+
+            $curtime = date('Y-m-d H:i:s');
      
-            // $curPbindId = $a->id;
-            // $b = $a->wasRecentlyCreated;
-            // $c = $a->wasChanged();
+            //新增数据
+            if($b)
+            {
+                $pRequesthistory = 
+                [
+                    'p_request_id' => $curPrequestId,
+                    'status_old' => null,
+                    'status_new' => '已提交',
+                    'operator' => Admin::user()->id,
+                    'comment' => null,
+                    'created_at' => $curtime,
+                    'updated_at' => $curtime,
+                ];
+                DB::table('p_request_histories')->insert($pRequesthistory);
+            }
   
         }
         
@@ -111,14 +130,14 @@ class PRequestImport implements ToCollection, WithHeadingRow, WithValidation
     public function rules(): array
     {
         return [
-            'pbindid' => Rule::unique('pbinds', 'pbindid'), 
+            'prequestid' => Rule::unique('prequests', 'prequestid'), 
         ];
     }
 
     public function customValidationMessages()
     {
         return [
-            'pbindid.unique' => '导入存在重复数据',
+            'prequestid.unique' => '导入存在重复数据',
         ];
     }
 }

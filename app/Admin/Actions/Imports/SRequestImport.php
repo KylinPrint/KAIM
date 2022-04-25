@@ -8,6 +8,7 @@ use App\Models\Chip;
 use App\Models\Release;
 use App\Models\SRequest;
 use App\Models\Stype;
+use Dcat\Admin\Admin;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
@@ -77,7 +78,7 @@ class SRequestImport implements ToCollection, WithHeadingRow, WithValidation
                 'updated_at' => date('Y-m-d H:i:s'),
             ];
             
-            $srequestInsertUnique = 
+            $sRequestInsertUnique = 
             [   
                 'manufactor' => $row['厂商名称'], 
                 'name' => $row['产品名称'], 
@@ -86,11 +87,29 @@ class SRequestImport implements ToCollection, WithHeadingRow, WithValidation
                 'release_id' => Release::where('name',$row['操作系统版本'])->pluck('id')->first(),
             ];
             
-            $a = SRequest::updateOrCreate($srequestInsertUnique,$SRequestInsert);
+            $a = SRequest::updateOrCreate($sRequestInsertUnique,$SRequestInsert);
             
-            // $curPbindId = $a->id;
-            // $b = $a->wasRecentlyCreated;
-            // $c = $a->wasChanged();
+            $curSRequestId = $a->id;
+            $b = $a->wasRecentlyCreated;
+            $c = $a->wasChanged();
+
+            $curtime = date('Y-m-d H:i:s');
+     
+            //新增数据
+            if($b)
+            {
+                $sRequesthistory = 
+                [
+                    's_request_id' => $curSRequestId,
+                    'status_old' => null,
+                    'status_new' => '已提交',
+                    'operator' => Admin::user()->id,
+                    'comment' => null,
+                    'created_at' => $curtime,
+                    'updated_at' => $curtime,
+                ];
+                DB::table('s_request_histories')->insert($sRequesthistory);
+            }
         }
         
     }

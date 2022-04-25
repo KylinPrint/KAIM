@@ -385,7 +385,7 @@ class PRequestController extends AdminController
                                 'chips_id' => $form->chip_id,
                                 'adapt_source' => $form->source,
                                 'statuses_id' => $form->statuses_id,
-                                'admin_users_id' => $form->admin_users_id,
+                                'user_name' => AdminUser::where('id',$form->admin_users_id)->pluck('name')->first(),
                                 'kylineco' => $form->kylineco,
                                 'appstore' => $form->appstore,
                                 'iscert' => $form->iscert,
@@ -395,7 +395,7 @@ class PRequestController extends AdminController
                                 'pbind_id' => $pbind_id,
                                 'status_old' => NULL,
                                 'status_new' => $form->statuses_id,
-                                'admin_users_id' => $form->admin_users_id,
+                                'user_name' => AdminUser::where('id',$form->admin_users_id)->pluck('name')->first(),
                                 'comment' => $form->statuses_comment,
                             ]);
                         }
