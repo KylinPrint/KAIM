@@ -8,6 +8,7 @@ use App\Models\Brand;
 use App\Models\Chip;
 use App\Models\Manufactor;
 use App\Models\Peripheral;
+use App\Models\PRequest;
 use App\Models\Release;
 use App\Models\Status;
 use App\Models\Type;
@@ -64,14 +65,9 @@ class PRequestImport implements ToCollection, WithHeadingRow, WithValidation
             $PRequestInsert =
             [
                 'source' => $row['需求来源'],
-                'manufactor' => $row['厂商名称'],
-                'brand' => $row['品牌名称'],
-                'name' => $row['产品名称'],
                 'type_id' => Type::where('name',$row['分类三'])->pluck('id')->first(),
                 'industry' => $row['涉及行业'],
-                'release_id' => Release::where('name',$row['操作系统版本'])->pluck('id')->first(),
                 'os_subversion' => $row['操作系统小版本号'],
-                'chip_id' => Chip::where('name',$row['芯片'])->pluck('id')->first(),
                 'project_name' => $row['项目名称'],
                 'amount' => $row['涉及数量'],
                 'project_status' => $row['项目状态'],
@@ -83,8 +79,6 @@ class PRequestImport implements ToCollection, WithHeadingRow, WithValidation
                 'status' => '已提交',
                 'bd_id' => AdminUser::where('name',$row['需求接收人'])->pluck('id')->first(),
                 'comment' => $row['备注'],
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s'),
             ];
             
             
@@ -97,12 +91,12 @@ class PRequestImport implements ToCollection, WithHeadingRow, WithValidation
                 'releases_id' => Release::where('name',$row['操作系统版本'])->pluck('id')->first(),
             ];
             
-            Rule::unique('p_requests')->where(function ($query) use ($prequestInsertUnique)
-            {
-                return $query->where($prequestInsertUnique);
-            });
 
-            DB::table('p_requests')->insert($PRequestInsert);
+            $a = PRequest::updateOrCreate($prequestInsertUnique,$PRequestInsert);
+     
+            // $curPbindId = $a->id;
+            // $b = $a->wasRecentlyCreated;
+            // $c = $a->wasChanged();
   
         }
         

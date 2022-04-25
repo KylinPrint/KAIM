@@ -6,6 +6,7 @@ use App\Exceptions\RequiredNotFoundException;
 use App\Models\AdminUser;
 use App\Models\Chip;
 use App\Models\Release;
+use App\Models\SRequest;
 use App\Models\Stype;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -58,14 +59,9 @@ class SRequestImport implements ToCollection, WithHeadingRow, WithValidation
             $SRequestInsert =
             [
                 'source' => $row['需求来源'],
-                'manufactor' => $row['厂商名称'],
-                'name' => $row['产品名称'],
-                'version' => $row['产品版本'],
                 'stype_id' => Stype::where('name',$row['分类三'])->pluck('id')->first(),
                 'industry' => $row['涉及行业'],
-                'release_id' => Release::where('name',$row['操作系统版本'])->pluck('id')->first(),
                 'os_subversion' => $row['操作系统小版本号'],
-                'chip_id' => Chip::where('name',$row['芯片'])->pluck('id')->first(),
                 'project_name' => $row['项目名称'],
                 'amount' => $row['涉及数量'],
                 'project_status' => $row['项目状态'],
@@ -90,13 +86,11 @@ class SRequestImport implements ToCollection, WithHeadingRow, WithValidation
                 'releases_id' => Release::where('name',$row['操作系统版本'])->pluck('id')->first(),
             ];
             
-            Rule::unique('s_requests')->where(function ($query) use ($srequestInsertUnique)
-            {
-                return $query->where($srequestInsertUnique);
-            });
-
-            DB::table('s_requests')->insert($SRequestInsert);
-  
+            $a = SRequest::updateOrCreate($srequestInsertUnique,$SRequestInsert);
+            
+            // $curPbindId = $a->id;
+            // $b = $a->wasRecentlyCreated;
+            // $c = $a->wasChanged();
         }
         
     }
