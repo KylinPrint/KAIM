@@ -82,8 +82,8 @@ class SRequestImport implements ToCollection, WithHeadingRow, WithValidation
                 'manufactor' => $row['厂商名称'], 
                 'name' => $row['产品名称'], 
                 'version' => $row['产品版本'],
-                'chips_id' => Chip::where('name',$row['芯片'])->pluck('id')->first(),
-                'releases_id' => Release::where('name',$row['操作系统版本'])->pluck('id')->first(),
+                'chip_id' => Chip::where('name',$row['芯片'])->pluck('id')->first(),
+                'release_id' => Release::where('name',$row['操作系统版本'])->pluck('id')->first(),
             ];
             
             $a = SRequest::updateOrCreate($srequestInsertUnique,$SRequestInsert);

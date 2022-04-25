@@ -10,6 +10,31 @@ class SRequest extends Model
 {
 	use HasDateTimeFormatter;
 
+	protected $fillable = 
+	[
+		'source',
+		'manufactor',
+		'name',
+		'version',
+		'stype_id',
+		'industry',
+		'release_id',
+		'os_subversion',
+		'chip_id',
+		'project_name',
+		'amount',
+		'project_status',
+		'level',
+		'manufactor_contact',
+		'et',
+		'requester_name',
+		'requester_contact',
+		'status',
+		'bd_id',
+		'sbind_id',
+		'comment',
+	];
+
 	public function stype() { return $this->belongsTo(Stype::class); }
 
 	public function release() { return $this->belongsTo(Release::class); }
