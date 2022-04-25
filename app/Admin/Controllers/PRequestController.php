@@ -88,6 +88,9 @@ class PRequestController extends AdminController
             $grid->column('comment');
             $grid->column('created_at');
 
+            $grid->scrollbarX();
+            $grid->showColumnSelector();
+
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->panel();
                 $filter->like('name','产品名称');
