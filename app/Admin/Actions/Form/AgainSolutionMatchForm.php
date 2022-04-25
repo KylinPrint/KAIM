@@ -32,7 +32,6 @@ class AgainSolutionMatchForm extends Form
             // 产品名称标准化
             (new AgainSolutionMatchExport($array,null))->store('solution-match/' . $storeFileName, 'public');
            
-
             // 标准化结果文件名存入数据库
             SolutionMatch::create([
                 'title' => $storeFileName,
@@ -52,5 +51,6 @@ class AgainSolutionMatchForm extends Form
             ->rules('required', ['required' => '文件不能为空'])
             ->help('请上传已经过型号标准化的文件，用以输出对应适配方案。');
         $this->hidden('admin_user_name')->value(Admin::user()->name);
+        $this->disableResetButton();
     }
 }
