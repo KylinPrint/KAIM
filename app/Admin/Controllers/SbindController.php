@@ -94,7 +94,7 @@ class SbindController extends AdminController
                 return Status::where('id', $parent)->pluck('name')->first();
             });
             $grid->column('statuses.name', __('当前细分适配状态'));
-            $grid->column('admin_users.name', __('当前适配状态责任人'));
+            $grid->column('user_name', __('当前适配状态责任人'));
             $grid->column('histories')
                 ->display('查看')
                 ->modal(function () {
@@ -193,7 +193,7 @@ class SbindController extends AdminController
                         if($this->input == 1)
                         {
                             $curUserCtreateArr = SbindHistory::where([
-                                ['admin_users_id',Admin::user()->id],
+                                ['user_name',Admin::user()->name],
                                 ['status_old',null]])->pluck('sbind_id')->toArray();
     
                             $query->whereIn('id',array_unique($curUserCtreateArr));
@@ -201,10 +201,10 @@ class SbindController extends AdminController
                         else 
                         { 
                             $curUserIncludedArr = array_merge(
-                                SbindHistory::where('admin_users_id',Admin::user()->id)
+                                SbindHistory::where('user_name',Admin::user()->name)
                                 ->pluck('sbind_id')
                                 ->toArray(),
-                                Sbind::where('admin_users_id',Admin::user()->id)
+                                Sbind::where('user_name',Admin::user()->name)
                                 ->pluck('id')
                                 ->toArray());  
                             $query->whereIn('id',array_unique($curUserIncludedArr));
@@ -246,7 +246,7 @@ class SbindController extends AdminController
                 return Status::where('id', $parent)->pluck('name')->first();
             });
             $show->field('statuses.name', __('当前细分适配状态'));
-            $show->field('admin_users.name', __('当前适配状态责任人'));
+            $show->field('user_name', __('当前适配状态责任人'));
             $show->field('solution_name');
             $show->field('solution');
             $show->field('class');
@@ -269,11 +269,11 @@ class SbindController extends AdminController
             $show->field('comment');
 
             $show->relation('histories', function ($model) {
-                $grid = new Grid(SbindHistory::with(['status_old', 'status_new', 'admin_users_id']));
+                $grid = new Grid(SbindHistory::with(['status_old', 'status_new']));
             
                 $grid->model()->where('sbind_id', $model->id);
             
-                $grid->column('admin_users_id.name', __('处理人'));
+                $grid->column('user_name', __('处理人'));
                 $grid->column('status_old.name', __('修改前状态'));
                 $grid->column('status_new.name', __('修改后状态'));
                 $grid->column('comment');
@@ -314,7 +314,7 @@ class SbindController extends AdminController
             $form->select('adapted_before')->options([0 => '否',1 => '是']);
             $form->select('statuses_id')->options(Status::where('parent','!=',null)->pluck('name','id'))->required();
             $form->text('statuses_comment', __('适配状态变更说明'));
-            $form->select('admin_users_id')->options(AdminUser::all()->pluck('name', 'id'))->default(Admin::user()->id);
+            $form->select('user_name')->options(AdminUser::all()->pluck('name'))->default(Admin::user()->name);
             $form->text('solution_name');
             $form->text('solution');
             $form->select('class')
@@ -361,7 +361,7 @@ class SbindController extends AdminController
                         'sbind_id' => $id,
                         'status_old' => $status_current,
                         'status_new' => $status_coming,
-                        'admin_users_id' => Admin::user()->id,
+                        'user_name' => Admin::user()->name,
                         'comment' => $form->statuses_comment,
                     ]);
                 }

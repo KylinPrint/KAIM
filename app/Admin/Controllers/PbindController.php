@@ -70,6 +70,7 @@ class PbindController extends AdminController
                 $grid->disableActions();
             }
 
+
             // 默认按创建时间倒序排列
             $grid->model()->orderBy('created_at', 'desc');
 
@@ -95,7 +96,7 @@ class PbindController extends AdminController
                     return Status::where('id', $parent)->pluck('name')->first();
                 });
             $grid->column('statuses.name', __('当前细分适配状态'));
-            $grid->column('admin_users.name', __('当前适配状态责任人'));
+            $grid->column('user_name', __('当前适配状态责任人'));
             $grid->column('histories')
                 ->display('查看')
                 ->modal(function () {
@@ -199,7 +200,7 @@ class PbindController extends AdminController
                     if($this->input == 1)
                     {
                         $curUserCtreateArr = PbindHistory::where([
-                            ['admin_users_id',Admin::user()->id],
+                            ['user_name',Admin::user()->name],
                             ['status_old',null]])->pluck('pbind_id')->toArray();
 
                         $query->whereIn('id',array_unique($curUserCtreateArr));
@@ -207,10 +208,10 @@ class PbindController extends AdminController
                     else 
                     { 
                         $curUserIncludedArr = array_merge(
-                            PbindHistory::where('admin_users_id',Admin::user()->id)
+                            PbindHistory::where('user_name',Admin::user()->name)
                             ->pluck('pbind_id')
                             ->toArray(),
-                            Pbind::where('admin_users_id',Admin::user()->id)
+                            Pbind::where('user_name',Admin::user()->name)
                             ->pluck('id')
                             ->toArray());  
                         $query->whereIn('id',array_unique($curUserIncludedArr));
@@ -252,7 +253,7 @@ class PbindController extends AdminController
                 return Status::where('id', $parent)->pluck('name')->first();
             });
             $show->field('statuses.name', __('当前细分适配状态'));
-            $show->field('admin_users.name', __('当前适配状态责任人'));
+            $show->field('user_name', __('当前适配状态责任人'));
             $show->field('solution_name');
             $show->field('solution');
             $show->field('class');
@@ -275,11 +276,11 @@ class PbindController extends AdminController
             $show->field('comment');
 
             $show->relation('histories', function ($model) {
-                $grid = new Grid(PbindHistory::with(['status_old', 'status_new', 'admin_users_id']));
+                $grid = new Grid(PbindHistory::with(['status_old', 'status_new']));
             
                 $grid->model()->where('pbind_id', $model->id);
             
-                $grid->column('admin_users_id.name', __('处理人'));
+                $grid->column('user_name', __('处理人'));
                 $grid->column('status_old.name', __('修改前状态'));
                 $grid->column('status_new.name', __('修改后状态'));
                 $grid->column('comment');
@@ -321,7 +322,7 @@ class PbindController extends AdminController
             $form->select('adapted_before')->options([0 => '否',1 => '是']);
             $form->select('statuses_id',__('状态'))->options(Status::where('parent','!=',null)->pluck('name','id'))->required();
             $form->text('statuses_comment', __('适配状态变更说明'));
-            $form->select('admin_users_id')->options(AdminUser::all()->pluck('name', 'id'))->default(Admin::user()->id);
+            $form->select('user_name')->options(AdminUser::all()->pluck('name'))->default(Admin::user()->name);
             $form->text('solution_name');
             $form->text('solution');
             $form->select('class')
@@ -370,7 +371,7 @@ class PbindController extends AdminController
                         'pbind_id' => $id,
                         'status_old' => $status_current,
                         'status_new' => $status_coming,
-                        'admin_users_id' => Admin::user()->id,
+                        'user_name' => Admin::user()->name,
                         'comment' => $form->statuses_comment,
                     ]);
                 }

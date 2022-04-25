@@ -12,14 +12,14 @@ class ShistoryTable extends LazyRenderable
     {
         $id = $this->key;
         
-        $query = SbindHistory::with(['admin_users_id', 'status_old', 'status_new'])
+        $query = SbindHistory::with(['status_old', 'status_new'])
             ->where('sbind_id', $id)
             ->get()
             ->toArray();
 
         $data = array();
         foreach ($query as $key => $value) {
-            $data[$key]['admin_users_id'] = $value['admin_users_id']['name'];
+            $data[$key]['user_name'] = $value['user_name'];
             if ($value['status_old'] == NULL) {
                 $data[$key]['status_old'] = '无';
             } else {
