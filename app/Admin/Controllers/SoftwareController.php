@@ -137,7 +137,9 @@ class SoftwareController extends AdminController
             })
             ->required();
             $form->text('version');
-            $form->select('stypes_id', __('类型'))->options(Stype::where('parent', '!=', 0)->pluck('name','id'))->required();    
+            
+            $TypeModel = config('admin.database.stypes_model');
+            $form->select('stypes_id', __('类型'))->options($TypeModel::selectOptions())->required();    
             $form->tags('industries')->options(config('kaim.industry'))->saving(function ($value) { return implode(',', $value); })->required();
             $form->select('appstore_soft')->options([0 => '否',1 => '是']);
             $form->text('kernel_version');
