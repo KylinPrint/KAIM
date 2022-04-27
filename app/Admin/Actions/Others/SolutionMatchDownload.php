@@ -19,7 +19,7 @@ class SolutionMatchDownload extends RowAction
 	public function title()
 
     {
-        return '下载';
+        return '<i class="feather icon-download"></i> 下载';
     }
 
     /**
