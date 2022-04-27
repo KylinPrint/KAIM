@@ -214,7 +214,7 @@ class SbindController extends AdminController
                         2 => '我参与的'
                     ])->width(2);
 
-                    $filter->equal('adaption_type',__('适配类型'))->select(config('kaim.class'))->width(2);
+                    $filter->equal('adaption_type',__('适配类型'))->select(config('kaim.adaption_type'))->width(2);
                 });
         });
     }
