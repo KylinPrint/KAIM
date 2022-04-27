@@ -20,7 +20,7 @@ class BrandController extends AdminController
     {
         return Grid::make(new Brand(), function (Grid $grid) {
             // $grid->column('id')->sortable();
-            $grid->column('name')->display(function () {
+            $grid->column('name', '名称')->display(function () {
                 if (!$this->name) {
                     return $this->name_en;
                 } elseif (!$this->name_en) {
