@@ -26,9 +26,23 @@ use Dcat\Admin\Admin;
 use Dcat\Admin\Widgets\Card;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\URL;
 
 class PbindController extends AdminController
 {
+    public $url_query = array();
+
+    public function __construct()
+    {
+        // 处理URL参数
+        parse_str(parse_url(URL::full())['query'] ?? null, $this->url_query);
+    }
+
+    public function urlQuery($key)
+    {
+        return $this->url_query[$key] ?? null;
+    }
+
     /**
      * Make a grid builder.
      *
@@ -55,29 +69,20 @@ class PbindController extends AdminController
                 }
             });
 
-            if(!Admin::user()->can('pbinds-edit'))
-            {
-                $grid->disableCreateButton();
-            }
+            $grid->actions(function (Grid\Displayers\Actions $actions) {
+                // 复制按钮
+                $actions->append('<a href="' . admin_url('pbinds/create?template=') . $this->getKey() . '"><i class="feather icon-copy"></i> 复制</a>');
+            });
 
-            if(Admin::user()->can('pbinds-export'))
-            {
-                $grid->export(new PbindExport());
-            }
+            if(!Admin::user()->can('pbinds-edit')) { $grid->disableCreateButton(); }
 
-            if(!Admin::user()->can('pbinds-action'))
-            {
-                $grid->disableActions();
-            }
+            if(Admin::user()->can('pbinds-export')) { $grid->export(new PbindExport()); }
+
+            if(!Admin::user()->can('pbinds-action')) { $grid->disableActions(); }
 
 
             // 默认按创建时间倒序排列
             $grid->model()->orderBy('created_at', 'desc');
-
-            // $grid->column('test')->display(function () {
-            //     $a = DB::select("select name from `chips` where ? like CONCAT('%',name,'%')", ['Intel/AMD']);
-            //     return $a;
-            // });
 
             $grid->showColumnSelector();  //后期可能根据权限显示
 
@@ -314,25 +319,44 @@ class PbindController extends AdminController
     protected function form()
     {
         return Form::make(Pbind::with(['peripherals','releases','chips','statuses']), function (Form $form) {
-            $form->select('peripherals_id',__('型号'))
-            ->options(function ($id) {
-                $peripheral = Peripheral::find($id);
-            
-                if ($peripheral) {
-                    return [$peripheral->id => $peripheral->name];
-                }
-            })
-            ->ajax('api/peripherals')
-            ->required();
+            // 获取要复制的行的ID
+            $template = Pbind::find($this->urlQuery('template'));
 
-            $form->select('releases_id',__('版本'))->options(Release::all()->pluck('name','id'))->required();
-            $form->text('os_subversion')->help('例如：V10SP1-Build01-0326');
-            $form->select('chips_id',__('芯片'))->options(Chip::all()->pluck('name','id'))->required();
+            $form->select('peripherals_id',__('型号'))
+                ->options(function ($id) {
+                    $peripheral = Peripheral::find($id);
+                
+                    if ($peripheral) {
+                        return [$peripheral->id => $peripheral->name];
+                    }
+                })
+                ->ajax('api/peripherals')
+                ->required()
+                ->default($template->peripherals_id ?? null);
+            $form->select('releases_id',__('版本'))
+                ->options(Release::all()->pluck('name','id'))
+                ->required()
+                ->default($template->releases_id ?? null);
+            $form->text('os_subversion')
+                ->help('例如:V10SP1-Build01-0326')
+                ->default($template->os_subversion ?? null);
+            $form->select('chips_id',__('芯片'))
+                ->options(Chip::all()->pluck('name','id'))
+                ->required()
+                ->default($template->chips_id ?? null);
             $form->select('adapt_source')
-                 ->options(config('kaim.adapt_source'))->required();
-            $form->select('adapted_before')->options([0 => '否',1 => '是']);
-            $form->select('statuses_id',__('状态'))->options(Status::where('parent','!=',null)->pluck('name','id'))->required();
-            $form->text('statuses_comment', __('适配状态变更说明'));
+                 ->options(config('kaim.adapt_source'))
+                 ->required()
+                 ->default($template->adapt_source ?? null);
+            $form->select('adapted_before')
+                ->options([0 => '否',1 => '是'])
+                ->default($template->adapted_before ?? null);
+            $form->select('statuses_id',__('状态'))
+                ->options(Status::where('parent','!=',null)->pluck('name','id'))
+                ->required()
+                ->default($template->statuses_id ?? null);
+            $form->text('statuses_comment', __('适配状态变更说明'))
+                ->default($template->statuses_comment ?? null);
             $form->select('user_name',__('当前适配状态责任人'))->options(function (){
                 $curaArr = AdminUser::all()->pluck('name')->toArray();
                 foreach($curaArr as $cura){
@@ -340,22 +364,37 @@ class PbindController extends AdminController
                 }
                 return $optionArr;
             })->default(Admin::user()->name);
-            $form->text('solution_name');
-            $form->text('solution');
+            $form->text('solution_name')
+                ->default($template->solution_name ?? null);
+            $form->text('solution')
+                ->default($template->solution ?? null);
             $form->select('class')
-                 ->options(config('kaim.class'));
+                 ->options(config('kaim.class'))
+                 ->default($template->class ?? null);
             $form->select('adaption_type')
-                 ->options(config('kaim.adaption_type'));
+                 ->options(config('kaim.adaption_type'))
+                 ->default($template->adaption_type ?? null);
             $form->select('test_type')
-                 ->options(config('kaim.test_type'));
-
-
-            $form->select('kylineco')->options([0 => '否',1 => '是'])->required();
-            $form->select('appstore')->options([0 => '否',1 => '是'])->required();
-            $form->select('iscert')->options([0 => '否',1 => '是'])->required();
-            $form->date('start_time')->format('Y-M-D');
-            $form->date('complete_time')->format('Y-M-D');
-            $form->text('comment');
+                 ->options(config('kaim.test_type'))
+                 ->default($template->test_type ?? null);
+            $form->select('kylineco')
+                ->options([0 => '否',1 => '是'])
+                ->required()
+                ->default($template->kylineco ?? null);
+            $form->select('appstore')
+                ->options([0 => '否',1 => '是'])
+                ->required()
+                ->default($template->appstore ?? null);
+            $form->select('iscert')
+                ->options([0 => '否',1 => '是'])
+                ->required()
+                ->default($template->iscert ?? null);
+            $form->date('start_time')->format('Y-M-D')
+                ->default($template->start_time ?? null);
+            $form->date('complete_time')->format('Y-M-D')
+                ->default($template->complete_time ?? null);
+            $form->text('comment')
+                ->default($template->comment ?? null);
         
             $form->saving(function (Form $form) {
                 $database_name = env('DB_DATABASE');

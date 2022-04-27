@@ -26,9 +26,23 @@ use Dcat\Admin\Http\Controllers\AdminController;
 use Dcat\Admin\Widgets\Card;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\URL;
 
 class SbindController extends AdminController
 {
+    public $url_query = array();
+
+    public function __construct()
+    {
+        // 处理URL参数
+        parse_str(parse_url(URL::full())['query'] ?? null, $this->url_query);
+    }
+
+    public function urlQuery($key)
+    {
+        return $this->url_query[$key] ?? null;
+    }
+
     /**
      * Make a grid builder.
      *
@@ -39,38 +53,32 @@ class SbindController extends AdminController
         return Grid::make(Sbind::with('softwares','releases','chips','admin_users','statuses'), function (Grid $grid) {
 
             $grid->paginate(10);
-            if(Admin::user()->can('sbinds-import'))
-            {
-                $grid->tools(function  (Grid\Tools  $tools)  { 
-                    if(Admin::user()->can('sbinds-import'))
-                    {
-                        $tools->append(new SbindModal()); 
-                    }         
 
-                    if(Admin::user()->can('sbinds-edit'))
-                    {
-                        $tools->batch(function ($batch) 
-                        {
-                            $batch->add(new SStatusBatch());
-                        });
-                    }
-                });
-            }
-            
-            if(!Admin::user()->can('sbinds-edit'))
-            {
-                $grid->disableCreateButton();
-            }
+            $grid->tools(function  (Grid\Tools  $tools)  { 
+                if(Admin::user()->can('sbinds-import'))
+                {
+                    $tools->append(new SbindModal()); 
+                }         
 
-            if(Admin::user()->can('sbinds-export'))
-            {
-                $grid->export(new SbindExport());
-            }
+                if(Admin::user()->can('sbinds-edit'))
+                {
+                    $tools->batch(function ($batch) 
+                    {
+                        $batch->add(new SStatusBatch());
+                    });
+                }
+            });
+
+            $grid->actions(function (Grid\Displayers\Actions $actions) {
+                // 复制按钮
+                $actions->append('<a href="' . admin_url('sbinds/create?template=') . $this->getKey() . '"><i class="feather icon-copy"></i> 复制</a>');
+            });
             
-            if(!Admin::user()->can('sbinds-action'))
-            {
-                $grid->disableActions();
-            }
+            if(!Admin::user()->can('sbinds-edit')) { $grid->disableCreateButton(); }
+
+            if(Admin::user()->can('sbinds-export')) { $grid->export(new SbindExport()); }
+            
+            if(!Admin::user()->can('sbinds-action')) { $grid->disableActions(); }
 
             // 默认按创建时间倒序排列
             $grid->model()->orderBy('created_at', 'desc');
@@ -298,7 +306,9 @@ class SbindController extends AdminController
     protected function form()
     {
         return Form::make(Sbind::with('softwares','releases','chips'), function (Form $form) {
-            // $form->display('id');
+            // 获取要复制的行的ID
+            $template = Sbind::find($this->urlQuery('template'));
+
             $form->select('softwares_id')->options(function ($id) {
                 $software = Software::find($id);
             
@@ -307,16 +317,32 @@ class SbindController extends AdminController
                 }
             })
             ->ajax('api/softwares')
-            ->required();
-            $form->select('releases_id')->options(Release::all()->pluck('name','id'))->required();
-            $form->text('os_subversion')->help('例如：V10SP1-Build01-0326');
-            $form->select('chips_id')->options(Chip::all()->pluck('name','id'))->required();
+            ->required()
+            ->default($template->softwares_id ?? null);
+            $form->select('releases_id',__('版本'))
+                ->options(Release::all()->pluck('name','id'))
+                ->required()
+                ->default($template->releases_id ?? null);
+            $form->text('os_subversion')
+                ->help('例如:V10SP1-Build01-0326')
+                ->default($template->os_subversion ?? null);
+            $form->select('chips_id',__('芯片'))
+                ->options(Chip::all()->pluck('name','id'))
+                ->required()
+                ->default($template->chips_id ?? null);
             $form->select('adapt_source')
-                ->options(config('kaim.adapt_source'))->required();
-            $form->select('adapted_before')->options([0 => '否',1 => '是']);
-            $form->select('statuses_id')->options(Status::where('parent','!=',null)->pluck('name','id'))->required();
-            $form->text('statuses_comment', __('适配状态变更说明'));
-            $a = AdminUser::all()->pluck('name')->toArray();
+                 ->options(config('kaim.adapt_source'))
+                 ->required()
+                 ->default($template->adapt_source ?? null);
+            $form->select('adapted_before')
+                ->options([0 => '否',1 => '是'])
+                ->default($template->adapted_before ?? null);
+            $form->select('statuses_id',__('状态'))
+                ->options(Status::where('parent','!=',null)->pluck('name','id'))
+                ->required()
+                ->default($template->statuses_id ?? null);
+            $form->text('statuses_comment', __('适配状态变更说明'))
+                ->default($template->statuses_comment ?? null);
             $form->select('user_name',__('当前适配状态责任人'))->options(function (){
                 $curaArr = AdminUser::all()->pluck('name')->toArray();
                 foreach($curaArr as $cura){
@@ -324,21 +350,38 @@ class SbindController extends AdminController
                 }
                 return $optionArr;
             })->default(Admin::user()->name);
-            $form->text('solution_name');
-            $form->text('solution');
+            $form->text('solution_name')
+                ->default($template->solution_name ?? null);
+            $form->text('solution')
+                ->default($template->solution ?? null);
             $form->select('class')
-                ->options(config('kaim.class'));
+                 ->options(config('kaim.class'))
+                 ->default($template->class ?? null);
             $form->select('adaption_type')
-                ->options(config('kaim.adaption_type'));
+                 ->options(config('kaim.adaption_type'))
+                 ->default($template->adaption_type ?? null);
             $form->select('test_type')
-                ->options(config('kaim.test_type'));
-            $form->select('kylineco')->options([0 => '否',1 => '是'])->required();
-            $form->select('appstore')->options([0 => '否',1 => '是'])->required();
-            $form->select('iscert')->options([0 => '否',1 => '是'])->required();
-            $form->date('start_time')->format('Y-M-D');
-            $form->date('complete_time')->format('Y-M-D');
-            $form->text('comment');
-            
+                 ->options(config('kaim.test_type'))
+                 ->default($template->test_type ?? null);
+            $form->select('kylineco')
+                ->options([0 => '否',1 => '是'])
+                ->required()
+                ->default($template->kylineco ?? null);
+            $form->select('appstore')
+                ->options([0 => '否',1 => '是'])
+                ->required()
+                ->default($template->appstore ?? null);
+            $form->select('iscert')
+                ->options([0 => '否',1 => '是'])
+                ->required()
+                ->default($template->iscert ?? null);
+            $form->date('start_time')->format('Y-M-D')
+                ->default($template->start_time ?? null);
+            $form->date('complete_time')->format('Y-M-D')
+                ->default($template->complete_time ?? null);
+            $form->text('comment')
+                ->default($template->comment ?? null);
+        
             $form->saving(function (Form $form) {
                 $database_name = env('DB_DATABASE');
                 $status_coming = $form->statuses_id;
