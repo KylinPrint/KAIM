@@ -20,7 +20,15 @@ class BrandController extends AdminController
     {
         return Grid::make(new Brand(), function (Grid $grid) {
             // $grid->column('id')->sortable();
-            $grid->column('name');
+            $grid->column('name')->display(function () {
+                if (!$this->name) {
+                    return $this->name_en;
+                } elseif (!$this->name_en) {
+                    return $this->name;
+                } else {
+                    return $this->name . '(' . $this->name_en . ')';
+                }
+            });
             $grid->column('alias');
             $grid->column('created_at');
             $grid->column('updated_at')->sortable();
@@ -40,7 +48,15 @@ class BrandController extends AdminController
     {
         return Show::make($id, new Brand(), function (Show $show) {
             // $show->field('id');
-            $show->field('name');
+            $show->field('name')->as(function (){
+                if (!$this->name) {
+                    return $this->name_en;
+                } elseif (!$this->name_en) {
+                    return $this->name;
+                } else {
+                    return $this->name . '(' . $this->name_en . ')';
+                }
+            });
             $show->field('alias');
         });
     }
@@ -54,7 +70,20 @@ class BrandController extends AdminController
     {
         return Form::make(new Brand(), function (Form $form) {
             // $form->display('id');
-            $form->text('name')->required();
+            $form->text('name')->rules(
+                'required_without:name_en|regex:/^[\x80-\xff]*$/|nullable',
+                [
+                    'required_without' => '请在品牌中文名称和英文名称中至少选择一项填写',
+                    'regex' => '请输入中文',
+                ]
+            );
+            $form->text('name_en')->rules(
+                'required_without:name|regex:/^[\w-]*$/|nullable',
+                [
+                    'required_without' => '请在品牌中文名称和英文名称中至少选择一项填写',
+                    'regex' => '请输入英文或数字',
+                ]
+            );
             $form->text('alias');
         });
     }
