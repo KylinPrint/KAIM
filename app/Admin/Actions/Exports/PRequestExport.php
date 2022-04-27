@@ -180,10 +180,6 @@ class PRequestExport extends BaseExport implements WithMapping, WithHeadings, Fr
         return $ExportArr;
     }
 
-    public function bools($value){
-        return $value == '是'?1:0;
-    }
-
     public function getmicrotime()
     {
         list($usec,$sec) = explode(" ",microtime());

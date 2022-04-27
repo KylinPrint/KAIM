@@ -213,6 +213,14 @@ class SbindController extends AdminController
                         1 => '我创建的',
                         2 => '我参与的'
                     ])->width(2);
+
+                    $filter->equal('adaption_type',__('适配类型'))
+                    ->select([
+                        '原生适配' => '原生适配',
+                        '自研适配' => '自研适配',
+                        '开源适配' => '开源适配',
+                        '项目适配' => '项目适配',
+                    ])->width(2);
                 });
         });
     }
@@ -314,7 +322,14 @@ class SbindController extends AdminController
             $form->select('adapted_before')->options([0 => '否',1 => '是']);
             $form->select('statuses_id')->options(Status::where('parent','!=',null)->pluck('name','id'))->required();
             $form->text('statuses_comment', __('适配状态变更说明'));
-            $form->select('user_name')->options(AdminUser::all()->pluck('name'))->default(Admin::user()->name);
+            $a = AdminUser::all()->pluck('name')->toArray();
+            $form->select('user_name',__('当前适配状态责任人'))->options(function (){
+                $curaArr = AdminUser::all()->pluck('name')->toArray();
+                foreach($curaArr as $cura){
+                    $optionArr[$cura] = $cura;
+                }
+                return $optionArr;
+            })->default(Admin::user()->name);
             $form->text('solution_name');
             $form->text('solution');
             $form->select('class')

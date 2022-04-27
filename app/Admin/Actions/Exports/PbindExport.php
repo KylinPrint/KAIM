@@ -84,7 +84,7 @@ class PbindExport extends BaseExport implements WithMapping, WithHeadings, FromC
         $curPeripheralArr = Peripheral::with('brands','types')->find($row['peripherals_id']);
 
         $curParentTypeName = Type::where('id',$curPeripheralArr->types->parent)->pluck('name')->first();
-        preg_match('/[0-9a-zA-Z]+/',$curPbindsArr->releases->name,$curSmallReleas);
+        // preg_match('/[0-9a-zA-Z]+/',$curPbindsArr->releases->name,$curSmallReleas);
         
         $ExportArr['产品ID'] = '';
         $ExportArr['厂商名称'] = $curPeripheralArr->brands->name;
@@ -95,14 +95,14 @@ class PbindExport extends BaseExport implements WithMapping, WithHeadings, FromC
         $ExportArr['适配系统'] = $curPbindsArr->releases->name;
         $ExportArr['芯片'] = $curPbindsArr->chips->name;
         $ExportArr['体系架构'] = $curPbindsArr->chips->arch;
-        $ExportArr['兼容等级'] = $curPbindsArr->class?:'';
+        $ExportArr['兼容等级'] = $row['class'];
         $ExportArr['测试时间'] = $curPbindsArr->start_time?:'';         //muji
         $ExportArr['适配状态'] = $this->getParent($curPbindsArr->statuses->parent);
-        $ExportArr['安装包名称'] = $curPbindsArr->solution_name;
-        $ExportArr['下载地址'] = $curPbindsArr->solution;
+        $ExportArr['安装包名称'] = $row['solution_name'];
+        $ExportArr['下载地址'] = $row['solution'];
         $ExportArr['产品描述'] = $curPeripheralArr->comment?:'';
-        $ExportArr['小版本号'] = $curSmallReleas[0];
-        $ExportArr['备注'] = $row['comment']?:'';
+        $ExportArr['小版本号'] = $row['os_subversion'];
+        $ExportArr['备注'] = $row['comment'];
         $ExportArr['是否计划适配产品'] = '';  //muji
         $ExportArr['行业'] = $curPeripheralArr->industries;
         $ExportArr['适配类型'] = $curPbindsArr->adaption_type ;

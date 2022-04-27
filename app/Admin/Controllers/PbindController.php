@@ -74,6 +74,11 @@ class PbindController extends AdminController
             // 默认按创建时间倒序排列
             $grid->model()->orderBy('created_at', 'desc');
 
+            // $grid->column('test')->display(function () {
+            //     $a = DB::select("select name from `chips` where ? like CONCAT('%',name,'%')", ['Intel/AMD']);
+            //     return $a;
+            // });
+
             $grid->showColumnSelector();  //后期可能根据权限显示
 
             $grid->column('peripherals.brands_id',__('品牌'))->display(function ($brand) {
@@ -186,7 +191,7 @@ class PbindController extends AdminController
                             $query->where('updated_at', '<=', $end);
                         }
                     });
-                })->datetime()->width(4);
+                })->datetime()->width(3);
 
                 $filter->where('brand', function ($query) {
                     $query->whereHas('peripherals', function ($query) {
@@ -194,7 +199,7 @@ class PbindController extends AdminController
                             $query->where('name', 'like',"%{$this->input}%");
                         });
                     });
-                }, '品牌')->width(4);
+                }, '品牌')->width(3);
 
                 $filter->where('related', function ($query) {
                     if($this->input == 1)
@@ -220,6 +225,14 @@ class PbindController extends AdminController
                     1 => '我创建的',
                     2 => '我参与的'
                 ])->width(2);
+
+                $filter->equal('adaption_type',__('适配类型'))
+                    ->select([
+                        '原生适配' => '原生适配',
+                        '自研适配' => '自研适配',
+                        '开源适配' => '开源适配',
+                        '项目适配' => '项目适配',
+                    ])->width(2);
             });
         });
     }
@@ -322,7 +335,13 @@ class PbindController extends AdminController
             $form->select('adapted_before')->options([0 => '否',1 => '是']);
             $form->select('statuses_id',__('状态'))->options(Status::where('parent','!=',null)->pluck('name','id'))->required();
             $form->text('statuses_comment', __('适配状态变更说明'));
-            $form->select('user_name')->options(AdminUser::all()->pluck('name'))->default(Admin::user()->name);
+            $form->select('user_name',__('当前适配状态责任人'))->options(function (){
+                $curaArr = AdminUser::all()->pluck('name')->toArray();
+                foreach($curaArr as $cura){
+                    $optionArr[$cura] = $cura;
+                }
+                return $optionArr;
+            })->default(Admin::user()->name);
             $form->text('solution_name');
             $form->text('solution');
             $form->select('class')
