@@ -132,7 +132,7 @@ class PRequestExport extends BaseExport implements WithMapping, WithHeadings, Fr
                 $ExportArr[$i]['需求提出人联系方式'] = $CacheArr['需求提出人联系方式'];
                 $ExportArr[$i]['处理状态'] = $CacheArr['处理状态'];
     
-                $ExportArr[$i]['处理人'] = AdminUser::where('id',$curHistory['operator'])->pluck('name')->first();
+                $ExportArr[$i]['处理人'] = $curHistory['user_name'];
                 $ExportArr[$i]['修改前状态'] = $curHistory['status_old'];
                 $ExportArr[$i]['修改后状态'] = $curHistory['status_new'];
                 $ExportArr[$i]['状态变更说明'] = $curHistory['comment'];

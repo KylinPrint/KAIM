@@ -109,7 +109,7 @@ class PRequestImport implements ToCollection, WithHeadingRow, WithValidation
                     'p_request_id' => $curPrequestId,
                     'status_old' => null,
                     'status_new' => '已提交',
-                    'operator' => Admin::user()->id,
+                    'user_name' => Admin::user()->name,
                     'comment' => null,
                     'created_at' => $curtime,
                     'updated_at' => $curtime,

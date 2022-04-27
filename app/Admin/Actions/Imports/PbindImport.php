@@ -79,12 +79,30 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
                 }
             }
 
-            $curBrandId = Brand::where('name','like','%'.$row['品牌'].'%')->pluck('id')->first();
+            $brand_name = '';
+            $brand_name_en = '';
+
+            preg_match('/[\u4e00-\u9fa5]+/',$row['品牌'],$input_brand_name);
+            preg_match('/[a-zA-Z]+/',$row['品牌'],$input_brand_name_en);
+
+            if(empty($input_brand_name[0])){$brand_name = '';}
+            else{
+                $brand_name = $input_brand_name[0];
+                $curBrandId = Brand::where('name','like','%'.$brand_name.'%')->pluck('id')->first();
+            }
+
+            if(empty($input_brand_name_en[0])){$brand_name_en = '';}
+            else{
+                $brand_name_en = $input_brand_name_en[0];
+                $curBrandId = Brand::where('name_en','like','%'.$brand_name_en.'%')->pluck('id')->first();
+            }
+            
             if(empty($curBrandId))
             {
                 $brandInsert = 
                 [
-                    'name' => $row['品牌'],
+                    'name' => $brand_name,
+                    'name_en' => $brand_name_en,
                     'alias' => null,
                     'created_at' => $curtime,
                     'updated_at' => $curtime,

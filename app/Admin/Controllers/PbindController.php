@@ -81,6 +81,10 @@ class PbindController extends AdminController
 
             $grid->showColumnSelector();  //后期可能根据权限显示
 
+            // \S+(?=\(|\（)|(?<=\(|\（)\S+(?=\)|\）)
+            $a = preg_match('/[a-zA-Z]+/','立思辰',$b);
+            if(empty($b[0])){$b = 0;}else{$b = 1;}
+
             $grid->column('peripherals.brands_id',__('品牌'))->display(function ($brand) {
                 return Brand::where('id', $brand)->pluck('name')->first();
             });

@@ -16,9 +16,8 @@ class SRequestHistory extends Model
         's_request_id',
         'status_old',
         'status_new',
-        'operator',
+        'user_name',
         'comment',
     ];
 
-	public function operator() { return $this->belongsTo(AdminUser::class, 'operator'); }
 }

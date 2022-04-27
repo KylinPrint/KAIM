@@ -87,11 +87,10 @@ class PbindExport extends BaseExport implements WithMapping, WithHeadings, FromC
         // preg_match('/[0-9a-zA-Z]+/',$curPbindsArr->releases->name,$curSmallReleas);
         
         $ExportArr['产品ID'] = '';
-        $ExportArr['厂商名称'] = $curPeripheralArr->brands->name;
+        $ExportArr['厂商名称'] = $curPeripheralArr->brands->name?:$curPeripheralArr->brands->name_en;
         $ExportArr['产品名称'] = $curPeripheralArr->name;
         $ExportArr['分类1'] = $curParentTypeName;
         $ExportArr['分类2'] = $curPeripheralArr->types->name;
-        $a = 0;
         $ExportArr['适配系统'] = $curPbindsArr->releases->name;
         $ExportArr['芯片'] = $curPbindsArr->chips->name;
         $ExportArr['体系架构'] = $curPbindsArr->chips->arch;

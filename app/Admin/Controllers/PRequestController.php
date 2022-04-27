@@ -166,11 +166,11 @@ class PRequestController extends AdminController
             $show->field('created_at');
 
             $show->relation('histories', function ($model) {
-                $grid = new Grid(PRequestHistory::with(['operator']));
+                $grid = Grid::make(new PRequestHistory);
             
                 $grid->model()->where('p_request_id', $model->id);
             
-                $grid->column('operator.name', __('处理人'));
+                $grid->column('user_name', __('处理人'));
                 $grid->column('status_old', __('修改前状态'));
                 $grid->column('status_new', __('修改后状态'));
                 $grid->column('comment');
@@ -409,7 +409,7 @@ class PRequestController extends AdminController
                             'p_request_id' => $id,
                             'status_old' => $status_current,
                             'status_new' => $status_coming,
-                            'operator' => Admin::user()->id,
+                            'user_name' => Admin::user()->name,
                             'comment' => $form->status_comment,
                         ]);
                     }
