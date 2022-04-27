@@ -231,13 +231,7 @@ class PbindController extends AdminController
                     2 => '我参与的'
                 ])->width(2);
 
-                $filter->equal('adaption_type',__('适配类型'))
-                    ->select([
-                        '原生适配' => '原生适配',
-                        '自研适配' => '自研适配',
-                        '开源适配' => '开源适配',
-                        '项目适配' => '项目适配',
-                    ])->width(2);
+                $filter->equal('adaption_type',__('适配类型'))->select(config('kaim.adaption_type'))->width(2);
             });
         });
     }
