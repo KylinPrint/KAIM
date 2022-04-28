@@ -24,7 +24,7 @@ class Pbind extends Model
 		'comment' ,
 		'adapt_source' ,
 		'adapted_before' ,
-		'admin_users_id' ,
+		'user_name' ,
 		'adaption_type' ,
 		'test_type' ,
 		'kylineco' ,

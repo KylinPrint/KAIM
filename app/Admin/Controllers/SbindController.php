@@ -144,12 +144,28 @@ class SbindController extends AdminController
             $grid->showColumnSelector();
             $grid->setActionClass(Grid\Displayers\ContextMenuActions::class);
             
-            $grid->quickSearch('softwares.name', 'solution', 'comment');
+            // $grid->quickSearch('softwares.name', 'solution', 'comment');
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->panel();
                 $filter->expand();
 
                 // 树状下拉  这块有待优化
+                $filter->where('sname',function ($query){
+                    $query->whereHas('softwares', function ($query){
+                        $query->where('name', 'like','%'.$this->input.'%');
+                    });
+                },'产品型号')->width(3);
+
+                $filter->where('manufacture', function ($query) {
+                    $query->whereHas('softwares', function ($query) {
+                        $query->whereHas('manufactors', function ($query) {
+                            $query->where('name', 'like',"%{$this->input}%");
+                        });
+                    });
+                }, '厂商')->width(3);
+
+                $filter->equal('solution')->width(3);
+
                 $filter->where('sbind',function ($query){
                     $query->whereHas('softwares', function ($query){
                         $query->whereHas('stypes', function ($query){
@@ -159,7 +175,7 @@ class SbindController extends AdminController
                         });
                     });
                 },'软件类型')->select(config('admin.database.stypes_model')::selectOptions())
-                ->width(4);
+                ->width(3);
 
                 $filter->equal('releases.id', '操作系统版本')
                     ->multipleSelectTable(ReleaseTable::make(['id' => 'name']))
@@ -180,7 +196,9 @@ class SbindController extends AdminController
                     ->title('弹窗标题')
                     ->dialogWidth('50%')
                     ->model(Status::class, 'id', 'name')
-                    ->width(2);
+                    ->width(3);
+
+                $filter->equal('adaption_type',__('适配类型'))->select(config('kaim.adaption_type'))->width(3);
 
                 $filter->whereBetween('created_at', function ($query) {
                         $start = $this->input['start'] ?? null;
@@ -220,9 +238,9 @@ class SbindController extends AdminController
                     }, __('与我有关'))->select([
                         1 => '我创建的',
                         2 => '我参与的'
-                    ])->width(2);
+                    ])->width(3);
 
-                    $filter->equal('adaption_type',__('适配类型'))->select(config('kaim.adaption_type'))->width(2);
+                    
                 });
         });
     }

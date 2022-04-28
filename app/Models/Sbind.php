@@ -22,7 +22,7 @@ class Sbind extends Model
 		'adapt_source',
 		'adapted_before',
 		'statuses_id',
-		'admin_users_id',
+		'user_name',
 		'softname',
 		'solution',
 		'class',

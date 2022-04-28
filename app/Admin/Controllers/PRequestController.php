@@ -304,8 +304,11 @@ class PRequestController extends AdminController
                             $form->text('statuses_comment')
                                 ->rules('required_if:status,处理中',['required_if' => '请填写此字段'])
                                 ->setLabelClass(['asterisk']);
-                            $form->select('admin_users_id')->options(AdminUser::all()->pluck('name', 'id'))
-                                ->rules('required_if:status,处理中',['required_if' => '请填写此字段'])
+                            $form->select('user_name')->options(function (){
+                                    $curaArr = AdminUser::all()->pluck('name')->toArray();
+                                    foreach($curaArr as $cura){$optionArr[$cura] = $cura;}
+                                    return $optionArr;
+                                })->rules('required_if:status,处理中',['required_if' => '请填写此字段'])
                                 ->setLabelClass(['asterisk']);
                             $form->select('kylineco')->options([0 => '否', 1 => '是'])
                                 ->rules('required_if:status,处理中',['required_if' => '请填写此字段'])
@@ -378,6 +381,28 @@ class PRequestController extends AdminController
                             [ 'chips_id', $form->chip_id ],
                         ])->pluck('id')->first();
                         if (!$pbind_id) {
+
+                            $pbind_input = [
+                                'peripherals_id'=> $peripheral_id,
+                                'releases_id' => $form->release_id,
+                                'os_subversion' => $form->os_subversion,
+                                'chips_id' => $form->chip_id,
+                                'adapt_source' => $form->source,
+                                'statuses_id' => $form->statuses_id,
+                                'user_name' => $form->user_name,
+                                'kylineco' => $form->kylineco,
+                                'appstore' => $form->appstore,
+                                'iscert' => $form->iscert,
+                            ];
+
+                            $pbindH_input = [
+                                'pbind_id' => $pbind_id,
+                                'status_old' => NULL,
+                                'status_new' => $form->statuses_id,
+                                'user_name' => Admin::user()->name,
+                                'comment' => $form->statuses_comment,
+                            ];
+
                             $pbind = Pbind::create([
                                 'peripherals_id'=> $peripheral_id,
                                 'releases_id' => $form->release_id,
@@ -385,7 +410,7 @@ class PRequestController extends AdminController
                                 'chips_id' => $form->chip_id,
                                 'adapt_source' => $form->source,
                                 'statuses_id' => $form->statuses_id,
-                                'user_name' => AdminUser::where('id',$form->admin_users_id)->pluck('name')->first(),
+                                'user_name' => $form->user_name,
                                 'kylineco' => $form->kylineco,
                                 'appstore' => $form->appstore,
                                 'iscert' => $form->iscert,
@@ -395,7 +420,7 @@ class PRequestController extends AdminController
                                 'pbind_id' => $pbind_id,
                                 'status_old' => NULL,
                                 'status_new' => $form->statuses_id,
-                                'user_name' => AdminUser::where('id',$form->admin_users_id)->pluck('name')->first(),
+                                'user_name' => Admin::user()->name,
                                 'comment' => $form->statuses_comment,
                             ]);
                         }
@@ -415,7 +440,7 @@ class PRequestController extends AdminController
                     }
                     
                     // 删除临时数据
-                    $form->deleteInput(['status_comment', 'statuses_id', 'statuses_comment', 'admin_users_id', 'kylineco', 'appstore', 'iscert']);
+                    $form->deleteInput(['status_comment', 'statuses_id', 'statuses_comment', 'user_name', 'kylineco', 'appstore', 'iscert']);
                 }
             });
         });
