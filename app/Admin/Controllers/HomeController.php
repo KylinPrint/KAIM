@@ -87,11 +87,15 @@ class HomeController extends Controller
 
         foreach ($pbinds as $pbind) {
             $peripheral = Peripheral::find($pbind['peripherals_id']);
+            $brand = Brand::find($peripheral->brands_id);
+            if (!$brand->name) { $brand_name = $brand->name_en; }
+            elseif (!$brand->name_en) { $brand_name = $brand->name; }
+            else { $brand_name = $brand->name . '(' . $brand->name_en . ')'; }
             $data[] = [
                 'id' => $pbind['id'],
                 'type' => '外设适配',
                 // 外设的厂商键实际值为品牌
-                'manufactor' => Brand::find($peripheral->brands_id)->name,
+                'manufactor' => $brand_name,
                 'name' => $peripheral->name,
                 'release' => Release::find($pbind['releases_id'])->name,
                 'chip' => Chip::find($pbind['chips_id'])->name,
