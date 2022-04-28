@@ -39,27 +39,27 @@ class SbindImport implements ToCollection, WithHeadingRow, WithValidation
 
         foreach($rows as $key => $row)
         {
-            if
-            ( 
-                !($row['厂商']&&
-                $row['品牌']&&
-                $row['软件名称']&&
-                $row['软件分类一']&&
-                $row['软件分类二']&&
-                $row['行业分类']&&
-                $row['操作系统版本']&&
-                $row['芯片']&&
-                $row['架构']&&
-                $row['引入来源']&&
-                $row['当前适配状态']&&
-                $row['当前细分适配状态']&&
-                $row['当前适配状态责任人']&&
-                $row['是否上传生态网站']&&
-                $row['是否上架软件商店']&&
-                $row['是否互认证'])
-            ){
-                throw new RequiredNotFoundException($key);
-            }
+            // if
+            // ( 
+            //     !($row['厂商']&&
+            //     $row['品牌']&&
+            //     $row['软件名称']&&
+            //     $row['软件分类一']&&
+            //     $row['软件分类二']&&
+            //     $row['行业分类']&&
+            //     $row['操作系统版本']&&
+            //     $row['芯片']&&
+            //     $row['架构']&&
+            //     $row['引入来源']&&
+            //     $row['当前适配状态']&&
+            //     $row['当前细分适配状态']&&
+            //     $row['当前适配状态责任人']&&
+            //     $row['是否上传生态网站']&&
+            //     $row['是否上架软件商店']&&
+            //     $row['是否互认证'])
+            // ){
+            //     throw new RequiredNotFoundException($key);
+            // }
 
             if(!$row['软件名称']){continue;}  //TODO 上边写的异常抛出后不继续执行，待检查
 

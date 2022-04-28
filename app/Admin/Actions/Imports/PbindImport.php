@@ -19,6 +19,8 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Imports\HeadingRowFormatter;
 
+use function PHPUnit\Framework\isEmpty;
+
 HeadingRowFormatter::default('none');
 class PbindImport implements ToCollection, WithHeadingRow, WithValidation
 {
@@ -82,20 +84,31 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
             $brand_name = '';
             $brand_name_en = '';
 
-            preg_match('/[\u4e00-\u9fa5]+/',$row['品牌'],$input_brand_name);
+            preg_match('/[\x7f-\xff]+/',$row['品牌'],$input_brand_name);
             preg_match('/[a-zA-Z]+/',$row['品牌'],$input_brand_name_en);
 
-            if(empty($input_brand_name[0])){$brand_name = '';}
-            else{
+            if(isEmpty($input_brand_name[0]) && empty($input_brand_name_en[0]))
+            {
                 $brand_name = $input_brand_name[0];
+                $brand_name_en = '';
                 $curBrandId = Brand::where('name','like','%'.$brand_name.'%')->pluck('id')->first();
             }
-
-            if(empty($input_brand_name_en[0])){$brand_name_en = '';}
-            else{
+            elseif(empty($input_brand_name[0]) && isEmpty($input_brand_name_en[0]))
+            {
+                $brand_name = '';
                 $brand_name_en = $input_brand_name_en[0];
                 $curBrandId = Brand::where('name_en','like','%'.$brand_name_en.'%')->pluck('id')->first();
             }
+            elseif(isEmpty($input_brand_name[0]) && isEmpty($input_brand_name_en[0]))
+            {
+                $brand_name = $input_brand_name[0];
+                $brand_name_en = $input_brand_name_en[0];
+                $curBrandId = Brand::where([
+                    ['name','like','%'.$brand_name.'%'],
+                    ['name_en','like','%'.$brand_name_en.'%']
+                ])->pluck('id')->first();
+            }
+
             
             if(empty($curBrandId))
             {

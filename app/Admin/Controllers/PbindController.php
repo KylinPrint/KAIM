@@ -28,6 +28,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
 
+use function PHPUnit\Framework\isEmpty;
+
 class PbindController extends AdminController
 {
     public $url_query = array();
@@ -84,11 +86,8 @@ class PbindController extends AdminController
             // 默认按创建时间倒序排列
             $grid->model()->orderBy('created_at', 'desc');
 
+        
             $grid->showColumnSelector();  //后期可能根据权限显示
-
-            // \S+(?=\(|\（)|(?<=\(|\（)\S+(?=\)|\）)
-            $a = preg_match('/[a-zA-Z]+/','立思辰',$b);
-            if(empty($b[0])){$b = 0;}else{$b = 1;}
 
             $grid->column('peripherals.brands_id',__('品牌'))->display(function ($brand) {
                 return Brand::where('id', $brand)->pluck('name')->first();
