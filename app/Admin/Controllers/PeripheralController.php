@@ -93,7 +93,16 @@ class PeripheralController extends AdminController
 
             // $grid->column('id')->sortable();
             $grid->column('manufactors.name',__('厂商'));
-            $grid->column('brands.name', __('品牌'));
+            $grid->column('brands_id', __('品牌'))->display(function ($brands_id) {
+                $brand = Brand::find($brands_id);
+                if (!$brand->name) {
+                    return $brand->name_en;
+                } elseif (!$brand->name_en) {
+                    return $brand->name;
+                } else {
+                    return $brand->name . '(' . $brand->name_en . ')';
+                }
+            });
             $grid->column('name');
             $grid->column('types.name', __('类型'));
             $grid->column('industries')->badge();
@@ -162,7 +171,16 @@ class PeripheralController extends AdminController
             // $show->field('id');
             $show->field('name');
             $show->field('manufactors.name', __('厂商'));
-            $show->field('brands.name', __('品牌'));
+            $show->field('brands.id', __('品牌'))->as(function ($brands_id) {
+                $brand = Brand::find($brands_id);
+                if (!$brand->name) {
+                    return $brand->name_en;
+                } elseif (!$brand->name_en) {
+                    return $brand->name;
+                } else {
+                    return $brand->name . '(' . $brand->name_en . ')';
+                }
+            });
             $show->field('types.name', __('类型'));
             $show->field('industries')->as(function ($industries) { return explode(',', $industries); })->badge();
             $show->field('vid');
@@ -210,7 +228,20 @@ class PeripheralController extends AdminController
             }
             
             $form->select('manufactors_id', __('厂商'))->options(Manufactor::all()->pluck('name','id'));
-            $form->select('brands_id', __('品牌'))->options(Brand::all()->pluck('name','id'))->required();
+            $form->select('brands_id', __('品牌'))
+                ->options(function () {
+                    foreach (Brand::select('id', 'name', 'name_en')->get()->toarray() as $value) {
+                        if (!$value['name']) {
+                            $options[$value['id']] = $value['name_en'];
+                        } elseif (!$value['name_en']) {
+                            $options[$value['id']] = $value['name'];
+                        } else {
+                            $options[$value['id']] = $value['name'] . '(' . $value['name_en'] . ')';
+                        }
+                    }
+                    return $options;
+                })
+                ->required();
             $form->text('name')->required()->rules("unique:peripherals,name,$id", [ 'unique' => '该外设名已存在' ]);
             $form->tags('industries')->options(config('kaim.industry'))->saving(function ($value) { return implode(',', $value); })->required();
             $form->text('vid');

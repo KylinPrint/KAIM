@@ -86,12 +86,15 @@ class PbindController extends AdminController
 
             $grid->showColumnSelector();  //后期可能根据权限显示
 
-            // \S+(?=\(|\（)|(?<=\(|\（)\S+(?=\)|\）)
-            $a = preg_match('/[a-zA-Z]+/','立思辰',$b);
-            if(empty($b[0])){$b = 0;}else{$b = 1;}
-
-            $grid->column('peripherals.brands_id',__('品牌'))->display(function ($brand) {
-                return Brand::where('id', $brand)->pluck('name')->first();
+            $grid->column('peripherals.brands_id',__('品牌'))->display(function ($brands_id) {
+                $brand = Brand::find($brands_id);
+                if (!$brand->name) {
+                    return $brand->name_en;
+                } elseif (!$brand->name_en) {
+                    return $brand->name;
+                } else {
+                    return $brand->name . '(' . $brand->name_en . ')';
+                }
             });
             $grid->column('peripherals.name',__('外设型号'));
             // 脑瘫代码
@@ -118,11 +121,9 @@ class PbindController extends AdminController
                 });
             $grid->column('solution_name', __('安装包名'));
             $grid->column('solution')->expand(function (Grid\Displayers\Expand $expand) {
-                
                 $expand->button('详情');
                 $card = new Card(null, $this->solution);    
                 return "<div style='padding:10px 10px 0;text-align:center;line-height:40px'>$card</div>";
-
             });
             $grid->column('class')->hide();
             $grid->column('adaption_type');
