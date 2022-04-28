@@ -65,8 +65,8 @@ class PeripheralController extends AdminController
             ->header('外设')
             ->description('列表')
             // 暂时隐藏下拉菜单
-            // ->body($dropdown)
-            // ->body('<p>')
+            ->body($dropdown)
+            ->body('<p>')
             ->body($this->grid());
     }
 

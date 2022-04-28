@@ -1,7 +1,6 @@
 # Package Manager
 /node_modules
 /vendor
-composer.lock
 
 npm-debug.log
 yarn-error.log

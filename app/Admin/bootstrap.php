@@ -1,9 +1,11 @@
 <?php
 
+use App\Models\Type;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid\Filter;
+use Dcat\Admin\Layout\Menu;
 use Dcat\Admin\Show;
 
 /**
@@ -24,3 +26,49 @@ use Dcat\Admin\Show;
  * Admin::js('/packages/prettydocs/js/main.js');
  *
  */
+
+Admin::menu(function (Menu $menu) {
+    $types = Type::where('parent', 0)->get();
+    $line[] = [
+        'id'            => '1', // 此id只要保证当前的数组中是唯一的即可
+        'title'         => '软件适配菜单',
+        'icon'          => 'fa-file-text-o',
+        'uri'           => '',
+        'parent_id'     => 0,
+        'roles'         => ['bd', 'menu-test'], // 与角色绑定
+    ];
+    foreach ($types as $type) {
+        $first_child_type = Type::where('parent', $type->id)->pluck('id')->first();
+        $line[] = [
+            'id'            => $type->id + 1,
+            'title'         => $type->name,
+            'icon'          => 'fa-file-text-o',
+            'uri'           => 'peripherals?type=' . $first_child_type,
+            'parent_id'     => 1,
+            'permission_id' => 'test', // 与权限绑定
+            'roles'         => 'test1', // 与角色绑定
+        ];
+    }
+    // 软件适配菜单
+    $menu->add($line);
+    // 外设适配菜单
+    $menu->add([
+        
+    ]);
+    // 其它信息菜单
+    $menu->add([
+        
+    ]);
+    // 适配需求菜单
+    $menu->add([
+        
+    ]);
+    // 实用工具菜单
+    $menu->add([
+        
+    ]);
+    // 数据统计菜单
+    $menu->add([
+        
+    ]);
+});
