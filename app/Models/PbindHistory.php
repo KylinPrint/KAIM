@@ -14,7 +14,7 @@ class PbindHistory extends Model
         'pbind_id',
         'status_old',
         'status_new',
-        'admin_users_id',
+        'user_name',
         'comment',
     ];
 

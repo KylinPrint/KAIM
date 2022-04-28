@@ -149,10 +149,27 @@ class PbindController extends AdminController
             $grid->showColumnSelector();
             $grid->setActionClass(Grid\Displayers\ContextMenuActions::class);
            
-            $grid->quickSearch('peripherals.name', 'solution', 'comment');
+            // $grid->quickSearch('peripherals.name', 'solution', 'comment');
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->panel();
                 $filter->expand();
+
+                $filter->where('pname',function ($query){
+                    $query->whereHas('peripherals', function ($query){
+                        $query->where('name', 'like','%'.$this->input.'%');
+                    });
+                },'产品型号')->width(3);
+
+                $filter->where('brand', function ($query) {
+                    $query->whereHas('peripherals', function ($query) {
+                        $query->whereHas('brands', function ($query) {
+                            $query->where('name', 'like',"%{$this->input}%")
+                                ->orWhere('name_en','like',"%{$this->input}%");
+                        });
+                    });
+                }, '品牌')->width(3);
+
+                $filter->equal('solution')->width(3);
 
                 // 树状下拉  这块有待优化
                 $filter->where('pbind',function ($query){
@@ -164,7 +181,7 @@ class PbindController extends AdminController
                         });
                     });
                 },'外设类型')->select(config('admin.database.types_model')::selectOptions())
-                ->width(4);
+                ->width(3);
 
                 $filter->equal('releases.id', '操作系统版本')
                     ->multipleSelectTable(ReleaseTable::make(['id' => 'name']))
@@ -185,30 +202,9 @@ class PbindController extends AdminController
                     ->title('适配状态')
                     ->dialogWidth('50%')
                     ->model(Status::class, 'id', 'name')
-                    ->width(2);
+                    ->width(3);
 
-                $filter->whereBetween('created_at', function ($query) {
-                    $start = $this->input['start'] ?? null;
-                    $end = $this->input['end'] ?? null;
-                
-                    $query->whereHas('binds', function ($query) use ($start,$end) {
-                        if ($start !== null) {
-                            $query->where('updated_at', '>=', $start);
-                        }
-                
-                        if ($end !== null) {
-                            $query->where('updated_at', '<=', $end);
-                        }
-                    });
-                })->datetime()->width(3);
-
-                $filter->where('brand', function ($query) {
-                    $query->whereHas('peripherals', function ($query) {
-                        $query->whereHas('brands', function ($query) {
-                            $query->where('name', 'like',"%{$this->input}%");
-                        });
-                    });
-                }, '品牌')->width(3);
+                $filter->equal('adaption_type',__('适配类型'))->select(config('kaim.adaption_type'))->width(3);
 
                 $filter->where('related', function ($query) {
                     if($this->input == 1)
@@ -233,9 +229,22 @@ class PbindController extends AdminController
                 }, __('与我有关'))->select([
                     1 => '我创建的',
                     2 => '我参与的'
-                ])->width(2);
+                ])->width(3);  
 
-                $filter->equal('adaption_type',__('适配类型'))->select(config('kaim.adaption_type'))->width(2);
+                $filter->whereBetween('created_at', function ($query) {
+                    $start = $this->input['start'] ?? null;
+                    $end = $this->input['end'] ?? null;
+                
+                    $query->whereHas('binds', function ($query) use ($start,$end) {
+                        if ($start !== null) {
+                            $query->where('updated_at', '>=', $start);
+                        }
+                
+                        if ($end !== null) {
+                            $query->where('updated_at', '<=', $end);
+                        }
+                    });
+                })->datetime()->width(4);
             });
         });
     }
