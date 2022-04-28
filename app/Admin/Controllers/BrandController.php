@@ -21,13 +21,9 @@ class BrandController extends AdminController
         return Grid::make(new Brand(), function (Grid $grid) {
             // $grid->column('id')->sortable();
             $grid->column('name', '名称')->display(function () {
-                if (!$this->name) {
-                    return $this->name_en;
-                } elseif (!$this->name_en) {
-                    return $this->name;
-                } else {
-                    return $this->name . '(' . $this->name_en . ')';
-                }
+                if (!$this->name) { return $this->name_en; }
+                elseif (!$this->name_en) { return $this->name; }
+                else { return $this->name . '(' . $this->name_en . ')'; }
             });
             $grid->column('alias');
             $grid->column('created_at');
@@ -49,13 +45,9 @@ class BrandController extends AdminController
         return Show::make($id, new Brand(), function (Show $show) {
             // $show->field('id');
             $show->field('name')->as(function (){
-                if (!$this->name) {
-                    return $this->name_en;
-                } elseif (!$this->name_en) {
-                    return $this->name;
-                } else {
-                    return $this->name . '(' . $this->name_en . ')';
-                }
+                if (!$this->name) { return $this->name_en; }
+                elseif (!$this->name_en) { return $this->name; }
+                else { return $this->name . '(' . $this->name_en . ')'; }
             });
             $show->field('alias');
         });

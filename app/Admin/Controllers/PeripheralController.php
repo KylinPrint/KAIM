@@ -95,13 +95,9 @@ class PeripheralController extends AdminController
             $grid->column('manufactors.name',__('厂商'));
             $grid->column('brands_id', __('品牌'))->display(function ($brands_id) {
                 $brand = Brand::find($brands_id);
-                if (!$brand->name) {
-                    return $brand->name_en;
-                } elseif (!$brand->name_en) {
-                    return $brand->name;
-                } else {
-                    return $brand->name . '(' . $brand->name_en . ')';
-                }
+                if (!$brand->name) { return $brand->name_en; }
+                elseif (!$brand->name_en) { return $brand->name; }
+                else { return $brand->name . '(' . $brand->name_en . ')'; }
             });
             $grid->column('name');
             $grid->column('types.name', __('类型'));
@@ -173,13 +169,9 @@ class PeripheralController extends AdminController
             $show->field('manufactors.name', __('厂商'));
             $show->field('brands.id', __('品牌'))->as(function ($brands_id) {
                 $brand = Brand::find($brands_id);
-                if (!$brand->name) {
-                    return $brand->name_en;
-                } elseif (!$brand->name_en) {
-                    return $brand->name;
-                } else {
-                    return $brand->name . '(' . $brand->name_en . ')';
-                }
+                if (!$brand->name) { return $brand->name_en; }
+                elseif (!$brand->name_en) { return $brand->name; }
+                else { return $brand->name . '(' . $brand->name_en . ')'; }
             });
             $show->field('types.name', __('类型'));
             $show->field('industries')->as(function ($industries) { return explode(',', $industries); })->badge();
@@ -231,13 +223,9 @@ class PeripheralController extends AdminController
             $form->select('brands_id', __('品牌'))
                 ->options(function () {
                     foreach (Brand::select('id', 'name', 'name_en')->get()->toarray() as $value) {
-                        if (!$value['name']) {
-                            $options[$value['id']] = $value['name_en'];
-                        } elseif (!$value['name_en']) {
-                            $options[$value['id']] = $value['name'];
-                        } else {
-                            $options[$value['id']] = $value['name'] . '(' . $value['name_en'] . ')';
-                        }
+                        if (!$value['name']) { $options[$value['id']] = $value['name_en']; }
+                        elseif (!$value['name_en']) { $options[$value['id']] = $value['name']; }
+                        else { $options[$value['id']] = $value['name'] . '(' . $value['name_en'] . ')'; }
                     }
                     return $options;
                 })

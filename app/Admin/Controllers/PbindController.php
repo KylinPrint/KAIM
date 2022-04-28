@@ -88,13 +88,9 @@ class PbindController extends AdminController
 
             $grid->column('peripherals.brands_id',__('品牌'))->display(function ($brands_id) {
                 $brand = Brand::find($brands_id);
-                if (!$brand->name) {
-                    return $brand->name_en;
-                } elseif (!$brand->name_en) {
-                    return $brand->name;
-                } else {
-                    return $brand->name . '(' . $brand->name_en . ')';
-                }
+                if (!$brand->name) { return $brand->name_en; }
+                elseif (!$brand->name_en) { return $brand->name; }
+                else { return $brand->name . '(' . $brand->name_en . ')'; }
             });
             $grid->column('peripherals.name',__('外设型号'));
             // 脑瘫代码
