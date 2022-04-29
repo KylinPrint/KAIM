@@ -4,6 +4,8 @@ namespace App\Admin\Controllers;
 
 use App\Admin\Actions\Exports\OemExport;
 use App\Admin\Actions\Modal\OemModal;
+use App\Admin\Renderable\ChipTable;
+use App\Admin\Renderable\ReleaseTable;
 use App\Models\Oem;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Form;
@@ -20,7 +22,7 @@ class OemController extends AdminController
      */
     protected function grid()
     {
-        return Grid::make(new Oem(), function (Grid $grid) {
+        return Grid::make(Oem::with(''), function (Grid $grid) {
 
             $grid->tools(function  (Grid\Tools  $tools)  { 
                 if(Admin::user()->can('oems-import'))
@@ -75,7 +77,21 @@ class OemController extends AdminController
             $grid->column('updated_at')->sortable();
         
             $grid->filter(function (Grid\Filter $filter) {
-                $filter->equal('id');
+                $filter->like('name');
+
+                $filter->equal('releases.id', '操作系统版本')
+                    ->multipleSelectTable(ReleaseTable::make(['id' => 'name']))
+                    ->title('操作系统版本')
+                    ->dialogWidth('50%')
+                    ->model(Release::class, 'id', 'name')
+                    ->width(3);
+
+                $filter->equal('chips.id', '芯片')
+                    ->multipleSelectTable(ChipTable::make(['id' => 'name']))
+                    ->title('芯片')
+                    ->dialogWidth('50%')
+                    ->model(Chip::class, 'id', 'name')
+                    ->width(3);
         
             });
         });
