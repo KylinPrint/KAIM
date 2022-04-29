@@ -29,32 +29,31 @@ use Dcat\Admin\Show;
 
 Admin::menu(function (Menu $menu) {
     $types = Type::where('parent', 0)->get();
-    $line[] = [
-        'id'            => '1', // 此id只要保证当前的数组中是唯一的即可
-        'title'         => '软件适配菜单',
+    $menu_peripherals[] = [
+        'id'            => '1',
+        'title'         => '外设适配数据',
         'icon'          => 'fa-file-text-o',
         'uri'           => '',
         'parent_id'     => 0,
-        'roles'         => ['bd', 'menu-test'], // 与角色绑定
+        'roles'         => ['bd', 'menu-test'],
     ];
     foreach ($types as $type) {
         $first_child_type = Type::where('parent', $type->id)->pluck('id')->first();
-        $line[] = [
+        $menu_peripherals[] = [
             'id'            => $type->id + 1,
             'title'         => $type->name,
             'icon'          => 'fa-file-text-o',
             'uri'           => 'peripherals?type=' . $first_child_type,
             'parent_id'     => 1,
-            'permission_id' => 'test', // 与权限绑定
-            'roles'         => 'test1', // 与角色绑定
+            'roles'         => ['bd', 'menu-test'],
         ];
     }
     // 软件适配菜单
-    $menu->add($line);
-    // 外设适配菜单
     $menu->add([
         
     ]);
+    // 外设适配菜单
+    $menu->add($menu_peripherals, -2);
     // 其它信息菜单
     $menu->add([
         
