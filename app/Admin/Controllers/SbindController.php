@@ -164,7 +164,7 @@ class SbindController extends AdminController
                     });
                 }, '厂商')->width(3);
 
-                $filter->equal('solution')->width(3);
+                $filter->like('solution')->width(3);
 
                 $filter->where('sbind',function ($query){
                     $query->whereHas('softwares', function ($query){
@@ -199,46 +199,41 @@ class SbindController extends AdminController
                     ->width(3);
 
                 $filter->equal('adaption_type',__('适配类型'))->select(config('kaim.adaption_type'))->width(3);
-
+                
                 $filter->whereBetween('created_at', function ($query) {
                         $start = $this->input['start'] ?? null;
-                        $end = $this->input['end'] ?? null;
-                    
-                        $query->whereHas('binds', function ($query) use ($start,$end) {
-                            if ($start !== null) {
-                                $query->where('updated_at', '>=', $start);
-                            }
-                    
-                            if ($end !== null) {
-                                $query->where('updated_at', '<=', $end);
-                            }
-                        });
-                    })->datetime()->width(4);
+                        $end = $this->input['end'] ?? null; 
 
-                    $filter->where('related', function ($query) {
-                        if($this->input == 1)
-                        {
-                            $curUserCtreateArr = SbindHistory::where([
-                                ['user_name',Admin::user()->name],
-                                ['status_old',null]])->pluck('sbind_id')->toArray();
-    
-                            $query->whereIn('id',array_unique($curUserCtreateArr));
-                        }
-                        else 
-                        { 
-                            $curUserIncludedArr = array_merge(
-                                SbindHistory::where('user_name',Admin::user()->name)
-                                ->pluck('sbind_id')
-                                ->toArray(),
-                                Sbind::where('user_name',Admin::user()->name)
-                                ->pluck('id')
-                                ->toArray());  
-                            $query->whereIn('id',array_unique($curUserIncludedArr));
-                        }
-                    }, __('与我有关'))->select([
-                        1 => '我创建的',
-                        2 => '我参与的'
-                    ])->width(3);
+                        if ($start !== null) {$query->where('created_at', '>=', $start);}
+                
+                        if ($end !== null) {$query->where('created_at', '<=', $end);}
+
+                })->datetime()->width(4);
+
+                $filter->where('related', function ($query) {
+                    if($this->input == 1)
+                    {
+                        $curUserCtreateArr = SbindHistory::where([
+                            ['user_name',Admin::user()->name],
+                            ['status_old',null]])->pluck('sbind_id')->toArray();
+
+                        $query->whereIn('id',array_unique($curUserCtreateArr));
+                    }
+                    else 
+                    { 
+                        $curUserIncludedArr = array_merge(
+                            SbindHistory::where('user_name',Admin::user()->name)
+                            ->pluck('sbind_id')
+                            ->toArray(),
+                            Sbind::where('user_name',Admin::user()->name)
+                            ->pluck('id')
+                            ->toArray());  
+                        $query->whereIn('id',array_unique($curUserIncludedArr));
+                    }
+                }, __('与我有关'))->select([
+                    1 => '我创建的',
+                    2 => '我参与的'
+                ])->width(3);
 
                     
                 });

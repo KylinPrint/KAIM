@@ -169,7 +169,7 @@ class PbindController extends AdminController
                     });
                 }, '品牌')->width(3);
 
-                $filter->equal('solution')->width(3);
+                $filter->like('solution')->width(3);
 
                 // 树状下拉  这块有待优化
                 $filter->where('pbind',function ($query){
@@ -235,15 +235,10 @@ class PbindController extends AdminController
                     $start = $this->input['start'] ?? null;
                     $end = $this->input['end'] ?? null;
                 
-                    $query->whereHas('binds', function ($query) use ($start,$end) {
-                        if ($start !== null) {
-                            $query->where('updated_at', '>=', $start);
-                        }
-                
-                        if ($end !== null) {
-                            $query->where('updated_at', '<=', $end);
-                        }
-                    });
+                    if ($start !== null) { $query->where('created_at', '>=', $start);}
+            
+                    if ($end !== null) {$query->where('created_at', '<=', $end);}
+            
                 })->datetime()->width(4);
             });
         });
