@@ -208,7 +208,7 @@ class SbindController extends AdminController
                 
                         if ($end !== null) {$query->where('created_at', '<=', $end);}
 
-                })->datetime()->width(4);
+                })->date()->width(4);
 
                 $filter->where('related', function ($query) {
                     if($this->input == 1)

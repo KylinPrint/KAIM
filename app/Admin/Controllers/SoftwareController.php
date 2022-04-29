@@ -66,16 +66,16 @@ class SoftwareController extends AdminController
                     $start = $this->input['start'] ?? null;
                     $end = $this->input['end'] ?? null;
                 
-                    $query->whereHas('binds', function ($query) use ($start,$end) {
-                        if ($start !== null) {
-                            $query->where('created_at', '>=', $start);
-                        }
-                
-                        if ($end !== null) {
-                            $query->where('created_at', '<=', $end);
-                        }
-                    });
-                })->datetime()->width(3);
+
+                    if ($start !== null) {
+                        $query->where('created_at', '>=', $start);
+                    }
+            
+                    if ($end !== null) {
+                        $query->where('created_at', '<=', $end);
+                    }
+
+                })->date()->width(3);
             });
         });
     }

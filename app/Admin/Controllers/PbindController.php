@@ -239,7 +239,7 @@ class PbindController extends AdminController
             
                     if ($end !== null) {$query->where('created_at', '<=', $end);}
             
-                })->datetime()->width(4);
+                })->date()->width(4);
             });
         });
     }
