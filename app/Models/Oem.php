@@ -27,6 +27,7 @@ class Oem extends Model
 		'iscert',
 		'test_report',
 		'certificate_NO',
+		'adaption_type',
 		'industries',
 		'patch',
 		'start_time',

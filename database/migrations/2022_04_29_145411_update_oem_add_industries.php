@@ -16,6 +16,7 @@ class UpdateOemAddIndustries extends Migration
         //
         Schema::table('oems', function (Blueprint $table) {
             $table->string('industries')->nullable()->comment('行业')->after('certificate_NO');
+            $table->string('adaption_type')->nullable()->comment('适配类型')->after('certificate_NO');     
         });
        
     }

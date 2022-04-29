@@ -28,7 +28,7 @@ class UpdateOemAddTestReport extends Migration
     public function down()
     {
         //
-        Schema::table('oem', function (Blueprint $table) {     
+        Schema::table('oems', function (Blueprint $table) {     
             $table->dropColumn('test_report');
             $table->dropColumn('certificate_NO');
         });

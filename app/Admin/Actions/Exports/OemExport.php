@@ -97,7 +97,7 @@ class OemExport extends BaseExport implements WithMapping, WithHeadings, FromCol
         $ExportArr['分类三'] = $curOemArr->types->name;
         $ExportArr['产品行业'] = $row['industries'];
         $ExportArr['适配系统'] = $curOemArr->releases->name;
-        $ExportArr['适配类型'] = ''; //muji
+        $ExportArr['适配类型'] = $row['adaption_type'];
         $ExportArr['体系结构'] =  $curOemArr->chips->arch;;
         $ExportArr['兼容等级'] =  $row['class'];
         $ExportArr['适配状态'] = $this->getParent($curOemArr->statuses->parent); ;
