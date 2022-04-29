@@ -25,6 +25,8 @@ class Oem extends Model
 		'test_type',
 		'kylineco',
 		'iscert',
+		'test_report',
+		'certificate_NO',
 		'patch',
 		'start_time',
 		'complete_time',

@@ -2,20 +2,15 @@
 
 namespace App\Admin\Actions\Imports;
 
-use App\Models\Brand;
 use App\Models\Chip;
 use App\Models\Manufactor;
 use App\Models\Oem;
 use App\Models\OemHistory;
-use App\Models\Pbind;
-use App\Models\PbindHistory;
-use App\Models\Peripheral;
 use App\Models\Release;
 use App\Models\Status;
 use App\Models\Type;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Imports\HeadingRowFormatter;
@@ -83,7 +78,7 @@ class OemImport implements ToCollection, WithHeadingRow
 
             $oemInsert =
             [
-                'type_id' => Type::where('name',$row['整机分类'])->pluck('id')->first(),
+                'type_id' => Type::where('name',$row['整机类型二'])->pluck('id')->first(),
                 'source' => $row['引入来源'],
                 'details' => $row['产品描述'],
                 'os_subversion' => $row['操作系统小版本号'],
@@ -93,6 +88,8 @@ class OemImport implements ToCollection, WithHeadingRow
                 'test_type' => $row['测试方式'],
                 'kylineco' => $this->bools($row['是否上传生态网站']),
                 'iscert' =>  $this->bools($row['是否互认证']),
+                'test_report' => $this->bools($row['是否有测试报告']),
+                'certificate_NO' => $row['证书编号'],
                 'patch' => $row['补丁包连接'],
                 'start_time' => $row['适配开始时间'] ? date('Y-m-d',($row['适配开始时间']-25569)*24*3600):null,
                 'complete_time' => $row['适配完成时间'] ? date('Y-m-d',($row['适配完成时间']-25569)*24*3600):null,

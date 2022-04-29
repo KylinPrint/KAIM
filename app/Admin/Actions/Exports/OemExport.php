@@ -30,7 +30,7 @@ class OemExport extends BaseExport implements WithMapping, WithHeadings, FromCol
         [   
             '产品ID',
             '厂商名称',
-            '整机型号',
+            '产品名称',
             '整机类型一',
             '整机类型二',
             '引入来源',
@@ -105,7 +105,7 @@ class OemExport extends BaseExport implements WithMapping, WithHeadings, FromCol
         
         $ExportArr['产品ID'] = '';
         $ExportArr['厂商名称'] = $curOemArr->manufactor->name;
-        $ExportArr['整机型号'] = $curOemArr->name;
+        $ExportArr['产品名称'] = $curOemArr->name;
         $ExportArr['整机类型一'] = $curParentTypeName;
         $ExportArr['整机类型二'] = $curOemArr->types->name;
         $ExportArr['引入来源'] = $row['source'];
