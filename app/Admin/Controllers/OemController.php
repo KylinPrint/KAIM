@@ -51,6 +51,7 @@ class OemController extends AdminController
             $grid->column('iscert');
             $grid->column('test_report');
             $grid->column('certificate_NO');
+            $grid->column('industries');   
             $grid->column('patch');
             $grid->column('start_time');
             $grid->column('complete_time');
@@ -107,6 +108,7 @@ class OemController extends AdminController
             $show->field('iscert');
             $show->field('test_report');
             $show->field('certificate_NO');
+            $show->field('industries'); 
             $show->field('patch');
             $show->field('start_time');
             $show->field('complete_time');
@@ -156,6 +158,7 @@ class OemController extends AdminController
             $form->text('iscert');
             $form->text('test_report');
             $form->text('certificate_NO');
+            $form->text('industries'); 
             $form->text('patch');
             $form->text('start_time');
             $form->text('complete_time');

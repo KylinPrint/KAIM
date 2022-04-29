@@ -90,6 +90,7 @@ class OemImport implements ToCollection, WithHeadingRow
                 'iscert' =>  $this->bools($row['是否互认证']),
                 'test_report' => $this->bools($row['是否有测试报告']),
                 'certificate_NO' => $row['证书编号'],
+                'industries' => $row['行业'],
                 'patch' => $row['补丁包连接'],
                 'start_time' => $row['适配开始时间'] ? date('Y-m-d',($row['适配开始时间']-25569)*24*3600):null,
                 'complete_time' => $row['适配完成时间'] ? date('Y-m-d',($row['适配完成时间']-25569)*24*3600):null,
