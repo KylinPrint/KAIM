@@ -7,6 +7,7 @@ use App\Admin\Actions\Modal\OemModal;
 use App\Admin\Renderable\ChipTable;
 use App\Admin\Renderable\ReleaseTable;
 use App\Models\Oem;
+use App\Models\Status;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
@@ -22,7 +23,7 @@ class OemController extends AdminController
      */
     protected function grid()
     {
-        return Grid::make(Oem::with(''), function (Grid $grid) {
+        return Grid::make(Oem::with(['manufactors','types','releases','chips','statuses']), function (Grid $grid) {
 
             $grid->tools(function  (Grid\Tools  $tools)  { 
                 if(Admin::user()->can('oems-import'))
@@ -36,16 +37,19 @@ class OemController extends AdminController
                 $grid->export(new OemExport());
             }
 
-            $grid->column('id')->sortable();
-            $grid->column('manufactor_id');
+            $grid->column('id')->sortable()->hide();
+            $grid->column('manufactors.name',__('厂商'));
             $grid->column('name');
-            $grid->column('type_id');
+            $grid->column('types.name', __('类型'));
             $grid->column('source');
             $grid->column('details');
-            $grid->column('release_id');
+            $grid->column('releases.name',__('操作系统版本'));
             $grid->column('os_subversion');
-            $grid->column('chip_id');
-            $grid->column('status_id');
+            $grid->column('chips.name',__('芯片'));
+            $grid->column('statuses.parent', __('当前适配状态'))->display(function ($parent) {
+                return Status::where('id', $parent)->pluck('name')->first();
+            });
+            $grid->column('statuses.name', __('当前细分适配状态'));
             $grid->column('user_name');
             $grid->column('class');
             $grid->column('test_type');
@@ -57,24 +61,28 @@ class OemController extends AdminController
             $grid->column('patch');
             $grid->column('start_time');
             $grid->column('complete_time');
-            $grid->column('motherboard');
-            $grid->column('gpu');
-            $grid->column('graphic_card');
-            $grid->column('ai_card');
-            $grid->column('network');
-            $grid->column('memory');
-            $grid->column('raid');
-            $grid->column('hba');
-            $grid->column('hard_disk');
-            $grid->column('firmware');
-            $grid->column('sound_card');
-            $grid->column('parallel');
-            $grid->column('serial');
-            $grid->column('isolation_card');
-            $grid->column('other_card');
-            $grid->column('comment');
-            $grid->column('created_at');
-            $grid->column('updated_at')->sortable();
+            $grid->column('motherboard')->hide();
+            $grid->column('gpu')->hide();
+            $grid->column('graphic_card')->hide();
+            $grid->column('ai_card')->hide();
+            $grid->column('network')->hide();
+            $grid->column('memory')->hide();
+            $grid->column('raid')->hide();
+            $grid->column('hba')->hide();
+            $grid->column('hard_disk')->hide();
+            $grid->column('firmware')->hide();
+            $grid->column('sound_card')->hide();
+            $grid->column('parallel')->hide();
+            $grid->column('serial')->hide();
+            $grid->column('isolation_card')->hide();
+            $grid->column('other_card')->hide();
+            $grid->column('comment')->hide();
+            $grid->column('created_at')->hide();
+            $grid->column('updated_at')->hide();
+
+            $grid->showColumnSelector();
+            $grid->disableActions();
+            $grid->disableCreateButton();
         
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->like('name');

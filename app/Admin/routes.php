@@ -30,7 +30,7 @@ Route::group([
     $router->resource('pbinds', PbindController::class);
 
     //整机
-    $router->resource('omes',OemController::class);
+    $router->resource('oems',OemController::class);
 
     // 关联
     $router->resource('manufactors',ManufactorController::class);

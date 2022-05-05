@@ -234,7 +234,7 @@ return [
     'menu' => [
         'cache' => [
             // enable cache or not
-            'enable' => true,
+            'enable' => false,
             'store'  => 'file',
         ],
 
