@@ -31,6 +31,8 @@ class Sbind extends Model
 		'kylineco',
 		'appstore',
 		'iscert',
+		'test_report',
+		'certificate_NO',
 		'comment',
 	];
 

@@ -118,6 +118,8 @@ class SbindImport implements ToCollection, WithHeadingRow, WithValidation
                 'kylineco' => $this->bools($row['是否上传生态网站']),
                 'appstore' => $this->bools($row['是否上架软件商店']),
                 'iscert' => $row['是否互认证'],
+                'test_report' => $this->bools($row['是否有测试报告']),
+                'certificate_NO' => $row['证书编号'],
                 'comment' => $row['备注'],
                 'updated_at' => $curtime,
             ];

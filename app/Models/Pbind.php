@@ -30,6 +30,8 @@ class Pbind extends Model
 		'kylineco' ,
 		'appstore' ,
 		'iscert' ,
+		'test_report',
+		'certificate_NO',
 		'start_time' ,
 		'complete_time' ,
 	];

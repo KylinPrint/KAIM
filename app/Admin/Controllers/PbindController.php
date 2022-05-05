@@ -139,6 +139,11 @@ class PbindController extends AdminController
                 if ($value == '1')  { return '是'; }
                 elseif ($value == '0') { return '否'; }
             });
+            $grid->column('test_report')->display(function ($value) {
+                if ($value == '1')  { return '是'; }
+                elseif ($value == '0') { return '否'; }
+            });
+            $grid->column('certificate_NO');
             $grid->column('start_time');
             $grid->column('complete_time');
             $grid->column('comment')->limit()->hide();       
