@@ -8,7 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Oem extends Model
 {
-	use HasDateTimeFormatter;    
+	use HasDateTimeFormatter; 
+	
+	protected $table = 'oems';
 
 	protected $fillable =[
 		'manufactor_id',
