@@ -5,7 +5,7 @@ namespace App\Admin\Metrics;
 use Dcat\Admin\OperationLog\Models\OperationLog;
 use Dcat\Admin\Widgets\Metrics\Line;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class PVShow extends Line
 {
@@ -49,14 +49,19 @@ class PVShow extends Line
      */
     public function handle(Request $request)
     {
-        // 默认7天
-        $range = $request->get('option') ?? 7;
-        // 查数据
-        $query = $this->query($range);
-        // 填充卡片内容
-        $this->withContent($query[$range - 1]);
-        // 填充图表数据
-        $this->withChart($query);
+        // 检查是否安装operation-log插件
+        if (!Schema::hasTable('admin_operation_log')) {
+            $this->content('<p><h2 class="ml-1">请安装操作日志扩展</h2>');
+        } else {
+            // 默认7天
+            $range = $request->get('option') ?? 7;
+            // 查数据
+            $query = $this->query($range);
+            // 填充卡片内容
+            $this->withContent($query[$range - 1]);
+            // 填充图表数据
+            $this->withChart($query);
+        }
     }
 
     /**

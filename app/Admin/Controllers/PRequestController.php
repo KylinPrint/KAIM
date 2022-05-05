@@ -56,6 +56,9 @@ class PRequestController extends AdminController
 
             $grid->showColumnSelector();
 
+            // 默认按创建时间倒序排列
+            $grid->model()->orderBy('created_at', 'desc');
+            
             $grid->column('source');
             $grid->column('manufactor');
             $grid->column('brand');
