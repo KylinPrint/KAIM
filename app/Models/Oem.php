@@ -67,12 +67,12 @@ class Oem extends Model
 		return $this->belongsTo(Chip::class);
 	}
 
-	public function types()
+	public function otypes()
     {
         return $this->belongsTo(Otype::class);
     }
 
-	public function statuses()
+	public function status()
 	{
 		return $this->belongsTo(Status::class);
 	}

@@ -4,10 +4,8 @@ namespace App\Admin\Actions\Exports;
 
 use App\Admin\Actions\Exports\BaseExport;
 use App\Models\Oem;
-use App\Models\Pbind;
-use App\Models\Peripheral;
+use App\Models\Otype;
 use App\Models\Status;
-use App\Models\Type;
 use Illuminate\Support\Fluent;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromCollection;
@@ -84,23 +82,23 @@ class OemExport extends BaseExport implements WithMapping, WithHeadings, FromCol
         $ids = $OemRow->id;
 
         $ExportArr = array();
-        $curOemArr = Oem::with('releases','chips','manufactors','statuses','types')->find($row['id']);
+        $curOemArr = Oem::with('releases','chips','manufactors','status','otypes')->find($row['id']);
 
-        $curParentTypeName = Type::where('id',$curOemArr->types->parent)->pluck('name')->first();
+        $curParentTypeName = Otype::where('id',$curOemArr->otypes->parent)->pluck('name')->first();
 
         $ExportArr['产品ID'] = '';
-        $ExportArr['厂商名称'] = $curOemArr->manufactor->name;
+        $ExportArr['厂商名称'] = $curOemArr->manufactors->name;
         $ExportArr['产品名称'] = $row['name'];
         $ExportArr['芯片品牌'] = $curOemArr->chips->name;
         $ExportArr['分类一'] = '整机';
         $ExportArr['分类二'] = $curParentTypeName;
-        $ExportArr['分类三'] = $curOemArr->types->name;
+        $ExportArr['分类三'] = $curOemArr->otypes->name;
         $ExportArr['产品行业'] = $row['industries'];
         $ExportArr['适配系统'] = $curOemArr->releases->name;
         $ExportArr['适配类型'] = $row['adaption_type'];
         $ExportArr['体系结构'] =  $curOemArr->chips->arch;;
         $ExportArr['兼容等级'] =  $row['class'];
-        $ExportArr['适配状态'] = $this->getParent($curOemArr->statuses->parent); ;
+        $ExportArr['适配状态'] = $this->getParent($curOemArr->status->parent); ;
         $ExportArr['安装包名称'] = '';
         $ExportArr['下载地址'] = '';
         $ExportArr['产品描述'] = $row['details']?:'';

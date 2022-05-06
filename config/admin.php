@@ -305,6 +305,8 @@ return [
         'types_model' => App\Models\Type::class,
         'stypes_table' => 'stypes',
         'stypes_model' => App\Models\Stype::class,
+        'otypes_table' => 'otypes',
+        'otypes_model' => App\Models\Otype::class,
 
         // Pivot table for table above.
         'role_users_table'       => 'admin_role_users',

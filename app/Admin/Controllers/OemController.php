@@ -6,6 +6,7 @@ use App\Admin\Actions\Exports\OemExport;
 use App\Admin\Actions\Modal\OemModal;
 use App\Admin\Renderable\ChipTable;
 use App\Admin\Renderable\ReleaseTable;
+use App\Admin\Renderable\StatusTable;
 use App\Models\Oem;
 use App\Models\Status;
 use Dcat\Admin\Admin;
@@ -23,7 +24,7 @@ class OemController extends AdminController
      */
     protected function grid()
     {
-        return Grid::make(Oem::with(['manufactors','types','releases','chips','statuses']), function (Grid $grid) {
+        return Grid::make(Oem::with(['manufactors','otypes','releases','chips','status']), function (Grid $grid) {
 
             $grid->tools(function  (Grid\Tools  $tools)  { 
                 if(Admin::user()->can('oems-import'))
@@ -40,22 +41,31 @@ class OemController extends AdminController
             $grid->column('id')->sortable()->hide();
             $grid->column('manufactors.name',__('厂商'));
             $grid->column('name');
-            $grid->column('types.name', __('类型'));
+            $grid->column('otypes.name', __('类型'));
             $grid->column('source');
             $grid->column('details');
             $grid->column('releases.name',__('操作系统版本'));
             $grid->column('os_subversion');
             $grid->column('chips.name',__('芯片'));
-            $grid->column('statuses.parent', __('当前适配状态'))->display(function ($parent) {
+            $grid->column('status.parent', __('当前适配状态'))->display(function ($parent) {
                 return Status::where('id', $parent)->pluck('name')->first();
             });
-            $grid->column('statuses.name', __('当前细分适配状态'));
+            $grid->column('status.name', __('当前细分适配状态'));
             $grid->column('user_name');
             $grid->column('class');
             $grid->column('test_type');
-            $grid->column('kylineco');
-            $grid->column('iscert');
-            $grid->column('test_report');
+            $grid->column('kylineco')->display(function ($value) {
+                if ($value == '1')  { return '是'; }
+                elseif ($value == '0') { return '否'; }
+            });
+            $grid->column('iscert')->display(function ($value) {
+                if ($value == '1')  { return '是'; }
+                elseif ($value == '0') { return '否'; }
+            });;
+            $grid->column('test_report')->display(function ($value) {
+                if ($value == '1')  { return '是'; }
+                elseif ($value == '0') { return '否'; }
+            });;
             $grid->column('certificate_NO');
             $grid->column('industries');   
             $grid->column('patch');
@@ -81,11 +91,15 @@ class OemController extends AdminController
             $grid->column('updated_at')->hide();
 
             $grid->showColumnSelector();
-            $grid->disableActions();
+            $grid->disableEditButton();
+            $grid->disableViewButton();
             $grid->disableCreateButton();
         
             $grid->filter(function (Grid\Filter $filter) {
-                $filter->like('name');
+                $filter->panel();
+                $filter->expand();
+
+                $filter->like('name')->width(3);;
 
                 $filter->equal('releases.id', '操作系统版本')
                     ->multipleSelectTable(ReleaseTable::make(['id' => 'name']))
@@ -100,7 +114,24 @@ class OemController extends AdminController
                     ->dialogWidth('50%')
                     ->model(Chip::class, 'id', 'name')
                     ->width(3);
-        
+                
+                $filter->equal('status.parent', '适配状态')
+                ->multipleSelectTable(StatusTable::make(['id' => 'name']))
+                ->title('适配状态')
+                ->dialogWidth('50%')
+                ->model(Status::class, 'id', 'name')
+                ->width(3);
+
+                $filter->where('oem',function ($query){      
+                    $query->whereHas('otypes', function ($query){
+                        if($this->input>5){$query->where('id', $this->input);}
+                        elseif($this->input == 0){}
+                        else{$query->where('parent', $this->input);}
+                    });                 
+                },'整机类型')->select(config('admin.database.otypes_model')::selectOptions())
+                ->width(3);
+
+                $filter->equal('test_report',_('是否有测试报告'))->select([1 => '有',0 => '无'])->width(3);;
             });
         });
     }

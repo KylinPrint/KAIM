@@ -6,9 +6,9 @@ use App\Models\Chip;
 use App\Models\Manufactor;
 use App\Models\Oem;
 use App\Models\OemHistory;
+use App\Models\Otype;
 use App\Models\Release;
 use App\Models\Status;
-use App\Models\Type;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\ToCollection;
@@ -78,11 +78,11 @@ class OemImport implements ToCollection, WithHeadingRow
 
             $oemInsert =
             [
-                'type_id' => Type::where('name',$row['整机类型二'])->pluck('id')->first(),
+                'type_id' => Otype::where('name',$row['整机类型二'])->pluck('id')->first(),
                 'source' => $row['引入来源'],
                 'details' => $row['产品描述'],
-                'os_subversion' => $row['操作系统小版本号'],
-                'status_id' => Status::where('name',$row['当前适配状态'])->pluck('id')->first(),
+                'os_subversion' => $row['操作系统小版本'],
+                'status_id' => Status::where('name',$row['当前细分适配状态'])->pluck('id')->first(),
                 'user_name' => $row['当前适配状态责任人'],
                 'class' => $row['兼容等级'],
                 'test_type' => $row['测试方式'],
@@ -92,13 +92,13 @@ class OemImport implements ToCollection, WithHeadingRow
                 'certificate_NO' => $row['证书编号'],
                 'adaption_type' => $row['适配类型'],
                 'industries' => $row['涉及行业'],
-                'patch' => $row['补丁包连接'],
+                'patch' => $row['补丁包链接'],
                 'start_time' => $row['适配开始时间'] ? date('Y-m-d',($row['适配开始时间']-25569)*24*3600):null,
                 'complete_time' => $row['适配完成时间'] ? date('Y-m-d',($row['适配完成时间']-25569)*24*3600):null,
                 'motherboard' => $row['主板品牌及型号'],
-                'gpu' => $row['gpu品牌及型号'],
+                'gpu' => $row['GPU品牌及型号'],
                 'graphic_card' => $row['显卡品牌及型号'],
-                'ai_card' => $row['Ai加速卡品牌及型号'],
+                'ai_card' => $row['AI加速卡品牌及型号'],
                 'network' => $row['网卡品牌及型号'],
                 'memory' => $row['内存品牌及型号'],
                 'raid' => $row['RAID卡品牌及型号'],
@@ -109,7 +109,7 @@ class OemImport implements ToCollection, WithHeadingRow
                 'parallel' => $row['并口卡品牌及型号'],
                 'serial' => $row['串口卡品牌及型号'],
                 'isolation_card' => $row['隔离卡品牌及型号'],
-                'other_card' => $row['其它板卡品牌及型号'],
+                'other_card' => $row['其他板卡配件品牌及型号'],
                 'comment' => $row['备注'],
             ];
             $oemInsertUnique = 
@@ -133,7 +133,7 @@ class OemImport implements ToCollection, WithHeadingRow
                 [
                     'oem_id' => $curOemId,
                     'status_old' => null,
-                    'status_new' => $oemInsert['statuses_id'],
+                    'status_new' => $oemInsert['status_id'],
                     'user_name' => $oemInsert['user_name'],
                     'comment' => null,
                     'created_at' => $curtime,
