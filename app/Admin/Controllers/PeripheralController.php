@@ -35,38 +35,27 @@ class PeripheralController extends AdminController
 
     public function index(Content $content)
     {
-        // 生成下拉菜单选项
-        $types = array();
-        $options = array();
-        foreach (Type::select('id', 'name', 'parent')->get()->toarray() as $query) {
-            if ($query['parent']) {
-                array_push($options, $query['id']);
-            }
-            $types[$query['id']]['name'] = $query['name'];
-            $types[$query['id']]['parent'] = $query['parent'];
-        }
-
         // type_id设置默认值防止不带参数访问外设页面
-        $type_id = $this->urlQuery('type') ?? $options[0];
-        
+        $type_id = $this->urlQuery('type') ?? Type::where('parent' , '!=', 0)->pluck('id')->first();
+
         // 创建下拉菜单
-        $dropdown = Dropdown::make($options)
+        $type_parent = Type::find($type_id)->parent;
+        $types = Type::select('id', 'name')->where('parent', $type_parent);
+        $dropdown = Dropdown::make($types->pluck('id')->toarray())
             ->button('选择外设分类') // 设置按钮
-            ->buttonClass('btn btn-white  waves-effect') // 设置按钮样式
-            ->click($types[$types[$type_id]['parent']]['name'] . ' -> ' . $types[$type_id]['name']) // 默认选项
+            ->buttonClass('btn btn-outline btn-white waves-effect') // 设置按钮样式
+            ->click($types->find($type_id)->name) // 默认选项
             ->map(function ($id) use ($types) {
                 // 格式化菜单选项
                 $url = admin_url('peripherals?type='.$id);
-                $label = $types[$types[$id]['parent']]['name'] . ' -> ' . $types[$id]['name'];
-                return "<a href='$url'>{$label}</a>";
+                // TODO 为什么读不到$types
+                $name = Type::find($id)->name;
+                return "<a href='$url'>{$name}</a>";
             });
         
         return $content
-            ->header('外设')
-            ->description('列表')
-            // 暂时隐藏下拉菜单
-            // ->body($dropdown)
-            // ->body('<p>')
+            ->header(Type::find($type_parent)->name)
+            ->description($dropdown)
             ->body($this->grid());
     }
 
