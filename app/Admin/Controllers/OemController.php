@@ -5,6 +5,7 @@ namespace App\Admin\Controllers;
 use App\Admin\Actions\Exports\OemExport;
 use App\Admin\Actions\Modal\OemModal;
 use App\Admin\Renderable\ChipTable;
+use App\Admin\Renderable\OhistoryTable;
 use App\Admin\Renderable\ReleaseTable;
 use App\Admin\Renderable\StatusTable;
 use App\Models\Oem;
@@ -52,6 +53,11 @@ class OemController extends AdminController
             });
             $grid->column('status.name', __('当前细分适配状态'));
             $grid->column('user_name');
+            $grid->column('histories')
+                ->display('查看')
+                ->modal(function () {
+                    return OhistoryTable::make();
+                });
             $grid->column('class');
             $grid->column('test_type');
             $grid->column('kylineco')->display(function ($value) {

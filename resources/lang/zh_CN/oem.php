@@ -1,8 +1,8 @@
 <?php 
 return [
     'labels' => [
-        'Oem' => '软件适配情况',
-        'oem' => '软件适配情况',
+        'Oem' => '整机适配情况',
+        'oem' => '整机适配情况',
     ],
     'fields' => [
         'manufactor_id' => '厂商名称',
@@ -23,6 +23,7 @@ return [
         'certificate_NO' => '证书编号',
         'adaption_type' => '适配类型',
         'industries' => '涉及行业',
+        'histories'  => '适配状态变更记录',
         'patch' => '补丁包连接',
         'start_time' => '适配开始时间',
         'complete_time' => '适配完成时间',
