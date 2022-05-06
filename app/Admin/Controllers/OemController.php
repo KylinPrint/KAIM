@@ -90,10 +90,12 @@ class OemController extends AdminController
             $grid->column('created_at')->hide();
             $grid->column('updated_at')->hide();
 
+            //各种设置
             $grid->showColumnSelector();
             $grid->disableEditButton();
             $grid->disableViewButton();
             $grid->disableCreateButton();
+            $grid->setActionClass(Grid\Displayers\ContextMenuActions::class);
         
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->panel();

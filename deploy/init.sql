@@ -136,6 +136,11 @@ INSERT INTO `admin_permissions` VALUES (55, '外设需求管理-查看', 'preque
 INSERT INTO `admin_permissions` VALUES (56, '外设需求管理-编辑', 'prequests-edit', 'GET,POST,PUT', '/prequests*', 56, 54, '2022-04-02 08:37:15', '2022-04-02 08:37:15');
 INSERT INTO `admin_permissions` VALUES (57, '外设需求管理-删除', 'prequests-delete', 'DELETE', '/prequests*', 57, 54, '2022-04-02 08:37:15', '2022-04-02 08:37:15');
 INSERT INTO `admin_permissions` VALUES (58, '外设需求管理-操作', 'prequests-action', '', '', 58, 54, '2022-04-02 08:37:15', '2022-04-02 08:37:15');
+INSERT INTO `admin_permissions` VALUES (59, '整机适配情况权限', 'oems', NULL, '/oems*', 59, 0, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_permissions` VALUES (60, '整机适配情况-查看', 'oems-get', 'GET', '/oems', 60, 59, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_permissions` VALUES (61, '整机适配情况-删除', 'oems-delete', 'DELETE', '/oems*', 61, 59, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_permissions` VALUES (62, '整机适配情况-导入', 'oems-import', 'GET,POST,PUT', NULL, 62, 59, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_permissions` VALUES (63, '整机适配情况-导出', 'oems-export', 'GET,POST,PUT', NULL, 63, 59, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
 
 -- ----------------------------
 -- Records of admin_role_menu
