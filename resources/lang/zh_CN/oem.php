@@ -19,6 +19,7 @@ return [
         'test_type' => '测试方式',
         'kylineco' => '是否上传生态网站',
         'iscert' => '是否互认证',
+        'test_report' => '是否有测试报告',
         'certificate_NO' => '证书编号',
         'adaption_type' => '适配类型',
         'industries' => '涉及行业',

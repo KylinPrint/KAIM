@@ -23,6 +23,8 @@ return [
         'kylineco' => '是否上传生态网站',
         'appstore' => '是否上架软件商店',
         'iscert' => '是否互认证',
+        'test_report' => '是否有测试报告',
+        'certificate_NO' => '证书编号',
         'start_time' => '适配开始时间',
         'complete_time' => '适配完成时间',
         'comment' => '备注',
