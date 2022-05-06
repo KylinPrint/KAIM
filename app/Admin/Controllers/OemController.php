@@ -8,7 +8,9 @@ use App\Admin\Renderable\ChipTable;
 use App\Admin\Renderable\OhistoryTable;
 use App\Admin\Renderable\ReleaseTable;
 use App\Admin\Renderable\StatusTable;
+use App\Models\Chip;
 use App\Models\Oem;
+use App\Models\Release;
 use App\Models\Status;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Form;
@@ -28,16 +30,16 @@ class OemController extends AdminController
         return Grid::make(Oem::with(['manufactors','otypes','releases','chips','status']), function (Grid $grid) {
 
             $grid->tools(function  (Grid\Tools  $tools)  { 
-                // if(Admin::user()->can('oems-import'))
-                // {
+                if(Admin::user()->can('oems-import'))
+                {
                     $tools->append(new OemModal()); 
-                // }
+                }
             });
 
-            // if(Admin::user()->can('oems-export'))
-            // {
+            if(Admin::user()->can('oems-export'))
+            {
                 $grid->export(new OemExport());
-            // }
+            }
 
             $grid->column('id')->sortable()->hide();
             $grid->column('manufactors.name',__('厂商'));
