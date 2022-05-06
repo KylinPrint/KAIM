@@ -29,7 +29,7 @@ Route::group([
     $router->resource('peripherals', PeripheralController::class);
     $router->resource('pbinds', PbindController::class);
 
-    //整机
+    // 整机
     $router->resource('oems',OemController::class);
 
     // 关联
@@ -47,7 +47,7 @@ Route::group([
     $router->resource('prequests',PRequestController::class);
 
     // 小工具
-    $router->resource('solution_matches',SolutionMatchController::class);
+    $router->resource('solution-match',SolutionMatchController::class);
 
     // 数据统计
     $router->resource('statistics', StatisticsController::class);
