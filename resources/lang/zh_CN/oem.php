@@ -1,8 +1,8 @@
 <?php 
 return [
     'labels' => [
-        'Oem' => 'Oem',
-        'oem' => 'Oem',
+        'Oem' => '软件适配情况',
+        'oem' => '软件适配情况',
     ],
     'fields' => [
         'manufactor_id' => '厂商名称',
@@ -19,6 +19,9 @@ return [
         'test_type' => '测试方式',
         'kylineco' => '是否上传生态网站',
         'iscert' => '是否互认证',
+        'certificate_NO' => '证书编号',
+        'adaption_type' => '适配类型',
+        'industries' => '涉及行业',
         'patch' => '补丁包连接',
         'start_time' => '适配开始时间',
         'complete_time' => '适配完成时间',

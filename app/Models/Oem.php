@@ -8,23 +8,29 @@ use Illuminate\Database\Eloquent\Model;
 
 class Oem extends Model
 {
-	use HasDateTimeFormatter;    
+	use HasDateTimeFormatter; 
+	
+	protected $table = 'oems';
 
 	protected $fillable =[
-		'manufactor_id',
+		'manufactors_id',
 		'name',
-		'type_id',
+		'otypes_id',
 		'source',
 		'details',
-		'release_id',
+		'releases_id',
 		'os_subversion',
-		'chip_id',
+		'chips_id',
 		'status_id',
 		'user_name',
 		'class',
 		'test_type',
 		'kylineco',
 		'iscert',
+		'test_report',
+		'certificate_NO',
+		'adaption_type',
+		'industries',
 		'patch',
 		'start_time',
 		'complete_time',
@@ -61,12 +67,12 @@ class Oem extends Model
 		return $this->belongsTo(Chip::class);
 	}
 
-	public function types()
+	public function otypes()
     {
-        return $this->belongsTo(Type::class);
+        return $this->belongsTo(Otype::class);
     }
 
-	public function statuses()
+	public function status()
 	{
 		return $this->belongsTo(Status::class);
 	}

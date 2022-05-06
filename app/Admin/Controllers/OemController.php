@@ -4,7 +4,11 @@ namespace App\Admin\Controllers;
 
 use App\Admin\Actions\Exports\OemExport;
 use App\Admin\Actions\Modal\OemModal;
+use App\Admin\Renderable\ChipTable;
+use App\Admin\Renderable\ReleaseTable;
+use App\Admin\Renderable\StatusTable;
 use App\Models\Oem;
+use App\Models\Status;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
@@ -20,60 +24,114 @@ class OemController extends AdminController
      */
     protected function grid()
     {
-        return Grid::make(new Oem(), function (Grid $grid) {
+        return Grid::make(Oem::with(['manufactors','otypes','releases','chips','status']), function (Grid $grid) {
 
             $grid->tools(function  (Grid\Tools  $tools)  { 
-                if(Admin::user()->can('oems-import'))
-                {
+                // if(Admin::user()->can('oems-import'))
+                // {
                     $tools->append(new OemModal()); 
-                }
+                // }
             });
 
-            if(Admin::user()->can('oems-export'))
-            {
+            // if(Admin::user()->can('oems-export'))
+            // {
                 $grid->export(new OemExport());
-            }
+            // }
 
-            $grid->column('id')->sortable();
-            $grid->column('manufactor_id');
+            $grid->column('id')->sortable()->hide();
+            $grid->column('manufactors.name',__('厂商'));
             $grid->column('name');
-            $grid->column('type_id');
+            $grid->column('otypes.name', __('类型'));
             $grid->column('source');
             $grid->column('details');
-            $grid->column('release_id');
+            $grid->column('releases.name',__('操作系统版本'));
             $grid->column('os_subversion');
-            $grid->column('chip_id');
-            $grid->column('status_id');
+            $grid->column('chips.name',__('芯片'));
+            $grid->column('status.parent', __('当前适配状态'))->display(function ($parent) {
+                return Status::where('id', $parent)->pluck('name')->first();
+            });
+            $grid->column('status.name', __('当前细分适配状态'));
             $grid->column('user_name');
             $grid->column('class');
             $grid->column('test_type');
-            $grid->column('kylineco');
-            $grid->column('iscert');
+            $grid->column('kylineco')->display(function ($value) {
+                if ($value == '1')  { return '是'; }
+                elseif ($value == '0') { return '否'; }
+            });
+            $grid->column('iscert')->display(function ($value) {
+                if ($value == '1')  { return '是'; }
+                elseif ($value == '0') { return '否'; }
+            });;
+            $grid->column('test_report')->display(function ($value) {
+                if ($value == '1')  { return '是'; }
+                elseif ($value == '0') { return '否'; }
+            });;
+            $grid->column('certificate_NO');
+            $grid->column('industries');   
             $grid->column('patch');
             $grid->column('start_time');
             $grid->column('complete_time');
-            $grid->column('motherboard');
-            $grid->column('gpu');
-            $grid->column('graphic_card');
-            $grid->column('ai_card');
-            $grid->column('network');
-            $grid->column('memory');
-            $grid->column('raid');
-            $grid->column('hba');
-            $grid->column('hard_disk');
-            $grid->column('firmware');
-            $grid->column('sound_card');
-            $grid->column('parallel');
-            $grid->column('serial');
-            $grid->column('isolation_card');
-            $grid->column('other_card');
-            $grid->column('comment');
-            $grid->column('created_at');
-            $grid->column('updated_at')->sortable();
+            $grid->column('motherboard')->hide();
+            $grid->column('gpu')->hide();
+            $grid->column('graphic_card')->hide();
+            $grid->column('ai_card')->hide();
+            $grid->column('network')->hide();
+            $grid->column('memory')->hide();
+            $grid->column('raid')->hide();
+            $grid->column('hba')->hide();
+            $grid->column('hard_disk')->hide();
+            $grid->column('firmware')->hide();
+            $grid->column('sound_card')->hide();
+            $grid->column('parallel')->hide();
+            $grid->column('serial')->hide();
+            $grid->column('isolation_card')->hide();
+            $grid->column('other_card')->hide();
+            $grid->column('comment')->hide();
+            $grid->column('created_at')->hide();
+            $grid->column('updated_at')->hide();
+
+            $grid->showColumnSelector();
+            $grid->disableEditButton();
+            $grid->disableViewButton();
+            $grid->disableCreateButton();
         
             $grid->filter(function (Grid\Filter $filter) {
-                $filter->equal('id');
-        
+                $filter->panel();
+                $filter->expand();
+
+                $filter->like('name')->width(3);;
+
+                $filter->equal('releases.id', '操作系统版本')
+                    ->multipleSelectTable(ReleaseTable::make(['id' => 'name']))
+                    ->title('操作系统版本')
+                    ->dialogWidth('50%')
+                    ->model(Release::class, 'id', 'name')
+                    ->width(3);
+
+                $filter->equal('chips.id', '芯片')
+                    ->multipleSelectTable(ChipTable::make(['id' => 'name']))
+                    ->title('芯片')
+                    ->dialogWidth('50%')
+                    ->model(Chip::class, 'id', 'name')
+                    ->width(3);
+                
+                $filter->equal('status.parent', '适配状态')
+                ->multipleSelectTable(StatusTable::make(['id' => 'name']))
+                ->title('适配状态')
+                ->dialogWidth('50%')
+                ->model(Status::class, 'id', 'name')
+                ->width(3);
+
+                $filter->where('oem',function ($query){      
+                    $query->whereHas('otypes', function ($query){
+                        if($this->input>5){$query->where('id', $this->input);}
+                        elseif($this->input == 0){}
+                        else{$query->where('parent', $this->input);}
+                    });                 
+                },'整机类型')->select(config('admin.database.otypes_model')::selectOptions())
+                ->width(3);
+
+                $filter->equal('test_report',_('是否有测试报告'))->select([1 => '有',0 => '无'])->width(3);;
             });
         });
     }
@@ -103,6 +161,9 @@ class OemController extends AdminController
             $show->field('test_type');
             $show->field('kylineco');
             $show->field('iscert');
+            $show->field('test_report');
+            $show->field('certificate_NO');
+            $show->field('industries'); 
             $show->field('patch');
             $show->field('start_time');
             $show->field('complete_time');
@@ -150,6 +211,9 @@ class OemController extends AdminController
             $form->text('test_type');
             $form->text('kylineco');
             $form->text('iscert');
+            $form->text('test_report');
+            $form->text('certificate_NO');
+            $form->text('industries'); 
             $form->text('patch');
             $form->text('start_time');
             $form->text('complete_time');

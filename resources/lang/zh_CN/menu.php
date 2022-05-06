@@ -19,6 +19,7 @@ return [
         'peripheral'            => '外设适配结果管理',
         'peripheral_adaption'   => '外设适配管理',
         'peripheral_data'       => '外设数据管理',
+        'oem'                  => '整机适配数据管理',
         'output_device'         => '输出设备数据管理',
         'laser_printer'         => '激光打印机',
         'inkjet_printer'        => '喷墨打印机',

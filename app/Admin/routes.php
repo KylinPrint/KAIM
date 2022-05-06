@@ -29,6 +29,9 @@ Route::group([
     $router->resource('peripherals', PeripheralController::class);
     $router->resource('pbinds', PbindController::class);
 
+    //整机
+    $router->resource('oems',OemController::class);
+
     // 关联
     $router->resource('manufactors',ManufactorController::class);
     $router->resource('brands', BrandController::class);

@@ -4,10 +4,8 @@ namespace App\Admin\Actions\Exports;
 
 use App\Admin\Actions\Exports\BaseExport;
 use App\Models\Oem;
-use App\Models\Pbind;
-use App\Models\Peripheral;
+use App\Models\Otype;
 use App\Models\Status;
-use App\Models\Type;
 use Illuminate\Support\Fluent;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromCollection;
@@ -30,41 +28,27 @@ class OemExport extends BaseExport implements WithMapping, WithHeadings, FromCol
         [   
             '产品ID',
             '厂商名称',
-            '整机型号',
-            '整机类型一',
-            '整机类型二',
-            '引入来源',
-            '产品描述',
-            '操作系统版本',
-            '操作系统小版本',
-            '芯片',
-            '架构',
-            '当前适配状态',
-            '当前细分适配状态',
-            '当前适配状态责任人',
+            '产品名称',
+            '芯片品牌',
+            '分类一',
+            '分类二',
+            '分类三',
+            '产品行业',
+            '适配系统',
+            '适配类型',
+            '体系结构',
             '兼容等级',
-            '测试方式',
-            '是否上传生态网站',
-            '是否互认证',
-            '补丁包链接',
-            '适配开始时间',
-            '适配完成时间',
-            '主板品牌及型号',
-            'GPU品牌及型号',
-            '显卡品牌及型号',
-            'AI加速卡品牌及型号',
-            '网卡品牌及型号',
-            '内存品牌及型号',
-            'RAID卡品牌及型号',
-            'HBA卡品牌及型号',
-            '硬盘品牌及型号',
-            '固件品牌及型号',
-            '声卡品牌及型号',
-            '并口卡品牌及型号',
-            '串口卡品牌及型号',
-            '隔离卡品牌及型号',
-            '其他板卡配件品牌及型号',
+            '适配状态',
+            '安装包名称',
+            '下载地址',
+            '产品描述',
+            '小版本号',
             '备注',
+            '证书编号',
+            '申请适配时间',
+            '适配完成时间',
+            '上传时间',
+            '是否上传测试报告',
         ];
         parent::__construct();
     }
@@ -98,48 +82,33 @@ class OemExport extends BaseExport implements WithMapping, WithHeadings, FromCol
         $ids = $OemRow->id;
 
         $ExportArr = array();
-        $curOemArr = Oem::with('releases','chips','manufactors','statuses','types')->find($row['id']);
+        $curOemArr = Oem::with('releases','chips','manufactors','status','otypes')->find($row['id']);
 
-        $curParentTypeName = Type::where('id',$curOemArr->types->parent)->pluck('name')->first();
+        $curParentTypeName = Otype::where('id',$curOemArr->otypes->parent)->pluck('name')->first();
 
-        
         $ExportArr['产品ID'] = '';
-        $ExportArr['厂商名称'] = $curOemArr->manufactor->name;
-        $ExportArr['整机型号'] = $curOemArr->name;
-        $ExportArr['整机类型一'] = $curParentTypeName;
-        $ExportArr['整机类型二'] = $curOemArr->types->name;
-        $ExportArr['引入来源'] = $row['source'];
+        $ExportArr['厂商名称'] = $curOemArr->manufactors->name;
+        $ExportArr['产品名称'] = $row['name'];
+        $ExportArr['芯片品牌'] = $curOemArr->chips->name;
+        $ExportArr['分类一'] = '整机';
+        $ExportArr['分类二'] = $curParentTypeName;
+        $ExportArr['分类三'] = $curOemArr->otypes->name;
+        $ExportArr['产品行业'] = $row['industries'];
+        $ExportArr['适配系统'] = $curOemArr->releases->name;
+        $ExportArr['适配类型'] = $row['adaption_type'];
+        $ExportArr['体系结构'] =  $curOemArr->chips->arch;;
+        $ExportArr['兼容等级'] =  $row['class'];
+        $ExportArr['适配状态'] = $this->getParent($curOemArr->status->parent); ;
+        $ExportArr['安装包名称'] = '';
+        $ExportArr['下载地址'] = '';
         $ExportArr['产品描述'] = $row['details']?:'';
-        $ExportArr['操作系统版本'] = $curOemArr->releases->name;
-        $ExportArr['操作系统小版本'] = $row['os_subversion'];
-        $ExportArr['芯片'] = $curOemArr->chips->name;
-        $curOemArr['架构'] = $curOemArr->chips->arch;
-        $curOemArr['当前适配状态'] = $this->getParent($curOemArr->statuses->parent);
-        $curOemArr['当前细分适配状态'] = $curOemArr->statuses->name;
-        $curOemArr['当前适配状态责任人'] = $row['user_name'];
-        $curOemArr['兼容等级'] = $row['class'];
-        $curOemArr['测试方式'] = $row['test_type'];
-        $curOemArr['是否上传生态网站'] = $this->bools($row['kylineco']);
-        $curOemArr['是否互认证'] = $this->bools($row['iscert']);
-        $curOemArr['补丁包连接'] = $row['patch']?:'';
-        $curOemArr['适配开始时间'] = $row['start_time'];
-        $curOemArr['适配完成时间'] = $row['complete_time'];
-        $curOemArr['主板品牌及型号'] = $row['motherboard'];
-        $curOemArr['GPU品牌及型号'] = $row['gpu'];
-        $curOemArr['显卡品牌及型号'] = $row['graphic_card'];
-        $curOemArr['AI加速卡品牌及型号'] = $row['ai_card'];
-        $curOemArr['网卡品牌及型号'] = $row['network'];
-        $curOemArr['内存品牌及型号'] = $row['memory'];
-        $curOemArr['RAID卡品牌及型号'] = $row['raid'];
-        $curOemArr['HBA卡品牌及型号'] = $row['hba'];
-        $curOemArr['硬盘品牌及型号'] = $row['hard_disk'];
-        $curOemArr['固件品牌及型号'] = $row['firmware'];
-        $curOemArr['声卡品牌及型号'] = $row['sound_card'];
-        $curOemArr['并口卡品牌及型号'] = $row['parallel'];
-        $curOemArr['串口卡品牌及型号'] = $row['serial'];
-        $curOemArr['隔离卡品牌及型号'] = $row['isolation_card'];
-        $curOemArr['其他板卡配件品牌及型号'] = $row['other_card'];
-        $curOemArr['备注'] = $row['comment'];
+        $ExportArr['小版本号'] = $row['os_subversion'];
+        $ExportArr['备注'] =  $row['comment'];
+        $ExportArr['证书编号'] = $row['certificate_NO'];
+        $ExportArr['申请适配时间'] = $row['start_time'];
+        $ExportArr['适配完成时间'] = $row['complete_time'];
+        $ExportArr['上传时间'] = $row['created_at'];
+        $ExportArr['是否上传测试报告'] =$this->bools($row['test_report']);
 
         return $ExportArr;
     }
