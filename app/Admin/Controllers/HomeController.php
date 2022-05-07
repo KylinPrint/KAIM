@@ -47,7 +47,7 @@ class HomeController extends Controller
                 elseif ($this->type == "外设适配") { $type = 'pbinds'; }
                 elseif ($this->type == "软件需求") { $type = 'srequests'; }
                 elseif ($this->type == "外设需求") { $type = 'prequests'; }
-                $href = admin_url($type.'/'.$this->id);
+                $href = admin_url($type. '/' . $this->id . '/edit');
                 return "
                     <button onclick=\"window.location.href='$href'\" class=\"btn btn-primary btn-outline\">
                         去处理
@@ -66,8 +66,10 @@ class HomeController extends Controller
     {
         $data = [];
 
+        // 对于SBind和PBind,展示当前适配状态责任人为登录用户的数据
         $sbinds = Sbind::select('id', 'softwares_id',   'releases_id', 'chips_id', 'statuses_id', 'updated_at')->where('user_name', Admin::user()->name)->get()->toarray();
         $pbinds = Pbind::select('id', 'peripherals_id', 'releases_id', 'chips_id', 'statuses_id', 'updated_at')->where('user_name', Admin::user()->name)->get()->toarray();
+        // 对于SRequest和PRequest,展示需求接收人为登录用户的数据
         $srequests = SRequest::select('id', 'manufactor', 'name', 'release_id', 'chip_id', 'status', 'updated_at')->where('bd_id', Admin::user()->id)->get()->toarray();
         $prequests = PRequest::select('id', 'manufactor', 'name', 'release_id', 'chip_id', 'status', 'updated_at')->where('bd_id', Admin::user()->id)->get()->toarray();
 

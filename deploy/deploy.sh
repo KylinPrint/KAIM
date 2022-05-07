@@ -2,7 +2,8 @@
 
 ## 变量
 WORKSPACE=`dirname $(dirname $(readlink -f $0))`
-SQL=$WORKSPACE/deploy/init.sql
+SQL_ADMIN=$WORKSPACE/deploy/admin.sql
+SQL_DATA=$WORKSPACE/deploy/data.sql
 
 ## 检查LNMP
 checkLNMP()
@@ -48,12 +49,21 @@ deployDcat()
 }
 
 ## 初始化数据
-doInit()
+initAdmin()
+{
+    echo "平台初始化中..."
+    SQLRES_ADMIN=`mysql -u$DB_USERNAME -p$DB_PASSWORD -e "
+    use $DB_DATABASE;
+    source $SQL_ADMIN;
+    "`
+}
+
+initData()
 {
     echo "数据初始化中..."
-    SQLINIT=`mysql -u$DB_USERNAME -p$DB_PASSWORD -e "
+    SQLRES_DATA=`mysql -u$DB_USERNAME -p$DB_PASSWORD -e "
     use $DB_DATABASE;
-    source $SQL;
+    source $SQL_DATA;
     "`
 }
 
@@ -85,4 +95,7 @@ if [ "$1" != "-sqlonly" ]; then
 fi
 
 deployDcat
-doInit
+initAdmin
+if [ "$1" != "-nodata" ]; then
+    initData
+fi
