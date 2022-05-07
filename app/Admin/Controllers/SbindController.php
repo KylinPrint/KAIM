@@ -86,7 +86,7 @@ class SbindController extends AdminController
             $grid->column('softwares.manufactors_id',__('厂商名称'))->display(function ($manufactors) {
                 return Manufactor::where('id',$manufactors)->pluck('name')->first();
             });
-            $grid->column('softwares.name',__('软件名'))->width('15%');
+            $grid->column('softwares.name',__('软件名'));
             $grid->column('softwares.stypes_id',__('软件类型'))->display(function ($stypes_id) {
                 return Stype::where('id',$stypes_id)->pluck('name')->first();
             });

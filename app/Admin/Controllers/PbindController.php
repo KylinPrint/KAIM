@@ -20,6 +20,7 @@ use App\Admin\Renderable\PhistoryTable;
 use App\Admin\Renderable\StatusTable;
 use App\Models\AdminUser;
 use App\Models\Brand;
+use App\Models\Manufactor;
 use App\Models\PbindHistory;
 use App\Models\Type;
 use Dcat\Admin\Admin;
@@ -52,9 +53,7 @@ class PbindController extends AdminController
      */
     protected function grid()
     {
-        return Grid::make(Pbind::with(['peripherals','releases','chips','statuses','admin_users']), function (Grid $grid) {
-
-            $grid->paginate(10);
+        return Grid::make(Pbind::with(['peripherals','releases','chips','statuses','admin_users']), function (Grid $grid) {         
 
             $grid->tools(function  (Grid\Tools  $tools)  { 
                 if(Admin::user()->can('pbinds-import'))
@@ -81,14 +80,14 @@ class PbindController extends AdminController
             if(Admin::user()->can('pbinds-export')) { $grid->export(new PbindExport()); }
 
             if(!Admin::user()->can('pbinds-action')) { $grid->disableActions(); }
-
-
-            // 默认按创建时间倒序排列
-            $grid->model()->orderBy('created_at', 'desc');
-
+         
         
             $grid->showColumnSelector();  //后期可能根据权限显示
 
+            $grid->column('peripherals.manufactors_id',__('厂商'))->display(function ($manufactors_id){
+                $manufactor = Manufactor::find($manufactors_id);
+                return $manufactor->name;
+            });
             $grid->column('peripherals.brands_id',__('品牌'))->display(function ($brands_id) {
                 $brand = Brand::find($brands_id);
                 if (!$brand->name) { return $brand->name_en; }
@@ -153,6 +152,10 @@ class PbindController extends AdminController
             $grid->scrollbarX();
             $grid->showColumnSelector();
             $grid->setActionClass(Grid\Displayers\ContextMenuActions::class);
+            $grid->paginate(10);
+            // 默认按创建时间倒序排列
+            $grid->model()->orderBy('created_at', 'desc');
+            
            
             // $grid->quickSearch('peripherals.name', 'solution', 'comment');
             $grid->filter(function (Grid\Filter $filter) {
@@ -173,6 +176,14 @@ class PbindController extends AdminController
                         });
                     });
                 }, '品牌')->width(3);
+
+                $filter->where('manufactor', function ($query) {
+                    $query->whereHas('peripherals', function ($query) {
+                        $query->whereHas('manufactors', function ($query) {
+                            $query->where('name', 'like',"%{$this->input}%");
+                        });
+                    });
+                }, '厂商')->width(3);
 
                 $filter->like('solution')->width(3);
 

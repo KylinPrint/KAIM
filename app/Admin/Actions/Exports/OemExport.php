@@ -85,6 +85,10 @@ class OemExport extends BaseExport implements WithMapping, WithHeadings, FromCol
         $curOemArr = Oem::with('releases','chips','manufactors','status','otypes')->find($row['id']);
 
         $curParentTypeName = Otype::where('id',$curOemArr->otypes->parent)->pluck('name')->first();
+        $curStatus = '';
+
+        if($row['status_id'] < 6){$curStatus = $this->getParent($row['status_id']);}
+        elseif($row['status_id'] >5){$curStatus = $this->getParent($curOemArr->status->parent);}
 
         $ExportArr['产品ID'] = '';
         $ExportArr['厂商名称'] = $curOemArr->manufactors->name;
@@ -98,9 +102,9 @@ class OemExport extends BaseExport implements WithMapping, WithHeadings, FromCol
         $ExportArr['适配类型'] = $row['adaption_type'];
         $ExportArr['体系结构'] =  $curOemArr->chips->arch;;
         $ExportArr['兼容等级'] =  $row['class'];
-        $ExportArr['适配状态'] = $this->getParent($curOemArr->status->parent); ;
+        $ExportArr['适配状态'] =  $curStatus;
         $ExportArr['安装包名称'] = '';
-        $ExportArr['下载地址'] = '';
+        $ExportArr['下载地址'] = $row['patch'];
         $ExportArr['产品描述'] = $row['details']?:'';
         $ExportArr['小版本号'] = $row['os_subversion'];
         $ExportArr['备注'] =  $row['comment'];

@@ -106,8 +106,8 @@ class OemController extends AdminController
             //各种设置
             $grid->showColumnSelector();
             $grid->disableEditButton();
-            $grid->disableViewButton();
             $grid->disableCreateButton();
+            $grid->paginate(10);
             $grid->setActionClass(Grid\Displayers\ContextMenuActions::class);
         
             $grid->filter(function (Grid\Filter $filter) {
@@ -161,23 +161,40 @@ class OemController extends AdminController
      */
     protected function detail($id)
     {
-        return Show::make($id, new Oem(), function (Show $show) {
-            $show->field('id');
-            $show->field('manufactor_id');
+        return Show::make($id, Oem::with(['manufactors','otypes','releases','chips','status']), function (Show $show) {
+
+            $show->field('manufactors.name', __('厂商'));
             $show->field('name');
-            $show->field('type_id');
+            $show->field('otypes.name', __('类型'));
             $show->field('source');
             $show->field('details');
-            $show->field('release_id');
+            $show->field('releases.name',__('操作系统版本'));
             $show->field('os_subversion');
-            $show->field('chip_id');
-            $show->field('status_id');
+            $show->field('chips.name',__('芯片'));
+            $show->field('status_parent', __('当前适配状态'))->as(function () {
+                $a = $this->status_id;
+                if($a > 5){return Status::where('id',$this->status->parent)->pluck('name')->first();}
+                if($a < 6){return Status::where('id',$a)->pluck('name')->first();}
+            });
+            $show->field('status_name', __('当前细分适配状态'))->as(function () {
+                $a = $this->status_id;
+                if($a > 5){return Status::where('id',$a)->pluck('name')->first();}
+            });
             $show->field('user_name');
             $show->field('class');
             $show->field('test_type');
-            $show->field('kylineco');
-            $show->field('iscert');
-            $show->field('test_report');
+            $show->field('kylineco')->as(function ($kylineco) {
+                if ($kylineco == '1') { return '是'; }
+                elseif ($kylineco == '0') { return '否'; }
+            });
+            $show->field('iscert')->as(function ($iscert) {
+                if ($iscert == '1') { return '是'; }
+                elseif ($iscert == '0') { return '否'; }
+            });
+            $show->field('test_report')->as(function ($iscert) {
+                if ($iscert == '1') { return '是'; }
+                elseif ($iscert == '0') { return '否'; }
+            });;
             $show->field('certificate_NO');
             $show->field('industries'); 
             $show->field('patch');
