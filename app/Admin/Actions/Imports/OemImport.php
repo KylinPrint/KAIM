@@ -82,7 +82,7 @@ class OemImport implements ToCollection, WithHeadingRow
                 'source' => $row['引入来源'],
                 'details' => $row['产品描述'],
                 'os_subversion' => $row['操作系统小版本'],
-                'status_id' => Status::where('name',$row['当前细分适配状态'])->pluck('id')->first(),
+                'status_id' => Status::where('name',$row['当前细分适配状态'])->pluck('id')->first()?:Status::where('name',$row['当前适配状态'])->pluck('id')->first(),
                 'user_name' => $row['当前适配状态责任人'],
                 'class' => $row['兼容等级'],
                 'test_type' => $row['测试方式'],
