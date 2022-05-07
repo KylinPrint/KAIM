@@ -75,7 +75,7 @@ class OemImport implements ToCollection, WithHeadingRow
                     $curManufactorId = DB::table('manufactors')->insertGetId($manufactorInsert);
                 }
             }
-
+            
             $oemInsert =
             [
                 'otypes_id' => Otype::where('name',$row['整机类型二'])->pluck('id')->first(),
@@ -152,7 +152,7 @@ class OemImport implements ToCollection, WithHeadingRow
                 [
                 'oem_id' => $curOemId,
                 'status_old' => $curHistoryId,
-                'status_new' => $oemInsert['statuses_id'],
+                'status_new' => $oemInsert['status_id'],
                 'user_name' => $oemInsert['user_name'],
                 'comment' => null,
                 'created_at' => $curtime,
