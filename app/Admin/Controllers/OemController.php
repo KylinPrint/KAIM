@@ -50,10 +50,15 @@ class OemController extends AdminController
             $grid->column('releases.name',__('操作系统版本'));
             $grid->column('os_subversion');
             $grid->column('chips.name',__('芯片'));
-            $grid->column('status.parent', __('当前适配状态'))->display(function ($parent) {
-                return Status::where('id', $parent)->pluck('name')->first();
+            $grid->column('status_parent', __('当前适配状态'))->display(function () {
+                $a = $this->status_id;
+                if($a > 5){return Status::where('id',$this->status->parent)->pluck('name')->first();}
+                if($a < 6){return Status::where('id',$a)->pluck('name')->first();}
             });
-            $grid->column('status.name', __('当前细分适配状态'));
+            $grid->column('status_name', __('当前细分适配状态'))->display(function () {
+                $a = $this->status_id;
+                if($a > 5){return Status::where('id',$a)->pluck('name')->first();}
+            });
             $grid->column('user_name');
             $grid->column('histories')
                 ->display('查看')
@@ -124,17 +129,18 @@ class OemController extends AdminController
                     ->dialogWidth('50%')
                     ->model(Chip::class, 'id', 'name')
                     ->width(3);
-                
-                $filter->equal('status.parent', '适配状态')
-                ->multipleSelectTable(StatusTable::make(['id' => 'name']))
-                ->title('适配状态')
-                ->dialogWidth('50%')
-                ->model(Status::class, 'id', 'name')
+
+                $filter->where('statuses',function ($query){
+                    $query->whereHas('status', function ($query){
+                       $query->where('parent', $this->input)->orWhere('id', $this->input);
+                    });
+                },__('适配状态'))->select(Status::where('parent',null)
+                ->pluck('name','id'))
                 ->width(3);
 
                 $filter->where('oem',function ($query){      
                     $query->whereHas('otypes', function ($query){
-                        if($this->input>5){$query->where('id', $this->input);}
+                        if($this->input>7){$query->where('id', $this->input);}
                         elseif($this->input == 0){}
                         else{$query->where('parent', $this->input);}
                     });                 
