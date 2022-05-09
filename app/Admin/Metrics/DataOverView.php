@@ -2,6 +2,7 @@
 
 namespace App\Admin\Metrics;
 
+use App\Models\Oem;
 use App\Models\Pbind;
 use App\Models\Peripheral;
 use App\Models\Sbind;
@@ -37,6 +38,7 @@ class DataOverView extends Card
 
         $pbind_count = Pbind::count();
         $sbind_count = Sbind::count();
+        $oem_count = Oem::count();
         $bind_count = $pbind_count + $sbind_count;
 
         return [
@@ -45,6 +47,7 @@ class DataOverView extends Card
             'product'       => $product_count,
             'pbind'         => $pbind_count,
             'sbind'         => $sbind_count,
+            'oem'           => $oem_count,
             'bind'          => $bind_count,
         ];
     }
@@ -86,13 +89,17 @@ class DataOverView extends Card
       <p class="mb-50">软件产品数据</p>
       <h3 class="text-bold-700 mb-50">{$data['software']}</h3>
   </div>
-  <div class="col-3 border-top border-right d-flex align-items-between flex-column py-1">
+  <div class="col-2 border-top border-right d-flex align-items-between flex-column py-1">
       <p class="mb-50">外设适配数据</p>
       <h3 class="text-bold-700 mb-50">{$data['pbind']}</h3>
   </div>
-  <div class="col-3 border-top d-flex align-items-between flex-column py-1">
+  <div class="col-2 border-top border-right d-flex align-items-between flex-column py-1">
       <p class="mb-50">软件适配数据</p>
       <h3 class="text-bold-700 mb-50">{$data['sbind']}</h3>
+  </div>
+  <div class="col-2 border-top border-right d-flex align-items-between flex-column py-1">
+      <p class="mb-50">整机适配数据</p>
+      <h3 class="text-bold-700 mb-50">{$data['oem']}</h3>
   </div>
 </div>
 HTML

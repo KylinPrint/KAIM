@@ -74,16 +74,16 @@ class OemController extends AdminController
             $grid->column('iscert')->display(function ($value) {
                 if ($value == '1')  { return '是'; }
                 elseif ($value == '0') { return '否'; }
-            });;
+            });
             $grid->column('test_report')->display(function ($value) {
                 if ($value == '1')  { return '是'; }
                 elseif ($value == '0') { return '否'; }
-            });;
+            });
             $grid->column('certificate_NO');
             $grid->column('industries');   
             $grid->column('patch');
-            $grid->column('start_time');
-            $grid->column('complete_time');
+            $grid->column('start_time')->date();
+            $grid->column('complete_time')->date();
             $grid->column('motherboard')->hide();
             $grid->column('gpu')->hide();
             $grid->column('graphic_card')->hide();
