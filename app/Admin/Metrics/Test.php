@@ -22,7 +22,7 @@ class Test extends Line
     {
         parent::init();
 
-        $this->title('新增产品数');
+        $this->title('新增产品数据');
         $this->dropdown([
             '7' => '7天内',
             '30' => '30天内',
