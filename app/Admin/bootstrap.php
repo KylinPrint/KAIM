@@ -122,7 +122,7 @@ Admin::menu(function (Menu $menu) {
             'icon'          => 'fa-tv',
             'uri'           => 'oems',
             'parent_id'     => 0,
-            'permission_id' => ['manufactors', 'brands', 'chips', 'releases', 'stypes', 'types', 'otypes', 'specifications', 'statuses'],
+            'permission_id' => ['manufactors', 'brands', 'chips', 'releases', 'types', 'otypes', 'specifications', 'statuses'],
         ],
         [
             'id'            => ++$id,
@@ -162,7 +162,7 @@ Admin::menu(function (Menu $menu) {
             'icon'          => 'fa-angle-double-right',
             'uri'           => 'stypes',
             'parent_id'     => 1,
-            'permission_id' => ['stypes'],
+            'permission_id' => ['types'],
         ],
         [
             'id'            => ++$id,
