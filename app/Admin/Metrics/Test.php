@@ -26,6 +26,7 @@ class Test extends Line
         $this->dropdown([
             '7' => '7天内',
             '30' => '30天内',
+            '365' => '一年内'
         ]);
     }
 
