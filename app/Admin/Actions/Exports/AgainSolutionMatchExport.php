@@ -140,7 +140,8 @@ class AgainSolutionMatchExport implements FromCollection, WithHeadings
                         $curMatchArr[$i]['适配状态'] = $this->getParent($curPstatus_sid);
                     }
                 }
-                else
+
+                if($curMatchArr[$i]['解决方案名'] == '暂无适配方案')
                 {
                     $curPbind = Pbind::where([
                         ['peripherals_id','=',$curPeripheralId],
