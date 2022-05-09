@@ -39,7 +39,7 @@ class DataOverView extends Card
         $pbind_count = Pbind::count();
         $sbind_count = Sbind::count();
         $oem_count = Oem::count();
-        $bind_count = $pbind_count + $sbind_count;
+        $bind_count = $pbind_count + $sbind_count + $oem_count;
 
         return [
             'peripheral'    => $peripheral_count,
