@@ -5,6 +5,7 @@ namespace App\Admin\Controllers;
 use App\Admin\Actions\Exports\SRequestExport;
 use App\Admin\Actions\Modal\SRequestModal;
 use App\Admin\Renderable\SRhistoryTable;
+use App\Admin\Utils\ContextMenuWash;
 use App\Models\AdminUser;
 use App\Models\Chip;
 use App\Models\Manufactor;
@@ -33,6 +34,9 @@ class SRequestController extends AdminController
      */
     protected function grid()
     {
+        // 恶人还需恶人磨
+        ContextMenuWash::wash();
+
         return Grid::make(SRequest::with(['stype', 'release', 'chip', 'bd']), function (Grid $grid) {
 
             $grid->paginate(10);

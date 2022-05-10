@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Utils\ContextMenuWash;
 use App\Http\Controllers\Controller;
 use App\Models\Brand;
 use App\Models\Chip;
@@ -30,6 +31,9 @@ class HomeController extends Controller
 
     protected function grid()
     {
+        // 恶人还需恶人磨
+        ContextMenuWash::wash();
+
         //考虑用权限控制数据来源
         return new Grid(null, function (Grid $grid) {
             $grid->model()->setData($this->data());

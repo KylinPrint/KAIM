@@ -5,6 +5,7 @@ namespace App\Admin\Controllers;
 use App\Admin\Actions\Exports\PRequestExport;
 use App\Admin\Actions\Modal\PRequestModal;
 use App\Admin\Renderable\PRhistoryTable;
+use App\Admin\Utils\ContextMenuWash;
 use App\Models\AdminUser;
 use App\Models\Brand;
 use App\Models\Chip;
@@ -34,6 +35,9 @@ class PRequestController extends AdminController
      */
     protected function grid()
     {
+        // 恶人还需恶人磨
+        ContextMenuWash::wash();
+
         return Grid::make(PRequest::with(['type', 'release', 'chip', 'bd','pbinds']), function (Grid $grid) {
 
             $grid->paginate(10);

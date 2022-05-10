@@ -2,12 +2,14 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Utils\ContextMenuWash;
 use App\Models\Brand;
 use App\Models\Manufactor;
 use App\Models\Peripheral;
 use App\Models\Specification;
 use App\Models\Type;
 use App\Models\Value;
+use Dcat\Admin\Admin;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
@@ -66,6 +68,9 @@ class PeripheralController extends AdminController
      */
     protected function grid()
     {
+        // 恶人还需恶人磨
+        ContextMenuWash::wash();
+        
         return Grid::make(Peripheral::with(['brands','types','manufactors']), function (Grid $grid){
 
             $grid->paginate(10);

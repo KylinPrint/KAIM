@@ -18,6 +18,7 @@ use App\Admin\Renderable\ReleaseTable;
 use App\Admin\Renderable\ChipTable;
 use App\Admin\Renderable\PhistoryTable;
 use App\Admin\Renderable\StatusTable;
+use App\Admin\Utils\ContextMenuWash;
 use App\Models\AdminUser;
 use App\Models\Brand;
 use App\Models\Manufactor;
@@ -53,6 +54,9 @@ class PbindController extends AdminController
      */
     protected function grid()
     {
+        // 恶人还需恶人磨
+        ContextMenuWash::wash();
+        
         return Grid::make(Pbind::with(['peripherals','releases','chips','statuses','admin_users']), function (Grid $grid) {         
 
             $grid->tools(function  (Grid\Tools  $tools)  { 

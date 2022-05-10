@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Utils\ContextMenuWash;
 use App\Models\Release;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
@@ -17,6 +18,9 @@ class ReleaseController extends AdminController
      */
     protected function grid()
     {
+        // 恶人还需恶人磨
+        ContextMenuWash::wash();
+
         return Grid::make(new Release(), function (Grid $grid) {
             // $grid->column('id')->sortable();
             $grid->column('name');

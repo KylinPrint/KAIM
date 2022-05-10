@@ -8,6 +8,7 @@ use App\Admin\Renderable\ChipTable;
 use App\Admin\Renderable\OhistoryTable;
 use App\Admin\Renderable\ReleaseTable;
 use App\Admin\Renderable\StatusTable;
+use App\Admin\Utils\ContextMenuWash;
 use App\Models\Chip;
 use App\Models\Oem;
 use App\Models\Release;
@@ -27,6 +28,9 @@ class OemController extends AdminController
      */
     protected function grid()
     {
+        // 恶人还需恶人磨
+        ContextMenuWash::wash();
+
         return Grid::make(Oem::with(['manufactors','otypes','releases','chips','status']), function (Grid $grid) {
 
             $grid->tools(function  (Grid\Tools  $tools)  { 
