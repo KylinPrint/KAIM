@@ -9,6 +9,7 @@ use App\Admin\Renderable\ChipTable;
 use App\Admin\Renderable\ShistoryTable;
 use App\Admin\Renderable\ReleaseTable;
 use App\Admin\Renderable\StatusTable;
+use App\Admin\Utils\ContextMenuWash;
 use App\Models\AdminUser;
 use App\Models\Chip;
 use App\Models\Manufactor;
@@ -50,6 +51,9 @@ class SbindController extends AdminController
      */
     protected function grid()
     {
+        // 恶人还需恶人磨
+        ContextMenuWash::wash();
+
         return Grid::make(Sbind::with('softwares','releases','chips','admin_users','statuses'), function (Grid $grid) {
 
             $grid->paginate(10);

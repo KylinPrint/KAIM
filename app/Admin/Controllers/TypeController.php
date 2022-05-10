@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Utils\ContextMenuWash;
 use App\Models\Type;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
@@ -18,6 +19,9 @@ class TypeController extends AdminController
      */
     protected function grid()
     {
+        // 恶人还需恶人磨
+        ContextMenuWash::wash();
+
         return Grid::make(new Type(), function (Grid $grid) {
             // $grid->column('id')->sortable();
             $grid->column('parent')->display(function($parent){

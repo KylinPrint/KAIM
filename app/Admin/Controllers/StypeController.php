@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Utils\ContextMenuWash;
 use App\Models\Stype;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
@@ -18,6 +19,9 @@ class StypeController extends AdminController
      */
     protected function grid()
     {
+        // 恶人还需恶人磨
+        ContextMenuWash::wash();
+        
         return Grid::make(new Stype(), function (Grid $grid) {
             $grid->column('parent')->display(function($parent){
                 return Stype::where('id',$parent)->pluck('name')->first();

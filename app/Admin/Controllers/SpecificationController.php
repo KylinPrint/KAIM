@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Utils\ContextMenuWash;
 use App\Models\Specification;
 use App\Models\Type;
 use Dcat\Admin\Form;
@@ -18,6 +19,9 @@ class SpecificationController extends AdminController
      */
     protected function grid()
     {
+        // 恶人还需恶人磨
+        ContextMenuWash::wash();
+
         return Grid::make(Specification::with(['types']), function (Grid $grid) {
             // $grid->column('id')->sortable();
             $grid->column('name');

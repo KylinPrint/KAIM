@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Utils\ContextMenuWash;
 use App\Models\Brand;
 use App\Models\Manufactor;
 use Dcat\Admin\Form;
@@ -18,6 +19,9 @@ class BrandController extends AdminController
      */
     protected function grid()
     {
+        // 恶人还需恶人磨
+        ContextMenuWash::wash();
+
         return Grid::make(new Brand(), function (Grid $grid) {
             // $grid->column('id')->sortable();
             $grid->column('name', '名称')->display(function () {

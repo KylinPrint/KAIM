@@ -4,6 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Admin\Actions\Modal\SolutionMatchModal;
 use App\Admin\Actions\Others\SolutionMatchDownload;
+use App\Admin\Utils\ContextMenuWash;
 use App\Models\SolutionMatch;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
@@ -20,6 +21,9 @@ class SolutionMatchController extends AdminController
      */
     protected function grid()
     {
+        // 恶人还需恶人磨
+        ContextMenuWash::wash();
+
         return Grid::make(new SolutionMatch(), function (Grid $grid) {
             $grid->model()->orderBy('created_at', 'desc');
 

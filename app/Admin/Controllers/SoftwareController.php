@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Utils\ContextMenuWash;
 use App\Models\Manufactor;
 use App\Models\Software;
 use App\Models\Stype;
@@ -19,6 +20,9 @@ class SoftwareController extends AdminController
      */
     protected function grid()
     {
+        // 恶人还需恶人磨
+        ContextMenuWash::wash();
+
         return Grid::make(Software::with(['manufactors','stypes']), function (Grid $grid) {
 
             $grid->paginate(10);
