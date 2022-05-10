@@ -44,6 +44,8 @@ class SoftwareController extends AdminController
             $grid->column('comment')->limit(50);
             $grid->column('created_at');
             $grid->column('updated_at')->sortable();
+
+            $grid->setActionClass(Grid\Displayers\ContextMenuActions::class);
             
             $grid->quickSearch('name', 'industries', 'comment');
             $grid->filter(function (Grid\Filter $filter) {

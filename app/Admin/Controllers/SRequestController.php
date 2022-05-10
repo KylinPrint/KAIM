@@ -96,6 +96,7 @@ class SRequestController extends AdminController
 
             $grid->scrollbarX();
             $grid->showColumnSelector();
+            $grid->setActionClass(Grid\Displayers\ContextMenuActions::class);
 
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->panel();
@@ -224,7 +225,7 @@ class SRequestController extends AdminController
                     ->options(config('kaim.project_level'))->required();
                 $form->text('manufactor_contact');
                 $form->date('et')->required();
-                $form->text('requester_name')->required();
+                $form->text('requester_name')->default(Admin::user()->name)->required();
                 $form->text('requester_contact')->required();
                 $form->hidden('status')->value('已提交');
                 $form->select('bd_id')
@@ -256,7 +257,7 @@ class SRequestController extends AdminController
                         ->options(config('kaim.project_level'))->required();
                     $form->text('manufactor_contact');
                     $form->date('et')->required();
-                    $form->text('requester_name')->required();
+                    $form->text('requester_name')->default(Admin::user()->name)->required();
                     $form->text('requester_contact')->required();
                     $form->select('bd_id')
                         ->options(AdminUser::all()->pluck('name', 'id'))->required();

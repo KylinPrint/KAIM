@@ -26,6 +26,8 @@ class ManufactorController extends AdminController
             });
             $grid->column('created_at');
             $grid->column('updated_at')->sortable();
+
+            $grid->setActionClass(Grid\Displayers\ContextMenuActions::class);
         
             $grid->quickSearch('name');
             $grid->selector(function (Grid\Tools\Selector $selector) {

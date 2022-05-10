@@ -41,6 +41,8 @@ class SolutionMatchController extends AdminController
 
             $grid->column('title');
             $grid->column('created_at');
+
+            $grid->setActionClass(Grid\Displayers\ContextMenuActions::class);
             
             $grid->quickSearch('title','path');
         });

@@ -23,6 +23,8 @@ class OtypeController extends AdminController
             $grid->column('parent');
             $grid->column('created_at');
             $grid->column('updated_at')->sortable();
+
+            $grid->setActionClass(Grid\Displayers\ContextMenuActions::class);
         
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->equal('id');

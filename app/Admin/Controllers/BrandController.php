@@ -28,6 +28,8 @@ class BrandController extends AdminController
             $grid->column('alias');
             $grid->column('created_at');
             $grid->column('updated_at')->sortable();
+
+            $grid->setActionClass(Grid\Displayers\ContextMenuActions::class);
         
             $grid->quickSearch('name', 'alias');
         });

@@ -118,6 +118,9 @@ class PeripheralController extends AdminController
 
             $grid->column('created_at');
             $grid->column('updated_at')->sortable();
+
+            $grid->scrollbarX();
+            $grid->setActionClass(Grid\Displayers\ContextMenuActions::class);
         
             $grid->quickSearch('name', 'industries', 'comment');
             $grid->filter(function (Grid\Filter $filter) {

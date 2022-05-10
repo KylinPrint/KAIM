@@ -25,6 +25,8 @@ class StypeController extends AdminController
             $grid->column('name');
             $grid->column('created_at');
             $grid->column('updated_at')->sortable();
+
+            $grid->setActionClass(Grid\Displayers\ContextMenuActions::class);
         
             $grid->quickSearch('name');
         });

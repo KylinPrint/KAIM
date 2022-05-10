@@ -23,6 +23,8 @@ class ChipController extends AdminController
             $grid->column('arch');
             $grid->column('created_at');
             $grid->column('updated_at')->sortable();
+
+            $grid->setActionClass(Grid\Displayers\ContextMenuActions::class);
         
             $grid->quickSearch('name', 'arch');
         });

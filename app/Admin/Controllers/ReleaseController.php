@@ -25,6 +25,8 @@ class ReleaseController extends AdminController
             $grid->column('eosl_date');
             $grid->column('created_at');
             $grid->column('updated_at')->sortable();
+
+            $grid->setActionClass(Grid\Displayers\ContextMenuActions::class);
         
             $grid->quickSearch('name', 'abbr');
         });
