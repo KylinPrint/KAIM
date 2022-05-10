@@ -163,6 +163,8 @@ class OemController extends AdminController
     {
         return Show::make($id, Oem::with(['manufactors','otypes','releases','chips','status']), function (Show $show) {
 
+            $show->disableEditButton();
+
             $show->field('manufactors.name', __('厂商'));
             $show->field('name');
             $show->field('otypes.name', __('类型'));
