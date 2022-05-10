@@ -85,8 +85,10 @@ class PbindController extends AdminController
             $grid->showColumnSelector();  //后期可能根据权限显示
 
             $grid->column('peripherals.manufactors_id',__('厂商'))->display(function ($manufactors_id){
-                $manufactor = Manufactor::find($manufactors_id);
-                return $manufactor->name;
+                if($manufactors_id){
+                    $manufactor = Manufactor::find($manufactors_id);
+                    return $manufactor->name;
+                }
             });
             $grid->column('peripherals.brands_id',__('品牌'))->display(function ($brands_id) {
                 $brand = Brand::find($brands_id);
