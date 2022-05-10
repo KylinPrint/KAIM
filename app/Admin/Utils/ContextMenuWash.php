@@ -11,9 +11,11 @@ class ContextMenuWash
         Admin::script(
             <<<JS
                 div = document.getElementById('grid-context-menu');
-                child = div.childNodes;
-                for (var i = child.length - 1; i >= 0; i--) {
-                    div.removeChild(child[i]);
+                if (div) {
+                    child = div.childNodes;
+                    for (var i = child.length - 1; i >= 0; i--) {
+                        div.removeChild(child[i]);
+                    }
                 }
             JS
         );
