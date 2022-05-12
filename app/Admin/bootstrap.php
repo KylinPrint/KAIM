@@ -27,6 +27,17 @@ use Dcat\Admin\Show;
  *
  */
 
+ // 自动深色切换
+// Admin::html(
+//     <<<HTML
+//     <script>
+//         Dcat.ready(function () {
+//             // Dcat.darkMode.toggle();
+//         })
+//     </script>
+//     HTML
+// );
+
 Admin::menu(function (Menu $menu) {
     // 软件适配菜单
     $menu->add([
