@@ -73,9 +73,32 @@ class HomeController extends Controller
         // 对于SBind和PBind,展示当前适配状态责任人为登录用户的数据
         $sbinds = Sbind::select('id', 'softwares_id',   'releases_id', 'chips_id', 'statuses_id', 'updated_at')->where('user_name', Admin::user()->name)->get()->toarray();
         $pbinds = Pbind::select('id', 'peripherals_id', 'releases_id', 'chips_id', 'statuses_id', 'updated_at')->where('user_name', Admin::user()->name)->get()->toarray();
-        // 对于SRequest和PRequest,展示需求接收人为登录用户的数据
-        $srequests = SRequest::select('id', 'manufactor', 'name', 'release_id', 'chip_id', 'status', 'updated_at')->where('bd_id', Admin::user()->id)->get()->toarray();
-        $prequests = PRequest::select('id', 'manufactor', 'name', 'release_id', 'chip_id', 'status', 'updated_at')->where('bd_id', Admin::user()->id)->get()->toarray();
+
+        // 对于SRequest和PRequest
+        $srequests = SRequest::select('id', 'manufactor', 'name', 'release_id', 'chip_id', 'status', 'updated_at')
+            // 已提交/处理中/暂停处理的数据显示给BD
+            ->where(function ($query) {
+                $query->where('bd_id', Admin::user()->id)
+                      ->whereIn('status', ['已提交', '处理中', '暂停处理']);
+            })
+            // 已处理/已拒绝的数据显示给提出人
+            ->orWhere(function ($query) {
+                $query->where('creator', Admin::user()->id)
+                      ->whereIn('status', ['已处理', '已拒绝']);
+            })
+            ->get()->toarray();
+        $prequests = PRequest::select('id', 'manufactor', 'name', 'release_id', 'chip_id', 'status', 'updated_at')
+            // 已提交/处理中/暂停处理的数据显示给BD
+            ->where(function ($query) {
+                $query->where('bd_id', Admin::user()->id)
+                      ->whereIn('status', ['已提交', '处理中', '暂停处理']);
+            })
+            // 已处理/已拒绝的数据显示给提出人
+            ->orWhere(function ($query) {
+                $query->where('creator', Admin::user()->id)
+                      ->whereIn('status', ['已处理', '已拒绝']);
+            })
+            ->get()->toarray();
 
         foreach ($sbinds as $sbind) {
             $software = Software::find($sbind['softwares_id']);

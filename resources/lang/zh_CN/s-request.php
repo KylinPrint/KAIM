@@ -30,6 +30,7 @@ return [
         'level' => '紧急程度',
         'manufactor_contact' => '厂商联系方式',
         'et' => '期望完成日期',
+        'creator' => '需求创建人',
         'requester_name' => '需求提出人',
         'requester_contact' => '需求提出人联系方式',
         'status' => '处理状态',

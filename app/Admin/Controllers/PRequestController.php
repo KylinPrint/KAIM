@@ -78,6 +78,9 @@ class PRequestController extends AdminController
             $grid->column('level');
             $grid->column('manufactor_contact');
             $grid->column('et');
+            $grid->column('creator')->display(function ($creator) {
+                return AdminUser::find($creator)->name;
+            });
             $grid->column('requester_name');
             $grid->column('requester_contact');
             $grid->column('status');
@@ -226,6 +229,7 @@ class PRequestController extends AdminController
                     ->options(config('kaim.project_level'))->required();
                 $form->text('manufactor_contact');
                 $form->date('et')->required();
+                $form->hidden('creator')->default(Admin::user()->name);
                 $form->text('requester_name')->default(Admin::user()->name)->required();
                 $form->text('requester_contact')->required();
                 $form->hidden('status')->value('已提交');
