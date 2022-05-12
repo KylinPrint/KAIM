@@ -86,8 +86,8 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
             if(preg_match('/\(|\（/',$row['品牌'])){
 
                 // 抓品牌的中文和英文
-                preg_match('/(?<=\(|\（).+?(?=\)|\）)/',$row['品牌'],$input_brand_name);
-                preg_match('/(.+(?=\())/',$row['品牌'],$input_brand_name_en);
+                preg_match('/(.+(?=\())/',$row['品牌'],$input_brand_name);
+                preg_match('/(?<=\(|\（).+?(?=\)|\）)/',$row['品牌'],$input_brand_name_en);
 
                 $brand_name = $input_brand_name[0];
                 $brand_name_en = $input_brand_name_en[0];
