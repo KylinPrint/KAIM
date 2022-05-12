@@ -188,14 +188,15 @@ Admin::menu(function (Menu $menu) {
             'parent_id'     => 1,
             'permission_id' => ['specifications'],
         ],
-        [
-            'id'            => ++$id,
-            'title'         => '适配状态管理',
-            'icon'          => 'fa-angle-double-right',
-            'uri'           => 'statuses',
-            'parent_id'     => 1,
-            'permission_id' => ['statuses'],
-        ],
+        // 先别管理了
+        // [
+        //     'id'            => ++$id,
+        //     'title'         => '适配状态管理',
+        //     'icon'          => 'fa-angle-double-right',
+        //     'uri'           => 'statuses',
+        //     'parent_id'     => 1,
+        //     'permission_id' => ['statuses'],
+        // ],
     ]);
 
     // 适配需求菜单

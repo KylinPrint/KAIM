@@ -4,7 +4,9 @@ namespace App\Admin\Metrics;
 
 use App\Models\Pbind;
 use App\Models\Sbind;
+use App\Models\Status;
 use Dcat\Admin\Admin;
+use Dcat\Admin\Support\JavaScript;
 use Dcat\Admin\Widgets\Metrics\Donut;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -32,35 +34,46 @@ class PDataAdd extends Donut
         $this->chartLabels($this->labels);
         // 设置图表颜色
         $this->chartColors($colors);
-
+        // 设置图的大小
         $this->chartHeight(150);
-
-        //显示图标百分百
-        // $this->chart([
-        //     'dataLabels' => [
-        //         'enabled' => true,
-        //         'formatter' => JavaScript::make(
-        //             <<<JS
-        //             function (val,options){
-        //                 return val.toFixed(1)+'%';
-        //             }
-        //             JS
-        //         )
-        //     ]
-        // ]);
-
+        // 设置图的格式
         $this->chart->style('margin: 15px 15px 0 0;width: 200px;float:right;');
+        // 设置卡片高度
         $this->height(285);
     }
 
+    protected function defaultChartOptions()
+    {
+        $color = Admin::color();
 
+        $colors = [$color->primary(), $color->alpha('blue2', 0.5), $color->orange2()];
 
-    /**
-     * 渲染模板
-     *
-     * @return string
-     */
-
+        return [
+            'chart' => [
+                'type' => 'donut',
+                'toolbar' => [
+                    'show' => false,
+                ],
+            ],
+            'colors' => $colors,
+            'legend' => [
+                'show' => false,
+            ],
+            'dataLabels' => [
+                'enabled' => false,
+            ],
+            'stroke' => [
+                'width' => 0,
+            ],
+            'plotOptions' => [
+                'pie' => [
+                    'donut' => [
+                        'size' => '75%',
+                    ],
+                ],
+            ],
+        ];
+    }
 
     /**
      * 写入数据.
@@ -73,42 +86,27 @@ class PDataAdd extends Donut
         $curTime = now();
         $curTimeBefor = now()->subDays($curOption)->toDateTimeString();
 
-        // $AddNum = count(Pbind::all()->whereBetween('created_at',[$curTimeBefor,$curTime]));
-        $a1 = 
-            Pbind::whereHas('statuses', function (Builder $query){
-                $query->where('parent','1')->orWhere('id','1');
-            })->whereBetween('created_at',[$curTimeBefor,$curTime])->count();
-
-        $a2 = 
-            Pbind::whereHas('statuses', function (Builder $query){
-                $query->where('parent','2')->orWhere('id','2');
-            })->whereBetween('created_at',[$curTimeBefor,$curTime])->count();
-
-        $a3 = 
-            Pbind::whereHas('statuses', function (Builder $query){
-                $query->where('parent','3')->orWhere('id','3');
-            })->whereBetween('created_at',[$curTimeBefor,$curTime])->count();
-
-        $a4 = 
-            Pbind::whereHas('statuses', function (Builder $query){
-                $query->where('parent','4')->orWhere('id','4');
-            })->whereBetween('created_at',[$curTimeBefor,$curTime])->count();
-
-        $a5 = 
-            Pbind::whereHas('statuses', function (Builder $query){
-                $query->where('parent','5')->orWhere('id','5');
-            })->whereBetween('created_at',[$curTimeBefor,$curTime])->count();
+        $data = array();
+        foreach (Status::select('id')->where('parent', null)->get()->toarray() as $id) {
+            $data[] = Pbind::whereHas('statuses', function (Builder $query) use ($id) { $query->where('parent', $id)->orWhere('id', $id); })
+            ->whereBetween('created_at', [$curTimeBefor,$curTime])
+            ->count();
+        }
+        // 不患寡而患不均
+        $data_fake = $data;
+        foreach ($data as $key => $value) {
+            if($value) {
+                if (max($data) / $value > 40) { $data_fake[$key] = max($data) / 40; }
+            }
+        }
 
         $color = Admin::color();
         $colors = [$color->red(),$color->yellow(), $color->green(),$color->blue(),$color->gray()];
  
-
-        $this->withContent($a1,$a2,$a3,$a4,$a5,$colors);
-
-        // 图表数据
-
-        $this->withChart([$a1,$a2,$a3,$a4,$a5]);
-
+        // 表
+        $this->withContent($data, $colors);
+        // 图
+        $this->withChart($data_fake);
     }
 
     /**
@@ -120,7 +118,23 @@ class PDataAdd extends Donut
      */
     public function withChart(array $data)
     {
-        return $this->chart(['series' => $data]);
+        return $this->chart([
+            'series' => $data,
+            'tooltip' => [
+                'enabled' => true,
+                'custom' => JavaScript::make(
+                    <<<JS
+                        function({seriesIndex, w}) {
+                            return '<div class="apexcharts-tooltip-series-group apexcharts-active apexcharts-tooltip-text" style="display: flex; background-color: '
+                            + w.config.colors[seriesIndex]
+                            + '; font-family: Helvetica, Arial, sans-serif; font-size: 12px;"><span>' 
+                            + w.config.labels[seriesIndex] 
+                            + '</span></div>';
+                        }
+                    JS
+                ),
+            ]
+        ]);
     }
 
     /**
@@ -131,7 +145,7 @@ class PDataAdd extends Donut
      *
      * @return $this
      */
-    protected function withContent($a1,$a2,$a3,$a4,$a5,$colors)
+    protected function withContent(array $data, $colors)
     {
         // $content = parent::render();
 
@@ -145,34 +159,32 @@ class PDataAdd extends Donut
     <div style="width: {$labelWidth}px">
         <i class="fa fa-circle" style="color: $colors[0]"></i> {$this->labels[0]}
     </div>
-    <div>{$a1}</div>
+    <div>{$data[0]}</div>
 </div>
 <div class="d-flex pl-1 pr-1 pt-1" style="{$style}">
     <div style="width: {$labelWidth}px">
         <i class="fa fa-circle" style="color: $colors[1]"></i> {$this->labels[1]}
     </div>
-    <div>{$a2}</div>
+    <div>{$data[1]}</div>
 </div>
 <div class="d-flex pl-1 pr-1 pt-1" style="{$style}">
     <div style="width: {$labelWidth}px">
         <i class="fa fa-circle" style="color: $colors[2]"></i> {$this->labels[2]}
     </div>
-    <div>{$a3}</div>
+    <div>{$data[2]}</div>
 </div>
 <div class="d-flex pl-1 pr-1 pt-1" style="{$style}">
     <div style="width: {$labelWidth}px">
         <i class="fa fa-circle" style="color: $colors[3]"></i> {$this->labels[3]}
     </div>
-    <div>{$a4}</div>
+    <div>{$data[3]}</div>
 </div>
 <div class="d-flex pl-1 pr-1 pt-1" style="{$style}">
     <div style="width: {$labelWidth}px">
         <i class="fa fa-circle" style="color: $colors[4]"></i> {$this->labels[4]}
     </div>
-    <div>{$a5}</div>
+    <div>{$data[4]}</div>
 </div>
-
-
 HTML
         );
     }
