@@ -18,7 +18,7 @@ class TypeController extends AdminController
         return $content->header('外设分类管理')
             ->body(function (Row $row) {
                 $tree = new Tree(new Type);
-                $tree->expand(false);
+
                 $tree->branch(function ($branch) {
                     return "{$branch['name']}";
                 });

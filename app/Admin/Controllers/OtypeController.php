@@ -17,7 +17,7 @@ class OtypeController extends AdminController
         return $content->header('整机分类管理')
             ->body(function (Row $row) {
                 $tree = new Tree(new Otype);
-                $tree->expand(false);
+
                 $tree->branch(function ($branch) {
                     return "{$branch['name']}";
                 });

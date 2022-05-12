@@ -151,7 +151,7 @@ class OemController extends AdminController
                 },'整机类型')->select(config('admin.database.otypes_model')::selectOptions())
                 ->width(3);
 
-                $filter->equal('test_report',_('是否有测试报告'))->select([1 => '有',0 => '无'])->width(3);;
+                $filter->equal('test_report',_('是否有测试报告'))->select([1 => '有',0 => '无'])->width(3);
             });
         });
     }
