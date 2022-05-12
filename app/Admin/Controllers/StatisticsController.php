@@ -9,7 +9,7 @@ use App\Admin\Metrics\PVShow;
 use App\Admin\Metrics\UVShow;
 use App\Admin\Metrics\PDataAdd;
 use App\Admin\Metrics\SDataAdd;
-use App\Admin\Metrics\Test;
+use App\Admin\Metrics\NewData;
 use App\Http\Controllers\Controller;
 use Dcat\Admin\Layout\Content;
 use Dcat\Admin\Layout\Row;
@@ -21,9 +21,9 @@ class StatisticsController extends Controller
         return $content
             ->header('数据统计')
             ->body(function (Row $row) {
-                $row->column(4, new PDataAdd());
-                $row->column(4, new SDataAdd());
-                $row->column(4, new DataOverView());
+                $row->column(3, new PDataAdd());
+                $row->column(3, new SDataAdd());
+                $row->column(6, new DataOverView());
                 // $row->column(4, new ODataAdd());
                 // 退役了
                 // $row->column(4, new DataCount());
@@ -31,7 +31,7 @@ class StatisticsController extends Controller
             ->body(function (Row $row) {
                 $row->column(4, new UVShow());
                 $row->column(4, new PVShow());
-                $row->column(4,new Test());
+                $row->column(4, new NewData());
             });
     }
 }

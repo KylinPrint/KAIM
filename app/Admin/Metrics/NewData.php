@@ -10,7 +10,7 @@ use Dcat\Admin\Widgets\Metrics\Line;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
 
-class Test extends Line
+class NewData extends Line
 {
     protected $labels = ['外设','软件'];
     /**
@@ -129,21 +129,21 @@ class Test extends Line
     public function withContent($p,$s)
     {
         $style = 'margin-bottom: 8px';
-        $labelWidth = 120;
+        $labelWidth = 75;
 
         return $this->content(
             <<<HTML
 <div class="d-flex pl-1 pr-1 pt-1" style="{$style}">
-    <div style="width: {$labelWidth}px">
-        <i class="fa fa-circle" style="color: #77B6EA"></i> {$this->labels[0]}
+    <div class="col-md-6" style="text-align:right">
+        <i class="fa fa-circle" style="color: #77B6EA"></i>
+        {$this->labels[0]}
+        {$p}
     </div>
-    <div>{$p}</div>
-</div>
-<div class="d-flex pl-1 pr-1 pt-1" style="{$style}">
-    <div style="width: {$labelWidth}px">
-        <i class="fa fa-circle" style="color: #545454"></i> {$this->labels[1]}
+    <div class="col-md-6" style="text-align:left">
+        <i class="fa fa-circle" style="color: #545454"></i>
+        {$this->labels[1]}
+        {$s}
     </div>
-    <div>{$s}</div>
 </div>
 HTML
         );
