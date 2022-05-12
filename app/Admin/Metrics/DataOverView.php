@@ -22,6 +22,7 @@ class DataOverView extends Card
 
         $this->title('适配数据统计');
         $this->contentWidth(0, 12);
+        $this->height(285);
     }
 
     /**

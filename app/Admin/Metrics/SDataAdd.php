@@ -50,6 +50,7 @@ class SDataAdd extends Donut
         // ]);
 
         $this->chart->style('margin: 15px 15px 0 0;width: 200px;float:right;');
+        $this->height(285);
     }
 
 
