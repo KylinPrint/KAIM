@@ -19,7 +19,7 @@ class Type extends Model
 
 	protected string $titleColumn = 'name';
 
-	protected string $orderColumn = 'id';
+	protected string $orderColumn = 'order';
 
 	protected $fillable = 
 	[
