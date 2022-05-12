@@ -65,6 +65,7 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
 
             $curtime = date('Y-m-d H:i:s');
             
+            //
             if($row['厂商'] != '')
             {
                 $curManufactorId = Manufactor::where('name',$row['厂商'])->pluck('id')->first();
@@ -81,46 +82,62 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
                 }
             }
 
-            $brand_name = '';
-            $brand_name_en = '';
+            // 如果抓到括号,默认中英文都有,且括号外中文,括号内英文
+            if(preg_match('/\(|\（/',$row['品牌'])){
 
-            preg_match('/[\x7f-\xff]+/',$row['品牌'],$input_brand_name);
-            preg_match('/[a-zA-Z]+/',$row['品牌'],$input_brand_name_en);
+                // 抓品牌的中文和英文
+                preg_match('/(?<=\(|\（).+?(?=\)|\）)/',$row['品牌'],$input_brand_name);
+                preg_match('/(.+(?=\())/',$row['品牌'],$input_brand_name_en);
 
-            if(isEmpty($input_brand_name[0]) && empty($input_brand_name_en[0]))
-            {
-                $brand_name = $input_brand_name[0];
-                $brand_name_en = '';
-                $curBrandId = Brand::where('name','like','%'.$brand_name.'%')->pluck('id')->first();
-            }
-            elseif(empty($input_brand_name[0]) && isEmpty($input_brand_name_en[0]))
-            {
-                $brand_name = '';
-                $brand_name_en = $input_brand_name_en[0];
-                $curBrandId = Brand::where('name_en','like','%'.$brand_name_en.'%')->pluck('id')->first();
-            }
-            elseif(isEmpty($input_brand_name[0]) && isEmpty($input_brand_name_en[0]))
-            {
                 $brand_name = $input_brand_name[0];
                 $brand_name_en = $input_brand_name_en[0];
                 $curBrandId = Brand::where([
                     ['name','like','%'.$brand_name.'%'],
                     ['name_en','like','%'.$brand_name_en.'%']
                 ])->pluck('id')->first();
-            }
 
-            
-            if(empty($curBrandId))
-            {
-                $brandInsert = 
-                [
-                    'name' => $brand_name,
-                    'name_en' => $brand_name_en,
-                    'alias' => null,
-                    'created_at' => $curtime,
-                    'updated_at' => $curtime,
-                ];
-                $curBrandId = DB::table('brands')->insertGetId($brandInsert);
+                if(!$curBrandId){
+                    $brandInsert = 
+                    [
+                        'name' => $brand_name,
+                        'name_en' => $brand_name_en,
+                        'alias' => null,
+                        'created_at' => $curtime,
+                        'updated_at' => $curtime,
+                    ];
+                    $curBrandId = DB::table('brands')->insertGetId($brandInsert);
+                }
+            }else{
+                if(preg_match('/[\x7f-\xff]/',$row['品牌'])){
+                    $curBrandId = Brand::where('name','like','%'.$row['品牌'].'%')->pluck('id')->first();
+
+                    if(!$curBrandId){
+                        $brandInsert = 
+                        [
+                            'name' => $row['品牌'],
+                            'name_en' => '',
+                            'alias' => null,
+                            'created_at' => $curtime,
+                            'updated_at' => $curtime,
+                        ];
+                        $curBrandId = DB::table('brands')->insertGetId($brandInsert);
+                    }
+                }else{
+                    //品牌拆分后这里应该查name_en列
+                    $curBrandId = Brand::where('name','like','%'.$row['品牌'].'%')->pluck('id')->first();
+
+                    if(!$curBrandId){
+                        $brandInsert = 
+                        [
+                            'name' => '',
+                            'name_en' => $row['品牌'],
+                            'alias' => null,
+                            'created_at' => $curtime,
+                            'updated_at' => $curtime,
+                        ];
+                        $curBrandId = DB::table('brands')->insertGetId($brandInsert);
+                    }
+                }
             }
 
             $curPeripheralId = Peripheral::where('name',$row['外设型号'])->pluck('id')->first();
