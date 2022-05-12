@@ -82,23 +82,23 @@ class DataOverView extends Card
       <p class="mb-50">适配数据</p>
       <p class="font-lg-1 text-bold-700 mb-50">{$data['bind']}</p>
   </div>
-  <div class="col-3 border-top border-right d-flex align-items-between flex-column py-1">
+  <div class="col-3 border-top border-right border-bottom d-flex align-items-between flex-column py-1">
       <p class="mb-50">外设产品数据</p>
       <h3 class="text-bold-700 mb-50">{$data['peripheral']}</h3>
   </div>
-  <div class="col-3 border-top border-right d-flex align-items-between flex-column py-1">
+  <div class="col-3 border-top border-right border-bottom d-flex align-items-between flex-column py-1">
       <p class="mb-50">软件产品数据</p>
       <h3 class="text-bold-700 mb-50">{$data['software']}</h3>
   </div>
-  <div class="col-2 border-top border-right d-flex align-items-between flex-column py-1">
+  <div class="col-2 border-top border-right border-bottom d-flex align-items-between flex-column py-1">
       <p class="mb-50">外设适配数据</p>
       <h3 class="text-bold-700 mb-50">{$data['pbind']}</h3>
   </div>
-  <div class="col-2 border-top border-right d-flex align-items-between flex-column py-1">
+  <div class="col-2 border-top border-right border-bottom d-flex align-items-between flex-column py-1">
       <p class="mb-50">软件适配数据</p>
       <h3 class="text-bold-700 mb-50">{$data['sbind']}</h3>
   </div>
-  <div class="col-2 border-top border-right d-flex align-items-between flex-column py-1">
+  <div class="col-2 border-top border-bottom d-flex align-items-between flex-column py-1">
       <p class="mb-50">整机适配数据</p>
       <h3 class="text-bold-700 mb-50">{$data['oem']}</h3>
   </div>
