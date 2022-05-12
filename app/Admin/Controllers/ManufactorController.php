@@ -33,10 +33,15 @@ class ManufactorController extends AdminController
 
             $grid->setActionClass(Grid\Displayers\ContextMenuActions::class);
         
-            $grid->quickSearch('name');
-            $grid->selector(function (Grid\Tools\Selector $selector) {
-                $selector->selectOne('isconnected', '是否建联', [0 => '否',1 => '是',]);
+            $grid->filter(function (Grid\Filter $filter) {
+                $filter->panel();
+                $filter->expand();
+
+                $filter->like('name');
+
+                $filter->equal('isconnected',_('是否建联'))->select([1 => '有',0 => '无']);
             });
+
         });
     }
 
