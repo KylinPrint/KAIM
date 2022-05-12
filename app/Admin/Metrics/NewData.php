@@ -134,16 +134,16 @@ class NewData extends Line
         return $this->content(
             <<<HTML
 <div class="d-flex pl-1 pr-1 pt-1" style="{$style}">
-    <div class="col-md-2">
+    <div class="col-md-6" style="text-align:right">
         <i class="fa fa-circle" style="color: #77B6EA"></i>
         {$this->labels[0]}
+        {$p}
     </div>
-    <div class="col-md-2"> {$p} </div>
-    <div class="col-md-2">
+    <div class="col-md-6" style="text-align:left">
         <i class="fa fa-circle" style="color: #545454"></i>
         {$this->labels[1]}
+        {$s}
     </div>
-    <div class="col-md-2"> {$s} </div>
 </div>
 HTML
         );
