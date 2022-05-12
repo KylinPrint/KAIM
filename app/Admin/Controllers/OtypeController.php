@@ -5,54 +5,25 @@ namespace App\admin\Controllers;
 use App\Admin\Utils\ContextMenuWash;
 use App\Models\Otype;
 use Dcat\Admin\Form;
-use Dcat\Admin\Grid;
-use Dcat\Admin\Show;
 use Dcat\Admin\Http\Controllers\AdminController;
+use Dcat\Admin\Layout\Row;
+use Dcat\Admin\Layout\Content;
+use Dcat\Admin\Tree;
 
 class OtypeController extends AdminController
 {
-    /**
-     * Make a grid builder.
-     *
-     * @return Grid
-     */
-    protected function grid()
+    public function index(Content $content)
     {
-        // 恶人还需恶人磨
-        ContextMenuWash::wash();
+        return $content->header('整机分类管理')
+            ->body(function (Row $row) {
+                $tree = new Tree(new Otype);
+                
+                $tree->branch(function ($branch) {
+                    return "{$branch['name']}";
+                });
 
-        return Grid::make(new Otype(), function (Grid $grid) {
-            $grid->column('id')->sortable();
-            $grid->column('name');
-            $grid->column('parent');
-            $grid->column('created_at');
-            $grid->column('updated_at')->sortable();
-
-            $grid->setActionClass(Grid\Displayers\ContextMenuActions::class);
-        
-            $grid->filter(function (Grid\Filter $filter) {
-                $filter->equal('id');
-        
+                $row->column(12, $tree);
             });
-        });
-    }
-
-    /**
-     * Make a show builder.
-     *
-     * @param mixed $id
-     *
-     * @return Show
-     */
-    protected function detail($id)
-    {
-        return Show::make($id, new Otype(), function (Show $show) {
-            $show->field('id');
-            $show->field('name');
-            $show->field('parent');
-            $show->field('created_at');
-            $show->field('updated_at');
-        });
     }
 
     /**
@@ -63,12 +34,15 @@ class OtypeController extends AdminController
     protected function form()
     {
         return Form::make(new Otype(), function (Form $form) {
-            $form->display('id');
-            $form->text('name');
-            $form->text('parent');
-        
-            $form->display('created_at');
-            $form->display('updated_at');
+            // $form->display('id');
+            $typeModel = config('admin.database.types_model');
+
+            $form->select('parent',)
+                ->options($typeModel::selectOptions())
+                ->saving(function ($v) {
+                    return (int) $v;
+                });
+            $form->text('name')->required(); 
         });
     }
 }

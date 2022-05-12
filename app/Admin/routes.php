@@ -37,6 +37,7 @@ Route::group([
     $router->resource('brands', BrandController::class);
     $router->resource('chips',ChipController::class);
     $router->resource('releases',ReleaseController::class);
+    $router->resource('otypes',OtypeController::class);
     $router->resource('stypes',StypeController::class);
     $router->resource('types',TypeController::class);
     $router->resource('specifications',SpecificationController::class);

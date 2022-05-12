@@ -5,52 +5,26 @@ namespace App\Admin\Controllers;
 use App\Admin\Utils\ContextMenuWash;
 use App\Models\Type;
 use Dcat\Admin\Form;
-use Dcat\Admin\Grid;
-use Dcat\Admin\Show;
 use Dcat\Admin\Http\Controllers\AdminController;
-use Illuminate\Http\Request;
+use Dcat\Admin\Layout\Row;
+use Dcat\Admin\Layout\Content;
+use Dcat\Admin\Tree;
 
 class TypeController extends AdminController
 {
-    /**
-     * Make a grid builder.
-     *
-     * @return Grid
-     */
-    protected function grid()
-    {
-        // 恶人还需恶人磨
-        ContextMenuWash::wash();
 
-        return Grid::make(new Type(), function (Grid $grid) {
-            // $grid->column('id')->sortable();
-            $grid->column('parent')->display(function($parent){
-                return Type::where('id',$parent)->pluck('name')->first();
+    public function index(Content $content)
+    {
+        return $content->header('外设分类管理')
+            ->body(function (Row $row) {
+                $tree = new Tree(new Type);
+                
+                $tree->branch(function ($branch) {
+                    return "{$branch['name']}";
+                });
+
+                $row->column(12, $tree);
             });
-            $grid->column('name');
-            $grid->column('created_at');
-            $grid->column('updated_at')->sortable();
-
-            $grid->setActionClass(Grid\Displayers\ContextMenuActions::class);
-        
-            $grid->quickSearch('name');
-        });
-    }
-
-    /**
-     * Make a show builder.
-     *
-     * @param mixed $id
-     *
-     * @return Show
-     */
-    protected function detail($id)
-    {
-        return Show::make($id, new Type(), function (Show $show) {
-            // $show->field('id');
-            $show->field('name');
-            $show->field('parent');
-        });
     }
 
     /**
@@ -62,39 +36,15 @@ class TypeController extends AdminController
     {
         return Form::make(new Type(), function (Form $form) {
             // $form->display('id');
+            $typeModel = config('admin.database.types_model');
 
-            if($form->isEditing())
-            {
-                $form->select('parent')->options(Type::where('parent', 0)->pluck('name','id'))->load('name','/api/type');
-                $form->select('name')->options(
-                    function (){
-
-                        $a = Type::all()->where('parent',$this->parent);
-
-                        if($a){
-                            $arr = array();
-  
-                            foreach($a as $b){
-                                $arr = $arr + [$b->id => $b->name];
-                            }
-                            return $arr;
-                        }
-                    }
-                );
-            }
-            else
-            {
-                $form->select('parent')->options(Type::where('parent', 0)->pluck('name','id'));
-                $form->text('name');
-            }          
+            $form->select('parent',)
+                ->options($typeModel::selectOptions())
+                ->saving(function ($v) {
+                    return (int) $v;
+                });
+            $form->text('name')->required(); 
         });
-    }
-
-    public function getName(Request $request)
-    {
-        $provinceId = $request->get('q')?:0;
-        return Type::where('parent', $provinceId)->get(['id', \Illuminate\Support\Facades\DB::raw('name as text')])->toArray();
-        
     }
 
 }

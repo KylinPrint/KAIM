@@ -17,7 +17,7 @@ class Stype extends Model
 
 	protected string $titleColumn = 'name';
 
-	protected string $orderColumn = 'id';
+	protected string $orderColumn = 'order';
 
 	protected static function boot()
     {
