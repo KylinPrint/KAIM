@@ -23,11 +23,15 @@ use Dcat\Admin\Widgets\Dropdown;
 class PeripheralController extends AdminController
 {
     public $url_query = array();
+    public $type_id;
 
     public function __construct()
     {
         // 处理URL参数
         parse_str(parse_url(URL::full())['query'] ?? null, $this->url_query);
+
+        // type_id设置默认值防止不带参数访问外设页面
+        $this->type_id = $this->urlQuery('type') ?? Type::where('parent' , '!=', 0)->orderBy('order')->pluck('id')->first();
     }
 
     public function urlQuery($key)
@@ -37,16 +41,13 @@ class PeripheralController extends AdminController
 
     public function index(Content $content)
     {
-        // type_id设置默认值防止不带参数访问外设页面
-        $type_id = $this->urlQuery('type') ?? Type::where('parent' , '!=', 0)->pluck('id')->first();
-
         // 创建下拉菜单
-        $type_parent = Type::find($type_id)->parent;
+        $type_parent = Type::find($this->type_id)->parent;
         $types = Type::select('id', 'name')->where('parent', $type_parent);
         $dropdown = Dropdown::make($types->pluck('id')->toarray())
             ->button('选择外设分类') // 设置按钮
             ->buttonClass('btn btn-outline btn-white waves-effect') // 设置按钮样式
-            ->click($types->find($type_id)->name) // 默认选项
+            ->click($types->find($this->type_id)->name) // 默认选项
             ->map(function ($id) use ($types) {
                 // 格式化菜单选项
                 $url = admin_url('peripherals?type='.$id);
@@ -72,16 +73,12 @@ class PeripheralController extends AdminController
         ContextMenuWash::wash();
         
         return Grid::make(Peripheral::with(['brands','types','manufactors']), function (Grid $grid){
-
             $grid->paginate(10);
-            // 没说就是激光打印机
-            // TODO 直接赋6有点脑瘫
-            $type_id = $this->urlQuery('type') ?? 6;
 
             $grid->model()->setConstraints([
-                'type' => $type_id,
+                'type' => $this->type_id,
             ]);
-            $grid->model()->where('types_id',$type_id);
+            $grid->model()->where('types_id', $this->type_id);
             // 默认按创建时间倒序排列
             $grid->model()->orderBy('created_at', 'desc');
 
@@ -102,7 +99,7 @@ class PeripheralController extends AdminController
             $grid->column('release_date');
             $grid->column('eosl_date');
 
-            $specs = Specification::where('types_id',$type_id)->get(['id', 'name', 'isrequired', 'field'])->toArray();
+            $specs = Specification::where('types_id', $this->type_id)->get(['id', 'name', 'isrequired', 'field'])->toArray();
             
             foreach ($specs as $value)
             {
@@ -212,7 +209,7 @@ class PeripheralController extends AdminController
                     return Type::where('id', $types_id)->pluck('name')->first();
                 });
             } else {
-                $form->hidden('types_id')->default($this->urlQuery('type'));
+                $form->hidden('types_id')->default($this->type_id);
                 $form->title(Type::where('id', $this->urlQuery('type'))->pluck('name')->first());
             }
             
@@ -240,7 +237,7 @@ class PeripheralController extends AdminController
 
             if ($form->isCreating()) {
                 // 脑瘫参数写法
-                $specs = Specification::where('types_id', $this->urlQuery('type'))->get(['id', 'name', 'isrequired', 'field'])->toArray();
+                $specs = Specification::where('types_id', $this->type_id)->get(['id', 'name', 'isrequired', 'field'])->toArray();
                 foreach ($specs as $value) {
                     if ($value['isrequired'] == 0) 
                     {
