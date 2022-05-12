@@ -76,6 +76,7 @@ class PRequestImport implements ToCollection, WithHeadingRow, WithValidation
                 'level' => $row['紧急程度'],
                 'manufactor_contact' => $row['厂商联系方式'],
                 'et' => date('Y-m-d',($row['期望完成日期']-25569)*24*3600),
+                'creator' => Admin::user()->id,
                 'requester_name' => $row['需求提出人'],
                 'requester_contact' => $row['需求提出人联系方式'],
                 'status' => '已提交',
