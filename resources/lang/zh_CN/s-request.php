@@ -43,7 +43,7 @@ return [
         'comment' => '备注',
         'statuses_id' => '当前适配状态',
         'statuses_comment' => '适配状态变更说明',
-        'admin_users_id' => '当前适配状态责任人',
+        'user_name' => '当前适配状态责任人',
         'kylineco' => '是否上传生态网站',
         'appstore' => '是否上架软件商店',
         'iscert' => '是否互认证',
