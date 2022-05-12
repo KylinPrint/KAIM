@@ -25,9 +25,9 @@ class PDataAdd extends Donut
 
         $this->title('外设新增适配数据');
         $this->dropdown([
-            '30' => 'Last Month',
-            '7' => 'Last 7 Days',
-            '365' => 'Last Year',
+            '30' => '30天内',
+            '7' => '7天内',
+            '365' => '1年内',
         ]);
         $this->chartLabels($this->labels);
         // 设置图表颜色
