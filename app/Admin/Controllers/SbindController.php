@@ -29,6 +29,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
 
+use function PHPUnit\Framework\isEmpty;
+
 class SbindController extends AdminController
 {
     public $url_query = array();
@@ -403,44 +405,87 @@ class SbindController extends AdminController
                 ->default($template->complete_time ?? null);
             $form->text('comment')
                 ->default($template->comment ?? null);
-        
-            $form->saving(function (Form $form) {
-                $database_name = env('DB_DATABASE');
-                $status_coming = $form->statuses_id;
-
-                if ($form->isCreating()) {
-                    // 脑瘫代码
-                    $id = DB::select("
-                        SELECT `AUTO_INCREMENT` FROM INFORMATION_SCHEMA.TABLES 
-                        WHERE TABLE_SCHEMA = '$database_name' AND TABLE_NAME = 'sbinds'
-                    ")[0]->AUTO_INCREMENT;
-                }
-                else
-                {
+            
+                // 稍作改进
+                $statuses_comment_cache = '';
+                // 暂存statuses_comment
+                $form->saving(function (Form $form) use (&$statuses_comment_cache){
+                    
+                    if(isEmpty($form->statuses_comment)){
+                        $statuses_comment_cache = $form->statuses_comment;
+                    }else{
+                        $statuses_comment_cache = null;
+                    }
+                    $form->deleteInput('statuses_comment');
+                });
+                
+                $form->saved(function (Form $form) use (&$statuses_comment_cache){
+    
                     $id = $form->getKey();
-                }
+                    // 如果有值说明进行了新增或编辑
+                    if($id){
+                        // 新增
+                        if($form->isCreating()){
+                            SbindHistory::create([
+                                'pbind_id' => $id,
+                                'status_old' => null,
+                                'status_new' => $form->statuses_id,
+                                'user_name' => Admin::user()->name,
+                                'comment' => $statuses_comment_cache,
+                            ]);
+                        // 编辑
+                        }else{
+                            $status_old = SbindHistory::where('pbind_id',$id)->orderBy('id','DESC')->pluck('status_new')->first();
+                            if($form->statuses_id != $status_old){
+                                SbindHistory::create([
+                                    'sbind_id' => $id,
+                                    'status_old' => $status_old,
+                                    'status_new' => $form->statuses_id,
+                                    'user_name' => Admin::user()->name,
+                                    'comment' => $statuses_comment_cache,
+                                ]);
+                            }      
+                        }
+                    }
+                });
 
-                // 判断当前为新增还是修改
-                if ($form->isCreating()) {
-                    $status_current = NULL;
-                }
-                else
-                {
-                    // 取当前状态
-                    $status_current = $form->model()->statuses_id;
-                }
+            // $form->saving(function (Form $form) {
+            //     $database_name = env('DB_DATABASE');
+            //     $status_coming = $form->statuses_id;
 
-                if ($status_coming != $status_current || $form->statuses_comment) {
-                    SbindHistory::create([
-                        'sbind_id' => $id,
-                        'status_old' => $status_current,
-                        'status_new' => $status_coming,
-                        'user_name' => Admin::user()->name,
-                        'comment' => $form->statuses_comment,
-                    ]);
-                }
-                $form->deleteInput('statuses_comment');
-            });
+            //     if ($form->isCreating()) {
+            //         // 脑瘫代码
+            //         $id = DB::select("
+            //             SELECT `AUTO_INCREMENT` FROM INFORMATION_SCHEMA.TABLES 
+            //             WHERE TABLE_SCHEMA = '$database_name' AND TABLE_NAME = 'sbinds'
+            //         ")[0]->AUTO_INCREMENT;
+            //     }
+            //     else
+            //     {
+            //         $id = $form->getKey();
+            //     }
+
+            //     // 判断当前为新增还是修改
+            //     if ($form->isCreating()) {
+            //         $status_current = NULL;
+            //     }
+            //     else
+            //     {
+            //         // 取当前状态
+            //         $status_current = $form->model()->statuses_id;
+            //     }
+
+            //     if ($status_coming != $status_current || $form->statuses_comment) {
+            //         SbindHistory::create([
+            //             'sbind_id' => $id,
+            //             'status_old' => $status_current,
+            //             'status_new' => $status_coming,
+            //             'user_name' => Admin::user()->name,
+            //             'comment' => $form->statuses_comment,
+            //         ]);
+            //     }
+            //     $form->deleteInput('statuses_comment');
+            // });
         });
     }
     public function sPaginate(Request $request)
