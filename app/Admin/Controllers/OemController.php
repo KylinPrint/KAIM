@@ -51,9 +51,8 @@ class OemController extends AdminController
             $grid->column('name');
             $grid->column('otypes.name', __('类型'));
             $grid->column('source');
-            $grid->column('details')->display('查看') // 设置按钮名称
-            ->modal(function ($modal) {
-                // 设置弹窗标题
+            $grid->column('details')->display('查看') ->modal(function ($modal) {
+                
                 $modal->title('产品描述');
         
                 $card = new Card($this->details);
@@ -96,8 +95,8 @@ class OemController extends AdminController
             $grid->column('certificate_NO');
             $grid->column('industries');   
             $grid->column('patch');
-            $grid->column('start_time')->date();
-            $grid->column('complete_time')->date();
+            $grid->column('start_time');
+            $grid->column('complete_time');
             $grid->column('motherboard')->hide();
             $grid->column('gpu')->hide();
             $grid->column('graphic_card')->hide();
