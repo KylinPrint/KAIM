@@ -173,9 +173,17 @@ class PRequestController extends AdminController
             $show->field('requester_contact');
             $show->field('status');
             $show->field('bd.name');
+            if ($show->model()->pbind_id) {
+                $show->field('pbind_id')->as(function ($pbind_id) {
+                    return "<a href=" . admin_url('pbinds/'.$pbind_id) . ">点击查看</a>";
+                })->link();
+            } else {
+                $show->field('pbind_id')->as(function () { return "暂无"; });
+            }
             $show->field('comment');
             $show->field('created_at');
 
+            // 需求处理记录
             $show->relation('histories', function ($model) {
                 $grid = Grid::make(new PRequestHistory);
             
@@ -393,28 +401,6 @@ class PRequestController extends AdminController
                             [ 'chips_id', $form->chip_id ],
                         ])->pluck('id')->first();
                         if (!$pbind_id) {
-
-                            $pbind_input = [
-                                'peripherals_id'=> $peripheral_id,
-                                'releases_id' => $form->release_id,
-                                'os_subversion' => $form->os_subversion,
-                                'chips_id' => $form->chip_id,
-                                'adapt_source' => $form->source,
-                                'statuses_id' => $form->statuses_id,
-                                'user_name' => $form->user_name,
-                                'kylineco' => $form->kylineco,
-                                'appstore' => $form->appstore,
-                                'iscert' => $form->iscert,
-                            ];
-
-                            $pbindH_input = [
-                                'pbind_id' => $pbind_id,
-                                'status_old' => NULL,
-                                'status_new' => $form->statuses_id,
-                                'user_name' => Admin::user()->name,
-                                'comment' => $form->statuses_comment,
-                            ];
-
                             $pbind = Pbind::create([
                                 'peripherals_id'=> $peripheral_id,
                                 'releases_id' => $form->release_id,
