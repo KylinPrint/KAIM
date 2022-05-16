@@ -180,6 +180,8 @@ class SRequestController extends AdminController
                 $show->field('sbind_id')->as(function ($sbind_id) {
                     return "<a href=" . admin_url('sbinds/'.$sbind_id) . ">点击查看</a>";
                 })->link();
+            } else {
+                $show->field('sbind_id')->as(function () { return "暂无"; });
             }
             $show->field('comment');
             $show->field('created_at');
