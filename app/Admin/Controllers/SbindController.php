@@ -188,21 +188,21 @@ class SbindController extends AdminController
                 },'软件类型')->select(config('admin.database.stypes_model')::selectOptions())
                 ->width(3);
 
-                $filter->equal('releases.id', '操作系统版本')
+                $filter->in('releases.id', '操作系统版本')
                     ->multipleSelectTable(ReleaseTable::make(['id' => 'name']))
                     ->title('弹窗标题')
                     ->dialogWidth('50%')
                     ->model(Release::class, 'id', 'name')
                     ->width(3);
 
-                $filter->equal('chips.id', '芯片')
+                $filter->in('chips.id', '芯片')
                     ->multipleSelectTable(ChipTable::make(['id' => 'name']))
                     ->title('弹窗标题')
                     ->dialogWidth('50%')
                     ->model(Chip::class, 'id', 'name')
                     ->width(3);
 
-                $filter->equal('statuses.parent', '适配状态')
+                $filter->in('statuses.parent', '适配状态')
                     ->multipleSelectTable(StatusTable::make(['id' => 'name']))
                     ->title('弹窗标题')
                     ->dialogWidth('50%')

@@ -25,6 +25,9 @@ use App\Models\Manufactor;
 use App\Models\PbindHistory;
 use App\Models\Type;
 use Dcat\Admin\Admin;
+use App\Admin\Actions\Form\PbindForm;
+use Dcat\Admin\Http\JsonResponse;
+use Dcat\Admin\Layout\Content;
 use Dcat\Admin\Widgets\Card;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -205,21 +208,21 @@ class PbindController extends AdminController
                 },'外设类型')->select(config('admin.database.types_model')::selectOptions())
                 ->width(3);
 
-                $filter->equal('releases.id', '操作系统版本')
+                $filter->in('releases.id', '操作系统版本')
                     ->multipleSelectTable(ReleaseTable::make(['id' => 'name']))
                     ->title('操作系统版本')
                     ->dialogWidth('50%')
                     ->model(Release::class, 'id', 'name')
                     ->width(3);
 
-                $filter->equal('chips.id', '芯片')
+                $filter->in('chips.id', '芯片')
                     ->multipleSelectTable(ChipTable::make(['id' => 'name']))
                     ->title('芯片')
                     ->dialogWidth('50%')
                     ->model(Chip::class, 'id', 'name')
                     ->width(3);
 
-                $filter->equal('statuses.parent', '适配状态')
+                $filter->in('statuses.parent', '适配状态')
                     ->multipleSelectTable(StatusTable::make(['id' => 'name']))
                     ->title('适配状态')
                     ->dialogWidth('50%')
@@ -421,6 +424,10 @@ class PbindController extends AdminController
                 ->default($template->complete_time ?? null);
             $form->text('comment')
                 ->default($template->comment ?? null);
+
+            if($form->isCreating()){
+                return new PbindForm(); 
+            }
             
             // 稍作改进
             $statuses_comment_cache = '';
@@ -464,46 +471,24 @@ class PbindController extends AdminController
                     }
                 }
             });
-
-            // $form->saving(function (Form $form) {
-            //     $database_name = env('DB_DATABASE');
-            //     $status_coming = $form->statuses_id;
-                
-            //     if ($form->isCreating()) {
-            //         // 脑瘫代码
-            //         $id = DB::select("
-            //             SELECT `AUTO_INCREMENT` FROM INFORMATION_SCHEMA.TABLES 
-            //             WHERE TABLE_SCHEMA = '$database_name' AND TABLE_NAME = 'pbinds'
-            //         ")[0]->AUTO_INCREMENT;
-            //     }
-            //     else
-            //     {
-            //         $id = $form->getKey();
-            //     }
-                
-            //     // 判断当前为新增还是修改
-            //     if ($form->isCreating()) {
-            //         $status_current = NULL;
-            //     }
-            //     else
-            //     {
-            //         // 取当前状态
-            //         $status_current = $form->model()->statuses_id;
-            //     }
-                
-            //     if ($status_coming != $status_current || $form->statuses_comment) {
-            //         PbindHistory::create([
-            //             'pbind_id' => $id,
-            //             'status_old' => $status_current,
-            //             'status_new' => $status_coming,
-            //             'user_name' => Admin::user()->name,
-            //             'comment' => $form->statuses_comment,
-            //         ]);
-            //     }
-            //     $form->deleteInput('statuses_comment');
-            // });
         });
     }
+
+    // public function store()
+    // {
+    //     $allData = request()->all();
+    //     if (empty($allData)) {
+    //         return JsonResponse::make()->error('没有数据提交！');
+    //     }
+
+    //     // 循环数据
+    //     foreach ($allData as $key => $value) {   
+    //         Pbind::query()->updateOrCreate();
+    //     }
+    //     return JsonResponse::make()->success('提交成功！')->redirect('pbinds');
+  
+    // }
+
     public function pPaginate(Request $request)
     {
         $q = $request->get('q');

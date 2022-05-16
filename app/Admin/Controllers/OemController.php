@@ -129,14 +129,14 @@ class OemController extends AdminController
 
                 $filter->like('name')->width(3);;
 
-                $filter->equal('releases.id', '操作系统版本')
+                $filter->in('releases.id', '操作系统版本')
                     ->multipleSelectTable(ReleaseTable::make(['id' => 'name']))
                     ->title('操作系统版本')
                     ->dialogWidth('50%')
                     ->model(Release::class, 'id', 'name')
                     ->width(3);
 
-                $filter->equal('chips.id', '芯片')
+                $filter->in('chips.id', '芯片')
                     ->multipleSelectTable(ChipTable::make(['id' => 'name']))
                     ->title('芯片')
                     ->dialogWidth('50%')
