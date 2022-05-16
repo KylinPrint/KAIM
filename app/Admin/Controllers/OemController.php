@@ -18,6 +18,7 @@ use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
 use Dcat\Admin\Http\Controllers\AdminController;
+use Dcat\Admin\Widgets\Metrics\Card;
 
 class OemController extends AdminController
 {
@@ -50,7 +51,16 @@ class OemController extends AdminController
             $grid->column('name');
             $grid->column('otypes.name', __('类型'));
             $grid->column('source');
-            $grid->column('details');
+            $grid->column('details')->display('查看') // 设置按钮名称
+            ->modal(function ($modal) {
+                // 设置弹窗标题
+                $modal->title('产品描述');
+        
+                $card = new Card($this->details);
+        
+                return "<div style='padding:10px 10px 0'>$card</div>";
+            });
+
             $grid->column('releases.name',__('操作系统版本'));
             $grid->column('os_subversion');
             $grid->column('chips.name',__('芯片'));
@@ -173,7 +183,7 @@ class OemController extends AdminController
             $show->field('name');
             $show->field('otypes.name', __('类型'));
             $show->field('source');
-            $show->field('details');
+            $show->text('details');
             $show->field('releases.name',__('操作系统版本'));
             $show->field('os_subversion');
             $show->field('chips.name',__('芯片'));
