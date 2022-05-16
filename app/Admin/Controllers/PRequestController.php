@@ -173,13 +173,11 @@ class PRequestController extends AdminController
             $show->field('requester_contact');
             $show->field('status');
             $show->field('bd.name');
-            $show->field('pbind_id')->as(function ($pbind_id) {
-                if ($pbind_id) {
+            if ($show->model()->pbind_id) {
+                $show->field('pbind_id')->as(function ($pbind_id) {
                     return "<a href=" . admin_url('pbinds/'.$pbind_id) . ">点击查看</a>";
-                } else {
-                    return "<a href=#" . ">暂无</a>";
-                }
-            })->link();
+                })->link();
+            }
             $show->field('comment');
             $show->field('created_at');
 

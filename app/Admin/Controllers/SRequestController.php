@@ -176,13 +176,11 @@ class SRequestController extends AdminController
             $show->field('requester_contact');
             $show->field('status');
             $show->field('bd.name');
-            $show->field('pbind_id')->as(function ($pbind_id) {
-                if ($pbind_id) {
-                    return "<a href=" . admin_url('pbinds/'.$pbind_id) . ">点击查看</a>";
-                } else {
-                    return "<a href=#" . ">暂无</a>";
-                }
-            })->link();
+            if ($show->model()->sbind_id) {
+                $show->field('sbind_id')->as(function ($sbind_id) {
+                    return "<a href=" . admin_url('sbinds/'.$sbind_id) . ">点击查看</a>";
+                })->link();
+            }
             $show->field('comment');
             $show->field('created_at');
 
