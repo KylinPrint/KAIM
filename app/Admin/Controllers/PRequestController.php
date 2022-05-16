@@ -177,7 +177,7 @@ class PRequestController extends AdminController
                 if ($pbind_id) {
                     return "<a href=" . admin_url('pbinds/'.$pbind_id) . ">点击查看</a>";
                 } else {
-                    return '暂无';
+                    return "<a href=#" . ">暂无</a>";
                 }
             })->link();
             $show->field('comment');
