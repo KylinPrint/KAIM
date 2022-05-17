@@ -25,11 +25,8 @@ use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
 use Dcat\Admin\Http\Controllers\AdminController;
 use Dcat\Admin\Widgets\Card;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
-
-use function PHPUnit\Framework\isEmpty;
 
 class SbindController extends AdminController
 {
@@ -165,7 +162,7 @@ class SbindController extends AdminController
                     $query->whereHas('softwares', function ($query){
                         $query->where('name', 'like','%'.$this->input.'%');
                     });
-                },'产品型号')->width(3);
+                },'软件名称')->width(3);
 
                 $filter->where('manufacture', function ($query) {
                     $query->whereHas('softwares', function ($query) {
@@ -350,10 +347,18 @@ class SbindController extends AdminController
             $form->text('os_subversion')
                 ->help('例如:V10SP1-Build01-0326')
                 ->default($template->os_subversion ?? null);
-            $form->select('chips_id',__('芯片'))
-                ->options(Chip::all()->pluck('name','id'))
-                ->required()
-                ->default($template->chips_id ?? null);
+            if ($form->isCreating()) {
+                $form->multipleSelect('chips_id',__('芯片'))
+                    ->options(Chip::all()->pluck('name','id'))
+                    ->saving(function ($value) { return implode(',', $value); })
+                    ->required()
+                    ->default($template->chips_id ?? null);
+            } else {
+                $form->select('chips_id',__('芯片'))
+                    ->options(Chip::all()->pluck('name','id'))
+                    ->required()
+                    ->default($template->chips_id ?? null);
+            }
             $form->select('adapt_source')
                  ->options(config('kaim.adapt_source'))
                  ->required()
@@ -406,86 +411,69 @@ class SbindController extends AdminController
             $form->text('comment')
                 ->default($template->comment ?? null);
             
-                // 稍作改进
-                $statuses_comment_cache = '';
                 // 暂存statuses_comment
-                $form->saving(function (Form $form) use (&$statuses_comment_cache){
-                    
-                    if(isEmpty($form->statuses_comment)){
-                        $statuses_comment_cache = $form->statuses_comment;
-                    }else{
-                        $statuses_comment_cache = null;
+                $statuses_comment = '';
+                
+                $form->saving(function (Form $form) use (&$statuses_comment){
+                    if($form->isCreating()) {
+                        // 读取表单数据
+                        $data = $form->input();
+                        // 读取多选的芯片
+                        $chips_id = array_filter($data['chips_id']);
+                        // 取消无意义的数据
+                        unset($data['chips_id'], $data["_previous_"], $data["_token"], $data['chss']);
+                        // 初始化错误信息
+                        $message = array();
+                        // 遍历芯片
+                        foreach ($chips_id as $chip_id) {
+                            $data['chips_id'] = $chip_id;
+                            $chip = Chip::find($data["chips_id"]);
+                            // 创建PBinds记录
+                            $sbind = null;
+                            try {
+                                $sbind = Sbind::create($data);
+                            } catch (\Throwable $th) {
+                                //throw $th;
+                            }
+                            if($sbind) {
+                                // 创建PBinds历史记录
+                                SbindHistory::create([
+                                    'sbind_id' => $sbind->id,
+                                    'status_old' => null,
+                                    'status_new' => $data['statuses_id'],
+                                    'user_name' => Admin::user()->name,
+                                    'comment' => $statuses_comment,
+                                ]);
+                            } else {
+                                // 返回错误
+                                $message[] = $chip->name;
+                            }
+                        }
+                        // 返回提示并跳转
+                        if ($message) {
+                            return $form->response()->warning('操作完成,其中"' . implode(',', $message) . '"的数据创建失败')->redirect('sbinds');
+                        } else {
+                            return $form->response()->success('操作完成')->redirect('sbinds');
+                        }
+                    } else {
+                        $statuses_comment = $form->statuses_comment ?? null;
+                        $form->deleteInput('statuses_comment');
                     }
-                    $form->deleteInput('statuses_comment');
                 });
                 
-                $form->saved(function (Form $form) use (&$statuses_comment_cache){
-    
+                $form->saved(function (Form $form) use (&$statuses_comment){
                     $id = $form->getKey();
-                    // 如果有值说明进行了新增或编辑
-                    if($id){
-                        // 新增
-                        if($form->isCreating()){
-                            SbindHistory::create([
-                                'pbind_id' => $id,
-                                'status_old' => null,
-                                'status_new' => $form->statuses_id,
-                                'user_name' => Admin::user()->name,
-                                'comment' => $statuses_comment_cache,
-                            ]);
-                        // 编辑
-                        }else{
-                            $status_old = SbindHistory::where('pbind_id',$id)->orderBy('id','DESC')->pluck('status_new')->first();
-                            if($form->statuses_id != $status_old){
-                                SbindHistory::create([
-                                    'sbind_id' => $id,
-                                    'status_old' => $status_old,
-                                    'status_new' => $form->statuses_id,
-                                    'user_name' => Admin::user()->name,
-                                    'comment' => $statuses_comment_cache,
-                                ]);
-                            }      
-                        }
+                    $status_old = SbindHistory::where('sbind_id', $id)->orderBy('id','DESC')->pluck('status_new')->first();
+                    if($form->statuses_id != $status_old){
+                        SbindHistory::create([
+                            'sbind_id' => $id,
+                            'status_old' => $status_old,
+                            'status_new' => $form->statuses_id,
+                            'user_name' => Admin::user()->name,
+                            'comment' => $statuses_comment,
+                        ]);
                     }
                 });
-
-            // $form->saving(function (Form $form) {
-            //     $database_name = env('DB_DATABASE');
-            //     $status_coming = $form->statuses_id;
-
-            //     if ($form->isCreating()) {
-            //         // 脑瘫代码
-            //         $id = DB::select("
-            //             SELECT `AUTO_INCREMENT` FROM INFORMATION_SCHEMA.TABLES 
-            //             WHERE TABLE_SCHEMA = '$database_name' AND TABLE_NAME = 'sbinds'
-            //         ")[0]->AUTO_INCREMENT;
-            //     }
-            //     else
-            //     {
-            //         $id = $form->getKey();
-            //     }
-
-            //     // 判断当前为新增还是修改
-            //     if ($form->isCreating()) {
-            //         $status_current = NULL;
-            //     }
-            //     else
-            //     {
-            //         // 取当前状态
-            //         $status_current = $form->model()->statuses_id;
-            //     }
-
-            //     if ($status_coming != $status_current || $form->statuses_comment) {
-            //         SbindHistory::create([
-            //             'sbind_id' => $id,
-            //             'status_old' => $status_current,
-            //             'status_new' => $status_coming,
-            //             'user_name' => Admin::user()->name,
-            //             'comment' => $form->statuses_comment,
-            //         ]);
-            //     }
-            //     $form->deleteInput('statuses_comment');
-            // });
         });
     }
     public function sPaginate(Request $request)
