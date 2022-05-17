@@ -35,7 +35,7 @@ class StypeController extends AdminController
     {
         return Form::make(new Stype(), function (Form $form) {
             // $form->display('id');
-            $typeModel = config('admin.database.types_model');
+            $typeModel = config('admin.database.stypes_model');
 
             $form->select('parent',)
                 ->options($typeModel::selectOptions())
