@@ -57,11 +57,11 @@ class SRequestImport implements ToCollection, WithHeadingRow, WithValidation
 
             if(!$row['需求来源']){continue;}  //TODO 上边写的异常抛出后不继续执行，待检查
             
-            $parentID = Stype::where('name',$row['分类二'])->pluck('id')->first();
+            $parentID = Stype::where('name',trim($row['分类二']))->pluck('id')->first();
             $SRequestInsert =
             [
                 'source' => $row['需求来源'],
-                'stype_id' => Stype::where([['parent',$parentID],['name',$row['分类三']]])->pluck('id')->first(),
+                'stype_id' => Stype::where([['parent',$parentID],['name',trim($row['分类三'])]])->pluck('id')->first(),
                 'industry' => $row['涉及行业'],
                 'os_subversion' => $row['操作系统小版本号'],
                 'project_name' => $row['项目名称'],
@@ -85,8 +85,8 @@ class SRequestImport implements ToCollection, WithHeadingRow, WithValidation
                 'manufactor' => $row['厂商名称'], 
                 'name' => $row['产品名称'], 
                 'version' => $row['产品版本'],
-                'chip_id' => Chip::where('name',$row['芯片'])->pluck('id')->first(),
-                'release_id' => Release::where('name',$row['操作系统版本'])->pluck('id')->first(),
+                'chip_id' => Chip::where('name',trim($row['芯片']))->pluck('id')->first(),
+                'release_id' => Release::where('name',trim($row['操作系统版本']))->pluck('id')->first(),
             ];
             
             $a = SRequest::updateOrCreate($sRequestInsertUnique,$SRequestInsert);
