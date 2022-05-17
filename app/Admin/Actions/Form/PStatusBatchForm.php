@@ -45,7 +45,7 @@ class PStatusBatchForm extends Form implements LazyRenderable
             'pbind_id' => $id,
             'status_old' => $pbind->statuses_id,
             'status_new' => $statuses_id,
-            'admin_users_id' => Admin::user()->id,
+            'user_name' => Admin::user()->name,
             'comment' => $comment,
           ]);
 
@@ -56,7 +56,7 @@ class PStatusBatchForm extends Form implements LazyRenderable
         
       }
         
-      return $this->response()->success('提交成功')->refresh();         
+      return $this->response()->success('提交成功')->refresh();
     }
   
     /**
@@ -69,7 +69,8 @@ class PStatusBatchForm extends Form implements LazyRenderable
         $this->textarea('comment', admin_trans('pbind.fields.statuses_comment'))->required();
         //批量选择的行的值传递
         $this->hidden('id')->attribute('id', 'batchsp-id'); //批量选择的行的id通过隐藏元素 提交时一并传递过去
-        
+        // $a = $this->parent->attributes;
+        $b = 0;
     }
   
     /**
