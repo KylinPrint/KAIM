@@ -6,6 +6,7 @@ use App\Admin\Utils\ContextMenuWash;
 use App\Models\Manufactor;
 use App\Models\Software;
 use App\Models\Stype;
+use Dcat\Admin\Admin;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
@@ -50,6 +51,12 @@ class SoftwareController extends AdminController
             $grid->column('updated_at')->sortable();
 
             $grid->setActionClass(Grid\Displayers\ContextMenuActions::class);
+            if(Admin::user()->can('sotfwares-action'))
+            {
+                $grid->showCreateButton();
+            }else{
+                $grid->disableCreateButton();
+            }
             
             $grid->quickSearch('name', 'industries', 'comment');
             $grid->filter(function (Grid\Filter $filter) {

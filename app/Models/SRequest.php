@@ -27,6 +27,7 @@ class SRequest extends Model
 		'level',
 		'manufactor_contact',
 		'et',
+		'creator',
 		'requester_name',
 		'requester_contact',
 		'status',

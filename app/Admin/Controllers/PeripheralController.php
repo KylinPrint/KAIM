@@ -123,6 +123,13 @@ class PeripheralController extends AdminController
 
             $grid->scrollbarX();
             $grid->setActionClass(Grid\Displayers\ContextMenuActions::class);
+
+            if(Admin::user()->can('peripherals-action'))
+            {
+                $grid->showCreateButton();
+            }else{
+                $grid->disableCreateButton();
+            }
         
             $grid->quickSearch('name', 'industries', 'comment');
             $grid->filter(function (Grid\Filter $filter) {
