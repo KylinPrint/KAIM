@@ -62,7 +62,7 @@ class OemImport implements ToCollection, WithHeadingRow
             
             if($row['厂商'] != '')
             {
-                $curManufactorId = Manufactor::where('name',$row['厂商'])->pluck('id')->first();
+                $curManufactorId = Manufactor::where('name',trim($row['厂商']))->pluck('id')->first();
                 if(!$curManufactorId)
                 {
                     $manufactorInsert = 
@@ -78,11 +78,11 @@ class OemImport implements ToCollection, WithHeadingRow
             
             $oemInsert =
             [
-                'otypes_id' => Otype::where('name',$row['整机类型二'])->pluck('id')->first(),
+                'otypes_id' => Otype::where('name',trim($row['整机类型二']))->pluck('id')->first(),
                 'source' => $row['引入来源'],
                 'details' => $row['产品描述'],
                 'os_subversion' => $row['操作系统小版本'],
-                'status_id' => Status::where('name',$row['当前细分适配状态'])->pluck('id')->first()?:Status::where('name',$row['当前适配状态'])->pluck('id')->first(),
+                'status_id' => Status::where('name',trim($row['当前细分适配状态']))->pluck('id')->first()?:Status::where('name',trim($row['当前适配状态']))->pluck('id')->first(),
                 'user_name' => $row['当前适配状态责任人'],
                 'class' => $row['兼容等级'],
                 'test_type' => $row['测试方式'],
@@ -117,8 +117,8 @@ class OemImport implements ToCollection, WithHeadingRow
             [
                 'manufactors_id' => $curManufactorId,
                 'name' => $row['整机型号'],
-                'releases_id' => Release::where('name',$row['操作系统版本'])->pluck('id')->first(),
-                'chips_id' => Chip::where('name','like','%'.$row['芯片'].'%')->pluck('id')->first(),
+                'releases_id' => Release::where('name',trim($row['操作系统版本']))->pluck('id')->first(),
+                'chips_id' => Chip::where('name','like','%'.trim($row['芯片']).'%')->pluck('id')->first(),
             ];
             
             $a = Oem::updateOrCreate($oemInsertUnique,$oemInsert);

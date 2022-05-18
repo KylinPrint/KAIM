@@ -68,7 +68,7 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
             //
             if($row['厂商'] != '')
             {
-                $curManufactorId = Manufactor::where('name',$row['厂商'])->pluck('id')->first();
+                $curManufactorId = Manufactor::where('name',trim($row['厂商']))->pluck('id')->first();
                 if(empty($curManufactorId))
                 {
                     $manufactorInsert = 
@@ -86,8 +86,8 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
             if(preg_match('/\(|\（/',$row['品牌'])){
 
                 // 抓品牌的中文和英文
-                preg_match('/(.+(?=\())/',$row['品牌'],$input_brand_name);
-                preg_match('/(?<=\(|\（).+?(?=\)|\）)/',$row['品牌'],$input_brand_name_en);
+                preg_match('/(.+(?=\())/',trim($row['品牌']),$input_brand_name);
+                preg_match('/(?<=\(|\（).+?(?=\)|\）)/',trim($row['品牌']),$input_brand_name_en);
 
                 $brand_name = $input_brand_name[0];
                 $brand_name_en = $input_brand_name_en[0];
@@ -108,7 +108,7 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
                 }
             }else{
                 if(preg_match('/[\x7f-\xff]/',$row['品牌'])){
-                    $curBrandId = Brand::where('name','like','%'.$row['品牌'].'%')->pluck('id')->first();
+                    $curBrandId = Brand::where('name','like','%'.trim($row['品牌']).'%')->pluck('id')->first();
 
                     if(!$curBrandId){
                         $brandInsert = 
@@ -123,7 +123,7 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
                     }
                 }else{
                     //品牌拆分后这里应该查name_en列
-                    $curBrandId = Brand::where('name','like','%'.$row['品牌'].'%')->pluck('id')->first();
+                    $curBrandId = Brand::where('name','like','%'.trim($row['品牌']).'%')->pluck('id')->first();
 
                     if(!$curBrandId){
                         $brandInsert = 
@@ -139,7 +139,7 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
                 }
             }
 
-            $curPeripheralId = Peripheral::where('name',$row['外设型号'])->pluck('id')->first();
+            $curPeripheralId = Peripheral::where('name',trim($row['外设型号']))->pluck('id')->first();
             if(empty($curPeripheralId))
             {
                 $parentID = Type::where('name',$row['外设类型一'])->pluck('id')->first();
@@ -148,7 +148,7 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
                     'name' => $row['外设型号'],
                     'manufactors_id' => isset($curManufactorId) ? $curManufactorId : null,
                     'brands_id' => $curBrandId,
-                    'types_id' => Type::where([['parent',$parentID],['name',$row['外设类型二']]])->pluck('id')->first(),
+                    'types_id' => Type::where([['parent',$parentID],['name',trim($row['外设类型二'])]])->pluck('id')->first(),
                     'release_date' => $row['发布日期'] ? date('Y-m-d',($row['发布日期']-25569)*24*3600):null,
                     'eosl_date' => $row['服务终止日期'] ? date('Y-m-d',($row['服务终止日期']-25569)*24*3600):null,
                     'industries' => $row['行业分类'],
@@ -184,8 +184,8 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
             $pbindInsertUnique = 
             [
                 'peripherals_id' => $curPeripheralId,
-                'chips_id' => Chip::where('name','like','%'.$row['芯片'].'%')->pluck('id')->first(),
-                'releases_id' => Release::where('name',$row['操作系统版本'])->pluck('id')->first(),
+                'chips_id' => Chip::where('name','like','%'.trim($row['芯片']).'%')->pluck('id')->first(),
+                'releases_id' => Release::where('name',trim($row['操作系统版本']))->pluck('id')->first(),
             ];
             
             $a = Pbind::updateOrCreate($pbindInsertUnique,$pbindInsert);
