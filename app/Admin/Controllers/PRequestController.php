@@ -251,6 +251,8 @@ class PRequestController extends AdminController
         return Form::make(PRequest::with(['type', 'release', 'chip', 'bd']), function (Form $form) {
             if ($form->isCreating()) {
                 // 新增需求
+                // 获取分类ModelTree
+                $typeModel = config('admin.database.types_model');
                 // 获取要复制的行的ID
                 $template = PRequest::find($this->urlQuery('template'));
 
@@ -264,7 +266,7 @@ class PRequestController extends AdminController
                 $form->text('name')->required()
                     ->default($template->name ?? null);
                 $form->select('type_id')
-                    ->options(Type::where('parent', '!=', 0)->pluck('name', 'id'))
+                    ->options($typeModel::selectOptions())
                     ->required()
                     ->default($template->type_id ?? null);
                 $form->tags('industry')

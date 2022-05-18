@@ -248,6 +248,8 @@ class SRequestController extends AdminController
         return Form::make(SRequest::with(['stype', 'release', 'chip', 'bd']), function (Form $form) {
             if ($form->isCreating()) {
                 // 新增需求
+                // 获取分类ModelTree
+                $stypeModel = config('admin.database.stypes_model');
                 // 获取要复制的行的ID
                 $template = SRequest::find($this->urlQuery('template'));
 
@@ -261,7 +263,8 @@ class SRequestController extends AdminController
                 $form->text('version')->required()
                     ->default($template->version ?? null);
                 $form->select('stype_id')
-                    ->options(Stype::all()->pluck('name', 'id'))->required()
+                    ->options($stypeModel::selectOptions())
+                    ->required()
                     ->default($template->stype_id ?? null);
                 $form->tags('industry')
                     ->options(config('kaim.industry'))
