@@ -246,10 +246,10 @@ class SRequestController extends AdminController
     protected function form()
     {
         return Form::make(SRequest::with(['stype', 'release', 'chip', 'bd']), function (Form $form) {
+            // 获取分类ModelTree
+            $stypeModel = config('admin.database.stypes_model');
+            // 新增需求
             if ($form->isCreating()) {
-                // 新增需求
-                // 获取分类ModelTree
-                $stypeModel = config('admin.database.stypes_model');
                 // 获取要复制的行的ID
                 $template = SRequest::find($this->urlQuery('template'));
 
@@ -306,7 +306,9 @@ class SRequestController extends AdminController
                 $form->text('comment')
                     ->default($template->comment ?? null);
             }
+            // 编辑需求
             else {
+                // 已提交的需求
                 if ($form->model()->status == '已提交') {
                     $form->select('source')
                         ->options(config('kaim.adapt_source'))->required();
@@ -314,7 +316,7 @@ class SRequestController extends AdminController
                     $form->text('name')->required();
                     $form->text('version')->required();
                     $form->select('stype_id')
-                        ->options(Stype::all()->pluck('name', 'id'))->required();
+                        ->options($stypeModel::selectOptions())->required();
                     $form->tags('industry')
                         ->options(config('kaim.industry'))
                         ->saving(function ($value) { return implode(',', $value); })->required();

@@ -249,10 +249,10 @@ class PRequestController extends AdminController
     protected function form()
     {
         return Form::make(PRequest::with(['type', 'release', 'chip', 'bd']), function (Form $form) {
+            // 获取分类ModelTree
+            $typeModel = config('admin.database.types_model');
+            // 新增需求
             if ($form->isCreating()) {
-                // 新增需求
-                // 获取分类ModelTree
-                $typeModel = config('admin.database.types_model');
                 // 获取要复制的行的ID
                 $template = PRequest::find($this->urlQuery('template'));
 
@@ -309,7 +309,9 @@ class PRequestController extends AdminController
                 $form->text('comment')
                     ->default($template->comment ?? null);
             }
+            // 编辑需求
             else {
+                // 已提交的需求
                 if ($form->model()->status == '已提交') {
                     $form->select('source')
                         ->options(config('kaim.adapt_source'))->required();
@@ -317,7 +319,7 @@ class PRequestController extends AdminController
                     $form->text('brand')->required();
                     $form->text('name')->required();
                     $form->select('type_id')
-                        ->options(Type::where('parent', '!=', 0)->pluck('name', 'id'))->required();
+                        ->options($typeModel::selectOptions())->required();
                     $form->tags('industry')
                         ->options(config('kaim.industry'))
                         ->saving(function ($value) { return implode(',', $value); })->required();
