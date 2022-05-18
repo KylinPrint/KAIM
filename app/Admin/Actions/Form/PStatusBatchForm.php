@@ -69,8 +69,6 @@ class PStatusBatchForm extends Form implements LazyRenderable
         $this->textarea('comment', admin_trans('pbind.fields.statuses_comment'))->required();
         //批量选择的行的值传递
         $this->hidden('id')->attribute('id', 'batchsp-id'); //批量选择的行的id通过隐藏元素 提交时一并传递过去
-        // $a = $this->parent->attributes;
-        $b = 0;
     }
   
     /**
