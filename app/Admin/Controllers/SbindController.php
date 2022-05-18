@@ -261,7 +261,9 @@ class SbindController extends AdminController
             $show->field('softwares.manufactors_id', __('厂商名称'))->as(function ($manufactors_id) {
                 return Manufactor::where('id', $manufactors_id)->pluck('name')->first();
             });
-            $show->field('softwares.name', __('软件名'));
+            $show->field('softwares', __('软件名'))->as(function ($softwares) {
+                return "<a href=" . admin_url('softwares/' . $softwares["id"]) . ">" . $softwares["name"] . "</a>";
+            })->link();
             $show->field('softwares.stypes_id', __('软件类型'))->as(function ($stypes_id) {
                 return Stype::where('id', $stypes_id)->pluck('name')->first();
             });

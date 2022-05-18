@@ -276,7 +276,9 @@ class PbindController extends AdminController
             $show->field('peripherals.brands_id', __('品牌'))->as(function ($brand) {
                 return Brand::where('id', $brand)->pluck('name')->first();
             });
-            $show->field('peripherals.name',__('型号'));
+            $show->field('peripherals',__('型号'))->as(function ($peripherals) {
+                return "<a href=" . admin_url('peripherals/' . $peripherals["id"]) . ">" . $peripherals["name"] . "</a>";
+            })->link();
             $show->field('peripherals.types_id', __('外设类型'))->as(function ($type) {
                 return Type::where('id', $type)->pluck('name')->first();
             });
