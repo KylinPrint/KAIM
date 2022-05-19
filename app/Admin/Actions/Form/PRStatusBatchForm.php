@@ -75,6 +75,10 @@ class PRStatusBatchForm extends Form implements LazyRenderable
                     // 拆分中英文
                     preg_match('/(.+(?=\(|\（))/', trim($prequest->brand), $brand_name);
                     preg_match('/(?<=\(|\（).+?(?=\)|\）)/', trim($prequest->brand), $brand_name_en);
+                    $brand = Brand::firstOrCreate([
+                        'name'      => $brand_name[0] ?? null,
+                        'name_en'   => $brand_name_en[0] ?? null,
+                    ]);
                 } else {
                     // 抓中文
                     if (preg_match('/[\x7f-\xff]/', $prequest->brand)) {
@@ -82,11 +86,11 @@ class PRStatusBatchForm extends Form implements LazyRenderable
                     } else {
                         $brand_name_en = trim($prequest->brand);
                     }
+                    $brand = Brand::firstOrCreate([
+                        'name'      => $brand_name ?? null,
+                        'name_en'   => $brand_name_en ?? null,
+                    ]);
                 }
-                $brand = Brand::firstOrCreate([
-                    'name'      => $brand_name[0] ?? $brand_name ?? null,
-                    'name_en'   => $brand_name_en[0] ?? $brand_name_en ?? null,
-                ]);
 
                 // Peripheral
                 $peripheral = Peripheral::firstOrCreate(

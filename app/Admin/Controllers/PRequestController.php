@@ -449,6 +449,10 @@ class PRequestController extends AdminController
                             // 拆分中英文
                             preg_match('/(.+(?=\(|\（))/', trim($form->brand), $brand_name);
                             preg_match('/(?<=\(|\（).+?(?=\)|\）)/', trim($form->brand), $brand_name_en);
+                            $brand = Brand::firstOrCreate([
+                                'name'      => $brand_name[0] ?? null,
+                                'name_en'   => $brand_name_en[0] ?? null,
+                            ]);
                         } else {
                             if (preg_match('/[\x7f-\xff]/', $form->brand)) {
                                 // 抓中文
@@ -456,11 +460,11 @@ class PRequestController extends AdminController
                             } else {
                                 $brand_name_en = trim($form->brand);
                             }
+                            $brand = Brand::firstOrCreate([
+                                'name'      => $brand_name ?? null,
+                                'name_en'   => $brand_name_en ?? null,
+                            ]);
                         }
-                        $brand = Brand::firstOrCreate([
-                            'name'      => $brand_name[0] ?? $brand_name ?? null,
-                            'name_en'   => $brand_name_en[0] ?? $brand_name_en ?? null,
-                        ]);
 
                         // Peripheral
                         $peripheral = Peripheral::firstOrCreate(
