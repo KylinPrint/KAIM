@@ -114,7 +114,7 @@ class PbindController extends AdminController
                     return Status::where('id', $parent)->pluck('name')->first();
                 });
             $grid->column('statuses.name', __('当前细分适配状态'));
-            $grid->column('user_name', __('当前适配状态责任人'));
+            $grid->column('user_name');
             $grid->column('histories')
                 ->display('查看')
                 ->modal(function () {
@@ -294,7 +294,7 @@ class PbindController extends AdminController
                 return Status::where('id', $parent)->pluck('name')->first();
             });
             $show->field('statuses.name', __('当前细分适配状态'));
-            $show->field('user_name', __('当前适配状态责任人'));
+            $show->field('user_name');
             $show->field('solution_name');
             $show->field('solution');
             $show->field('class');
@@ -390,7 +390,7 @@ class PbindController extends AdminController
                 ->default($template->statuses_id ?? null);
             $form->text('statuses_comment', __('适配状态变更说明'))
                 ->default($template->statuses_comment ?? null);
-            $form->select('user_name',__('当前适配状态责任人'))->options(function (){
+            $form->select('user_name')->options(function (){
                 $curaArr = AdminUser::all()->pluck('name')->toArray();
                 foreach($curaArr as $cura){
                     $optionArr[$cura] = $cura;

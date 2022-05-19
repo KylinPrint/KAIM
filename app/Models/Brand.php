@@ -12,6 +12,7 @@ class Brand extends Model
 
     protected $fillable = [
         'name',
+        'name_en',
     ];
 
 	public function peripherals()

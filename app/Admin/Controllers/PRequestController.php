@@ -4,6 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Admin\Actions\Exports\PRequestExport;
 use App\Admin\Actions\Modal\PRequestModal;
+use App\Admin\Actions\Others\PRStatusBatch;
 use App\Admin\Renderable\PRhistoryTable;
 use App\Admin\Utils\ContextMenuWash;
 use App\Models\AdminUser;
@@ -57,7 +58,14 @@ class PRequestController extends AdminController
             $grid->paginate(10);
 
             $grid->tools(function  (Grid\Tools  $tools)  { 
-                $tools->append(new PRequestModal()); 
+                $tools->append(new PRequestModal());
+
+                if(Admin::user()->can('prequests-edit')) {
+                    $tools->batch(function ($batch) {
+                        // 状态修改按钮
+                        $batch->add(new PRStatusBatch());
+                    });
+                }
             });
 
             $grid->actions(function (Grid\Displayers\Actions $actions) {
@@ -261,7 +269,9 @@ class PRequestController extends AdminController
                     ->default($template->source ?? null);
                 $form->text('manufactor')->required()
                     ->default($template->manufactor ?? null);
+                // TODO PRequest新增添加品牌的输入提示
                 $form->text('brand')->required()
+                    ->help('格式: 品牌中文名(品牌英文名)  如: 惠普(HP)')
                     ->default($template->brand ?? null);
                 $form->text('name')->required()
                     ->default($template->name ?? null);
@@ -387,9 +397,7 @@ class PRequestController extends AdminController
                             $form->select('statuses_id')->options(Status::where('parent','!=',null)->pluck('name','id'))
                                 ->rules('required_if:status,处理中',['required_if' => '请填写此字段'])
                                 ->setLabelClass(['asterisk']);
-                            $form->text('statuses_comment')
-                                ->rules('required_if:status,处理中',['required_if' => '请填写此字段'])
-                                ->setLabelClass(['asterisk']);
+                            $form->text('statuses_comment');
                             $form->select('user_name')->options(function (){
                                     $curaArr = AdminUser::all()->pluck('name')->toArray();
                                     foreach($curaArr as $cura){$optionArr[$cura] = $cura;}
@@ -418,7 +426,7 @@ class PRequestController extends AdminController
                         if (in_array($form->model()->status, ['处理中', '已处理', '暂停处理'])) { unset($status_option['已拒绝']); }
                         return $status_option;
                     })->required();
-                $form->text('status_comment', __('状态变更说明'))->required();
+                $form->text('status_comment');
             }
             
             $form->saving(function (Form $form) {
@@ -429,67 +437,73 @@ class PRequestController extends AdminController
                     $status_coming = $form->status;
                     
                     if ($status_coming == '处理中' && ($status_coming != $status_current)) {
-                        // 查询Manufactor记录是否存在
-                        $manufactor_id = Manufactor::where('name', $form->manufactor)->pluck('id')->first();
-                        if (!$manufactor_id) {
-                            $manufactor = Manufactor::create([
-                                'name' => $form->manufactor
-                            ]);
-                            $manufactor_id = $manufactor->id;
-                        }
+                        // Manufactor
+                        $manufactor = Manufactor::firstOrCreate([
+                            'name' => $form->manufactor,
+                        ]);
 
-                        // 查询Brand记录是否存在
-                        $brand_id = Brand::where('name', $form->brand)->pluck('id')->first();
-                        if (!$brand_id) {
-                            $brand = Brand::create([
-                                'name' => $form->brand
-                            ]);
-                            $brand_id = $brand->id;
+                        // Brand
+                        // 抓括号
+                        if (preg_match('/\(|\（/', $form->brand)) {
+                            // 拆分中英文
+                            preg_match('/(.+(?=\(|\（))/', trim($form->brand), $brand_name);
+                            preg_match('/(?<=\(|\（).+?(?=\)|\）)/', trim($form->brand), $brand_name_en);
+                        } else {
+                            if (preg_match('/[\x7f-\xff]/', $form->brand)) {
+                                // 抓中文
+                                $brand_name = trim($form->brand);
+                            } else {
+                                $brand_name_en = trim($form->brand);
+                            }
                         }
+                        $brand = Brand::firstOrCreate([
+                            'name'      => $brand_name[0] ?? $brand_name ?? null,
+                            'name_en'   => $brand_name_en[0] ?? $brand_name_en ?? null,
+                        ]);
 
-                        // 查询Peripheral记录是否存在 
-                        $peripheral_id = Peripheral::where('name', $form->name)->pluck('id')->first();
-                        if (!$peripheral_id) {
-                            $peripheral = Peripheral::create([
-                                'name' => $form->name,
-                                'manufactors_id' => $manufactor_id,
-                                'brands_id' => $brand_id,
-                                'types_id' => $form->type_id,
-                                'industries' => implode(',', array_filter($form->industry)),
-                            ]);
-                            $peripheral_id = $peripheral->id;
-                        }
+                        // Peripheral
+                        $peripheral = Peripheral::firstOrCreate(
+                            [
+                                'manufactors_id'    => $manufactor->id,
+                                'brands_id'         => $brand->id,
+                                'name'              => $form->name,
+                            ],
+                            [
+                                'types_id'          => $form->type_id,
+                                'industries'        => implode(',', array_filter($form->industry)),
+                            ],
+                        );
 
-                        // 查询PBind记录是否存在
-                        $pbind_id = Pbind::where([
-                            [ 'peripherals_id', $peripheral_id ],
-                            [ 'releases_id', $form->release_id ],
-                            [ 'chips_id', $form->chip_id ],
-                        ])->pluck('id')->first();
-                        if (!$pbind_id) {
-                            $pbind = Pbind::create([
-                                'peripherals_id'=> $peripheral_id,
-                                'releases_id' => $form->release_id,
+                        // PBind
+                        $pbind = Pbind::firstOrCreate(
+                            [
+                                'peripherals_id'    => $peripheral->id,
+                                'releases_id'       => $form->release_id,
+                                'chips_id'          => $form->chip_id,
+                            ],
+                            [
                                 'os_subversion' => $form->os_subversion,
-                                'chips_id' => $form->chip_id,
-                                'adapt_source' => $form->source,
-                                'statuses_id' => $form->statuses_id,
-                                'user_name' => $form->user_name,
-                                'kylineco' => $form->kylineco,
-                                'appstore' => $form->appstore,
-                                'iscert' => $form->iscert,
-                            ]);
-                            $pbind_id = $pbind->id;
+                                'adapt_source'  => $form->source,
+                                'statuses_id'   => $form->statuses_id,
+                                'user_name'     => $form->user_name,
+                                'kylineco'      => $form->kylineco,
+                                'appstore'      => $form->appstore,
+                                'iscert'        => $form->iscert,
+                            ],
+                        );
+                        // PBindHistory
+                        if ($pbind->wasRecentlyCreated) {
                             PbindHistory::create([
-                                'pbind_id' => $pbind_id,
-                                'status_old' => NULL,
-                                'status_new' => $form->statuses_id,
-                                'user_name' => Admin::user()->name,
-                                'comment' => $form->statuses_comment,
+                                'pbind_id'      => $pbind->id,
+                                'status_old'    => NULL,
+                                'status_new'    => $form->statuses_id,
+                                'user_name'     => Admin::user()->name,
+                                'comment'       => $form->statuses_comment,
                             ]);
                         }
+
                         // 填充关联数据
-                        $form->pbind_id = $pbind_id;
+                        $form->pbind_id = $pbind->id;
                     }
 
                     // 需求状态变更记录

@@ -4,6 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Admin\Actions\Exports\SRequestExport;
 use App\Admin\Actions\Modal\SRequestModal;
+use App\Admin\Actions\Others\SRStatusBatch;
 use App\Admin\Renderable\SRhistoryTable;
 use App\Admin\Utils\ContextMenuWash;
 use App\Models\AdminUser;
@@ -56,7 +57,14 @@ class SRequestController extends AdminController
             $grid->paginate(10);
 
             $grid->tools(function  (Grid\Tools  $tools)  { 
-                $tools->append(new SRequestModal()); 
+                $tools->append(new SRequestModal());
+
+                if(Admin::user()->can('srequests-edit')) {
+                    $tools->batch(function ($batch) {
+                        // 状态修改按钮
+                        $batch->add(new SRStatusBatch());
+                    });
+                }
             });
 
             $grid->actions(function (Grid\Displayers\Actions $actions) {
@@ -384,9 +392,7 @@ class SRequestController extends AdminController
                             $form->select('statuses_id')->options(Status::where('parent','!=',null)->pluck('name','id'))
                                 ->rules('required_if:status,处理中',['required_if' => '请填写此字段'])
                                 ->setLabelClass(['asterisk']);
-                            $form->text('statuses_comment')
-                                ->rules('required_if:status,处理中',['required_if' => '请填写此字段'])
-                                ->setLabelClass(['asterisk']);
+                            $form->text('statuses_comment');
                             $form->select('user_name')->options(function (){
                                     $curaArr = AdminUser::all()->pluck('name')->toArray();
                                     foreach($curaArr as $cura){$optionArr[$cura] = $cura;}
@@ -415,7 +421,7 @@ class SRequestController extends AdminController
                         if (in_array($form->model()->status, ['处理中', '已处理', '暂停处理'])) { unset($status_option['已拒绝']); }
                         return $status_option;
                     })->required();
-                $form->text('status_comment', __('状态变更说明'))->required();
+                $form->text('status_comment');
             }
             
             $form->saving(function (Form $form) {
@@ -426,49 +432,44 @@ class SRequestController extends AdminController
                     $status_coming = $form->status;
                     
                     if ($status_coming == '处理中' && ($status_coming != $status_current)) {
-                        // 查询Manufactor记录是否存在
-                        $manufactor_id = Manufactor::where('name', $form->manufactor)->pluck('id')->first();
-                        if (!$manufactor_id) {
-                            $manufactor = Manufactor::create([
-                                'name' => $form->manufactor
-                            ]);
-                            $manufactor_id = $manufactor->id;
-                        }
+                        // Manufactor
+                        $manufactor = Manufactor::firstOrCreate([
+                            'name' => $form->manufactor,
+                        ]);
 
-                        // 查询Software记录是否存在
-                        $software_id = Software::where('name', $form->name)->pluck('id')->first();
-                        if (!$software_id) {
-                            $software = Software::create([
-                                'name' => $form->name,
-                                'manufactors_id' => $manufactor_id,
-                                'stypes_id' => $form->stype_id,
-                                'industries' => implode(',', array_filter($form->industry)),
-                            ]);
-                            $software_id = $software->id;
-                        }
+                        // Software
+                        $software = Software::firstOrCreate(
+                            [
+                                'name'  => $form->name,
+                            ],
+                            [
+                                'manufactors_id'    => $manufactor->id,
+                                'stypes_id'         => $form->stype_id,
+                                'industries'        => implode(',', array_filter($form->industry)),
+                            ],
+                        );
 
-                        // 查询SBind记录是否存在
-                        $sbind_id = Sbind::where([
-                            [ 'softwares_id', $software_id ],
-                            [ 'releases_id', $form->release_id ],
-                            [ 'chips_id', $form->chip_id ],
-                        ])->pluck('id')->first();
-                        if (!$sbind_id) {
-                            $sbind = Sbind::create([
-                                'softwares_id' => $software_id,
-                                'releases_id' => $form->release_id,
+                        // SBind
+                        $sbind = Sbind::firstOrCreate(
+                            [
+                                'softwares_id'  => $software->id,
+                                'releases_id'   => $form->release_id,
+                                'chips_id'      => $form->chip_id,
+                            ],
+                            [
                                 'os_subversion' => $form->os_subversion,
-                                'chips_id' => $form->chip_id,
                                 'adapt_source' => $form->source,
                                 'statuses_id' => $form->statuses_id,
                                 'user_name' =>$form->user_name,
                                 'kylineco' => $form->kylineco,
                                 'appstore' => $form->appstore,
                                 'iscert' => $form->iscert,
-                            ]);
-                            $sbind_id = $sbind->id;
+                            ],
+                        );
+                        // SbindHistory
+                        if ($sbind->wasRecentlyCreated) {
                             SbindHistory::create([
-                                'sbind_id' => $sbind_id,
+                                'sbind_id' => $sbind->id,
                                 'status_old' => NULL,
                                 'status_new' => $form->statuses_id,
                                 'user_name' => Admin::user()->name,
@@ -476,7 +477,7 @@ class SRequestController extends AdminController
                             ]);
                         }
                         // 填充关联数据
-                        $form->sbind_id = $sbind_id;
+                        $form->sbind_id = $sbind->id;
                     }
 
                     // 需求状态变更记录
