@@ -125,7 +125,8 @@ class SRequestController extends AdminController
                 $filter->panel();
                 $filter->expand();
 
-                $filter->like('name','产品名称')->width(6);
+                $filter->like('name','产品名称')->width(3);
+                $filter->like('manufactor','厂商名称')->width(3);
 
                 $filter->in('status','处理状态')
                 ->multipleSelect([
