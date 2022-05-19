@@ -51,10 +51,10 @@ class SoftwareController extends AdminController
             $grid->column('updated_at')->sortable();
 
             $grid->setActionClass(Grid\Displayers\ContextMenuActions::class);
-            if(Admin::user()->can('sotfwares-action'))
+            if(Admin::user()->can('sotfwares-edit'))
             {
                 $grid->showCreateButton();
-            }else{
+            } else {
                 $grid->disableCreateButton();
             }
             
