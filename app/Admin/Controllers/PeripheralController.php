@@ -124,10 +124,7 @@ class PeripheralController extends AdminController
             $grid->scrollbarX();
             $grid->setActionClass(Grid\Displayers\ContextMenuActions::class);
 
-            if (Admin::user()->can('peripherals-edit'))
-            {
-                $grid->showCreateButton();
-            } else {
+            if (Admin::user()->cannot('peripherals-edit')) {
                 $grid->disableCreateButton();
             }
         
