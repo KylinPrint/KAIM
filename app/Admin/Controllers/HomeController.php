@@ -53,7 +53,7 @@ class HomeController extends Controller
                 elseif ($this->type == "外设需求") { $type = 'prequests'; }
                 $href = admin_url($type. '/' . $this->id . '/edit');
                 return "
-                    <button onclick=\"window.location.href='$href'\" class=\"btn btn-primary btn-outline\">
+                    <button onclick=\"window.open('$href')\" class=\"btn btn-primary btn-outline\">
                         去处理
                     </button>
                 ";
