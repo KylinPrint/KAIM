@@ -273,8 +273,11 @@ class PbindController extends AdminController
     protected function detail($id)
     {
         return Show::make($id, Pbind::with(['peripherals','releases','chips','statuses']), function (Show $show) {
-            $show->field('peripherals.brands_id', __('品牌'))->as(function ($brand) {
-                return Brand::where('id', $brand)->pluck('name')->first();
+            $show->field('peripherals.brands_id', __('品牌'))->as(function ($brand_id) {
+                $brand = Brand::find($brand_id);
+                if (!$brand->name) { return $brand->name_en; }
+                elseif (!$brand->name_en) { return $brand->name; }
+                else { return $brand->name . '(' . $brand->name_en . ')'; }
             });
             $show->field('peripherals',__('型号'))->as(function ($peripherals) {
                 return "<a href=" . admin_url('peripherals/' . $peripherals["id"]) . ">" . $peripherals["name"] . "</a>";
