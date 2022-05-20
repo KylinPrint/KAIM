@@ -72,7 +72,7 @@ class SbindImport implements ToCollection, WithHeadingRow, WithValidation
                 $manufactorInsert = 
                 [
                     'name' => $row['厂商'],
-                    'isconnected' => '',
+                    'isconnected' => 0,
                     'created_at' => $curtime,
                     'updated_at' => $curtime,
                 ];
@@ -97,7 +97,7 @@ class SbindImport implements ToCollection, WithHeadingRow, WithValidation
                     'am' => $row['适配负责人'],
                     'tsm' => $row['技术支撑负责人'],
                     'comment' => $row['软件描述'],
-                    'industries' => $row['行业'],
+                    'industries' => $row['行业分类'],
                     'created_at' => $curtime,
                     'updated_at' => $curtime,
                 ];
@@ -106,10 +106,10 @@ class SbindImport implements ToCollection, WithHeadingRow, WithValidation
 
             $sbindInsert =
             [
-                'os_subversion' => $row['操作系统小版本号']?:'',
+                'os_subversion' => $row['操作系统小版本']?:'',
                 'adapt_source' => $row['引入来源'],
                 'adapted_before' => $this->bools($row['是否适配过国产CPU']),
-                'statuses_id' => Status::where('name',$row['当前细分适配状态'])->pluck('id')->first(),
+                'statuses_id' => Status::where('name',trim($row['当前细分适配状态']))->pluck('id')->first(),
                 'user_name' =>$row['当前适配状态责任人'],
                 'softname' => $row['安装包名称'],
                 'solution' => $row['安装包下载地址'],
@@ -118,7 +118,7 @@ class SbindImport implements ToCollection, WithHeadingRow, WithValidation
                 'test_type' => $row['测试方式'],
                 'kylineco' => $this->bools($row['是否上传生态网站']),
                 'appstore' => $this->bools($row['是否上架软件商店']),
-                'iscert' => $row['是否互认证'],
+                'iscert' => $this->bools($row['是否互认证']),
                 'test_report' => $this->bools($row['是否有测试报告']),
                 'certificate_NO' => $row['证书编号'],
                 'comment' => $row['备注'],
@@ -155,7 +155,7 @@ class SbindImport implements ToCollection, WithHeadingRow, WithValidation
                     'updated_at' => $curtime,
                 ];
 
-                DB::table('sbind_histories')->inset($sbindhistory);
+                DB::table('sbind_histories')->insert($sbindhistory);
             }
 
             if(!$b && $c)
