@@ -58,7 +58,7 @@ class PeripheralChangeForm extends Form
                 }
                 
                 // 找原外设id
-                // 有厂商
+                //      有厂商
                 if(isEmpty($curManufactorid)){
                     $curPeripheralid = Peripheral::where([
                         ['name', $value['原外设型号']],
@@ -66,14 +66,13 @@ class PeripheralChangeForm extends Form
                         ['manufactors_id', $curManufactorid]])
                         ->pluck('id')->first();
                 }
-                // 无厂商
+                //      无厂商
                 else{
                     $curPeripheralid = Peripheral::where([
                         ['name', $value['原外设型号']],
                         ['brands_id', $curBrandid]])
                         ->pluck('id')->first();
                 }
-
                 // 没找到
                 if(empty($curPeripheralid)){
                     return $this->response()->error('未找到原外设型号'.$value['原外设型号'])->refresh();
@@ -82,83 +81,91 @@ class PeripheralChangeForm extends Form
                 $curPeripheral = Peripheral::with('brands','manufactors')->find($curPeripheralid);
 
                 // 修改品牌
-                if (preg_match('/\(|\（/', $value['修改品牌'])) {
-                    // 拆分中英文
-                    preg_match('/(.+(?=\(|\（))/', trim($value['修改品牌']), $brand_name);
-                    preg_match('/(?<=\(|\（).+?(?=\)|\）)/', trim($value['修改品牌']), $brand_name_en);
-
-                    // 看下要改的库里有没有
-                    $changeBrandid = Brand::where([
-                        ['name',$brand_name[0]],
-                        ['name_en',$brand_name_en[0]]
-                    ])->pluck('id')->first();
-                    
-                    // 没有就改品牌名
-                    if(empty($changeBrandid)){
-                        if($curPeripheral->brands->name.$curPeripheral->brands->name_en != $brand_name[0].$brand_name_en[0]){
-                            $curPeripheral->brands->name    = $brand_name[0];
-                            $curPeripheral->brands->name_en = $brand_name_en[0];
-                            $curPeripheral->brands->save();
-                        }
-                    // 有就该外设的品牌id
-                    }else{
-                        $curPeripheral->brands_id =  $changeBrandid;
-                    }
-                    
-                } else {
-                    // 抓中文
-                    if (preg_match('/[\x7f-\xff]/', $value['修改品牌'])) {
-                        $brand_name = trim($value['修改品牌']);
-
-                        $changeBrandid = Brand::where(['name',$brand_name])->pluck('id')->first();
-
-                        // 看下要改的库里有没有 逻辑同上
+                if(strlen(trim($value['修改品牌']))){
+                    if (preg_match('/\(|\（/', $value['修改品牌'])) {
+                        // 拆分中英文
+                        preg_match('/(.+(?=\(|\（))/', trim($value['修改品牌']), $brand_name);
+                        preg_match('/(?<=\(|\（).+?(?=\)|\）)/', trim($value['修改品牌']), $brand_name_en);
+    
+                        // 看下要改的库里有没有
+                        $changeBrandid = Brand::where([
+                            ['name',$brand_name[0]],
+                            ['name_en',$brand_name_en[0]]
+                        ])->pluck('id')->first();
+                        
+                        // 没有就改品牌名
                         if(empty($changeBrandid)){
-                            if($curPeripheral->brands->name != $brand_name){
-                                $curPeripheral->brands->name    = $brand_name;
+                            if($curPeripheral->brands->name.$curPeripheral->brands->name_en != $brand_name[0].$brand_name_en[0]){
+                                $curPeripheral->brands->name    = $brand_name[0];
+                                $curPeripheral->brands->name_en = $brand_name_en[0];
                                 $curPeripheral->brands->save();
                             }
+                        // 有就该外设的品牌id
                         }else{
                             $curPeripheral->brands_id =  $changeBrandid;
                         }
                         
                     } else {
-                        $brand_name_en = trim($value['修改品牌']);
-
-                        // 看下要改的库里有没有 逻辑同上
-                        $changeBrandid = Brand::where(['name_en',$brand_name_en])->pluck('id')->first();
-                        
-                        if(empty($changeBrandid)){
-                            if($curPeripheral->brands->name_en != $brand_name_en){
-                                $curPeripheral->brands->name_en    = $brand_name_en;
-                                $curPeripheral->brands->save();
+                        // 抓中文
+                        if (preg_match('/[\x7f-\xff]/', $value['修改品牌'])) {
+                            $brand_name = trim($value['修改品牌']);
+    
+                            $changeBrandid = Brand::where(['name',$brand_name])->pluck('id')->first();
+    
+                            // 看下要改的库里有没有 逻辑同上
+                            if(empty($changeBrandid)){
+                                if($curPeripheral->brands->name != $brand_name){
+                                    $curPeripheral->brands->name    = $brand_name;
+                                    $curPeripheral->brands->save();
+                                }
+                            }else{
+                                $curPeripheral->brands_id =  $changeBrandid;
                             }
+                            
+                        } else {
+                            $brand_name_en = trim($value['修改品牌']);
+    
+                            // 看下要改的库里有没有 逻辑同上
+                            $changeBrandid = Brand::where(['name_en',$brand_name_en])->pluck('id')->first();
+                            
+                            if(empty($changeBrandid)){
+                                if($curPeripheral->brands->name_en != $brand_name_en){
+                                    $curPeripheral->brands->name_en    = $brand_name_en;
+                                    $curPeripheral->brands->save();
+                                }
+                            }else{
+                                $curPeripheral->brands_id =  $changeBrandid;
+                            }     
+                        }
+                    }
+                }   
+                
+
+                // 修改厂商
+                if(strlen(trim($value['修改厂商']))){
+                    if($curPeripheral->manufactors->name != $value['修改厂商'])
+                    {
+                        // 看下要改的库里有没有 逻辑同上
+                        $changeManufactorid = Manufactor::where('name',$value['修改厂商'])->pluck('id')->first();
+                        if(empty($changeManufactorid)){
+                            $curPeripheral->manufactors->name = $value['修改厂商'];
+                            $curPeripheral->manufactors->save();
                         }else{
-                            $curPeripheral->brands_id =  $changeBrandid;
+                            $curPeripheral->manufactors_id =  $changeManufactorid;
                         }
                         
                     }
                 }
-
-                // 修改厂商
-                if($curPeripheral->manufactors->name != $value['修改厂商'])
-                {
-                    // 看下要改的库里有没有 逻辑同上
-                    $changeManufactorid = Manufactor::where('name',$value['修改厂商'])->pluck('id')->first();
-                    if(empty($changeManufactorid)){
-                        $curPeripheral->manufactors->name = $value['修改厂商'];
-                        $curPeripheral->manufactors->save();
-                    }else{
-                        $curPeripheral->manufactors_id =  $changeManufactorid;
-                    }
-                    
-                }
+                
                 
                 //修改外设名
-                if($curPeripheral->name != $value['修改外设型号'])
-                {
-                    $curPeripheral->name = $value['修改外设型号'];
+                if(strlen(trim($value['修改外设型号']))){
+                    if($curPeripheral->name != $value['修改外设型号'])
+                    {
+                        $curPeripheral->name = $value['修改外设型号'];
+                    }
                 }
+                
 
                 $curPeripheral->save();
                 
