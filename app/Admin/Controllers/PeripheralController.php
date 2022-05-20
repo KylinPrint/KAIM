@@ -307,7 +307,7 @@ class PeripheralController extends AdminController
             });
 
             $form->saved(function (Form $form){
-                return $form->response()->redirect('peripherals?type='.$form->input('types_id'));
+                return $form->response()->redirect('peripherals?type=' . $form->model()->types_id);
             });
         });
     }

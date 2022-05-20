@@ -46,6 +46,12 @@ class PRStatusBatchForm extends Form implements LazyRenderable
             if ($status_current[0] == '已关闭') {
                 return $this->response()->warning('已关闭的需求不允许编辑')->refresh();
             }
+
+            // 已提交改处理中不能只填备注
+            if ($status_current[0] == '已提交' && $input["comment_only"]) {
+                return $this->response()->warning('已提交状态的需求变更为处理中时,不允许仅添加需求状态变更说明');
+            }
+
             // 直接进行一个状态的判
             $options = config('kaim.request_status');
             if     (in_array($status_current[0], ['处理中', '已处理', '暂停处理', '已拒绝'])) { unset($options['已提交']); }
