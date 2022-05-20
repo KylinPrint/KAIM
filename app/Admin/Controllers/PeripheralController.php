@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Actions\Modal\PeripheralChangeModal;
 use App\Admin\Utils\ContextMenuWash;
 use App\Models\Brand;
 use App\Models\Manufactor;
@@ -73,6 +74,14 @@ class PeripheralController extends AdminController
         ContextMenuWash::wash();
         
         return Grid::make(Peripheral::with(['brands','types','manufactors']), function (Grid $grid){
+
+            $grid->tools(function  (Grid\Tools  $tools)  { 
+                if(Admin::user()->can('pbinds-import'))
+                {
+                    $tools->append(new PeripheralChangeModal()); 
+                }
+            });
+
             $grid->paginate(10);
 
             $grid->model()->setConstraints([
