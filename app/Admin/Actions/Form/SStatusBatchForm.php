@@ -73,7 +73,7 @@ class SStatusBatchForm extends Form implements LazyRenderable
           return $optionArr;
         })->help('不更改无需填写');
         $this->select('statuses_id')->options(Status::where('parent','!=',null)->pluck('name','id'));
-        $this->textarea('comment');
+        $this->textarea('statuses_comment');
         //批量选择的行的值传递
         $this->hidden('id')->attribute('id', 'batchsp-id'); //批量选择的行的id通过隐藏元素 提交时一并传递过去
     }
