@@ -66,12 +66,12 @@ class SbindImport implements ToCollection, WithHeadingRow, WithValidation
 
             $curtime = date('Y-m-d H:i:s');
 
-            $curManufactorId = Manufactor::where('name',trim($row['厂商名称']))->pluck('id')->first();
+            $curManufactorId = Manufactor::where('name',trim($row['厂商']))->pluck('id')->first();
             if(empty($curManufactorId))
             {
                 $manufactorInsert = 
                 [
-                    'name' => $row['厂商名称'],
+                    'name' => $row['厂商'],
                     'isconnected' => '',
                     'created_at' => $curtime,
                     'updated_at' => $curtime,
