@@ -31,7 +31,7 @@ class PeripheralController extends AdminController
         parse_str(parse_url(URL::full())['query'] ?? null, $this->url_query);
 
         // type_id设置默认值防止不带参数访问外设页面
-        $this->type_id = $this->urlQuery('type') ?? Type::where('parent' , '!=', 0)->orderBy('order')->pluck('id')->first();
+        $this->type_id = $this->urlQuery('type') ? $this->urlQuery('type') : Type::where('parent' , '!=', 0)->orderBy('order')->pluck('id')->first();
     }
 
     public function urlQuery($key)
