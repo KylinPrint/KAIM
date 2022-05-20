@@ -114,7 +114,7 @@ class SRStatusBatchForm extends Form implements LazyRenderable
                 $srequest->save();
             }
 
-        } elseif ($status_current[0] != $input['status']) {
+        } elseif ($input['status'] && $status_current[0] != $input['status']) {
             // 不是已提交改处理中的直接批量修改需求状态
             SRequest::whereIn('id', $ids)->update([ 'status' => $input['status'] ]);
 
@@ -131,7 +131,7 @@ class SRStatusBatchForm extends Form implements LazyRenderable
             SRequestHistory::create([
                 's_request_id' => $id,
                 'status_old' => $status_current[0],
-                'status_new' => $input['status'],
+                'status_new' => $input['status'] ?? $status_current[0],
                 'user_name' => Admin::user()->name,
                 'comment' => $input['status_comment'],
             ]);
@@ -160,7 +160,7 @@ class SRStatusBatchForm extends Form implements LazyRenderable
             })
             ->options(config('kaim.request_status'))
             ->required();
-        $this->textarea('status_comment', admin_trans('s-request.fields.status_comment'))->required();
+        $this->textarea('status_comment', admin_trans('s-request.fields.status_comment'));
         //批量选择的行的值传递
         $this->hidden('id')->attribute('id', 'batch-srs-id'); //批量选择的行的id通过隐藏元素 提交时一并传递过去
     }
