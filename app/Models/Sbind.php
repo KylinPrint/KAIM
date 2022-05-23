@@ -25,6 +25,7 @@ class Sbind extends Model
 		'user_name',
 		'softname',
 		'solution',
+		'solution_name',
 		'class',
 		'adaption_type',
 		'test_type',

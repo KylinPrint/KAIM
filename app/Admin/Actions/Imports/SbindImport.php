@@ -111,7 +111,7 @@ class SbindImport implements ToCollection, WithHeadingRow, WithValidation
                 'adapted_before' => $this->bools($row['是否适配过国产CPU']),
                 'statuses_id' => Status::where('name',trim($row['当前细分适配状态']))->pluck('id')->first(),
                 'user_name' =>$row['当前适配状态责任人'],
-                'softname' => $row['安装包名称'],
+                'solution_name' => $row['安装包名称'],
                 'solution' => $row['安装包下载地址'],
                 'class' => $row['兼容等级'],
                 'adaption_type' => $row['适配类型'],
