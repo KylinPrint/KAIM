@@ -56,7 +56,6 @@ class SoftwareController extends AdminController
                 $grid->disableCreateButton();
             }
             
-            $grid->quickSearch('name', 'industries', 'comment');
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->panel();
 

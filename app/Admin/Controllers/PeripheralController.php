@@ -137,7 +137,6 @@ class PeripheralController extends AdminController
                 $grid->disableCreateButton();
             }
         
-            $grid->quickSearch('name', 'industries', 'comment');
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->panel();
                 $filter->like('name','产品名称');
