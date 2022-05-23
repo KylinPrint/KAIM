@@ -457,13 +457,18 @@ class PRequestController extends AdminController
                             if (preg_match('/[\x7f-\xff]/', $form->brand)) {
                                 // 抓中文
                                 $brand_name = trim($form->brand);
+                                $brand = Brand::where('name','like','%'.$brand_name.'%')->first();                     
                             } else {
                                 $brand_name_en = trim($form->brand);
+                                $brand = Brand::where('name_en','like','%'.$brand_name_en.'%')->first();
                             }
-                            $brand = Brand::firstOrCreate([
-                                'name'      => $brand_name ?? null,
-                                'name_en'   => $brand_name_en ?? null,
-                            ]);
+                            if(empty($brand->id)){
+                                $brand = Brand::firstOrCreate([
+                                    'name'      => $brand_name ?? null,
+                                    'name_en'   => $brand_name_en ?? null,
+                                ]);
+                            }
+ 
                         }
 
                         // Peripheral
