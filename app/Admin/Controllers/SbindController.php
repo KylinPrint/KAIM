@@ -301,6 +301,14 @@ class SbindController extends AdminController
             $show->field('complete_time');
             $show->field('comment');
 
+            if(!Admin::user()->can('sbinds-edit')){
+                $show->panel()
+                    ->tools(function ($tools) {
+                        $tools->disableEdit();
+                        $tools->disableDelete();
+                    });
+            }
+
             $show->relation('histories', function ($model) {
                 $grid = new Grid(SbindHistory::with(['status_old', 'status_new']));
             

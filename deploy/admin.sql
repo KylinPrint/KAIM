@@ -9,7 +9,7 @@ INSERT INTO `admin_permissions` VALUES (4, 'Permissions', 'permissions', NULL, '
 INSERT INTO `admin_permissions` VALUES (5, 'Menu', 'menu', NULL, '/auth/menu*', 0, 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
 INSERT INTO `admin_permissions` VALUES (6, 'Extension', 'extension', NULL, '/auth/extensions*', 0, 1, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
 INSERT INTO `admin_permissions` VALUES (7, '外设适配情况权限', 'pbinds', NULL, '/pbinds*', 0, 0, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_permissions` VALUES (8, '外设适配情况-查看', 'pbinds-get', 'GET', '/pbinds', 0, 7, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_permissions` VALUES (8, '外设适配情况-查看', 'pbinds-get', 'GET', '/pbinds*', 0, 7, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
 INSERT INTO `admin_permissions` VALUES (9, '外设适配情况-编辑', 'pbinds-edit', 'GET,POST,PUT', '/pbinds*', 0, 7, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
 INSERT INTO `admin_permissions` VALUES (10, '外设适配情况-删除', 'pbinds-delete', 'DELETE', '/pbinds*', 0, 7, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
 INSERT INTO `admin_permissions` VALUES (11, '外设适配情况-操作', 'pbinds-action', NULL, NULL, 0, 7, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
@@ -23,7 +23,7 @@ INSERT INTO `admin_permissions` VALUES (18, '外设数据管理-操作', 'periph
 INSERT INTO `admin_permissions` VALUES (19, '外设数据管理-导入', 'peripherals-import', 'GET,POST,PUT', NULL, 0, 14, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
 INSERT INTO `admin_permissions` VALUES (20, '外设数据管理-导出', 'peripherals-export', 'GET,POST,PUT', NULL, 0, 14, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
 INSERT INTO `admin_permissions` VALUES (21, '软件适配情况权限', 'sbinds', NULL, '/sbinds*', 0, 0, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
-INSERT INTO `admin_permissions` VALUES (22, '软件适配情况-查看', 'sbinds-get', 'GET', '/sbinds', 0, 21, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
+INSERT INTO `admin_permissions` VALUES (22, '软件适配情况-查看', 'sbinds-get', 'GET', '/sbinds*', 0, 21, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
 INSERT INTO `admin_permissions` VALUES (23, '软件适配情况-编辑', 'sbinds-edit', 'GET,POST,PUT', '/sbinds*', 0, 21, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
 INSERT INTO `admin_permissions` VALUES (24, '软件适配情况-删除', 'sbinds-delete', 'DELETE', '/sbinds*', 0, 21, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
 INSERT INTO `admin_permissions` VALUES (25, '软件适配情况-操作', 'sbinds-action', NULL, NULL, 0, 21, '2022-02-21 06:02:26', '2022-02-21 06:02:26');
