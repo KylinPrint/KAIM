@@ -7,6 +7,7 @@ use App\Models\Brand;
 use App\Models\Manufactor;
 use App\Models\Peripheral;
 use Dcat\Admin\Widgets\Form;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -93,18 +94,22 @@ class PeripheralChangeForm extends Form
                             ['name_en',$brand_name_en[0]]
                         ])->pluck('id')->first();
                         
-                        // 没有就改品牌名
+                        // 没有就添加品牌名
                         if(empty($changeBrandid)){
                             if($curPeripheral->brands->name.$curPeripheral->brands->name_en != $brand_name[0].$brand_name_en[0]){
-                                $curPeripheral->brands->name    = $brand_name[0];
-                                $curPeripheral->brands->name_en = $brand_name_en[0];
-                                $curPeripheral->brands->save();
+                                $brandInsert =  [
+                                    'name'       => $brand_name[0],
+                                    'name_en'    => $brand_name_en[0],
+                                    'alias'      => null,
+                                    'created_at' => date('Y-m-d H:i:s'),
+                                    'updated_at' => date('Y-m-d H:i:s'),
+                                ];
+                                $changeBrandid = DB::table('brands')->insertGetId($brandInsert);
                             }
-                        // 有就该外设的品牌id
-                        }else{
-                            $curPeripheral->brands_id =  $changeBrandid;
                         }
-                        
+
+                        $curPeripheral->brands_id =  $changeBrandid;
+                                     
                     } else {
                         // 抓中文
                         if (preg_match('/[\x7f-\xff]/', $value['修改品牌'])) {
@@ -115,12 +120,18 @@ class PeripheralChangeForm extends Form
                             // 看下要改的库里有没有 逻辑同上
                             if(empty($changeBrandid)){
                                 if($curPeripheral->brands->name != $brand_name){
-                                    $curPeripheral->brands->name    = $brand_name;
-                                    $curPeripheral->brands->save();
+                                   $brandInsert =  [
+                                        'name'       => $brand_name,
+                                        'name_en'    => null,
+                                        'alias'      => null,
+                                        'created_at' => date('Y-m-d H:i:s'),
+                                        'updated_at' => date('Y-m-d H:i:s'),
+                                    ];
+                                    $changeBrandid = DB::table('brands')->insertGetId($brandInsert);
                                 }
-                            }else{
-                                $curPeripheral->brands_id =  $changeBrandid;
                             }
+                            $curPeripheral->brands_id =  $changeBrandid;
+                            
                             
                         } else {
                             $brand_name_en = trim($value['修改品牌']);
@@ -130,12 +141,18 @@ class PeripheralChangeForm extends Form
                             
                             if(empty($changeBrandid)){
                                 if($curPeripheral->brands->name_en != $brand_name_en){
-                                    $curPeripheral->brands->name_en    = $brand_name_en;
-                                    $curPeripheral->brands->save();
+                                    $brandInsert =  [
+                                        'name'       => null,
+                                        'name_en'    => $brand_name_en,
+                                        'alias'      => null,
+                                        'created_at' => date('Y-m-d H:i:s'),
+                                        'updated_at' => date('Y-m-d H:i:s'),
+                                    ];
+                                    $changeBrandid = DB::table('brands')->insertGetId($brandInsert);
                                 }
-                            }else{
-                                $curPeripheral->brands_id =  $changeBrandid;
-                            }     
+                            }
+                            $curPeripheral->brands_id =  $changeBrandid;
+                                 
                         }
                     }
                 }   
@@ -148,12 +165,16 @@ class PeripheralChangeForm extends Form
                         // 看下要改的库里有没有 逻辑同上
                         $changeManufactorid = Manufactor::where('name',$value['修改厂商'])->pluck('id')->first();
                         if(empty($changeManufactorid)){
-                            $curPeripheral->manufactors->name = $value['修改厂商'];
-                            $curPeripheral->manufactors->save();
-                        }else{
-                            $curPeripheral->manufactors_id =  $changeManufactorid;
+                            $manufactorInsert = 
+                            [
+                                'name' => $value['修改厂商'],
+                                'isconnected' => '0',
+                                'created_at' => date('Y-m-d H:i:s'),
+                                'updated_at' => date('Y-m-d H:i:s'),
+                            ];
+                            $changeManufactorid = DB::table('manufactors')->insertGetId($manufactorInsert);
                         }
-                        
+                        $curPeripheral->manufactors_id =  $changeManufactorid;       
                     }
                 }
                 
@@ -166,7 +187,6 @@ class PeripheralChangeForm extends Form
                     }
                 }
                 
-
                 $curPeripheral->save();
                 
             }
