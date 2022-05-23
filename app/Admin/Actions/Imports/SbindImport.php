@@ -128,11 +128,7 @@ class SbindImport implements ToCollection, WithHeadingRow, WithValidation
             $sbindInsertUnique = 
             [
                 'softwares_id' => $curSoftwareId,
-                'chips_id' => Chip::where([
-                    ['name','like','%'.$row['芯片'].'%'],
-                    ['arch',$row['架构']]
-                ])->pluck('id')
-                ->first(),
+                'chips_id' => Chip::where('name','like','%'.$row['芯片'].'%')->pluck('id')->first(),
                 'releases_id' => Release::where('name',$row['操作系统版本'])->pluck('id')->first(),
             ];
 
