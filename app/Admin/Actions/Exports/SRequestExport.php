@@ -148,6 +148,7 @@ class SRequestExport extends BaseExport implements WithMapping, WithHeadings, Fr
             $ExportArr[$i]['需求来源'] = $CacheArr['需求来源'];
                 $ExportArr[$i]['厂商名称'] = $CacheArr['厂商名称'];
                 $ExportArr[$i]['产品名称'] = $CacheArr['产品名称'];
+                $ExportArr[$i]['产品版本'] = $CacheArr['产品版本'];
                 $ExportArr[$i]['产品类型'] = $CacheArr['产品类型'];
                 $ExportArr[$i]['涉及行业'] = $CacheArr['涉及行业'];
                 $ExportArr[$i]['操作系统版本'] = $CacheArr['操作系统版本'];
