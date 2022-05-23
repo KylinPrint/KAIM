@@ -99,13 +99,17 @@ class PRStatusBatchForm extends Form implements LazyRenderable
                         // 没括号的抓中文拆分中英文
                         if (preg_match('/[\x7f-\xff]/', $prequest->brand)) {
                             $brand_name = trim($prequest->brand);
+                            $brand = Brand::where('name','like','%'.$brand_name.'%')->first();
                         } else {
                             $brand_name_en = trim($prequest->brand);
+                            $brand = Brand::where('name_en','like','%'.$brand_name_en.'%')->first();
                         }
-                        $brand = Brand::firstOrCreate([
-                            'name'      => $brand_name ?? null,
-                            'name_en'   => $brand_name_en ?? null,
-                        ]);
+                        if(empty($brand->id)){
+                            $brand = Brand::firstOrCreate([
+                                'name'      => $brand_name ?? null,
+                                'name_en'   => $brand_name_en ?? null,
+                            ]);
+                        }         
                     }
 
                     // Peripheral
