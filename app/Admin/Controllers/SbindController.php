@@ -281,7 +281,7 @@ class SbindController extends AdminController
             $show->field('statuses.name', __('当前细分适配状态'));
             $show->field('user_name', __('当前适配状态责任人'));
             $show->field('create_name',__('适配数据创建人'))->as(function () use ($id){
-                $a =  SbindHistory::where([['pbind_id',$id],['status_old',null]])
+                $a =  SbindHistory::where([['sbind_id',$id],['status_old',null]])
                     ->pluck('user_name')->first();
                 return $a;
             });
