@@ -257,7 +257,7 @@ class SbindController extends AdminController
      */
     protected function detail($id)
     {
-        return Show::make($id, Sbind::with(['softwares', 'releases', 'chips', 'statuses', 'admin_users']), function (Show $show) {
+        return Show::make($id, Sbind::with(['softwares', 'releases', 'chips', 'statuses', 'admin_users']), function (Show $show) use ($id){
             $show->field('softwares.manufactors_id', __('厂商名称'))->as(function ($manufactors_id) {
                 return Manufactor::where('id', $manufactors_id)->pluck('name')->first();
             });
@@ -280,6 +280,11 @@ class SbindController extends AdminController
             });
             $show->field('statuses.name', __('当前细分适配状态'));
             $show->field('user_name', __('当前适配状态责任人'));
+            $show->field('create_name',__('适配数据创建人'))->as(function () use ($id){
+                $a =  SbindHistory::where([['pbind_id',$id],['status_old',null]])
+                    ->pluck('user_name')->first();
+                return $a;
+            });
             $show->field('solution_name');
             $show->field('solution');
             $show->field('class');

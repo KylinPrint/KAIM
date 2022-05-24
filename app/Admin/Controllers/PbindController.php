@@ -23,6 +23,7 @@ use App\Models\AdminUser;
 use App\Models\Brand;
 use App\Models\Manufactor;
 use App\Models\PbindHistory;
+use App\Models\SbindHistory;
 use App\Models\Type;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Widgets\Card;
@@ -272,7 +273,8 @@ class PbindController extends AdminController
      */
     protected function detail($id)
     {
-        return Show::make($id, Pbind::with(['peripherals','releases','chips','statuses']), function (Show $show) {
+        return Show::make($id, Pbind::with(['peripherals','releases','chips','statuses']), function (Show $show) use ($id){
+
             $show->field('peripherals.brands_id', __('品牌'))->as(function ($brand_id) {
                 $brand = Brand::find($brand_id);
                 if (!$brand->name) { return $brand->name_en; }
@@ -298,6 +300,11 @@ class PbindController extends AdminController
             });
             $show->field('statuses.name', __('当前细分适配状态'));
             $show->field('user_name');
+            $show->field('create_name',__('适配数据创建人'))->as(function () use ($id){
+                $a =  PbindHistory::where([['pbind_id',$id],['status_old',null]])
+                    ->pluck('user_name')->first();
+                return $a;
+            });
             $show->field('solution_name');
             $show->field('solution');
             $show->field('class');

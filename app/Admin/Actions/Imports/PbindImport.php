@@ -11,6 +11,7 @@ use App\Models\Peripheral;
 use App\Models\Release;
 use App\Models\Status;
 use App\Models\Type;
+use Dcat\Admin\Admin;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
@@ -202,7 +203,7 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
                     'pbind_id' => $curPbindId,
                     'status_old' => null,
                     'status_new' => $pbindInsert['statuses_id'],
-                    'user_name' => $pbindInsert['user_name'],
+                    'user_name' => Admin::user()->name,
                     'comment' => null,
                     'created_at' => $curtime,
                     'updated_at' => $curtime,
@@ -220,7 +221,7 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
                 'pbind_id' => $curPbindId,
                 'status_old' => $curHistoryId,
                 'status_new' => $pbindInsert['statuses_id'],
-                'user_name' => $pbindInsert['user_name'],
+                'user_name' => Admin::user()->name,
                 'comment' => null,
                 'created_at' => $curtime,
                 'updated_at' => $curtime,
