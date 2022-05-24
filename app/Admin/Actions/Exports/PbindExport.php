@@ -81,7 +81,7 @@ class PbindExport extends BaseExport implements WithMapping, WithHeadings, FromC
         $curPbindsArr = Pbind::with('releases','chips','statuses')->find($row['id']);
 
         
-        $curPeripheralArr = Peripheral::with('brands','types')->find($row['peripherals_id']);
+        $curPeripheralArr = Peripheral::with('brands','types','manufactors')->find($row['peripherals_id']);
 
         $curParentTypeName = Type::where('id',$curPeripheralArr->types->parent)->pluck('name')->first();
         
@@ -92,7 +92,8 @@ class PbindExport extends BaseExport implements WithMapping, WithHeadings, FromC
         }
 
         $ExportArr['产品ID'] = '';
-        $ExportArr['厂商名称'] = $brand_name;
+        $ExportArr['厂商名称'] = $curPeripheralArr->manufactors->name;
+        $ExportArr['品牌名称'] = $brand_name;
         $ExportArr['产品名称'] = $curPeripheralArr->name;
         $ExportArr['分类1'] = $curParentTypeName;
         $ExportArr['分类2'] = $curPeripheralArr->types->name;
