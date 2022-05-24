@@ -116,7 +116,7 @@ Admin::menu(function (Menu $menu) {
     $menu->add([
         [
             'id'            => '1',
-            'title'         => '整机适配数据管理',
+            'title'         => '整机适配详情管理',
             'icon'          => 'fa-tv',
             'uri'           => 'oems',
             'parent_id'     => 0,
