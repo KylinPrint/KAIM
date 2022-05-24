@@ -43,7 +43,7 @@ Admin::menu(function (Menu $menu) {
     $menu->add([
         [
             'id'            => '1',
-            'title'         => '软件适配结果管理',
+            'title'         => '软件适配详情管理',
             'icon'          => 'fa-tv',
             'uri'           => '',
             'parent_id'     => 0,
@@ -73,7 +73,7 @@ Admin::menu(function (Menu $menu) {
     $menu_peripherals = [
         [
             'id'            => ++$id,
-            'title'         => '外设适配结果管理',
+            'title'         => '外设适配详情管理',
             'icon'          => 'fa-tv',
             'uri'           => '',
             'parent_id'     => 0,
