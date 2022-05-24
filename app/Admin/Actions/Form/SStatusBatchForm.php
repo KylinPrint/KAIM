@@ -33,7 +33,7 @@ class SStatusBatchForm extends Form implements LazyRenderable
   
       $user_name = $input['user_name'];
       $statuses_id = $input['statuses_id'];
-      $comment = $input['comment'];
+      $comment = $input['statuses_comment'];
           
       //处理逻辑
       foreach ($ids as $id) 
