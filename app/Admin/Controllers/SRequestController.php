@@ -4,7 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Admin\Actions\Exports\SRequestExport;
 use App\Admin\Actions\Modal\SRequestModal;
-use App\Admin\Actions\Others\SRStatusBatch;
+use App\Admin\Actions\Others\StatusBatch;
 use App\Admin\Renderable\SRhistoryTable;
 use App\Admin\Utils\ContextMenuWash;
 use App\Models\AdminUser;
@@ -62,7 +62,7 @@ class SRequestController extends AdminController
                 if(Admin::user()->can('srequests-edit')) {
                     $tools->batch(function ($batch) {
                         // 状态修改按钮
-                        $batch->add(new SRStatusBatch());
+                        $batch->add(new StatusBatch('srequest'));
                     });
                 }
             });

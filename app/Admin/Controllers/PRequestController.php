@@ -4,7 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Admin\Actions\Exports\PRequestExport;
 use App\Admin\Actions\Modal\PRequestModal;
-use App\Admin\Actions\Others\PRStatusBatch;
+use App\Admin\Actions\Others\StatusBatch;
 use App\Admin\Renderable\PRhistoryTable;
 use App\Admin\Utils\ContextMenuWash;
 use App\Models\AdminUser;
@@ -63,7 +63,7 @@ class PRequestController extends AdminController
                 if(Admin::user()->can('prequests-edit')) {
                     $tools->batch(function ($batch) {
                         // 状态修改按钮
-                        $batch->add(new PRStatusBatch());
+                        $batch->add(new StatusBatch('prequest'));
                     });
                 }
             });

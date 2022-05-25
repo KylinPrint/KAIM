@@ -4,7 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Admin\Actions\Exports\SbindExport;
 use App\Admin\Actions\Modal\SbindModal;
-use App\Admin\Actions\Others\SStatusBatch;
+use App\Admin\Actions\Others\StatusBatch;
 use App\Admin\Renderable\ChipTable;
 use App\Admin\Renderable\ShistoryTable;
 use App\Admin\Renderable\ReleaseTable;
@@ -67,7 +67,7 @@ class SbindController extends AdminController
                 {
                     $tools->batch(function ($batch) 
                     {
-                        $batch->add(new SStatusBatch());
+                        $batch->add(new StatusBatch('sbind'));
                     });
                 }
             });
