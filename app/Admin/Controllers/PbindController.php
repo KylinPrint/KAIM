@@ -58,30 +58,35 @@ class PbindController extends AdminController
         return Grid::make(Pbind::with(['peripherals','releases','chips','statuses','admin_users']), function (Grid $grid) {         
 
             $grid->tools(function  (Grid\Tools  $tools)  { 
-                if(Admin::user()->can('pbinds-import'))
-                {
+                if(Admin::user()->can('pbinds-import')) {
                     $tools->append(new PbindModal()); 
                 }
                 
-                if(Admin::user()->can('pbinds-edit'))
-                {
-                    $tools->batch(function ($batch) 
-                    {
+                if(Admin::user()->can('pbinds-edit')) {
+                    $tools->batch(function ($batch) {
                         $batch->add(new StatusBatch('pbind'));
                     });
                 }
             });
 
-            $grid->actions(function (Grid\Displayers\Actions $actions) {
-                // 复制按钮
-                $actions->append('<a href="' . admin_url('pbinds/create?template=') . $this->getKey() . '"><i class="feather icon-copy"></i> 复制</a>');
-            });
+            // 复制按钮
+            if (Admin::user()->cannot('pbinds-edit')) {
+                $grid->actions(function (Grid\Displayers\Actions $actions) {
+                    $actions->append('<a href="' . admin_url('pbinds/create?template=') . $this->getKey() . '"><i class="feather icon-copy"></i> 复制</a>');
+                });
+            }
 
-            if(!Admin::user()->can('pbinds-edit')) { $grid->disableCreateButton(); }
+            if (Admin::user()->cannot('pbinds-edit')) {
+                $grid->disableCreateButton();
+                $grid->disableEditButton();
+            }
+            if (Admin::user()->cannot('pbinds-delete')) {
+                $grid->disableDeleteButton();
+            }
 
             if(Admin::user()->can('pbinds-export')) { $grid->export(new PbindExport()); }
 
-            if(!Admin::user()->can('pbinds-action')) { $grid->disableActions(); }
+            if(Admin::user()->cannot('pbinds-action')) { $grid->disableActions(); }
          
         
             $grid->showColumnSelector();  //后期可能根据权限显示
@@ -325,15 +330,6 @@ class PbindController extends AdminController
             $show->field('start_time');
             $show->field('complete_time');
             $show->field('comment');
-           
-            if(!Admin::user()->can('pbinds-edit')){
-                $show->panel()
-                    ->tools(function ($tools) {
-                        $tools->disableEdit();
-                        $tools->disableDelete();
-                    });
-            }
-            
 
             $show->relation('histories', function ($model) {
                 $grid = new Grid(PbindHistory::with(['status_old', 'status_new']));
@@ -351,6 +347,11 @@ class PbindController extends AdminController
                 $grid->disableRefreshButton();
                         
                 return $grid;
+            });
+
+            $show->panel()->tools(function ($tools) {
+                if (Admin::user()->cannot('pbinds-edit')) { $tools->disableEdit(); }
+                if (Admin::user()->cannot('pbinds-delete')) { $tools->disableDelete(); }
             });
         });
     }

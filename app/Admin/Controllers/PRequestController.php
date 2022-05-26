@@ -68,16 +68,24 @@ class PRequestController extends AdminController
                 }
             });
 
-            $grid->actions(function (Grid\Displayers\Actions $actions) {
-                // 复制按钮
-                $actions->append('<a href="' . admin_url('prequests/create?template=') . $this->getKey() . '"><i class="feather icon-copy"></i> 复制</a>');
-            });
+            // 复制按钮
+            if(Admin::user()->can('prequests-edit')) {
+                $grid->actions(function (Grid\Displayers\Actions $actions) {
+                    $actions->append('<a href="' . admin_url('prequests/create?template=') . $this->getKey() . '"><i class="feather icon-copy"></i> 复制</a>');
+                });
+            }
 
             $grid->export(new PRequestExport());
 
-            if(!Admin::user()->can('prequests-edit')) { $grid->disableCreateButton(); }
+            if(Admin::user()->cannot('prequests-edit')) {
+                $grid->disableCreateButton();
+                $grid->disableEditButton();
+            }
+            if(Admin::user()->cannot('prequests-delete')) {
+                $grid->disableDeleteButton();
+            }
             
-            if(!Admin::user()->can('prequests-action')) { $grid->disableActions(); }
+            if(Admin::user()->cannot('prequests-action')) { $grid->disableActions(); }
 
             $grid->showColumnSelector();
 
@@ -246,6 +254,11 @@ class PRequestController extends AdminController
                 $grid->disableRefreshButton();
                         
                 return $grid;
+            });
+
+            $show->panel()->tools(function ($tools) {
+                if (Admin::user()->cannot('prequests-edit')) { $tools->disableEdit(); }
+                if (Admin::user()->cannot('prequests-delete')) { $tools->disableDelete(); }
             });
         });
     }
