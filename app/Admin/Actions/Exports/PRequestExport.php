@@ -41,11 +41,7 @@ class PRequestExport extends BaseExport implements WithMapping, WithHeadings, Fr
             '需求提出人' ,
             '需求提出人联系方式' ,
             '处理状态' ,
-            '处理人',
-            '修改前状态',
-            '修改后状态',
-            '状态变更说明',
-            '更新时间',
+            '处理历史',
             '生态负责人' ,
             '备注',
 
@@ -83,11 +79,28 @@ class PRequestExport extends BaseExport implements WithMapping, WithHeadings, Fr
  
 
         $CacheArr = array();
-        $ExportArr = array();
+        $curHistoryStr = '';
         $i = 1;
 
         $curPRquest = PRequest::with('type', 'release', 'chip', 'bd','pbinds')->find($row['id']);
         $curHistoryArr = PRequestHistory::where('p_request_id',$row['id'])->get()->toArray();
+
+        if($curHistoryArr){
+            foreach($curHistoryArr as $curHistory){
+                
+                if($i == 1){
+                    if(!$curHistory['status_old']){
+                        $status_old = '      ';
+                    }else{
+                        $status_old = $curHistory['status_old'];
+                    }
+                    $curHistoryStr = $curHistory['user_name'].$status_old.$curHistory['status_new'].$curHistory['updated_at'].$curHistory['comment'].chr(10);
+                }else{
+                    $curHistoryStr = $curHistoryStr.$curHistory['user_name'].$curHistory['status_old'].$curHistory['status_new'].$curHistory['updated_at'].$curHistory['comment'].chr(10);
+                }
+                $i ++;
+            } 
+        }
 
         $CacheArr['需求来源'] = $curPRquest->source;
         $CacheArr['厂商名称'] = $curPRquest->manufactor;
@@ -107,77 +120,12 @@ class PRequestExport extends BaseExport implements WithMapping, WithHeadings, Fr
         $CacheArr['需求提出人'] = $curPRquest->requester_name;
         $CacheArr['需求提出人联系方式'] = $curPRquest->requester_contact;
         $CacheArr['处理状态'] = $curPRquest->status;
+        $CacheArr['处理历史'] = $curHistoryStr;
         $CacheArr['生态负责人'] = $curPRquest->bd->name;
         $CacheArr['备注'] = $curPRquest->comment;
 
-        if($curHistoryArr)
-        {
-            foreach($curHistoryArr as $curHistory){
-                $ExportArr[$i]['需求来源'] = $CacheArr['需求来源'];
-                $ExportArr[$i]['厂商名称'] = $CacheArr['厂商名称'];
-                $ExportArr[$i]['品牌名称'] = $CacheArr['品牌名称'];
-                $ExportArr[$i]['产品名称'] = $CacheArr['产品名称'];
-                $ExportArr[$i]['外设类型'] = $CacheArr['外设类型'];
-                $ExportArr[$i]['涉及行业'] = $CacheArr['涉及行业'];
-                $ExportArr[$i]['操作系统版本'] = $CacheArr['操作系统版本'];
-                $ExportArr[$i]['操作系统小版本号'] = $CacheArr['操作系统小版本号'];
-                $ExportArr[$i]['芯片'] = $CacheArr['芯片'];
-                $ExportArr[$i]['项目名称'] = $CacheArr['项目名称'];
-                $ExportArr[$i]['涉及数量'] = $CacheArr['涉及数量'];  
-                $ExportArr[$i]['项目状态'] = $CacheArr['项目状态'];
-                $ExportArr[$i]['紧急程度'] = $CacheArr['紧急程度'];      
-                $ExportArr[$i]['厂商联系方式'] = $CacheArr['厂商联系方式'];
-                $ExportArr[$i]['期望完成日期'] = $CacheArr['期望完成日期'];
-                $ExportArr[$i]['需求提出人'] = $CacheArr['需求提出人'];
-                $ExportArr[$i]['需求提出人联系方式'] = $CacheArr['需求提出人联系方式'];
-                $ExportArr[$i]['处理状态'] = $CacheArr['处理状态'];
-    
-                $ExportArr[$i]['处理人'] = $curHistory['user_name'];
-                $ExportArr[$i]['修改前状态'] = $curHistory['status_old'];
-                $ExportArr[$i]['修改后状态'] = $curHistory['status_new'];
-                $ExportArr[$i]['状态变更说明'] = $curHistory['comment'];
-                $ExportArr[$i]['更新时间'] = $curHistory['updated_at'];
-    
-                $ExportArr[$i]['生态负责人'] = $CacheArr['生态负责人'];
-                $ExportArr[$i]['备注'] = $CacheArr['备注'];
-    
-                $i++;
-            }
-        }
-        else{
-            $ExportArr[$i]['需求来源'] = $CacheArr['需求来源'];
-                $ExportArr[$i]['厂商名称'] = $CacheArr['厂商名称'];
-                $ExportArr[$i]['品牌名称'] = $CacheArr['品牌名称'];
-                $ExportArr[$i]['产品名称'] = $CacheArr['产品名称'];
-                $ExportArr[$i]['外设类型'] = $CacheArr['外设类型'];
-                $ExportArr[$i]['涉及行业'] = $CacheArr['涉及行业'];
-                $ExportArr[$i]['操作系统版本'] = $CacheArr['操作系统版本'];
-                $ExportArr[$i]['操作系统小版本号'] = $CacheArr['操作系统小版本号'];
-                $ExportArr[$i]['芯片'] = $CacheArr['芯片'];
-                $ExportArr[$i]['项目名称'] = $CacheArr['项目名称'];
-                $ExportArr[$i]['涉及数量'] = $CacheArr['涉及数量'];  
-                $ExportArr[$i]['项目状态'] = $CacheArr['项目状态'];
-                $ExportArr[$i]['紧急程度'] = $CacheArr['紧急程度'];      
-                $ExportArr[$i]['厂商联系方式'] = $CacheArr['厂商联系方式'];
-                $ExportArr[$i]['期望完成日期'] = $CacheArr['期望完成日期'];
-                $ExportArr[$i]['需求提出人'] = $CacheArr['需求提出人'];
-                $ExportArr[$i]['需求提出人联系方式'] = $CacheArr['需求提出人联系方式'];
-                $ExportArr[$i]['处理状态'] = $CacheArr['处理状态'];
-    
-                $ExportArr[$i]['处理人'] = '';
-                $ExportArr[$i]['修改前状态'] = '';
-                $ExportArr[$i]['修改后状态'] = '';
-                $ExportArr[$i]['状态变更说明'] = '';
-                $ExportArr[$i]['更新时间'] = '';
-    
-                $ExportArr[$i]['生态负责人'] = $CacheArr['生态负责人'];
-                $ExportArr[$i]['备注'] = $CacheArr['备注'];
-
-                $i++;
-        }
-
-        $a = $ExportArr;
-        return $ExportArr;
+        
+        return $CacheArr;
     }
 
     public function getmicrotime()
