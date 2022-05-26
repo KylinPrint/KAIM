@@ -70,7 +70,7 @@ class SbindController extends AdminController
             });
 
             // 复制按钮
-            if (Admin::user()->cannot('sbinds-edit')) {
+            if (Admin::user()->can('sbinds-edit')) {
                 $grid->actions(function (Grid\Displayers\Actions $actions) {
                     $actions->append('<a href="' . admin_url('sbinds/create?template=') . $this->getKey() . '"><i class="feather icon-copy"></i> 复制</a>');
                 });

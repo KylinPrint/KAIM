@@ -70,7 +70,7 @@ class PbindController extends AdminController
             });
 
             // 复制按钮
-            if (Admin::user()->cannot('pbinds-edit')) {
+            if (Admin::user()->can('pbinds-edit')) {
                 $grid->actions(function (Grid\Displayers\Actions $actions) {
                     $actions->append('<a href="' . admin_url('pbinds/create?template=') . $this->getKey() . '"><i class="feather icon-copy"></i> 复制</a>');
                 });
