@@ -67,16 +67,26 @@ class SRequestController extends AdminController
                 }
             });
 
-            $grid->actions(function (Grid\Displayers\Actions $actions) {
-                // 复制按钮
-                $actions->append('<a href="' . admin_url('srequests/create?template=') . $this->getKey() . '"><i class="feather icon-copy"></i> 复制</a>');
-            });
+            // 复制按钮
+            if (Admin::user()->can('srequests-edit')) {
+                $grid->actions(function (Grid\Displayers\Actions $actions) {
+                    $actions->append('<a href="' . admin_url('srequests/create?template=') . $this->getKey() . '"><i class="feather icon-copy"></i> 复制</a>');
+                });
+            }
 
             $grid->export(new SRequestExport());
 
-            if(!Admin::user()->can('srequests-edit')) { $grid->disableCreateButton(); }
+            if (Admin::user()->cannot('srequests-edit')) {
+                $grid->disableCreateButton();
+                $grid->disableEditButton();
+            }
+            if (Admin::user()->cannot('srequests-delete')) {
+                $grid->disableDeleteButton();
+            }
             
-            if(!Admin::user()->can('srequests-action')) { $grid->disableActions(); }
+            if (Admin::user()->cannot('srequests-action')) {
+                $grid->disableActions();
+            }
 
             $grid->showColumnSelector();
 
@@ -243,6 +253,11 @@ class SRequestController extends AdminController
                 $grid->disableRefreshButton();
                         
                 return $grid;
+            });
+
+            $show->panel()->tools(function ($tools) {
+                if (Admin::user()->cannot('srequests-edit')) { $tools->disableEdit(); }
+                if (Admin::user()->cannot('srequests-delete')) { $tools->disableDelete(); }
             });
         });
     }

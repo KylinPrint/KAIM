@@ -83,7 +83,7 @@ class PStatusBatchForm extends Form implements LazyRenderable
                     ->rules('required_if:change_user,1', ['required_if' => '请填写此字段'])
                     ->setLabelClass('asterisk');
             });
-        $this->radio('change_status', '是否修改需求状态')
+        $this->radio('change_status', '是否修改当前适配状态')
             ->options([0 => '否', 1 => '是'])->default(0)
             ->when(1, function (Form $form) {
                 $form->select('statuses_id')->options(Status::where('parent', '!=', null)->pluck('name','id'));

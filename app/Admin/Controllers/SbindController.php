@@ -58,30 +58,35 @@ class SbindController extends AdminController
             $grid->paginate(10);
 
             $grid->tools(function  (Grid\Tools  $tools)  { 
-                if(Admin::user()->can('sbinds-import'))
-                {
+                if(Admin::user()->can('sbinds-import')) {
                     $tools->append(new SbindModal()); 
                 }         
 
-                if(Admin::user()->can('sbinds-edit'))
-                {
-                    $tools->batch(function ($batch) 
-                    {
+                if(Admin::user()->can('sbinds-edit')) {
+                    $tools->batch(function ($batch) {
                         $batch->add(new StatusBatch('sbind'));
                     });
                 }
             });
 
-            $grid->actions(function (Grid\Displayers\Actions $actions) {
-                // 复制按钮
-                $actions->append('<a href="' . admin_url('sbinds/create?template=') . $this->getKey() . '"><i class="feather icon-copy"></i> 复制</a>');
-            });
+            // 复制按钮
+            if (Admin::user()->can('sbinds-edit')) {
+                $grid->actions(function (Grid\Displayers\Actions $actions) {
+                    $actions->append('<a href="' . admin_url('sbinds/create?template=') . $this->getKey() . '"><i class="feather icon-copy"></i> 复制</a>');
+                });
+            }
             
-            if(!Admin::user()->can('sbinds-edit')) { $grid->disableCreateButton(); }
+            if (Admin::user()->cannot('sbinds-edit')) {
+                $grid->disableCreateButton();
+                $grid->disableEditButton();
+            }
+            if (Admin::user()->cannot('sbinds-delete')) {
+                $grid->disableDeleteButton();
+            }
 
             if(Admin::user()->can('sbinds-export')) { $grid->export(new SbindExport()); }
             
-            if(!Admin::user()->can('sbinds-action')) { $grid->disableActions(); }
+            if(Admin::user()->cannot('sbinds-action')) { $grid->disableActions(); }
 
             // 默认按创建时间倒序排列
             $grid->model()->orderBy('created_at', 'desc');
@@ -306,14 +311,6 @@ class SbindController extends AdminController
             $show->field('complete_time');
             $show->field('comment');
 
-            if(!Admin::user()->can('sbinds-edit')){
-                $show->panel()
-                    ->tools(function ($tools) {
-                        $tools->disableEdit();
-                        $tools->disableDelete();
-                    });
-            }
-
             $show->relation('histories', function ($model) {
                 $grid = new Grid(SbindHistory::with(['status_old', 'status_new']));
             
@@ -330,6 +327,11 @@ class SbindController extends AdminController
                 $grid->disableRefreshButton();
                         
                 return $grid;
+            });
+
+            $show->panel()->tools(function ($tools) {
+                if (Admin::user()->cannot('sbinds-edit')) { $tools->disableEdit(); }
+                if (Admin::user()->cannot('sbinds-delete')) { $tools->disableDelete(); }
             });
         });
     }

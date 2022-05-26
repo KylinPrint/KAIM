@@ -135,6 +135,10 @@ class PeripheralController extends AdminController
 
             if (Admin::user()->cannot('peripherals-edit')) {
                 $grid->disableCreateButton();
+                $grid->disableEditButton();
+            }
+            if (Admin::user()->cannot('peripherals-delete')) {
+                $grid->disableDeleteButton();
             }
         
             $grid->filter(function (Grid\Filter $filter) {
@@ -170,7 +174,6 @@ class PeripheralController extends AdminController
     protected function detail($id)
     {
         return Show::make($id, Peripheral::with(['brands','types','manufactors']), function (Show $show) {
-            // $show->field('id');
             $show->field('name');
             $show->field('manufactors.name', __('厂商'));
             $show->field('brands.id', __('品牌'))->as(function ($brands_id) {
@@ -202,6 +205,11 @@ class PeripheralController extends AdminController
                 $grid->disableRefreshButton();
 
                 return $grid;
+            });
+
+            $show->panel()->tools(function ($tools) {
+                if (Admin::user()->cannot('peripherals-edit')) { $tools->disableEdit(); }
+                if (Admin::user()->cannot('peripherals-delete')) { $tools->disableDelete(); }
             });
         });
     }

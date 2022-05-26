@@ -52,8 +52,12 @@ class SoftwareController extends AdminController
 
             $grid->setActionClass(Grid\Displayers\ContextMenuActions::class);
             
-            if(Admin::user()->cannot('softwares-edit')) {
+            if (Admin::user()->cannot('softwares-edit')) {
                 $grid->disableCreateButton();
+                $grid->disableEditButton();
+            }
+            if (Admin::user()->cannot('softwares-delete')) {
+                $grid->disableDeleteButton();
             }
             
             $grid->filter(function (Grid\Filter $filter) {
@@ -117,6 +121,11 @@ class SoftwareController extends AdminController
             $show->field('am');
             $show->field('tsm');
             $show->field('comment');
+
+            $show->panel()->tools(function ($tools) {
+                if (Admin::user()->cannot('softwares-edit')) { $tools->disableEdit(); }
+                if (Admin::user()->cannot('softwares-delete')) { $tools->disableDelete(); }
+            });
         });
     }
 
