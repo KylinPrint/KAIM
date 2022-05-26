@@ -120,6 +120,9 @@ class OemController extends AdminController
             $grid->showColumnSelector();
             $grid->disableEditButton();
             $grid->disableCreateButton();
+            if (Admin::user()->cannot('oems-delete')) {
+                $grid->disableDeleteButton();
+            }
             $grid->paginate(10);
             $grid->setActionClass(Grid\Displayers\ContextMenuActions::class);
         
