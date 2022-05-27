@@ -44,7 +44,8 @@ class SRequestExport extends BaseExport implements WithMapping, WithHeadings, Fr
             '处理历史',
             '生态负责人' ,
             '备注',
-
+            '创建时间',
+            '更新时间'
         ];
         parent::__construct();
     }
@@ -79,13 +80,14 @@ class SRequestExport extends BaseExport implements WithMapping, WithHeadings, Fr
  
 
         $CacheArr = array();
-        $curHistoryStr = $curHistoryStr = '处理人 修改前状态 修改后状态 变更时间            状态变更说明';
+        $curHistoryStr = '';
         $i = 0;
 
         $curSRquest = SRequest::with('stype', 'release', 'chip', 'bd','sbinds')->find($row['id']);
         $curHistoryArr = SRequestHistory::where('s_request_id',$row['id'])->get()->toArray();
 
         if($curHistoryArr){
+            $curHistoryStr = '处理人 修改前状态 修改后状态 变更时间            状态变更说明';
             foreach($curHistoryArr as $curHistory){
                 
                 if($i == 1){
@@ -123,9 +125,8 @@ class SRequestExport extends BaseExport implements WithMapping, WithHeadings, Fr
         $CacheArr['处理历史'] = $curHistoryStr;
         $CacheArr['生态负责人'] = $curSRquest->bd->name;
         $CacheArr['备注'] = $curSRquest->comment;
-
-        
-        
+        $CacheArr['创建时间'] = $curSRquest->created_at;
+        $CacheArr['更新时间'] = $curSRquest->updated_at;  
 
         return $CacheArr;
     }

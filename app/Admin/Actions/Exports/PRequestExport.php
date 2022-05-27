@@ -44,7 +44,8 @@ class PRequestExport extends BaseExport implements WithMapping, WithHeadings, Fr
             '处理历史',
             '生态负责人' ,
             '备注',
-
+            '创建时间',
+            '更新时间'
         ];
         parent::__construct();
     }
@@ -79,13 +80,14 @@ class PRequestExport extends BaseExport implements WithMapping, WithHeadings, Fr
  
 
         $CacheArr = array();
-        $curHistoryStr = '处理人 修改前状态 修改后状态 变更时间            状态变更说明';
+        $curHistoryStr = '';
         $i = 1;
 
         $curPRquest = PRequest::with('type', 'release', 'chip', 'bd','pbinds')->find($row['id']);
         $curHistoryArr = PRequestHistory::where('p_request_id',$row['id'])->get()->toArray();
 
         if($curHistoryArr){
+            $curHistoryStr = '处理人 修改前状态 修改后状态 变更时间            状态变更说明';
             foreach($curHistoryArr as $curHistory){
                 
                 if($i == 1){
@@ -123,7 +125,8 @@ class PRequestExport extends BaseExport implements WithMapping, WithHeadings, Fr
         $CacheArr['处理历史'] = $curHistoryStr;
         $CacheArr['生态负责人'] = $curPRquest->bd->name;
         $CacheArr['备注'] = $curPRquest->comment;
-
+        $CacheArr['创建时间'] = $curPRquest->created_at;
+        $CacheArr['更新时间'] = $curPRquest->updated_at;
         
         return $CacheArr;
     }
