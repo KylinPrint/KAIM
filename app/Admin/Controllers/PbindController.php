@@ -17,6 +17,7 @@ use Dcat\Admin\Http\Controllers\AdminController;
 use App\Admin\Renderable\ReleaseTable;
 use App\Admin\Renderable\ChipTable;
 use App\Admin\Renderable\PhistoryTable;
+use App\Admin\Renderable\SolutionTable;
 use App\Admin\Renderable\StatusTable;
 use App\Admin\Utils\ContextMenuWash;
 use App\Models\AdminUser;
@@ -126,12 +127,20 @@ class PbindController extends AdminController
                 ->modal(function () {
                     return PhistoryTable::make();
                 });
-            $grid->column('solution_name', __('安装包名'));
-            $grid->column('solution')->expand(function (Grid\Displayers\Expand $expand) {
-                $expand->button('详情');
-                $card = new Card(null, $this->solution);    
-                return "<div style='padding:10px 10px 0;text-align:center;line-height:40px'>$card</div>";
+            
+            $grid->column('solution_name',__('适配方案'))
+                 ->display(function ($solution_name){
+                    if ($solution_name) {
+                        return "详情";
+                    }
+                 })
+                 ->expand(function (){
+                    if ($this->solution_name) {
+                        return SolutionTable::make(['solution' => $this->solution,'solution_name' => $this->solution_name]);
+                    }
+                
             });
+
             $grid->column('class')->hide();
             $grid->column('adaption_type');
             $grid->column('test_type');

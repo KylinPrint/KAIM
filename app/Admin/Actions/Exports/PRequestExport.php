@@ -79,7 +79,7 @@ class PRequestExport extends BaseExport implements WithMapping, WithHeadings, Fr
  
 
         $CacheArr = array();
-        $curHistoryStr = '';
+        $curHistoryStr = '处理人 修改前状态 修改后状态 变更时间            状态变更说明';
         $i = 1;
 
         $curPRquest = PRequest::with('type', 'release', 'chip', 'bd','pbinds')->find($row['id']);
@@ -94,9 +94,9 @@ class PRequestExport extends BaseExport implements WithMapping, WithHeadings, Fr
                     }else{
                         $status_old = $curHistory['status_old'];
                     }
-                    $curHistoryStr = $curHistory['user_name'].$status_old.$curHistory['status_new'].$curHistory['updated_at'].$curHistory['comment'].chr(10);
+                    $curHistoryStr = $curHistoryStr.chr(10).$curHistory['user_name'].' '.$status_old.'     '.$curHistory['status_new'].'    '.$curHistory['updated_at'].' '.$curHistory['comment'];
                 }else{
-                    $curHistoryStr = $curHistoryStr.$curHistory['user_name'].$curHistory['status_old'].$curHistory['status_new'].$curHistory['updated_at'].$curHistory['comment'].chr(10);
+                    $curHistoryStr = $curHistoryStr.chr(10).$curHistory['user_name'].' '.$curHistory['status_old'].'     '.$curHistory['status_new'].'    '.$curHistory['updated_at'].' '.$curHistory['comment'];
                 }
                 $i ++;
             } 
