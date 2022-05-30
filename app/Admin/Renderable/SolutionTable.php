@@ -18,12 +18,13 @@ class SolutionTable extends LazyRenderable
         $solution_name = preg_split('/[;]+/',$this->StrReplace($this->solution_name));
 
         foreach($solution as $k=>$v){
-            $data[$i]['solution'] = $v;
+            
             if(isEmpty($solution_name[$i])){
                 $data[$i]['solution_name'] = $solution_name[$i];
             }else{
                 $data[$i]['solution_name'] = '';
             }
+            $data[$i]['solution'] = $v;
             
             $i++;
         }
