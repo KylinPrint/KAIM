@@ -37,7 +37,7 @@ class SolutionTable extends LazyRenderable
         return "<div style='padding:10px 400px 0 900px;text-align:center;line-height:40px'>$a</div>";
     }
 
-    public function StrReplace(string $str){
+    public function StrReplace($str){
         $arr = array('；' => ';');
         return strtr($str,$arr);
     }
