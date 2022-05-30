@@ -19,13 +19,13 @@ class SolutionTable extends LazyRenderable
 
         foreach($solution as $k=>$v){
             
-            if(isEmpty($solution_name[$i])){
+            if(isset($solution_name[$i])){
                 $data[$i]['solution_name'] = $solution_name[$i];
             }else{
                 $data[$i]['solution_name'] = '';
             }
             $data[$i]['solution'] = $v;
-            
+
             $i++;
         }
 
