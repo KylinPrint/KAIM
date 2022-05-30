@@ -129,17 +129,17 @@ class PbindController extends AdminController
                 });
             
             $grid->column('solution_name',__('适配方案'))
-                 ->display(function ($solution_name){
-                    if ($solution_name) {
-                        return "详情";
-                    }
-                 })
-                 ->expand(function (){
-                    if ($this->solution_name) {
-                        return SolutionTable::make(['solution' => $this->solution,'solution_name' => $this->solution_name]);
-                    }
-                
-            });
+                ->if(function ($column){
+                    return $column->getValue();
+                })
+                ->display('详情')
+                ->expand(function (){
+                    return SolutionTable::make(['solution' => $this->solution,'solution_name' => $this->solution_name]);
+                })
+                ->else()
+                ->display('');
+            
+            
 
             $grid->column('class')->hide();
             $grid->column('adaption_type');
