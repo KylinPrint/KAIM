@@ -13,8 +13,9 @@ class SolutionTable extends LazyRenderable
     {
         // 获取ID
         $i = 0;
-        $solution = preg_split('/[,，]+/',$this->solution);
-        $solution_name = preg_split('/[,，]+/',$this->solution_name);
+
+        $solution = preg_split('/[,，]+/',$this->StrReplace($this->solution));
+        $solution_name = preg_split('/[,，]+/',$this->StrReplace($this->solution_name));
 
         foreach($solution_name as $k=>$v){
             $data[$i]['solution_name'] = $v;
@@ -33,5 +34,10 @@ class SolutionTable extends LazyRenderable
         ];
         $a = Table::make($titles, $data);
         return "<div style='padding:10px 400px 0 900px;text-align:center;line-height:40px'>$a</div>";
+    }
+
+    public function StrReplace(string $str){
+        $arr = array('：' => ':' , '，' => ',' , '（' => '(' , '）' => ')' , '。' => '.' , '“' => '"' , '”' => '"' , '‘' => '\'' , '’' => '\'');
+        return strtr($str,$arr);
     }
 }
