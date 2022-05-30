@@ -409,12 +409,18 @@ class SRequestController extends AdminController
                                 ->rules('required_if:status,处理中',['required_if' => '请填写此字段'])
                                 ->setLabelClass(['asterisk']);
                             $form->text('statuses_comment');
-                            $form->select('user_name')->options(function (){
+                            $form->select('user_name')->options(function () {
                                     $curaArr = AdminUser::all()->pluck('name')->toArray();
                                     foreach($curaArr as $cura){$optionArr[$cura] = $cura;}
                                     return $optionArr;
                                 })->rules('required_if:status,处理中',['required_if' => '请填写此字段'])
                                 ->setLabelClass(['asterisk']);
+                            $form->select('class', admin_trans('sbind.fields.class'))
+                                ->options(config('kaim.class'));
+                            $form->select('adaption_type', admin_trans('sbind.fields.adaption_type'))
+                                ->options(config('kaim.adaption_type'));
+                            $form->select('test_type' ,admin_trans('sbind.fields.test_type'))
+                                ->options(config('kaim.test_type'));
                             $form->select('kylineco')->options([0 => '否', 1 => '是'])
                                 ->rules('required_if:status,处理中',['required_if' => '请填写此字段'])
                                 ->setLabelClass(['asterisk']);

@@ -141,6 +141,9 @@ class PRStatusBatchForm extends Form implements LazyRenderable
                             'adapt_source'  => $prequest->source,
                             'statuses_id'   => $input['statuses_id'],
                             'user_name'     => $input["user_name"],
+                            'class'         => $input["class"],
+                            'adaption_type' => $input["adaption_type"],
+                            'test_type'     => $input["test_type"],
                             'kylineco'      => $input["kylineco"],
                             'appstore'      => $input["appstore"],
                             'iscert'        => $input["iscert"],
@@ -214,6 +217,12 @@ class PRStatusBatchForm extends Form implements LazyRenderable
                                     })
                                     ->rules('required_if:comment_only,1',['required_if' => '请填写此字段'])
                                     ->setLabelClass(['asterisk']);
+                                $form->select('class', admin_trans('pbind.fields.class'))
+                                    ->options(config('kaim.class'));
+                                $form->select('adaption_type', admin_trans('pbind.fields.adaption_type'))
+                                    ->options(config('kaim.adaption_type'));
+                                $form->select('test_type' ,admin_trans('pbind.fields.test_type'))
+                                    ->options(config('kaim.test_type'));
                                 $form->select('kylineco')->options([0 => '否', 1 => '是'])
                                     ->rules('required_if:comment_only,1',['required_if' => '请填写此字段'])
                                     ->setLabelClass(['asterisk']);
