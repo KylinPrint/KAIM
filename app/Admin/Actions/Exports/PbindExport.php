@@ -2,22 +2,25 @@
 
 namespace App\Admin\Actions\Exports;
 
+use Dcat\Admin\Grid;
 use App\Admin\Actions\Exports\BaseExport;
 use App\Models\Pbind;
 use App\Models\Peripheral;
 use App\Models\Type;
+use Dcat\Admin\Grid\Exporters\AbstractExporter;
 use Illuminate\Support\Fluent;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 
 use function PHPUnit\Framework\isEmpty;
 
-class PbindExport extends BaseExport implements WithMapping, WithHeadings, FromCollection
+class PbindExport extends AbstractExporter implements WithMapping, WithHeadings, FromQuery
 {
     use Exportable;
-    protected $fileName = '表格导出测试';
+    public $fileName = '表格导出测试';
     protected $titles = [];
 
     public function __construct()
@@ -28,6 +31,7 @@ class PbindExport extends BaseExport implements WithMapping, WithHeadings, FromC
         [   
             '产品ID',
             '厂商名称',
+            '品牌名称',
             '产品名称',
             '分类1',
             '分类2',
@@ -52,16 +56,54 @@ class PbindExport extends BaseExport implements WithMapping, WithHeadings, FromC
     public function export()
     {
         // TODO: Implement export() method.
-        $this->download($this->fileName)->prepare(request())->send();
+        // $this->download($this->fileName)->prepare(request())->send();
+        $this->queue($this->fileName)->prepare(request())->send();    
         exit;
     }
 
-    public function collection()
+    protected function getChunkSize()
     {
-        // TODO: Implement collection() method.
-
-        return collect($this->buildData());
+        $a = config('excel.exports.chunk_size', 1000);
+        return $a;
     }
+
+
+    // public function getQuery()
+    // {
+    //     $model = $this->getGridModel();
+    //     $page = null;
+    //     $perPage = null;
+
+    //     // current page
+    //     if ($this->scope === Grid\Exporter::SCOPE_CURRENT_PAGE) {
+    //         $page = $model->getCurrentPage();
+    //         $perPage = $model->getPerPage();
+    //     }
+
+    //     $model->usePaginate(false);
+
+    //     if ($page && $this->scope !== Grid\Exporter::SCOPE_SELECTED_ROWS) {
+    //         $perPage = $perPage ?: $this->getChunkSize();
+    //         $model->forPage($page, $perPage);
+    //     }
+
+    //     $grid = new \App\Admin\Rewrites\Grid($this->grid);
+    //     $query = $grid->processFilter2($grid);
+    //     $model->reset();
+
+    //     return new \App\Admin\Rewrites\Builder($query);
+
+    // }
+
+    // public function query()
+    // {
+    //     return $this->getQuery();
+    // }
+
+    // public function query()
+    // {
+    //     return Pbind::query();
+    // }
 
     public function headings(): array
     {
@@ -75,11 +117,11 @@ class PbindExport extends BaseExport implements WithMapping, WithHeadings, FromC
         // TODO: Implement map() method.
         
         $PbindRow = new Fluent($row);
+        
         $ids = $PbindRow->id;
 
         $ExportArr = array();
         $curPbindsArr = Pbind::with('releases','chips','statuses')->find($row['id']);
-
         
         $curPeripheralArr = Peripheral::with('brands','types','manufactors')->find($row['peripherals_id']);
 
@@ -101,25 +143,19 @@ class PbindExport extends BaseExport implements WithMapping, WithHeadings, FromC
         $ExportArr['芯片'] = $curPbindsArr->chips->name;
         $ExportArr['体系架构'] = $curPbindsArr->chips->arch;
         $ExportArr['兼容等级'] = $row['class'];
-        $ExportArr['测试时间'] = $curPbindsArr->start_time?:'';         //muji
+        $ExportArr['测试时间'] = $curPbindsArr->start_time?:'';
         $ExportArr['适配状态'] = $this->getParent($curPbindsArr->statuses->parent);
         $ExportArr['安装包名称'] = $row['solution_name'];
         $ExportArr['下载地址'] = $row['solution'];
         $ExportArr['产品描述'] = $curPeripheralArr->comment?:'';
         $ExportArr['小版本号'] = $row['os_subversion'];
         $ExportArr['备注'] = $row['comment'];
-        $ExportArr['是否计划适配产品'] = '';  //muji
+        $ExportArr['是否计划适配产品'] = '';
         $ExportArr['行业'] = $curPeripheralArr->industries;
         $ExportArr['适配类型'] = $curPbindsArr->adaption_type ;
 
 
         return $ExportArr;
-    }
-
-    public function getmicrotime()
-    {
-        list($usec,$sec) = explode(" ",microtime());
-        return ((float)$usec + (float)$sec);
     }
 
     public function getParent($sid)
