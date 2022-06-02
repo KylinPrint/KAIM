@@ -104,7 +104,7 @@ class SbindImport implements ToCollection, WithHeadingRow, WithValidation
                 $curSoftwareId = DB::table('softwares')->insertGetId($softwareInsert);
             }
 
-            $sbindInsert =
+            $sbindInsertCache =
             [
                 'os_subversion' => $row['操作系统小版本']?:'',
                 'adapt_source' => $row['引入来源'],
@@ -124,6 +124,12 @@ class SbindImport implements ToCollection, WithHeadingRow, WithValidation
                 'comment' => $row['备注'],
                 'updated_at' => $curtime,
             ];
+
+            foreach($sbindInsertCache as $k => $v){
+                if(isset($v)){
+                    $sbindInsert[$k] = $v;
+                }
+            };
             
             $sbindInsertUnique = 
             [

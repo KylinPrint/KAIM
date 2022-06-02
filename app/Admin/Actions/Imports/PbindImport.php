@@ -160,7 +160,7 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
                 $curPeripheralId = DB::table('peripherals')->insertGetId($peripheralInsert);
             }
 
-            $pbindInsert =
+            $pbindInsertCache =
             [
                 'os_subversion' => $row['操作系统小版本']?:'',
                 'statuses_id' => Status::where('name',$row['当前细分适配状态'])->pluck('id')->first(),
@@ -180,8 +180,14 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
                 'certificate_NO' => $row['证书编号'],
                 'start_time' => $row['适配开始时间'] ? date('Y-m-d',($row['适配开始时间']-25569)*24*3600):null,
                 'complete_time' => $row['适配完成时间'] ? date('Y-m-d',($row['适配完成时间']-25569)*24*3600):null,
-                'updated_at' => $curtime,
             ];
+
+            foreach($pbindInsertCache as $k => $v){
+                if(isset($v)){
+                    $pbindInsert[$k] = $v;
+                }
+            };
+
             $pbindInsertUnique = 
             [
                 'peripherals_id' => $curPeripheralId,
