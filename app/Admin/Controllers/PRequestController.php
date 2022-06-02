@@ -151,15 +151,15 @@ class PRequestController extends AdminController
                 $filter->where('pbind',function ($query){
                     $query->whereHas('pbinds', function ($query){
                         $query->whereHas('statuses', function ($query){
-                            $query->where('parent',"%{$this->input}%");
+                            $query->where('parent',$this->input);
                         });
                     });
                 },'适配状态')->select([
-                    '未适配',
-                    '适配中',
-                    '已适配',
-                    '待验证',
-                    '适配暂停',
+                    1 => '未适配',
+                    2 => '适配中',
+                    3 => '已适配',
+                    4 => '待验证',
+                    5 => '适配暂停',
                 ])->width(3);
 
                 $filter->whereBetween('created_at', function ($query) {
