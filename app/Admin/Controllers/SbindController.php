@@ -226,7 +226,7 @@ class SbindController extends AdminController
                 
                         if ($end !== null) {$query->where('created_at', '<=', $end);}
 
-                })->date()->width(4);
+                })->date()->width(3);
 
                 $filter->where('related', function ($query) {
                     if($this->input == 1)
@@ -253,6 +253,8 @@ class SbindController extends AdminController
                     2 => '我参与的'
                 ])->width(3);
 
+                $filter->equal('appstore', __('是否上架'))->select(['1' => '是' , '0' => '否'])->width(2);
+                $filter->equal('iscert')->select(['1' => '是' , '0' => '否'])->width(2);
                     
                 });
         });
@@ -352,11 +354,10 @@ class SbindController extends AdminController
             // 获取要复制的行的ID
             $template = Sbind::find($this->urlQuery('template'));
 
-            $form->select('softwares_id')->options(function ($id) {
-                $software = Software::find($id);
-            
+            $form->select('softwares_id')->options(function ($softwares_id) {
+                $software = Software::find($softwares_id);
                 if ($software) {
-                    return [$software->id => $software->name];
+                    return [$software->id => $software->name.' '.$software->version];
                 }
             })
             ->ajax('api/softwares')
@@ -501,7 +502,7 @@ class SbindController extends AdminController
     public function sPaginate(Request $request)
     {
         $q = $request->get('q');
-
-        return Software::where('name', 'like', "%$q%")->paginate(null, ['id', 'name as text']);
+        $b = Software::where('name', 'like', "%$q%")->paginate(null, ['id', 'name as text']);
+        return $b;
     }
 }

@@ -240,6 +240,16 @@ class PbindController extends AdminController
 
                 $filter->equal('adaption_type',__('适配类型'))->select(config('kaim.adaption_type'))->width(3);
 
+                $filter->whereBetween('created_at', function ($query) {
+                    $start = $this->input['start'] ?? null;
+                    $end = $this->input['end'] ?? null;
+                
+                    if ($start !== null) { $query->where('created_at', '>=', $start);}
+            
+                    if ($end !== null) {$query->where('created_at', '<=', $end);}
+            
+                })->date()->width(3);
+
                 $filter->where('related', function ($query) {
                     if($this->input == 1)
                     {
@@ -263,17 +273,10 @@ class PbindController extends AdminController
                 }, __('与我有关'))->select([
                     1 => '我创建的',
                     2 => '我参与的'
-                ])->width(3);  
+                ])->width(2);   
 
-                $filter->whereBetween('created_at', function ($query) {
-                    $start = $this->input['start'] ?? null;
-                    $end = $this->input['end'] ?? null;
-                
-                    if ($start !== null) { $query->where('created_at', '>=', $start);}
-            
-                    if ($end !== null) {$query->where('created_at', '<=', $end);}
-            
-                })->date()->width(4);
+                $filter->equal('appstore', __('是否上架'))->select(['1' => '是' , '0' => '否'])->width(2);
+                $filter->equal('iscert')->select(['1' => '是' , '0' => '否'])->width(2);
             });
         });
     }

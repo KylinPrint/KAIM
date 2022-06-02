@@ -137,6 +137,10 @@ class PRequestController extends AdminController
 
                 $filter->like('name','产品名称')->width(3);
                 $filter->like('manufactor','厂商名称')->width(3);
+                $filter->equal('project_name')->select(function (){
+                    $a = array_filter(PRequest::all()->pluck('project_name','project_name')->toArray());
+                    return $a;
+                })->width(3);
                 
                 $filter->in('status','处理状态')
                 ->multipleSelect([
