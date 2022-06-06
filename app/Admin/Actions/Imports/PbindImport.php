@@ -115,7 +115,7 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
                         $brandInsert = 
                         [
                             'name' => $row['品牌'],
-                            'name_en' => '',
+                            'name_en' => null,
                             'alias' => null,
                             'created_at' => $curtime,
                             'updated_at' => $curtime,
@@ -123,13 +123,13 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
                         $curBrandId = DB::table('brands')->insertGetId($brandInsert);
                     }
                 }else{
-                    //品牌拆分后这里应该查name_en列
-                    $curBrandId = Brand::where('name','like','%'.trim($row['品牌']).'%')->pluck('id')->first();
+                   
+                    $curBrandId = Brand::where('name_en','like','%'.trim($row['品牌']).'%')->pluck('id')->first();
 
                     if(!$curBrandId){
                         $brandInsert = 
                         [
-                            'name' => '',
+                            'name' => null,
                             'name_en' => $row['品牌'],
                             'alias' => null,
                             'created_at' => $curtime,
