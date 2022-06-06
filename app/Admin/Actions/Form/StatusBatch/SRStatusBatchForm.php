@@ -143,7 +143,7 @@ class SRStatusBatchForm extends Form implements LazyRenderable
             }
 
             // 新增SRequestHistory
-            if ($input["change_status"] || $input['status_comment']) {
+            if ($input["change_bd"] || $input["change_status"] || $input['status_comment']) {
                 SRequestHistory::create([
                     's_request_id' => $id,
                     'status_old' => $status_current[0],

@@ -456,7 +456,6 @@ class PRequestController extends AdminController
             }
             
             $form->saving(function (Form $form) {
-                $a = $form->isEditing();
                 if($form->isEditing()) {
                     $id = $form->getKey();
                     // 取当前状态
@@ -546,7 +545,7 @@ class PRequestController extends AdminController
                     }
 
                     // 需求状态变更记录
-                    if ($status_coming != $status_current || $form->status_comment) {
+                    if ($form->model()->bd_id != $form->bd_id || $status_coming != $status_current || $form->status_comment) {
                         PRequestHistory::create([
                             'p_request_id' => $id,
                             'status_old' => $status_current,

@@ -512,7 +512,7 @@ class SRequestController extends AdminController
                     }
 
                     // 需求状态变更记录
-                    if ($status_coming != $status_current || $form->status_comment) {
+                    if ($form->model()->bd_id != $form->bd_id || $status_coming != $status_current || $form->status_comment) {
                         SRequestHistory::create([
                             's_request_id' => $id,
                             'status_old' => $status_current,
