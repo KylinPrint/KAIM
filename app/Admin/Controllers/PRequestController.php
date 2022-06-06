@@ -137,6 +137,8 @@ class PRequestController extends AdminController
 
                 $filter->like('name','产品名称')->width(3);
                 $filter->like('manufactor','厂商名称')->width(3);
+
+                //卡了上异步
                 $filter->equal('project_name')->select(function (){
                     $a = array_filter(PRequest::all()->pluck('project_name','project_name')->toArray());
                     return $a;
@@ -152,7 +154,7 @@ class PRequestController extends AdminController
                     '已关闭' => '已关闭',
                 ])->width(3);
 
-                $filter->where('pbind',function ($query){
+                $filter->where('pbind_id',function ($query){
                     $query->whereHas('pbinds', function ($query){
                         $query->whereHas('statuses', function ($query){
                             $query->where('parent',$this->input);
@@ -454,6 +456,7 @@ class PRequestController extends AdminController
             }
             
             $form->saving(function (Form $form) {
+                $a = $form->isEditing();
                 if($form->isEditing()) {
                     $id = $form->getKey();
                     // 取当前状态
@@ -519,6 +522,9 @@ class PRequestController extends AdminController
                                 'adapt_source'  => $form->source,
                                 'statuses_id'   => $form->statuses_id,
                                 'user_name'     => $form->user_name,
+                                'class'         => $form->class,
+                                'test_type'     => $form->test_type,
+                                'adaption_type' => $form->adaption_type,
                                 'kylineco'      => $form->kylineco,
                                 'appstore'      => $form->appstore,
                                 'iscert'        => $form->iscert,
@@ -551,7 +557,7 @@ class PRequestController extends AdminController
                     }
                     
                     // 删除临时数据
-                    $form->deleteInput(['status_comment', 'statuses_id', 'statuses_comment', 'user_name', 'kylineco', 'appstore', 'iscert']);
+                    $form->deleteInput(['status_comment', 'statuses_id', 'statuses_comment', 'user_name', 'class', 'test_type', 'adaption_type', 'kylineco', 'appstore', 'iscert']);
                 } else {
                     // 读取表单数据
                     $data = $form->input();

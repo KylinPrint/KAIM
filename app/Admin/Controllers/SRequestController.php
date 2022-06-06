@@ -154,7 +154,7 @@ class SRequestController extends AdminController
                     '已关闭' => '已关闭',
                 ])->width(3);
 
-                $filter->where('sbind',function ($query){
+                $filter->where('sbind_id',function ($query){
                     $query->whereHas('sbinds', function ($query){
                         $query->whereHas('statuses', function ($query){
                             $query->where('parent', $this->input);
@@ -486,12 +486,15 @@ class SRequestController extends AdminController
                             ],
                             [
                                 'os_subversion' => $form->os_subversion,
-                                'adapt_source' => $form->source,
-                                'statuses_id' => $form->statuses_id,
-                                'user_name' =>$form->user_name,
-                                'kylineco' => $form->kylineco,
-                                'appstore' => $form->appstore,
-                                'iscert' => $form->iscert,
+                                'adapt_source'  => $form->source,
+                                'statuses_id'   => $form->statuses_id,
+                                'user_name'     => $form->user_name,
+                                'class'         => $form->class,
+                                'test_type'     => $form->test_type,
+                                'adaption_type' => $form->adaption_type,
+                                'kylineco'      => $form->kylineco,
+                                'appstore'      => $form->appstore,
+                                'iscert'        => $form->iscert,
                             ],
                         );
                         // SbindHistory
@@ -520,7 +523,7 @@ class SRequestController extends AdminController
                     }
                     
                     // 删除临时数据
-                    $form->deleteInput(['status_comment', 'statuses_id', 'statuses_comment', 'user_name', 'kylineco', 'appstore', 'iscert']);
+                    $form->deleteInput(['status_comment', 'statuses_id', 'statuses_comment', 'user_name','class','test_type','adaption_type', 'kylineco', 'appstore', 'iscert']);
                 } else {
                     // 读取表单数据
                     $data = $form->input();

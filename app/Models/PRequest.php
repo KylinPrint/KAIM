@@ -44,5 +44,5 @@ class PRequest extends Model
 
 	public function bd() { return $this->belongsTo(AdminUser::class); }
 
-	public function pbinds() { return $this->belongsTo(Pbind::class); }
+	public function pbinds() { return $this->belongsTo(Pbind::class, 'pbind_id'); }
 }
