@@ -488,11 +488,11 @@ class PbindController extends AdminController
                         if($pbind) {
                             // 创建PBinds历史记录
                             PbindHistory::create([
-                                'pbind_id' => $pbind->id,
-                                'status_old' => null,
-                                'status_new' => $data['statuses_id'],
-                                'user_name' => Admin::user()->name,
-                                'comment' => $statuses_comment,
+                                'pbind_id'      => $pbind->id,
+                                'status_old'    => null,
+                                'status_new'    => $data['statuses_id'],
+                                'user_name'     => Admin::user()->name,
+                                'comment'       => $statuses_comment,
                             ]);
                         } else {
                             // 返回错误
@@ -516,11 +516,11 @@ class PbindController extends AdminController
                 $status_old = PbindHistory::where('pbind_id', $id)->orderBy('id', 'DESC')->pluck('status_new')->first();
                 if($form->statuses_id != $status_old) {
                     PbindHistory::create([
-                        'pbind_id' => $id,
-                        'status_old' => $status_old,
-                        'status_new' => $form->statuses_id,
-                        'user_name' => Admin::user()->name,
-                        'comment' => $statuses_comment,
+                        'pbind_id'      => $id,
+                        'status_old'    => $status_old,
+                        'status_new'    => $form->statuses_id,
+                        'user_name'     => Admin::user()->name,
+                        'comment'       => $statuses_comment,
                     ]);
                 }
             });
