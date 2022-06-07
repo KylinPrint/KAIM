@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Admin\Actions\Exports\PbindExport;
+use App\Admin\Actions\Grid\ViewHistory;
 use App\Admin\Actions\Modal\PbindModal;
 use App\Admin\Actions\Others\StatusBatch;
 use App\Models\Chip;
@@ -16,20 +17,17 @@ use Dcat\Admin\Show;
 use Dcat\Admin\Http\Controllers\AdminController;
 use App\Admin\Renderable\ReleaseTable;
 use App\Admin\Renderable\ChipTable;
-use App\Admin\Renderable\PhistoryTable;
 use App\Admin\Renderable\SolutionTable;
 use App\Admin\Renderable\StatusTable;
 use App\Admin\Utils\ContextMenuWash;
 use App\Models\AdminUser;
 use App\Models\Brand;
 use App\Models\Manufactor;
-use App\Models\PbindHistory;
-use App\Models\SbindHistory;
 use App\Models\Type;
 use Dcat\Admin\Admin;
-use Dcat\Admin\Widgets\Card;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
+use OwenIt\Auditing\Models\Audit;
 
 class PbindController extends AdminController
 {
@@ -58,24 +56,32 @@ class PbindController extends AdminController
         
         return Grid::make(Pbind::with(['peripherals','releases','chips','statuses','admin_users']), function (Grid $grid) {         
 
-            $grid->tools(function  (Grid\Tools  $tools)  { 
+            // 工具栏
+            $grid->tools(function (Grid\Tools $tools) {
+                // 导入
                 if(Admin::user()->can('pbinds-import')) {
                     $tools->append(new PbindModal()); 
                 }
                 
-                if(Admin::user()->can('pbinds-edit')) {
-                    $tools->batch(function ($batch) {
+                // 批量操作
+                $tools->batch(function ($batch) {
+                    // 批量修改状态
+                    if(Admin::user()->can('pbinds-edit')) {
                         $batch->add(new StatusBatch('pbind'));
-                    });
-                }
+                    }
+                });
+                
             });
 
-            // 复制按钮
-            if (Admin::user()->can('pbinds-edit')) {
-                $grid->actions(function (Grid\Displayers\Actions $actions) {
-                    $actions->append('<a href="' . admin_url('pbinds/create?template=') . $this->getKey() . '"><i class="feather icon-copy"></i> 复制</a>');
-                });
-            }
+            // 行操作
+            $grid->actions(function (Grid\Displayers\Actions $actions) {
+                // 复制按钮
+                if (Admin::user()->can('pbinds-edit')) {
+                    $actions->append('<a href="' . admin_url('pbinds/create?template=') . $this->getKey() . '"><i class="fa fa-copy"></i> 复制</a>');
+                }
+                // 查看历史
+                $actions->append(new ViewHistory());
+            });
 
             if (Admin::user()->cannot('pbinds-edit')) {
                 $grid->disableCreateButton();
@@ -119,14 +125,10 @@ class PbindController extends AdminController
             })->hide();
             $grid->column('statuses.parent', __('当前适配状态'))->display(function ($parent) {
                     return Status::where('id', $parent)->pluck('name')->first();
-                });
+            });
             $grid->column('statuses.name', __('当前细分适配状态'));
+            $grid->column('statuses_comment');
             $grid->column('user_name');
-            $grid->column('histories')
-                ->display('查看')
-                ->modal(function () {
-                    return PhistoryTable::make();
-                });
             
             $grid->column('solution',__('适配方案'))
                 ->if(function ($column){
@@ -251,23 +253,22 @@ class PbindController extends AdminController
                 })->date()->width(3);
 
                 $filter->where('related', function ($query) {
-                    if($this->input == 1)
-                    {
-                        $curUserCtreateArr = PbindHistory::where([
-                            ['user_name',Admin::user()->name],
-                            ['status_old',null]])->pluck('pbind_id')->toArray();
-
-                        $query->whereIn('id',array_unique($curUserCtreateArr));
-                    }
-                    else 
-                    { 
+                    if($this->input == 1) {
+                        $created = Audit::where([
+                            'admin_user_id'     => Admin::user()->id,
+                            'event'             => 'created',
+                            'auditable_type'    => 'App\Models\Pbind',
+                        ])->pluck('auditable_id')->toarray();
+                        $query->whereIn('id', $created);
+                    } else { 
                         $curUserIncludedArr = array_merge(
-                            PbindHistory::where('user_name',Admin::user()->name)
-                            ->pluck('pbind_id')
-                            ->toArray(),
+                            Audit::where([
+                                'admin_user_id'     => Admin::user()->id,
+                                'auditable_type'    => 'App\Models\Pbind',
+                            ])->pluck('auditable_id')->toarray(),
                             Pbind::where('user_name',Admin::user()->name)
                             ->pluck('id')
-                            ->toArray());  
+                            ->toarray());  
                         $query->whereIn('id',array_unique($curUserIncludedArr));
                     }
                 }, __('与我有关'))->select([
@@ -290,8 +291,7 @@ class PbindController extends AdminController
      */
     protected function detail($id)
     {
-        return Show::make($id, Pbind::with(['peripherals','releases','chips','statuses']), function (Show $show) use ($id){
-
+        return Show::make($id, Pbind::with(['peripherals','releases','chips','statuses']), function (Show $show) {
             $show->field('peripherals.brands_id', __('品牌'))->as(function ($brand_id) {
                 $brand = Brand::find($brand_id);
                 if (!$brand->name) { return $brand->name_en; }
@@ -317,10 +317,13 @@ class PbindController extends AdminController
             });
             $show->field('statuses.name', __('当前细分适配状态'));
             $show->field('user_name');
-            $show->field('create_name',__('适配数据创建人'))->as(function () use ($id){
-                $a =  PbindHistory::where([['pbind_id',$id],['status_old',null]])
-                    ->pluck('user_name')->first();
-                return $a;
+            $show->field('creator', '适配数据创建人')->as(function () {
+                $admin_user_id = Audit::where([
+                    'event'             => 'created',
+                    'auditable_type'    => 'App\Models\Pbind',
+                    'auditable_id'      => $this->id,
+                ])->first()->admin_user_id;
+                return AdminUser::find($admin_user_id)->name;
             });
             $show->field('solution_name');
             $show->field('solution');
@@ -342,24 +345,6 @@ class PbindController extends AdminController
             $show->field('start_time');
             $show->field('complete_time');
             $show->field('comment');
-
-            $show->relation('histories', function ($model) {
-                $grid = new Grid(PbindHistory::with(['status_old', 'status_new']));
-            
-                $grid->model()->where('pbind_id', $model->id);
-            
-                $grid->column('user_name', __('处理人'));
-                $grid->column('status_old.name', __('修改前状态'));
-                $grid->column('status_new.name', __('修改后状态'));
-                $grid->column('comment');
-                $grid->updated_at();
-
-                $grid->disableActions();
-                $grid->disableCreateButton();
-                $grid->disableRefreshButton();
-                        
-                return $grid;
-            });
 
             $show->panel()->tools(function ($tools) {
                 if (Admin::user()->cannot('pbinds-edit')) { $tools->disableEdit(); }
@@ -420,13 +405,12 @@ class PbindController extends AdminController
                 ->options(Status::where('parent','!=',null)->pluck('name','id'))
                 ->required()
                 ->default($template->statuses_id ?? null);
-            $form->text('statuses_comment', __('适配状态变更说明'))
+            $form->text('statuses_comment_temp', admin_trans('pbind.fields.statuses_comment'))
                 ->default($template->statuses_comment ?? null);
+            $form->hidden('statuses_comment');
             $form->select('user_name')->options(function (){
                 $curaArr = AdminUser::all()->pluck('name')->toArray();
-                foreach($curaArr as $cura){
-                    $optionArr[$cura] = $cura;
-                }
+                foreach($curaArr as $cura) { $optionArr[$cura] = $cura; }
                 return $optionArr;
             })->default(Admin::user()->name);
             $form->text('solution_name')
@@ -454,24 +438,23 @@ class PbindController extends AdminController
                 ->options([0 => '否',1 => '是'])
                 ->required()
                 ->default($template->iscert ?? null);
-            $form->date('start_time')->format('Y-M-D')
+            $form->date('start_time')
                 ->default($template->start_time ?? null);
-            $form->date('complete_time')->format('Y-M-D')
+            $form->date('complete_time')
                 ->default($template->complete_time ?? null);
             $form->text('comment')
                 ->default($template->comment ?? null);
-            
-            // 暂存statuses_comment
-            $statuses_comment = '';
 
-            $form->saving(function (Form $form) use (&$statuses_comment) {
+            $form->saving(function (Form $form) {
                 if($form->isCreating()) {
                     // 读取表单数据
                     $data = $form->input();
                     // 读取多选的芯片
                     $chips_id = array_filter($data['chips_id']);
+                    // 修正状态变更说明
+                    $data['statuses_comment'] = $data['statuses_comment_temp'];
                     // 取消无意义的数据
-                    unset($data['chips_id'], $data["_previous_"], $data["_token"], $data['chss']);
+                    unset($data['chips_id'], $data['statuses_comment_temp'], $data["_previous_"], $data["_token"], $data['chss']);
                     // 初始化错误信息
                     $message = array();
                     // 遍历芯片
@@ -485,16 +468,7 @@ class PbindController extends AdminController
                         } catch (\Throwable $th) {
                             //throw $th;
                         }
-                        if($pbind) {
-                            // 创建PBinds历史记录
-                            PbindHistory::create([
-                                'pbind_id'      => $pbind->id,
-                                'status_old'    => null,
-                                'status_new'    => $data['statuses_id'],
-                                'user_name'     => Admin::user()->name,
-                                'comment'       => $statuses_comment,
-                            ]);
-                        } else {
+                        if(!$pbind) {
                             // 返回错误
                             $message[] = $chip->name;
                         }
@@ -506,22 +480,8 @@ class PbindController extends AdminController
                         return $form->response()->success('操作完成')->redirect('pbinds');
                     }
                 } else {
-                    $statuses_comment = $form->statuses_comment ?? null;
-                    $form->deleteInput('statuses_comment');
-                }
-            });
-            
-            $form->saved(function (Form $form) use (&$statuses_comment) {
-                $id = $form->getKey(); 
-                $status_old = PbindHistory::where('pbind_id', $id)->orderBy('id', 'DESC')->pluck('status_new')->first();
-                if($form->statuses_id != $status_old) {
-                    PbindHistory::create([
-                        'pbind_id'      => $id,
-                        'status_old'    => $status_old,
-                        'status_new'    => $form->statuses_id,
-                        'user_name'     => Admin::user()->name,
-                        'comment'       => $statuses_comment,
-                    ]);
+                    $form->statuses_comment = $form->statuses_comment_temp;
+                    $form->deleteInput('statuses_comment_temp');
                 }
             });
         });

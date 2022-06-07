@@ -41,8 +41,8 @@ class CreatePbindsTable extends Migration
             $table->boolean('kylineco')->nullable()->comment('是否上传生态网站');
             $table->boolean('appstore')->nullable()->comment('是否上架软件商店');
             $table->boolean('iscert')->nullable()->comment('是否互认证');
-            $table->timestamp('start_time')->nullable()->comment('适配开始时间');
-            $table->timestamp('complete_time')->nullable()->comment('适配完成时间');
+            $table->date('start_time')->nullable()->comment('适配开始时间');
+            $table->date('complete_time')->nullable()->comment('适配完成时间');
             $table->string('comment')->nullable()->comment('备注');
 
             $table->timestamps();
