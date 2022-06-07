@@ -48,6 +48,10 @@ class NewHistoryTable extends LazyRenderable
                     } elseif    ($key == 'statuses_id') {
                         $old = Status::find($value)->name;
                         $new = Status::find($this->new_values[$key])->name;
+                    } elseif    (in_array($key, ['adapted_before', 'kylineco', 'appstore', 'iscert'])) {
+                        // 布尔值修正
+                        $old = $value ? '是' : '否';
+                        $new = $this->new_values[$key] ? '是' : '否';
                     } else {
                         $old = $value;
                         $new = $this->new_values[$key];
