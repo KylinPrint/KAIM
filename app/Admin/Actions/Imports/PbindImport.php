@@ -9,8 +9,10 @@ use App\Models\Pbind;
 use App\Models\PbindHistory;
 use App\Models\Peripheral;
 use App\Models\Release;
+use App\Models\Specification;
 use App\Models\Status;
 use App\Models\Type;
+use App\Models\Value;
 use Dcat\Admin\Admin;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -66,7 +68,7 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
 
             $curtime = date('Y-m-d H:i:s');
             
-            //
+            // 厂商
             if($row['厂商'] != '')
             {
                 $curManufactorId = Manufactor::where('name',trim($row['厂商']))->pluck('id')->first();
@@ -83,7 +85,7 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
                 }
             }
 
-            // 如果抓到括号,默认中英文都有,且括号外中文,括号内英文
+            // 品牌  如果抓到括号,默认中英文都有,且括号外中文,括号内英文
             if(preg_match('/\(|\（/',$row['品牌'])){
 
                 // 抓品牌的中文和英文
@@ -140,6 +142,7 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
                 }
             }
 
+            // 外设
             $curPeripheralId = Peripheral::where('name',trim($row['外设型号']))->pluck('id')->first();
             if(empty($curPeripheralId))
             {
@@ -159,6 +162,59 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
                 ];
                 $curPeripheralId = DB::table('peripherals')->insertGetId($peripheralInsert);
             }
+
+            //处理参数
+            foreach($row as $k => $v){
+                //定位到固定列最后一列
+                if($k == '备注'){
+                    $tag = 0;
+                }
+                if(isset($tag)){
+                    //进入非固定列          
+                    if($tag != 0){
+                        if(empty($v)){break;}
+                        //找有没有这个参数名,没有就加
+
+                        $parentID = Type::where('name',$row['外设类型一'])->pluck('id')->first();
+                        $types_id = Type::where([['parent',$parentID],['name',trim($row['外设类型二'])]])->pluck('id')->first();
+
+                        $specificationId = Specification::where([['name',str_replace('*','',$k)],['types_id',$types_id]])->pluck('id')->first();
+
+                        if(empty($specificationId)){
+
+                            
+                            $isrequired = strpos($k,'*')?0:1;
+
+                            // 导入的默认都是文本类型  开摆
+                            $specificationInsert = 
+                            [
+                                'name'       => str_replace('*','',$k),
+                                'types_id'   => $types_id,
+                                'isrequired' => $isrequired,
+                                'field'      => 0,
+                                'created_at' => $curtime,
+                                'updated_at' => $curtime,
+                            ];
+
+                            $specificationId = DB::table('specifications')->insertGetId($specificationInsert);
+                        }
+                        
+                        $valueInsertCache = [
+                            'value' => $v,
+                        ];
+                        $valueInsertUnique = [
+                            'peripherals_id'    => $curPeripheralId,
+                            'specifications_id' => $specificationId,
+                        ];
+
+                        Value::updateOrCreate($valueInsertUnique,$valueInsertCache);
+                    }
+                    //准备进入非固定列
+                    elseif($tag == 0){$tag ++ ;}
+                }
+            }
+            // 循环结束没有释放  怪
+            unset($tag);
 
             $pbindInsertCache =
             [
