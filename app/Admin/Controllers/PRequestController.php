@@ -297,6 +297,7 @@ class PRequestController extends AdminController
                     ->default($template->name ?? null);
                 $form->select('type_id')
                     ->options($typeModel::selectOptions())
+                    ->rules('required|numeric|min:6',['min' => '外设分类  请选择子分类,例如:激光打印机,扫描仪等'])
                     ->required()
                     ->default($template->type_id ?? null);
                 $form->tags('industry')

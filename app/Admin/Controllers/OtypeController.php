@@ -35,7 +35,7 @@ class OtypeController extends AdminController
     {
         return Form::make(new Otype(), function (Form $form) {
             // $form->display('id');
-            $typeModel = config('admin.database.types_model');
+            $typeModel = config('admin.database.otypes_model');
 
             $form->select('parent',)
                 ->options($typeModel::selectOptions())

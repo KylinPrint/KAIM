@@ -346,7 +346,9 @@ class SRequestController extends AdminController
                     $form->text('name')->required();
                     $form->text('version')->required();
                     $form->select('stype_id')
-                        ->options($stypeModel::selectOptions())->required();
+                        ->options($stypeModel::selectOptions())
+                        ->rules('required|numeric|min:9',['min' => '软件分类  请选择子分类,例如:即时通讯,浏览器等'])
+                        ->required();
                     $form->tags('industry')
                         ->options(config('kaim.industry'))
                         ->saving(function ($value) { return implode(',', $value); })->required();
