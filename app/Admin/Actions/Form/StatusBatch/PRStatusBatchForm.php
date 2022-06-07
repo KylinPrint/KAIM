@@ -171,7 +171,7 @@ class PRStatusBatchForm extends Form implements LazyRenderable
             }
 
             // 新增PRequestHistory
-            if ($input["change_bd"] || $input["change_status"] || $input['status_comment']) {
+            if ($input["change_status"] || $input['status_comment']) {
                 PRequestHistory::create([
                     'p_request_id' => $id,
                     'status_old' => $status_current[0],
