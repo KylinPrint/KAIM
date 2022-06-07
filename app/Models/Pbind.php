@@ -5,9 +5,11 @@ namespace App\Models;
 use Dcat\Admin\Traits\HasDateTimeFormatter;
 
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Pbind extends Model
+class Pbind extends Model implements Auditable
 {
+	use \OwenIt\Auditing\Auditable;
 	use HasDateTimeFormatter;    
 
 	protected $fillable = 
@@ -18,6 +20,7 @@ class Pbind extends Model
 		'chips_id',	
 		'os_subversion',
 		'statuses_id',
+		'statuses_comment',
 		'class' ,
 		'solution_name' ,
 		'solution' ,

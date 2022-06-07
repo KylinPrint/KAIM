@@ -289,6 +289,7 @@ class PeripheralController extends AdminController
             $form->saving(function (Form $form) {
                 if ($form->isCreating()) {
                     $database_name = env('DB_DATABASE');
+                    // NT
                     $newID = DB::select("
                         SELECT `AUTO_INCREMENT` FROM INFORMATION_SCHEMA.TABLES 
                         WHERE TABLE_SCHEMA = '$database_name' AND TABLE_NAME = 'peripherals'
