@@ -20,6 +20,6 @@ class ViewHistory extends RowAction
             ->xl()
             ->title('查看变更历史')
             ->body($grid)   
-            ->button('<i class="fa fa-history"></i> 历史');
+            ->button('<a><i class="fa fa-history"></i> 历史</a>');
     }
 }
