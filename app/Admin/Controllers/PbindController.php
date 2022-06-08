@@ -322,8 +322,9 @@ class PbindController extends AdminController
                     'event'             => 'created',
                     'auditable_type'    => 'App\Models\Pbind',
                     'auditable_id'      => $this->id,
-                ])->first()->admin_user_id;
-                return AdminUser::find($admin_user_id)->name;
+                ])->first();
+                // 防止出现空值页面直接报错
+                return $admin_user_id ? AdminUser::find($admin_user_id->admin_user_id)->name : '';
             });
             $show->field('solution_name');
             $show->field('solution');
