@@ -3,10 +3,10 @@
 namespace App\Admin\Controllers;
 
 use App\Admin\Actions\Exports\SbindExport;
+use App\Admin\Actions\Grid\ShowAudit;
 use App\Admin\Actions\Modal\SbindModal;
 use App\Admin\Actions\Others\StatusBatch;
 use App\Admin\Renderable\ChipTable;
-use App\Admin\Renderable\ShistoryTable;
 use App\Admin\Renderable\ReleaseTable;
 use App\Admin\Renderable\SolutionTable;
 use App\Admin\Renderable\StatusTable;
@@ -16,7 +16,6 @@ use App\Models\Chip;
 use App\Models\Manufactor;
 use App\Models\Release;
 use App\Models\Sbind;
-use App\Models\SbindHistory;
 use App\Models\Software;
 use App\Models\Status;
 use App\Models\Stype;
@@ -25,25 +24,11 @@ use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
 use Dcat\Admin\Http\Controllers\AdminController;
-use Dcat\Admin\Widgets\Card;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\URL;
+use OwenIt\Auditing\Models\Audit;
 
 class SbindController extends AdminController
 {
-    public $url_query = array();
-
-    public function __construct()
-    {
-        // 处理URL参数
-        parse_str(parse_url(URL::full())['query'] ?? null, $this->url_query);
-    }
-
-    public function urlQuery($key)
-    {
-        return $this->url_query[$key] ?? null;
-    }
-
     /**
      * Make a grid builder.
      *
@@ -58,24 +43,31 @@ class SbindController extends AdminController
 
             $grid->paginate(10);
 
-            $grid->tools(function  (Grid\Tools  $tools)  { 
+            // 工具栏
+            $grid->tools(function (Grid\Tools $tools)  {
+                // 导入
                 if(Admin::user()->can('sbinds-import')) {
                     $tools->append(new SbindModal()); 
                 }         
 
-                if(Admin::user()->can('sbinds-edit')) {
-                    $tools->batch(function ($batch) {
+                // 批量操作
+                $tools->batch(function ($batch) {
+                    // 批量修改状态
+                    if(Admin::user()->can('sbinds-edit')) {
                         $batch->add(new StatusBatch('sbind'));
-                    });
-                }
+                    }
+                });
             });
 
-            // 复制按钮
-            if (Admin::user()->can('sbinds-edit')) {
-                $grid->actions(function (Grid\Displayers\Actions $actions) {
+            // 行操作
+            $grid->actions(function (Grid\Displayers\Actions $actions) {
+                // 复制按钮
+                if (Admin::user()->can('sbinds-edit')) {
                     $actions->append('<a href="' . admin_url('sbinds/create?template=') . $this->getKey() . '"><i class="feather icon-copy"></i> 复制</a>');
-                });
-            }
+                }
+                // 查看历史
+                $actions->append(new ShowAudit());
+            });
             
             if (Admin::user()->cannot('sbinds-edit')) {
                 $grid->disableCreateButton();
@@ -112,12 +104,7 @@ class SbindController extends AdminController
             });
             $grid->column('statuses.name', __('当前细分适配状态'));
             $grid->column('user_name');
-            $grid->column('histories')
-                ->display('查看')
-                ->modal(function () {
-                    return ShistoryTable::make();
-                });
-            
+
             $grid->column('solution_name',__('适配方案'))
             ->display(function ($solution_name){
                 if ($solution_name) {
@@ -229,26 +216,29 @@ class SbindController extends AdminController
                 })->date()->width(3);
 
                 $filter->where('related', function ($query) {
-                    if($this->input == 1)
-                    {
-                        $curUserCtreateArr = SbindHistory::where([
-                            ['user_name',Admin::user()->name],
-                            ['status_old',null]])->pluck('sbind_id')->toArray();
+                    if($this->input == 1) {
+                        $created = Audit::where([
+                            'admin_user_id'     => Admin::user()->id,
+                            'event'             => 'created',
+                            'auditable_type'    => 'App\Models\Sbind',
+                        ])->pluck('auditable_id')->toarray();
+                        $query->whereIn('id', $created);
+                    } else {
+                        // 筛选SBind相关的审计
+                        $audit_sbind = Audit::where('auditable_type', 'App\Models\Sbind');
 
-                        $query->whereIn('id',array_unique($curUserCtreateArr));
+                        $related = array_unique(array_merge(
+                            // 当前用户编辑过的
+                            $audit_sbind->where('admin_user_id', Admin::user()->id)->pluck('auditable_id')->toarray(),
+                            // 当前用户是责任人的
+                            Sbind::where('admin_user_id', Admin::user()->id)->pluck('id')->toarray(),
+                            // 当前用户曾经是责任人的
+                            $audit_sbind->whereJsonContains('old_values->admin_user_id', Admin::user()->id)->pluck('auditable_id')->toarray(),
+                        ));
+
+                        $query->whereIn('id', $related);
                     }
-                    else 
-                    { 
-                        $curUserIncludedArr = array_merge(
-                            SbindHistory::where('user_name',Admin::user()->name)
-                            ->pluck('sbind_id')
-                            ->toArray(),
-                            Sbind::where('user_name',Admin::user()->name)
-                            ->pluck('id')
-                            ->toArray());  
-                        $query->whereIn('id',array_unique($curUserIncludedArr));
-                    }
-                }, __('与我有关'))->select([
+                }, '与我有关')->select([
                     1 => '我创建的',
                     2 => '我参与的'
                 ])->width(3);
@@ -269,7 +259,7 @@ class SbindController extends AdminController
      */
     protected function detail($id)
     {
-        return Show::make($id, Sbind::with(['softwares', 'releases', 'chips', 'statuses', 'admin_users']), function (Show $show) use ($id){
+        return Show::make($id, Sbind::with(['softwares', 'releases', 'chips', 'statuses', 'admin_users']), function (Show $show) {
             $show->field('softwares.manufactors_id', __('厂商名称'))->as(function ($manufactors_id) {
                 return Manufactor::where('id', $manufactors_id)->pluck('name')->first();
             });
@@ -292,10 +282,14 @@ class SbindController extends AdminController
             });
             $show->field('statuses.name', __('当前细分适配状态'));
             $show->field('user_name', __('当前适配状态责任人'));
-            $show->field('create_name',__('适配数据创建人'))->as(function () use ($id){
-                $a =  SbindHistory::where([['sbind_id',$id],['status_old',null]])
-                    ->pluck('user_name')->first();
-                return $a;
+            $show->field('creator',__('适配数据创建人'))->as(function () {
+                $admin_user_id = Audit::where([
+                    'event'             => 'created',
+                    'auditable_type'    => 'App\Models\Sbind',
+                    'auditable_id'      => $this->id,
+                ])->first();
+                // 防止出现空值页面直接报错
+                return $admin_user_id ? AdminUser::find($admin_user_id->admin_user_id)->name : '';
             });
             $show->field('solution_name');
             $show->field('solution');
@@ -318,24 +312,6 @@ class SbindController extends AdminController
             $show->field('complete_time');
             $show->field('comment');
 
-            $show->relation('histories', function ($model) {
-                $grid = new Grid(SbindHistory::with(['status_old', 'status_new']));
-            
-                $grid->model()->where('sbind_id', $model->id);
-            
-                $grid->column('user_name', __('处理人'));
-                $grid->column('status_old.name', __('修改前状态'));
-                $grid->column('status_new.name', __('修改后状态'));
-                $grid->column('comment');
-                $grid->updated_at();
-
-                $grid->disableActions();
-                $grid->disableCreateButton();
-                $grid->disableRefreshButton();
-                        
-                return $grid;
-            });
-
             $show->panel()->tools(function ($tools) {
                 if (Admin::user()->cannot('sbinds-edit')) { $tools->disableEdit(); }
                 if (Admin::user()->cannot('sbinds-delete')) { $tools->disableDelete(); }
@@ -352,7 +328,7 @@ class SbindController extends AdminController
     {
         return Form::make(Sbind::with('softwares','releases','chips'), function (Form $form) {
             // 获取要复制的行的ID
-            $template = Sbind::find($this->urlQuery('template'));
+            $template = Sbind::find(request('template'));
 
             $form->select('softwares_id')->options(function ($softwares_id) {
                 $software = Software::find($softwares_id);
@@ -393,13 +369,12 @@ class SbindController extends AdminController
                 ->options(Status::where('parent','!=',null)->pluck('name','id'))
                 ->required()
                 ->default($template->statuses_id ?? null);
-            $form->text('statuses_comment', __('适配状态变更说明'))
+            $form->text('statuses_comment_temp', admin_trans('sbind.fields.statuses_comment'))
                 ->default($template->statuses_comment ?? null);
-            $form->select('user_name')->options(function (){
+            $form->hidden('statuses_comment');
+            $form->select('user_name')->options(function () {
                 $curaArr = AdminUser::all()->pluck('name')->toArray();
-                foreach($curaArr as $cura){
-                    $optionArr[$cura] = $cura;
-                }
+                foreach($curaArr as $cura){ $optionArr[$cura] = $cura; }
                 return $optionArr;
             })->default(Admin::user()->name);
             $form->text('solution_name')
@@ -433,76 +408,51 @@ class SbindController extends AdminController
                 ->default($template->complete_time ?? null);
             $form->text('comment')
                 ->default($template->comment ?? null);
-            
-                // 暂存statuses_comment
-                $statuses_comment = '';
-                
-                $form->saving(function (Form $form) use (&$statuses_comment){
-                    if($form->isCreating()) {
-                        // 读取表单数据
-                        $data = $form->input();
-                        // 读取多选的芯片
-                        $chips_id = array_filter($data['chips_id']);
-                        // 取消无意义的数据
-                        unset($data['chips_id'], $data["_previous_"], $data["_token"], $data['chss']);
-                        // 初始化错误信息
-                        $message = array();
-                        // 遍历芯片
-                        foreach ($chips_id as $chip_id) {
-                            $data['chips_id'] = $chip_id;
-                            $chip = Chip::find($data["chips_id"]);
-                            // 创建PBinds记录
-                            $sbind = null;
-                            try {
-                                $sbind = Sbind::create($data);
-                            } catch (\Throwable $th) {
-                                //throw $th;
-                            }
-                            if($sbind) {
-                                // 创建PBinds历史记录
-                                SbindHistory::create([
-                                    'sbind_id' => $sbind->id,
-                                    'status_old' => null,
-                                    'status_new' => $data['statuses_id'],
-                                    'user_name' => Admin::user()->name,
-                                    'comment' => $statuses_comment,
-                                ]);
-                            } else {
-                                // 返回错误
-                                $message[] = $chip->name;
-                            }
+
+            $form->saving(function (Form $form) {
+                if($form->isCreating()) {
+                    // 读取表单数据
+                    $data = $form->input();
+                    // 读取多选的芯片
+                    $chips_id = array_filter($data['chips_id']);
+                    // 修正状态变更说明
+                    $data['statuses_comment'] = $data['statuses_comment_temp'];
+                    // 取消无意义的数据
+                    unset($data['chips_id'], $data['statuses_comment_temp'], $data["_previous_"], $data["_token"], $data['chss']);
+                    // 初始化错误信息
+                    $message = array();
+                    // 遍历芯片
+                    foreach ($chips_id as $chip_id) {
+                        $data['chips_id'] = $chip_id;
+                        $chip = Chip::find($data["chips_id"]);
+                        // 创建SBinds记录
+                        $sbind = null;
+                        try {
+                            $sbind = Sbind::create($data);
+                        } catch (\Throwable $th) {
+                            //throw $th;
                         }
-                        // 返回提示并跳转
-                        if ($message) {
-                            return $form->response()->warning('操作完成,其中"' . implode(',', $message) . '"的数据创建失败')->redirect('sbinds');
-                        } else {
-                            return $form->response()->success('操作完成')->redirect('sbinds');
+                        if(!$sbind) {
+                            // 返回错误
+                            $message[] = $chip->name;
                         }
+                    }
+                    // 返回提示并跳转
+                    if ($message) {
+                        return $form->response()->warning('操作完成,其中"' . implode(',', $message) . '"的数据创建失败')->redirect('sbinds');
                     } else {
-                        $statuses_comment = $form->statuses_comment ?? null;
-                        $form->deleteInput('statuses_comment');
+                        return $form->response()->success('操作完成')->redirect('sbinds');
                     }
-                });
-                
-                $form->saved(function (Form $form) use (&$statuses_comment){
-                    $id = $form->getKey();
-                    $status_old = SbindHistory::where('sbind_id', $id)->orderBy('id','DESC')->pluck('status_new')->first();
-                    if($form->statuses_id != $status_old){
-                        SbindHistory::create([
-                            'sbind_id' => $id,
-                            'status_old' => $status_old,
-                            'status_new' => $form->statuses_id,
-                            'user_name' => Admin::user()->name,
-                            'comment' => $statuses_comment,
-                        ]);
-                    }
-                });
+                } else {
+                    $form->statuses_comment = $form->statuses_comment_temp;
+                    $form->deleteInput('statuses_comment_temp');
+                }
+            });
         });
     }
     public function sPaginate(Request $request)
     {
         $q = $request->get('q');
-        $b = Software::where('name', 'like', "%$q%")->paginate(null, ['id', 'name as text']);
-        return $b;
+        return Software::where('name', 'like', "%$q%")->paginate(null, ['id', 'name as text']);
     }
 }

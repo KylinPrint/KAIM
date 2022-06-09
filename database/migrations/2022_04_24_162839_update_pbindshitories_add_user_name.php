@@ -39,7 +39,7 @@ class UpdatePbindshitoriesAddUserName extends Migration
     {
         //
         Schema::table('pbind_histories', function (Blueprint $table) { 
-            $table->BigInteger('admin_users_id')->nullable()->comment('当前适配状态责任人')->after('user_name');
+            $table->unsignedBigInteger('admin_users_id')->nullable()->comment('当前适配状态责任人')->after('user_name');
         });   
         $pbindhistories = PbindHistory::where('user_name','!=','')->get();
         foreach ($pbindhistories as $pbindhistory)

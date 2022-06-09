@@ -3,21 +3,18 @@
 namespace App\Admin\Controllers;
 
 use App\Admin\Actions\Exports\SRequestExport;
+use App\Admin\Actions\Grid\ShowAudit;
 use App\Admin\Actions\Modal\SRequestModal;
 use App\Admin\Actions\Others\StatusBatch;
-use App\Admin\Renderable\SRhistoryTable;
 use App\Admin\Utils\ContextMenuWash;
 use App\Models\AdminUser;
 use App\Models\Chip;
 use App\Models\Manufactor;
 use App\Models\Release;
 use App\Models\Sbind;
-use App\Models\SbindHistory;
 use App\Models\Software;
 use App\Models\SRequest;
-use App\Models\SRequestHistory;
 use App\Models\Status;
-use App\Models\Stype;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
@@ -25,23 +22,10 @@ use Dcat\Admin\Show;
 use Dcat\Admin\Http\Controllers\AdminController;
 use Dcat\Admin\Layout\Content;
 use Dcat\Admin\Widgets\Alert;
-use Illuminate\Support\Facades\URL;
+use OwenIt\Auditing\Models\Audit;
 
 class SRequestController extends AdminController
 {
-    public $url_query = array();
-
-    public function __construct()
-    {
-        // 处理URL参数
-        parse_str(parse_url(URL::full())['query'] ?? null, $this->url_query);
-    }
-
-    public function urlQuery($key)
-    {
-        return $this->url_query[$key] ?? null;
-    }
-
     /**
      * Make a grid builder.
      *
@@ -56,23 +40,31 @@ class SRequestController extends AdminController
 
             $grid->paginate(10);
 
-            $grid->tools(function  (Grid\Tools  $tools)  { 
-                $tools->append(new SRequestModal());
-
+            // 工具栏
+            $grid->tools(function (Grid\Tools $tools) {
+                // 导入
                 if(Admin::user()->can('srequests-edit')) {
-                    $tools->batch(function ($batch) {
-                        // 状态修改按钮
-                        $batch->add(new StatusBatch('srequest'));
-                    });
+                    $tools->append(new SRequestModal());
                 }
+                
+                // 批量操作
+                $tools->batch(function ($batch) {
+                    // 状态修改按钮
+                    if(Admin::user()->can('srequests-edit')) {
+                        $batch->add(new StatusBatch('srequest'));
+                    }
+                });
             });
 
-            // 复制按钮
-            if (Admin::user()->can('srequests-edit')) {
-                $grid->actions(function (Grid\Displayers\Actions $actions) {
+            // 行操作
+            $grid->actions(function (Grid\Displayers\Actions $actions) {
+                // 复制按钮
+                if (Admin::user()->can('srequests-edit')) {
                     $actions->append('<a href="' . admin_url('srequests/create?template=') . $this->getKey() . '"><i class="feather icon-copy"></i> 复制</a>');
-                });
-            }
+                }
+                // 查看历史
+                $actions->append(new ShowAudit());
+            });
 
             $grid->export(new SRequestExport());
 
@@ -113,11 +105,7 @@ class SRequestController extends AdminController
             $grid->column('requester_name');
             $grid->column('requester_contact');
             $grid->column('status');
-            $grid->column('history')
-                ->display('查看')
-                ->modal(function () {
-                    return SRhistoryTable::make();
-            });
+
             $grid->column('sbind_id')->display(function ($sbind_id) {
                 if ($sbind_id) {
                     return "<a href=" . admin_url('sbinds/'.$sbind_id) . ">点击查看</a>";
@@ -186,17 +174,20 @@ class SRequestController extends AdminController
                         $query->where('creator', Admin::user()->id);
                     } else {
                         // 我参与的
+                        // 筛选SRequest相关的审计
+                        $audit_srequest = Audit::where('auditable_type', 'App\Models\SRequest');
+
                         $related = array_unique(array_merge(
-                            // 历史记录
-                            SRequestHistory::where('user_name', Admin::user()->name)->pluck('s_request_id')->toArray(),
-                            // 当前BD
+                            // 当前用户编辑过的
+                            $audit_srequest->where('admin_user_id', Admin::user()->id)->pluck('auditable_id')->toarray(),
+                            // 当前用户是BD的
                             SRequest::where('bd_id', Admin::user()->id)->pluck('id')->toArray(),
-                            // 需求创建人
-                            SRequest::where('creator', Admin::user()->id)->pluck('id')->toArray(),
+                            // 当前用户曾经是BD的
+                            $audit_srequest->whereJsonContains('old_values->bd_id', Admin::user()->id)->pluck('auditable_id')->toarray(),
                         ));
                         $query->whereIn('id', $related);
                     }
-                }, __('与我有关'))->select([
+                }, '与我有关')->select([
                     1 => '我创建的',
                     2 => '我参与的'
                 ])->width(3);
@@ -243,24 +234,6 @@ class SRequestController extends AdminController
             $show->field('comment');
             $show->field('created_at');
 
-            $show->relation('histories', function ($model) {
-                $grid = Grid::make(new SRequestHistory());
-            
-                $grid->model()->where('s_request_id', $model->id);
-            
-                $grid->column('user_name', __('处理人'));
-                $grid->column('status_old', __('修改前状态'));
-                $grid->column('status_new', __('修改后状态'));
-                $grid->column('comment');
-                $grid->updated_at();
-
-                $grid->disableActions();
-                $grid->disableCreateButton();
-                $grid->disableRefreshButton();
-                        
-                return $grid;
-            });
-
             $show->panel()->tools(function ($tools) {
                 if (Admin::user()->cannot('srequests-edit')) { $tools->disableEdit(); }
                 if (Admin::user()->cannot('srequests-delete')) { $tools->disableDelete(); }
@@ -281,7 +254,7 @@ class SRequestController extends AdminController
             // 新增需求
             if ($form->isCreating()) {
                 // 获取要复制的行的ID
-                $template = SRequest::find($this->urlQuery('template'));
+                $template = SRequest::find(request('template'));
 
                 $form->select('source')
                     ->options(config('kaim.adapt_source'))->required()
@@ -413,15 +386,12 @@ class SRequestController extends AdminController
                     ->when('处理中', function (Form $form) {
                         // 由处理中修改为处理中时不显示以下字段
                         if ($form->model()->status != '处理中') {
-                            $form->select('statuses_id')->options(Status::where('parent','!=',null)->pluck('name','id'))
+                            $form->select('statuses_id')->options(Status::where('parent', '!=', null)->pluck('name','id'))
                                 ->rules('required_if:status,处理中',['required_if' => '请填写此字段'])
                                 ->setLabelClass(['asterisk']);
                             $form->text('statuses_comment');
-                            $form->select('user_name')->options(function () {
-                                    $curaArr = AdminUser::all()->pluck('name')->toArray();
-                                    foreach($curaArr as $cura){$optionArr[$cura] = $cura;}
-                                    return $optionArr;
-                                })->rules('required_if:status,处理中',['required_if' => '请填写此字段'])
+                            $form->select('admin_user_id')->options(AdminUser::all()->pluck('name', 'id'))
+                                ->rules('required_if:status,处理中',['required_if' => '请填写此字段'])
                                 ->setLabelClass(['asterisk']);
                             $form->select('class', admin_trans('sbind.fields.class'))
                                 ->options(config('kaim.class'));
@@ -456,7 +426,6 @@ class SRequestController extends AdminController
             
             $form->saving(function (Form $form) {
                 if($form->isEditing()) {
-                    $id = $form->getKey();
                     // 取当前状态
                     $status_current = $form->model()->status;
                     $status_coming = $form->status;
@@ -487,45 +456,26 @@ class SRequestController extends AdminController
                                 'chips_id'      => $form->chip_id,
                             ],
                             [
-                                'os_subversion' => $form->os_subversion,
-                                'adapt_source'  => $form->source,
-                                'statuses_id'   => $form->statuses_id,
-                                'user_name'     => $form->user_name,
-                                'class'         => $form->class,
-                                'test_type'     => $form->test_type,
-                                'adaption_type' => $form->adaption_type,
-                                'kylineco'      => $form->kylineco,
-                                'appstore'      => $form->appstore,
-                                'iscert'        => $form->iscert,
+                                'os_subversion'     => $form->os_subversion,
+                                'adapt_source'      => $form->source,
+                                'statuses_id'       => $form->statuses_id,
+                                'statuses_comment'  => $form->statuses_comment,
+                                'admin_user_id'     => $form->admin_user_id,
+                                'class'             => $form->class,
+                                'test_type'         => $form->test_type,
+                                'adaption_type'     => $form->adaption_type,
+                                'kylineco'          => $form->kylineco,
+                                'appstore'          => $form->appstore,
+                                'iscert'            => $form->iscert,
                             ],
                         );
-                        // SbindHistory
-                        if ($sbind->wasRecentlyCreated) {
-                            SbindHistory::create([
-                                'sbind_id' => $sbind->id,
-                                'status_old' => NULL,
-                                'status_new' => $form->statuses_id,
-                                'user_name' => Admin::user()->name,
-                                'comment' => $form->statuses_comment,
-                            ]);
-                        }
+
                         // 填充关联数据
                         $form->sbind_id = $sbind->id;
                     }
-
-                    // 需求状态变更记录
-                    if ($status_coming != $status_current || $form->status_comment) {
-                        SRequestHistory::create([
-                            's_request_id' => $id,
-                            'status_old' => $status_current,
-                            'status_new' => $status_coming,
-                            'user_name' => Admin::user()->name,
-                            'comment' => $form->status_comment,
-                        ]);
-                    }
                     
                     // 删除临时数据
-                    $form->deleteInput(['status_comment', 'statuses_id', 'statuses_comment', 'user_name','class','test_type','adaption_type', 'kylineco', 'appstore', 'iscert']);
+                    $form->deleteInput(['statuses_id', 'statuses_comment', 'admin_user_id', 'class', 'test_type', 'adaption_type', 'kylineco', 'appstore', 'iscert']);
                 } else {
                     // 读取表单数据
                     $data = $form->input();

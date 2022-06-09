@@ -5,14 +5,16 @@ namespace App\Models;
 use Dcat\Admin\Traits\HasDateTimeFormatter;
 
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Oem extends Model
+class Oem extends Model implements Auditable
 {
+	use \OwenIt\Auditing\Auditable;
 	use HasDateTimeFormatter; 
 	
 	protected $table = 'oems';
 
-	protected $fillable =[
+	protected $fillable = [
 		'manufactors_id',
 		'name',
 		'otypes_id',

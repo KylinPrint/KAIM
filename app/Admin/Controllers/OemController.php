@@ -3,11 +3,10 @@
 namespace App\Admin\Controllers;
 
 use App\Admin\Actions\Exports\OemExport;
+use App\Admin\Actions\Grid\ShowAudit;
 use App\Admin\Actions\Modal\OemModal;
 use App\Admin\Renderable\ChipTable;
-use App\Admin\Renderable\OhistoryTable;
 use App\Admin\Renderable\ReleaseTable;
-use App\Admin\Renderable\StatusTable;
 use App\Admin\Utils\ContextMenuWash;
 use App\Models\Chip;
 use App\Models\Oem;
@@ -34,11 +33,18 @@ class OemController extends AdminController
 
         return Grid::make(Oem::with(['manufactors','otypes','releases','chips','status']), function (Grid $grid) {
 
-            $grid->tools(function  (Grid\Tools  $tools)  { 
-                if(Admin::user()->can('oems-import'))
-                {
+            // 工具栏
+            $grid->tools(function (Grid\Tools $tools) { 
+                // 导入
+                if(Admin::user()->can('oems-import')) {
                     $tools->append(new OemModal()); 
                 }
+            });
+
+            // 行操作
+            $grid->actions(function (Grid\Displayers\Actions $actions) {
+                // 查看历史
+                $actions->append(new ShowAudit());
             });
 
             if(Admin::user()->can('oems-export'))
@@ -52,11 +58,9 @@ class OemController extends AdminController
             $grid->column('otypes.name', __('类型'));
             $grid->column('source');
             $grid->column('details')->display('查看') ->modal(function ($modal) {
-                
                 $modal->title('产品描述');
-        
+
                 $card = new Card($this->details);
-        
                 return "<div style='padding:10px 10px 0'>$card</div>";
             });
 
@@ -70,14 +74,10 @@ class OemController extends AdminController
             });
             $grid->column('status_name', __('当前细分适配状态'))->display(function () {
                 $a = $this->status_id;
-                if($a > 5){return Status::where('id',$a)->pluck('name')->first();}
+                if($a > 5){return Status::where('id', $a)->pluck('name')->first();}
             });
             $grid->column('user_name');
-            $grid->column('histories')
-                ->display('查看')
-                ->modal(function () {
-                    return OhistoryTable::make();
-                });
+
             $grid->column('class');
             $grid->column('test_type');
             $grid->column('kylineco')->display(function ($value) {
