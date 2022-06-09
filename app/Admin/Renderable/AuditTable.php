@@ -11,7 +11,7 @@ use Dcat\Admin\Grid;
 use Dcat\Admin\Grid\LazyRenderable;
 use OwenIt\Auditing\Models\Audit;
 
-class NewHistoryTable extends LazyRenderable
+class AuditTable extends LazyRenderable
 {
     public function grid(): Grid
     {
@@ -48,6 +48,14 @@ class NewHistoryTable extends LazyRenderable
                     } elseif    ($key == 'statuses_id') {
                         $old = Status::find($value)->name;
                         $new = Status::find($this->new_values[$key])->name;
+                    } elseif    ($key == 'admin_user_id') {
+                        $old = AdminUser::find($value)->name;
+                        $new = AdminUser::find($this->new_values[$key])->name;
+                    } elseif    (preg_match('/[sp]bind_id/', $key)) {
+                        $href = admin_url(explode('_', $key)[0] . 's');
+                        
+                        $old = $value ? '<a href="' . $href . '/' . $value . '" target="_blank">点击查看</a>' : '';
+                        $new = $this->new_values[$key] ? '<a href="' . $href . '/' . $this->new_values[$key] . '" target="_blank">点击查看</a>' : '';
                     } elseif    (in_array($key, ['adapted_before', 'kylineco', 'appstore', 'iscert'])) {
                         // 布尔值修正
                         $old = $value ? '是' : '否';

@@ -63,9 +63,4 @@ class Pbind extends Model implements Auditable
 	{
 		return $this->belongsTo((AdminUser::class));
 	}
-
-	public function histories()
-	{
-		return $this->hasMany(PbindHistory::class);
-	}
 }

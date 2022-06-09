@@ -2,16 +2,16 @@
 
 namespace App\Admin\Actions\Grid;
 
-use App\Admin\Renderable\NewHistoryTable;
+use App\Admin\Renderable\AuditTable;
 use Dcat\Admin\Grid\RowAction;
 use Dcat\Admin\Widgets\Modal;
 
-class ViewHistory extends RowAction
+class ShowAudit extends RowAction
 {    
     public function render()
     {
         // 实例化表单类并传递自定义参数
-        $grid = NewHistoryTable::make()->payload([
+        $grid = AuditTable::make()->payload([
             'auditable_id'      => $this->getKey(),
             'auditable_type'    => get_class($this->row)
         ]);

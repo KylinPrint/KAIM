@@ -3,9 +3,9 @@
 namespace App\Admin\Controllers;
 
 use App\Admin\Actions\Exports\PRequestExport;
+use App\Admin\Actions\Grid\ShowAudit;
 use App\Admin\Actions\Modal\PRequestModal;
 use App\Admin\Actions\Others\StatusBatch;
-use App\Admin\Renderable\PRhistoryTable;
 use App\Admin\Utils\ContextMenuWash;
 use App\Models\AdminUser;
 use App\Models\Brand;
@@ -13,12 +13,9 @@ use App\Models\Chip;
 use App\Models\Manufactor;
 use App\Models\Release;
 use App\Models\Pbind;
-use App\Models\PbindHistory;
 use App\Models\Peripheral;
 use App\Models\PRequest;
-use App\Models\PRequestHistory;
 use App\Models\Status;
-use App\Models\Type;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
@@ -26,23 +23,10 @@ use Dcat\Admin\Show;
 use Dcat\Admin\Http\Controllers\AdminController;
 use Dcat\Admin\Layout\Content;
 use Dcat\Admin\Widgets\Alert;
-use Illuminate\Support\Facades\URL;
+use OwenIt\Auditing\Models\Audit;
 
 class PRequestController extends AdminController
 {
-    public $url_query = array();
-
-    public function __construct()
-    {
-        // 处理URL参数
-        parse_str(parse_url(URL::full())['query'] ?? null, $this->url_query);
-    }
-
-    public function urlQuery($key)
-    {
-        return $this->url_query[$key] ?? null;
-    }
-
     /**
      * Make a grid builder.
      *
@@ -57,23 +41,31 @@ class PRequestController extends AdminController
 
             $grid->paginate(10);
 
-            $grid->tools(function  (Grid\Tools  $tools)  { 
-                $tools->append(new PRequestModal());
-
+            // 工具栏
+            $grid->tools(function (Grid\Tools  $tools) { 
+                // 导入
                 if(Admin::user()->can('prequests-edit')) {
-                    $tools->batch(function ($batch) {
-                        // 状态修改按钮
-                        $batch->add(new StatusBatch('prequest'));
-                    });
+                    $tools->append(new PRequestModal());
                 }
+                
+                // 批量操作
+                $tools->batch(function ($batch) {
+                    // 状态修改按钮
+                    if(Admin::user()->can('prequests-edit')) {
+                        $batch->add(new StatusBatch('prequest'));
+                    }
+                });
             });
 
-            // 复制按钮
-            if(Admin::user()->can('prequests-edit')) {
-                $grid->actions(function (Grid\Displayers\Actions $actions) {
+            // 行操作
+            $grid->actions(function (Grid\Displayers\Actions $actions) {
+                // 复制按钮
+                if(Admin::user()->can('prequests-edit')) {
                     $actions->append('<a href="' . admin_url('prequests/create?template=') . $this->getKey() . '"><i class="feather icon-copy"></i> 复制</a>');
-                });
-            }
+                }
+                // 查看历史
+                $actions->append(new ShowAudit());
+            });
 
             $grid->export(new PRequestExport());
 
@@ -113,11 +105,7 @@ class PRequestController extends AdminController
             $grid->column('requester_name');
             $grid->column('requester_contact');
             $grid->column('status');
-            $grid->column('history')
-                ->display('查看')
-                ->modal(function () {
-                    return PRhistoryTable::make();
-            });
+
             $grid->column('pbind_id')->display(function ($pbind_id) {
                 if ($pbind_id) {
                     return "<a href=" . admin_url('pbinds/'.$pbind_id) . ">点击查看</a>";
@@ -186,17 +174,21 @@ class PRequestController extends AdminController
                         $query->where('creator', Admin::user()->id);
                     } else {
                         // 我参与的
+                        // 筛选PRequest相关的审计
+                        $audit_prequest = Audit::where('auditable_type', 'App\Models\PRequest');
+
                         $related = array_unique(array_merge(
-                            // 历史记录
-                            PRequestHistory::where('user_name', Admin::user()->name)->pluck('p_request_id')->toArray(),
-                            // 当前BD
+                            // 当前用户编辑过的
+                            $audit_prequest->where('admin_user_id', Admin::user()->id)->pluck('auditable_id')->toarray(),
+                            // 当前用户是BD的
                             PRequest::where('bd_id', Admin::user()->id)->pluck('id')->toArray(),
-                            // 需求创建人
-                            PRequest::where('creator', Admin::user()->id)->pluck('id')->toArray(),
+                            // 当前用户曾经是BD的
+                            $audit_prequest->whereJsonContains('old_values->bd_id', Admin::user()->id)->pluck('auditable_id')->toarray(),
                         ));
+
                         $query->whereIn('id', $related);
                     }
-                }, __('与我有关'))->select([
+                }, '与我有关')->select([
                     1 => '我创建的',
                     2 => '我参与的'
                 ])->width(3);
@@ -243,25 +235,6 @@ class PRequestController extends AdminController
             $show->field('comment');
             $show->field('created_at');
 
-            // 需求处理记录
-            $show->relation('histories', function ($model) {
-                $grid = Grid::make(new PRequestHistory);
-            
-                $grid->model()->where('p_request_id', $model->id);
-            
-                $grid->column('user_name', __('处理人'));
-                $grid->column('status_old', __('修改前状态'));
-                $grid->column('status_new', __('修改后状态'));
-                $grid->column('comment');
-                $grid->updated_at();
-
-                $grid->disableActions();
-                $grid->disableCreateButton();
-                $grid->disableRefreshButton();
-                        
-                return $grid;
-            });
-
             $show->panel()->tools(function ($tools) {
                 if (Admin::user()->cannot('prequests-edit')) { $tools->disableEdit(); }
                 if (Admin::user()->cannot('prequests-delete')) { $tools->disableDelete(); }
@@ -282,14 +255,13 @@ class PRequestController extends AdminController
             // 新增需求
             if ($form->isCreating()) {
                 // 获取要复制的行的ID
-                $template = PRequest::find($this->urlQuery('template'));
+                $template = PRequest::find(request('template'));
 
                 $form->select('source')
                     ->options(config('kaim.adapt_source'))->required()
                     ->default($template->source ?? null);
                 $form->text('manufactor')->required()
                     ->default($template->manufactor ?? null);
-                // TODO PRequest新增添加品牌的输入提示
                 $form->text('brand')->required()
                     ->help('格式: 品牌中文名(品牌英文名)  如: 惠普(HP)')
                     ->default($template->brand ?? null);
@@ -414,15 +386,12 @@ class PRequestController extends AdminController
                     ->when('处理中', function (Form $form) {
                         // 由处理中修改为处理中时不显示以下字段
                         if ($form->model()->status != '处理中') {
-                            $form->select('statuses_id')->options(Status::where('parent','!=',null)->pluck('name','id'))
+                            $form->select('statuses_id')->options(Status::where('parent', '!=' ,null)->pluck('name', 'id'))
                                 ->rules('required_if:status,处理中',['required_if' => '请填写此字段'])
                                 ->setLabelClass(['asterisk']);
                             $form->text('statuses_comment');
-                            $form->select('user_name')->options(function () {
-                                    $curaArr = AdminUser::all()->pluck('name')->toArray();
-                                    foreach($curaArr as $cura){$optionArr[$cura] = $cura;}
-                                    return $optionArr;
-                                })->rules('required_if:status,处理中',['required_if' => '请填写此字段'])
+                            $form->select('admin_user_id')->options(AdminUser::all()->pluck('name', 'id'))
+                                ->rules('required_if:status,处理中',['required_if' => '请填写此字段'])
                                 ->setLabelClass(['asterisk']);
                             $form->select('class', admin_trans('pbind.fields.class'))
                                 ->options(config('kaim.class'));
@@ -457,7 +426,6 @@ class PRequestController extends AdminController
             
             $form->saving(function (Form $form) {
                 if($form->isEditing()) {
-                    $id = $form->getKey();
                     // 取当前状态
                     $status_current = $form->model()->status;
                     $status_coming = $form->status;
@@ -493,7 +461,6 @@ class PRequestController extends AdminController
                                     'name_en'   => $brand_name_en ?? null,
                                 ]);
                             }
- 
                         }
 
                         // Peripheral
@@ -517,46 +484,26 @@ class PRequestController extends AdminController
                                 'chips_id'          => $form->chip_id,
                             ],
                             [
-                                'os_subversion' => $form->os_subversion,
-                                'adapt_source'  => $form->source,
-                                'statuses_id'   => $form->statuses_id,
-                                'user_name'     => $form->user_name,
-                                'class'         => $form->class,
-                                'test_type'     => $form->test_type,
-                                'adaption_type' => $form->adaption_type,
-                                'kylineco'      => $form->kylineco,
-                                'appstore'      => $form->appstore,
-                                'iscert'        => $form->iscert,
+                                'os_subversion'     => $form->os_subversion,
+                                'adapt_source'      => $form->source,
+                                'statuses_id'       => $form->statuses_id,
+                                'statuses_comment'  => $form->statuses_comment,
+                                'admin_user_id'     => $form->admin_user_id,
+                                'class'             => $form->class,
+                                'test_type'         => $form->test_type,
+                                'adaption_type'     => $form->adaption_type,
+                                'kylineco'          => $form->kylineco,
+                                'appstore'          => $form->appstore,
+                                'iscert'            => $form->iscert,
                             ],
                         );
-                        // PBindHistory
-                        if ($pbind->wasRecentlyCreated) {
-                            PbindHistory::create([
-                                'pbind_id'      => $pbind->id,
-                                'status_old'    => NULL,
-                                'status_new'    => $form->statuses_id,
-                                'user_name'     => Admin::user()->name,
-                                'comment'       => $form->statuses_comment,
-                            ]);
-                        }
 
                         // 填充关联数据
                         $form->pbind_id = $pbind->id;
                     }
-
-                    // 需求状态变更记录
-                    if ($status_coming != $status_current || $form->status_comment) {
-                        PRequestHistory::create([
-                            'p_request_id' => $id,
-                            'status_old' => $status_current,
-                            'status_new' => $status_coming,
-                            'user_name' => Admin::user()->name,
-                            'comment' => $form->status_comment,
-                        ]);
-                    }
                     
                     // 删除临时数据
-                    $form->deleteInput(['status_comment', 'statuses_id', 'statuses_comment', 'user_name', 'class', 'test_type', 'adaption_type', 'kylineco', 'appstore', 'iscert']);
+                    $form->deleteInput(['statuses_id', 'statuses_comment', 'admin_user_id', 'class', 'test_type', 'adaption_type', 'kylineco', 'appstore', 'iscert']);
                 } else {
                     // 读取表单数据
                     $data = $form->input();

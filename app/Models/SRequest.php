@@ -5,9 +5,11 @@ namespace App\Models;
 use Dcat\Admin\Traits\HasDateTimeFormatter;
 
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class SRequest extends Model
+class SRequest extends Model implements Auditable
 {
+	use \OwenIt\Auditing\Auditable;
 	use HasDateTimeFormatter;
 
 	protected $fillable = 
@@ -31,6 +33,7 @@ class SRequest extends Model
 		'requester_name',
 		'requester_contact',
 		'status',
+		'statuses_comment',
 		'bd_id',
 		'sbind_id',
 		'comment',

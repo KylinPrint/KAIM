@@ -35,7 +35,6 @@ return [
         'requester_contact' => '需求提出人联系方式',
         'status' => '需求处理状态',
         'status_comment' => '需求状态变更说明',
-        'history' => '处理历史',
         'sbind_id' => '软件适配信息',
         'bd_id' => '需求接收人',
         'bd' => [
@@ -44,7 +43,7 @@ return [
         'comment' => '备注',
         'statuses_id' => '当前适配状态',
         'statuses_comment' => '适配状态变更说明',
-        'user_name' => '当前适配状态责任人',
+        'admin_user_id' => '当前适配状态责任人',
         'kylineco' => '是否上传生态网站',
         'appstore' => '是否上架软件商店',
         'iscert' => '是否互认证',

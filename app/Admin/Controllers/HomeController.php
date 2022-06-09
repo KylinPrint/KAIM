@@ -37,32 +37,31 @@ class HomeController extends Controller
         //考虑用权限控制数据来源
         return new Grid(null, function (Grid $grid) {
             $grid->model()->setData($this->data());
-            $grid->model()->orderBy('updated_at');
 
-            $grid->column('type');
-            $grid->column('manufactor');
+            $grid->column('type')->width('10%');
+            $grid->column('manufactor')->width('10%');
             $grid->column('name');
             $grid->column('release');
-            $grid->column('chip');
+            $grid->column('chip')->width('10%');
             $grid->column('status');
-            $grid->updated_at()->sortable();
+            $grid->updated_at()->width('10%');
             $grid->column('action')->display(function () {
                 if     ($this->type == "软件适配") { $type = 'sbinds'; }
                 elseif ($this->type == "外设适配") { $type = 'pbinds'; }
                 elseif ($this->type == "软件需求") { $type = 'srequests'; }
                 elseif ($this->type == "外设需求") { $type = 'prequests'; }
                 $href = admin_url($type. '/' . $this->id . '/edit');
-                return "
-                    <button onclick=\"window.open('$href')\" class=\"btn btn-primary btn-outline\">
-                        去处理
-                    </button>
-                ";
+                return '
+                <a href="' . $href .'" target="_blank">
+                    <i class="fa feather icon-edit"></i> 处理
+                </a>
+                ';
             });
 
             $grid->disableActions();
             $grid->disableCreateButton();
-            $grid->disableBatchActions();
             $grid->disablePagination();
+            $grid->disableRowSelector();
         });
     }
 
@@ -71,8 +70,8 @@ class HomeController extends Controller
         $data = [];
 
         // 对于SBind和PBind,展示当前适配状态责任人为登录用户的数据
-        $sbinds = Sbind::select('id', 'softwares_id',   'releases_id', 'chips_id', 'statuses_id', 'updated_at')->where('user_name', Admin::user()->name)->get()->toarray();
-        $pbinds = Pbind::select('id', 'peripherals_id', 'releases_id', 'chips_id', 'statuses_id', 'updated_at')->where('user_name', Admin::user()->name)->get()->toarray();
+        $sbinds = Sbind::select('id', 'softwares_id',   'releases_id', 'chips_id', 'statuses_id', 'updated_at')->where('admin_user_id', Admin::user()->id)->get()->toarray();
+        $pbinds = Pbind::select('id', 'peripherals_id', 'releases_id', 'chips_id', 'statuses_id', 'updated_at')->where('admin_user_id', Admin::user()->id)->get()->toarray();
 
         // 对于SRequest和PRequest
         $srequests = SRequest::select('id', 'manufactor', 'name', 'release_id', 'chip_id', 'status', 'updated_at')

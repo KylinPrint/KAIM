@@ -2,14 +2,15 @@
 
 namespace App\Models;
 
-use Dcat\Admin\Models\Administrator;
 use Dcat\Admin\Traits\HasDateTimeFormatter;
 
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Sbind extends Model
+class Sbind extends Model implements Auditable
 {
-	use HasDateTimeFormatter;   
+	use \OwenIt\Auditing\Auditable;
+	use HasDateTimeFormatter;
 	
 	protected $table = 'sbinds';
 
@@ -22,6 +23,7 @@ class Sbind extends Model
 		'adapt_source',
 		'adapted_before',
 		'statuses_id',
+		'statuses_comment',
 		'user_name',
 		'softname',
 		'solution',
@@ -59,11 +61,6 @@ class Sbind extends Model
 
 	public function admin_users()
 	{
-		return $this->belongsTo((Administrator::class));
-	}
-	
-	public function histories()
-	{
-		return $this->hasMany(SbindHistory::class);
+		return $this->belongsTo((AdminUser::class));
 	}
 }

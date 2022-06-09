@@ -3,7 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Admin\Actions\Exports\PbindExport;
-use App\Admin\Actions\Grid\ViewHistory;
+use App\Admin\Actions\Grid\ShowAudit;
 use App\Admin\Actions\Modal\PbindModal;
 use App\Admin\Actions\Others\StatusBatch;
 use App\Models\Chip;
@@ -26,24 +26,10 @@ use App\Models\Manufactor;
 use App\Models\Type;
 use Dcat\Admin\Admin;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\URL;
 use OwenIt\Auditing\Models\Audit;
 
 class PbindController extends AdminController
 {
-    public $url_query = array();
-
-    public function __construct()
-    {
-        // 处理URL参数
-        parse_str(parse_url(URL::full())['query'] ?? null, $this->url_query);
-    }
-
-    public function urlQuery($key)
-    {
-        return $this->url_query[$key] ?? null;
-    }
-
     /**
      * Make a grid builder.
      *
@@ -80,7 +66,7 @@ class PbindController extends AdminController
                     $actions->append('<a href="' . admin_url('pbinds/create?template=') . $this->getKey() . '"><i class="fa fa-copy"></i> 复制</a>');
                 }
                 // 查看历史
-                $actions->append(new ViewHistory());
+                $actions->append(new ShowAudit());
             });
 
             if (Admin::user()->cannot('pbinds-edit')) {
@@ -260,18 +246,22 @@ class PbindController extends AdminController
                             'auditable_type'    => 'App\Models\Pbind',
                         ])->pluck('auditable_id')->toarray();
                         $query->whereIn('id', $created);
-                    } else { 
-                        $curUserIncludedArr = array_merge(
-                            Audit::where([
-                                'admin_user_id'     => Admin::user()->id,
-                                'auditable_type'    => 'App\Models\Pbind',
-                            ])->pluck('auditable_id')->toarray(),
-                            Pbind::where('user_name',Admin::user()->name)
-                            ->pluck('id')
-                            ->toarray());  
-                        $query->whereIn('id',array_unique($curUserIncludedArr));
+                    } else {
+                        // 筛选PBind相关的审计
+                        $audit_pbind = Audit::where('auditable_type', 'App\Models\Pbind');
+
+                        $related = array_unique(array_merge(
+                            // 当前用户编辑过的
+                            $audit_pbind->where('admin_user_id', Admin::user()->id)->pluck('auditable_id')->toarray(),
+                            // 当前用户是责任人的
+                            Pbind::where('admin_user_id', Admin::user()->id)->pluck('id')->toarray(),
+                            // 当前用户曾经是责任人的
+                            $audit_pbind->whereJsonContains('old_values->admin_user_id', Admin::user()->id)->pluck('auditable_id')->toarray(),
+                        ));
+
+                        $query->whereIn('id', $related);
                     }
-                }, __('与我有关'))->select([
+                }, '与我有关')->select([
                     1 => '我创建的',
                     2 => '我参与的'
                 ])->width(2);   
@@ -363,7 +353,7 @@ class PbindController extends AdminController
     {
         return Form::make(Pbind::with(['peripherals','releases','chips','statuses']), function (Form $form) {
             // 获取要复制的行的ID
-            $template = Pbind::find($this->urlQuery('template'));
+            $template = Pbind::find(request('template'));
 
             $form->select('peripherals_id',__('型号'))
                 ->options(function ($id) {
@@ -409,7 +399,7 @@ class PbindController extends AdminController
             $form->text('statuses_comment_temp', admin_trans('pbind.fields.statuses_comment'))
                 ->default($template->statuses_comment ?? null);
             $form->hidden('statuses_comment');
-            $form->select('user_name')->options(function (){
+            $form->select('user_name')->options(function () {
                 $curaArr = AdminUser::all()->pluck('name')->toArray();
                 foreach($curaArr as $cura) { $optionArr[$cura] = $cura; }
                 return $optionArr;
