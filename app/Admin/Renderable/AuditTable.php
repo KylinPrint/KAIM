@@ -49,14 +49,14 @@ class AuditTable extends LazyRenderable
                         $old = Status::find($value)->name;
                         $new = Status::find($this->new_values[$key])->name;
                     } elseif    ($key == 'admin_user_id') {
-                        $old = AdminUser::find($value)->name;
-                        $new = AdminUser::find($this->new_values[$key])->name;
+                        $old = $value ? AdminUser::find($value)->name : '';
+                        $new = $this->new_values[$key] ? AdminUser::find($this->new_values[$key])->name : '';
                     } elseif    (preg_match('/[sp]bind_id/', $key)) {
                         $href = admin_url(explode('_', $key)[0] . 's');
                         
                         $old = $value ? '<a href="' . $href . '/' . $value . '" target="_blank">点击查看</a>' : '';
                         $new = $this->new_values[$key] ? '<a href="' . $href . '/' . $this->new_values[$key] . '" target="_blank">点击查看</a>' : '';
-                    } elseif    (in_array($key, ['adapted_before', 'kylineco', 'appstore', 'iscert'])) {
+                    } elseif    (in_array($key, ['adapted_before', 'kylineco', 'appstore', 'iscert', 'test_report'])) {
                         // 布尔值修正
                         $old = $value ? '是' : '否';
                         $new = $this->new_values[$key] ? '是' : '否';
