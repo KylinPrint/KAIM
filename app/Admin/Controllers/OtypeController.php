@@ -1,6 +1,6 @@
 <?php
 
-namespace App\admin\Controllers;
+namespace App\Admin\Controllers;
 
 use App\Admin\Utils\ContextMenuWash;
 use App\Models\Otype;
