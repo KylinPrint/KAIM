@@ -8,6 +8,7 @@ use App\Admin\Actions\Modal\OemModal;
 use App\Admin\Renderable\ChipTable;
 use App\Admin\Renderable\ReleaseTable;
 use App\Admin\Utils\ContextMenuWash;
+use App\Models\AdminUser;
 use App\Models\Chip;
 use App\Models\Oem;
 use App\Models\Release;
@@ -76,7 +77,9 @@ class OemController extends AdminController
                 $a = $this->status_id;
                 if($a > 5){return Status::where('id', $a)->pluck('name')->first();}
             });
-            $grid->column('user_name');
+            $grid->column('admin_user_id')->display(function ($admin_user_id) {
+                return $admin_user_id ? AdminUser::find($admin_user_id)->name : '';
+            });
 
             $grid->column('class');
             $grid->column('test_type');
@@ -198,7 +201,9 @@ class OemController extends AdminController
                 $a = $this->status_id;
                 if($a > 5){return Status::where('id',$a)->pluck('name')->first();}
             });
-            $show->field('user_name');
+            $show->field('admin_user_id')->as(function ($admin_user_id) {
+                return $admin_user_id ? AdminUser::find($admin_user_id)->name : '';
+            });
             $show->field('class');
             $show->field('test_type');
             $show->field('kylineco')->as(function ($kylineco) {
@@ -257,7 +262,7 @@ class OemController extends AdminController
             $form->text('os_subversion');
             $form->text('chip_id');
             $form->text('status_id');
-            $form->text('user_name');
+            $form->text('admin_user_id');
             $form->text('class');
             $form->text('test_type');
             $form->text('kylineco');

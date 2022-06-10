@@ -24,7 +24,7 @@ class Oem extends Model implements Auditable
 		'os_subversion',
 		'chips_id',
 		'status_id',
-		'user_name',
+		'admin_user_id',
 		'class',
 		'test_type',
 		'kylineco',

@@ -24,7 +24,7 @@ class Sbind extends Model implements Auditable
 		'adapted_before',
 		'statuses_id',
 		'statuses_comment',
-		'user_name',
+		'admin_user_id',
 		'softname',
 		'solution',
 		'solution_name',

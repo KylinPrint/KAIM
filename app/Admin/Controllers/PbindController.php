@@ -114,7 +114,9 @@ class PbindController extends AdminController
             });
             $grid->column('statuses.name', __('当前细分适配状态'));
             $grid->column('statuses_comment');
-            $grid->column('user_name');
+            $grid->column('admin_user_id')->display(function ($admin_user_id) {
+                return $admin_user_id ? AdminUser::find($admin_user_id)->name : '';
+            });
             
             $grid->column('solution',__('适配方案'))
                 ->if(function ($column){
@@ -306,7 +308,9 @@ class PbindController extends AdminController
                 return Status::where('id', $parent)->pluck('name')->first();
             });
             $show->field('statuses.name', __('当前细分适配状态'));
-            $show->field('user_name');
+            $show->field('admin_user_id')->as(function ($admin_user_id) {
+                return $admin_user_id ? AdminUser::find($admin_user_id)->name : '';
+            });
             $show->field('creator', '适配数据创建人')->as(function () {
                 $admin_user_id = Audit::where([
                     'event'             => 'created',
@@ -399,11 +403,8 @@ class PbindController extends AdminController
             $form->text('statuses_comment_temp', admin_trans('pbind.fields.statuses_comment'))
                 ->default($template->statuses_comment ?? null);
             $form->hidden('statuses_comment');
-            $form->select('user_name')->options(function () {
-                $curaArr = AdminUser::all()->pluck('name')->toArray();
-                foreach($curaArr as $cura) { $optionArr[$cura] = $cura; }
-                return $optionArr;
-            })->default(Admin::user()->name);
+            $form->select('admin_user_id')->options(AdminUser::all()->pluck('name', 'id'))
+                ->default(Admin::user()->id);
             $form->text('solution_name')
                 ->default($template->solution_name ?? null);
             $form->text('solution')

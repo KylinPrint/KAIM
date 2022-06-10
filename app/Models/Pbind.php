@@ -27,7 +27,7 @@ class Pbind extends Model implements Auditable
 		'comment' ,
 		'adapt_source' ,
 		'adapted_before' ,
-		'user_name' ,
+		'admin_user_id' ,
 		'adaption_type' ,
 		'test_type' ,
 		'kylineco' ,
