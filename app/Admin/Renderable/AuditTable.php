@@ -4,10 +4,13 @@ namespace App\Admin\Renderable;
 
 use App\Models\AdminUser;
 use App\Models\Chip;
+use App\Models\Otype;
 use App\Models\Peripheral;
 use App\Models\Release;
 use App\Models\Software;
 use App\Models\Status;
+use App\Models\Stype;
+use App\Models\Type;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Grid\LazyRenderable;
 use OwenIt\Auditing\Models\Audit;
@@ -49,6 +52,15 @@ class AuditTable extends LazyRenderable
                     } elseif    (preg_match('/chips?_id/', $key)) {
                         $old = Chip::find($value)->name;
                         $new = Chip::find($this->new_values[$key])->name;
+                    } elseif    (preg_match('/types?_id/', $key)) {
+                        $old = Type::find($value)->name;
+                        $new = Type::find($this->new_values[$key])->name;
+                    } elseif    (preg_match('/stypes?_id/', $key)) {
+                        $old = Stype::find($value)->name;
+                        $new = Stype::find($this->new_values[$key])->name;
+                    } elseif    (preg_match('/otypes?_id/', $key)) {
+                        $old = Otype::find($value)->name;
+                        $new = Otype::find($this->new_values[$key])->name;
                     } elseif    ($key == 'statuses_id') {
                         $old = Status::find($value)->name;
                         $new = Status::find($this->new_values[$key])->name;
