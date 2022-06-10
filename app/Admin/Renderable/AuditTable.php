@@ -56,7 +56,7 @@ class AuditTable extends LazyRenderable
                         
                         $old = $value ? '<a href="' . $href . '/' . $value . '" target="_blank">点击查看</a>' : '';
                         $new = $this->new_values[$key] ? '<a href="' . $href . '/' . $this->new_values[$key] . '" target="_blank">点击查看</a>' : '';
-                    } elseif    (in_array($key, ['adapted_before', 'kylineco', 'appstore', 'iscert'])) {
+                    } elseif    (in_array($key, ['adapted_before', 'kylineco', 'appstore', 'iscert', 'test_report'])) {
                         // 布尔值修正
                         $old = $value ? '是' : '否';
                         $new = $this->new_values[$key] ? '是' : '否';
