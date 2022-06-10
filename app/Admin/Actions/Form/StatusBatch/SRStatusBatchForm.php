@@ -147,7 +147,7 @@ class SRStatusBatchForm extends Form implements LazyRenderable
             ->options([0 => '否', 1 => '是'])->default(0)
             ->when(1, function (Form $form) {
                 $form->select('bd_id')->options(AdminUser::all()->pluck('name', 'id'))
-                    ->rules('required_if:change_bd,1', ['required_if' => '请填写此字段'])
+                    ->rules('required_if:change_bd,1', ['required_if' => '请填写需求接收人'])
                     ->setLabelClass('asterisk');
             });
         $this->radio('change_status', '是否修改需求状态')
@@ -156,16 +156,15 @@ class SRStatusBatchForm extends Form implements LazyRenderable
                 $form->select('status', admin_trans('s-request.fields.status'))
                     ->when('处理中', function (Form $form) {
                         $form->radio('comment_only', '仅添加需求状态变更说明')
-                            ->rules('required_if:status,处理中', ['required_if' => '请填写此字段'])
                             ->setLabelClass(['asterisk'])
                             ->options([0 => '否', 1 => '是'])->default(0)
                             ->when(0, function (Form $form) {
                                 $form->select('statuses_id')->options(Status::where('parent', '!=', null)->pluck('name', 'id'))
-                                    ->rules('required_if:comment_only,0',['required_if' => '请填写此字段'])
+                                    ->rules('required_if:comment_only,0',['required_if' => '请填写' . admin_trans('sbind.fields.statuses_id')])
                                     ->setLabelClass(['asterisk']);
                                 $form->text('statuses_comment');
                                 $form->select('admin_user_id')->options(AdminUser::all()->pluck('name', 'id'))
-                                    ->rules('required_if:comment_only,1',['required_if' => '请填写此字段'])
+                                    ->rules('required_if:comment_only,0',['required_if' => '请填写' . admin_trans('sbind.fields.admin_user_id')])
                                     ->setLabelClass(['asterisk']);
                                 $form->select('class', admin_trans('sbind.fields.class'))
                                     ->options(config('kaim.class'));
@@ -174,13 +173,13 @@ class SRStatusBatchForm extends Form implements LazyRenderable
                                 $form->select('test_type' ,admin_trans('sbind.fields.test_type'))
                                     ->options(config('kaim.test_type'));
                                 $form->select('kylineco')->options([0 => '否', 1 => '是'])
-                                    ->rules('required_if:comment_only,0',['required_if' => '请填写此字段'])
+                                    ->rules('required_if:comment_only,0',['required_if' => '请填写' . admin_trans('sbind.fields.kylineco')])
                                     ->setLabelClass(['asterisk']);
                                 $form->select('appstore')->options([0 => '否', 1 => '是'])
-                                    ->rules('required_if:comment_only,0',['required_if' => '请填写此字段'])
+                                    ->rules('required_if:comment_only,0',['required_if' => '请填写' . admin_trans('sbind.fields.appstore')])
                                     ->setLabelClass(['asterisk']);
                                 $form->select('iscert')->options([0 => '否', 1 => '是'])
-                                    ->rules('required_if:comment_only,0',['required_if' => '请填写此字段'])
+                                    ->rules('required_if:comment_only,0',['required_if' => '请填写' . admin_trans('sbind.fields.iscert')])
                                     ->setLabelClass(['asterisk']);
                             });
                     })
