@@ -6,12 +6,9 @@ use App\Models\AdminUser;
 use App\Models\Brand;
 use App\Models\Manufactor;
 use App\Models\Pbind;
-use App\Models\PbindHistory;
 use App\Models\Peripheral;
 use App\Models\PRequest;
-use App\Models\PRequestHistory;
 use App\Models\Status;
-use Dcat\Admin\Admin;
 use Dcat\Admin\Traits\LazyWidget;
 use Dcat\Admin\Widgets\Form;
 use Dcat\Admin\Contracts\LazyRenderable;
@@ -43,32 +40,34 @@ class PRStatusBatchForm extends Form implements LazyRenderable
             return $this->response()->warning('已关闭的需求不允许编辑')->refresh();
         }
 
-        if ($input["change_status"]) {
+        if ($input['change_status']) {
             // 不同状态的需求不能批量编辑状态
             if (count($status_current) - 1) {
                 return $this->response()->error('不同状态的需求不能批量编辑状态')->refresh();
             }
 
             // 已提交改处理中不能只填备注
-            if ($status_current[0] == '已提交' && $input["comment_only"]) {
+            if ($status_current[0] == '已提交' && $input['comment_only']) {
                 return $this->response()->warning('已提交状态的需求变更为处理中时,不允许仅添加需求状态变更说明');
             }
 
             // 直接进行一个状态的判
-            $options = config('kaim.request_status');
-            if     (in_array($status_current[0], ['处理中', '已处理', '暂停处理', '已拒绝'])) { unset($options['已提交']); }
-            elseif (in_array($status_current[0], ['已处理', '已拒绝'])) { unset($options['处理中']); }
-            elseif (in_array($status_current[0], ['已提交', '已拒绝'])) { unset($options['已处理']); }
-            elseif (in_array($status_current[0], ['已提交', '已处理', '已拒绝'])) { unset($options['暂停处理']); }
-            elseif (in_array($status_current[0], ['处理中', '已处理', '暂停处理'])) { unset($options['已拒绝']); }
-            if (!in_array($input['status'], $options)) {
-                // 状态不能反着改
-                return $this->response()->error('"' . $status_current[0] . '"' . '的需求不能修改为' . '"' . $input['status'] . '"');
+            if ($input['status']) {
+                $options = config('kaim.request_status');
+                if     (in_array($status_current[0], ['处理中', '已处理', '暂停处理', '已拒绝'])) { unset($options['已提交']); }
+                elseif (in_array($status_current[0], ['已处理', '已拒绝'])) { unset($options['处理中']); }
+                elseif (in_array($status_current[0], ['已提交', '已拒绝'])) { unset($options['已处理']); }
+                elseif (in_array($status_current[0], ['已提交', '已处理', '已拒绝'])) { unset($options['暂停处理']); }
+                elseif (in_array($status_current[0], ['处理中', '已处理', '暂停处理'])) { unset($options['已拒绝']); }
+                if (!in_array($input['status'], $options)) {
+                    // 状态不能反着改
+                    return $this->response()->error('"' . $status_current[0] . '"' . '的需求不能修改为' . '"' . $input['status'] . '"');
+                }
             }
         }
         
         // 啥也不干你点它干啥
-        if (!($input["change_bd"] || $input["change_status"] || $input["status_comment"])) {
+        if (!($input['change_bd'] || $input['change_status'])) {
             return $this->response()->info('未修改');
         }
         
@@ -77,12 +76,12 @@ class PRStatusBatchForm extends Form implements LazyRenderable
             $prequest = PRequest::find($id);
 
             // 改BD
-            if ($input["change_bd"]) {
-                $prequest->bd_id = $input["bd_id"];
+            if ($input['change_bd']) {
+                $prequest->bd_id = $input['bd_id'];
             }
 
             // 改状态
-            if ($input["change_status"]) {
+            if ($input['change_status']) {
                 // 已提交改处理中
                 if ($status_current[0] == '已提交' && $input['status'] == '处理中') {
                     // Manufactor
@@ -137,29 +136,19 @@ class PRStatusBatchForm extends Form implements LazyRenderable
                             'chips_id'          => $prequest->chip_id,
                         ],
                         [
-                            'os_subversion' => $prequest->os_subversion,
-                            'adapt_source'  => $prequest->source,
-                            'statuses_id'   => $input['statuses_id'],
-                            'user_name'     => $input["user_name"],
-                            'class'         => $input["class"],
-                            'adaption_type' => $input["adaption_type"],
-                            'test_type'     => $input["test_type"],
-                            'kylineco'      => $input["kylineco"],
-                            'appstore'      => $input["appstore"],
-                            'iscert'        => $input["iscert"],
+                            'os_subversion'     => $prequest->os_subversion,
+                            'adapt_source'      => $prequest->source,
+                            'statuses_id'       => $input['statuses_id'],
+                            'statuses_comment'  => $input['statuses_comment'],
+                            'admin_user_id'     => $input['admin_user_id'],
+                            'class'             => $input['class'],
+                            'adaption_type'     => $input['adaption_type'],
+                            'test_type'         => $input['test_type'],
+                            'kylineco'          => $input['kylineco'],
+                            'appstore'          => $input['appstore'],
+                            'iscert'            => $input['iscert'],
                         ],
                     );
-
-                    // PBindHistory
-                    if ($pbind->wasRecentlyCreated) {
-                        PbindHistory::create([
-                            'pbind_id'      => $pbind->id,
-                            'status_old'    => NULL,
-                            'status_new'    => $input["statuses_id"],
-                            'user_name'     => Admin::user()->name,
-                            'comment'       => $input['statuses_comment'],
-                        ]);
-                    }
                     
                     // 填充关联数据
                     $prequest->pbind_id = $pbind->id;
@@ -167,18 +156,8 @@ class PRStatusBatchForm extends Form implements LazyRenderable
                 }
 
                 // 状态的改
-                $prequest->status = $input["status"];
-            }
-
-            // 新增PRequestHistory
-            if ($input["change_status"] || $input['status_comment']) {
-                PRequestHistory::create([
-                    'p_request_id' => $id,
-                    'status_old' => $status_current[0],
-                    'status_new' => $input["change_status"] ? $input['status'] : $status_current[0],
-                    'user_name' => Admin::user()->name,
-                    'comment' => $input['status_comment'],
-                ]);
+                if ($input['status']) { $prequest->status = $input['status']; }
+                if ($input['status_comment']) { $prequest->status_comment = $input['status_comment']; }   
             }
 
             $prequest->save();
@@ -205,16 +184,15 @@ class PRStatusBatchForm extends Form implements LazyRenderable
                 $form->select('status', admin_trans('p-request.fields.status'))
                     ->when('处理中', function (Form $form) {
                         $form->radio('comment_only', '仅添加需求状态变更说明')
+                            ->rules('required_if:status,处理中', ['required_if' => '请填写此字段'])
+                            ->setLabelClass(['asterisk'])
                             ->options([0 => '否', 1 => '是'])->default(0)
                             ->when(0, function (Form $form) {
                                 $form->select('statuses_id')->options(Status::where('parent', '!=', null)->pluck('name', 'id'))
                                     ->rules('required_if:comment_only,1',['required_if' => '请填写此字段'])
                                     ->setLabelClass(['asterisk']);
                                 $form->text('statuses_comment');
-                                $form->select('user_name')->options(function () {
-                                        foreach(AdminUser::all()->pluck('name')->toArray() as $name) { $user_names[$name] = $name; }
-                                        return $user_names;
-                                    })
+                                $form->select('admin_user_id')->options(AdminUser::all()->pluck('name', 'id'))
                                     ->rules('required_if:comment_only,1',['required_if' => '请填写此字段'])
                                     ->setLabelClass(['asterisk']);
                                 $form->select('class', admin_trans('pbind.fields.class'))
@@ -234,9 +212,11 @@ class PRStatusBatchForm extends Form implements LazyRenderable
                                     ->setLabelClass(['asterisk']);
                             });
                     })
-                    ->options(config('kaim.request_status'));
+                    ->options(config('kaim.request_status'))
+                    ->rules('required_without:status_comment',['required_without' => '请填写要修改的内容']);
+                $form->textarea('status_comment', admin_trans('p-request.fields.status_comment'))
+                    ->rules('required_without:status',['required_without' => '请填写要修改的内容']);
             });
-        $this->textarea('status_comment', admin_trans('p-request.fields.status_comment'));
         //批量选择的行的值传递
         $this->hidden('id')->attribute('id', 'batch-status-id'); //批量选择的行的id通过隐藏元素 提交时一并传递过去
     }
