@@ -14,7 +14,7 @@ return [
         'os_subversion' => '操作系统小版本号',
         'chip_id' => '芯片ID',
         'status_id' => '当前适配状态',
-        'user_name' => '当前适配状态责任人',
+        'admin_user_id' => '当前适配状态责任人',
         'class' => '兼容等级',
         'test_type' => '测试方式',
         'kylineco' => '是否上传生态网站',

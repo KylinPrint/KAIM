@@ -56,25 +56,29 @@ class UpdateAdminUserId extends Migration
     {
         Schema::table('sbinds', function (Blueprint $table) {
             $table->string('user_name')->nullable()->comment('当前适配状态责任人')->after('admin_user_id');
+        });
 
-            $sbinds = Sbind::where('admin_user_id', '!=', null);
-            foreach ($sbinds as $sbind) {  
-                $sbind->user_name = AdminUser::where('id', $sbind->admin_user_id)->pluck('name')->first();
-                $sbind->save();
-            }
+        $sbinds = Sbind::where('admin_user_id', '!=', null);
+        foreach ($sbinds as $sbind) {  
+            $sbind->user_name = AdminUser::where('id', $sbind->admin_user_id)->pluck('name')->first();
+            $sbind->save();
+        }
 
+        Schema::table('sbinds', function (Blueprint $table) {
             $table->dropColumn('admin_user_id');
         });
 
         Schema::table('pbinds', function (Blueprint $table) { 
             $table->string('user_name')->nullable()->comment('当前适配状态责任人')->after('admin_user_id');
+        });
 
-            $pbinds = Pbind::where('admin_user_id', '!=', null);
-            foreach ($pbinds as $pbind) {  
-                $pbind->user_name = AdminUser::where('id', $pbind->admin_user_id)->pluck('name')->first();
-                $pbind->save();
-            }
+        $pbinds = Pbind::where('admin_user_id', '!=', null);
+        foreach ($pbinds as $pbind) {  
+            $pbind->user_name = AdminUser::where('id', $pbind->admin_user_id)->pluck('name')->first();
+            $pbind->save();
+        }
 
+        Schema::table('pbinds', function (Blueprint $table) { 
             $table->dropColumn('admin_user_id');
         });
     }

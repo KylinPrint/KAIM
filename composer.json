@@ -12,7 +12,6 @@
         "laravel/framework": "8.*",
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
-        "lizhichao/word": "^2.1",
         "maatwebsite/excel": "^3.1",
         "owen-it/laravel-auditing": "^13.0"
     },
