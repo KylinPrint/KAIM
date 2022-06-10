@@ -106,7 +106,7 @@ class SbindImport implements ToCollection, WithHeadingRow, WithValidation
 
             $sbindInsertCache =
             [
-                'os_subversion' => $row['操作系统小版本']?:'',
+                'os_subversion' => $row['操作系统小版本'],
                 'adapt_source' => $row['引入来源'],
                 'adapted_before' => $this->bools($row['是否适配过国产CPU']),
                 'statuses_id' => Status::where('name',trim($row['当前细分适配状态']))->pluck('id')->first(),
@@ -183,7 +183,8 @@ class SbindImport implements ToCollection, WithHeadingRow, WithValidation
     }
 
     public function bools($value){
-        return $value == '是'?1:0;
+        if($value == '是'){return 1;}
+        elseif($value == '否'){return 0;}
     }
 
 

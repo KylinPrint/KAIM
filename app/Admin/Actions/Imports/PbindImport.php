@@ -219,7 +219,7 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
 
             $pbindInsertCache =
             [
-                'os_subversion' => $row['操作系统小版本']?:'',
+                'os_subversion' => $row['操作系统小版本'],
                 'statuses_id' => Status::where('name',$row['当前细分适配状态'])->pluck('id')->first(),
                 'class' => $row['兼容等级'],
                 'solution_name' => $row['方案名称'],
@@ -299,9 +299,9 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
         
     }
 
-    public function bools($value)
-    {
-        return $value =='是' ? 1 : 0;
+    public function bools($value){
+        if($value == '是'){return 1;}
+        elseif($value == '否'){return 0;}
     }
 
 
