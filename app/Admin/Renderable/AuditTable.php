@@ -6,6 +6,7 @@ use App\Models\AdminUser;
 use App\Models\Chip;
 use App\Models\Peripheral;
 use App\Models\Release;
+use App\Models\Software;
 use App\Models\Status;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Grid\LazyRenderable;
@@ -39,16 +40,19 @@ class AuditTable extends LazyRenderable
                     if          ($key == 'peripherals_id') {
                         $old = Peripheral::find($value)->name;
                         $new = Peripheral::find($this->new_values[$key])->name;
-                    } elseif    ($key == 'releases_id') {
+                    } elseif    ($key == 'softwares_id') {
+                        $old = Software::find($value)->name;
+                        $new = Software::find($this->new_values[$key])->name;
+                    } elseif    (preg_match('/releases?_id/', $key)) {
                         $old = Release::find($value)->name;
                         $new = Release::find($this->new_values[$key])->name;
-                    } elseif    ($key == 'chips_id') {
+                    } elseif    (preg_match('/chips?_id/', $key)) {
                         $old = Chip::find($value)->name;
                         $new = Chip::find($this->new_values[$key])->name;
                     } elseif    ($key == 'statuses_id') {
                         $old = Status::find($value)->name;
                         $new = Status::find($this->new_values[$key])->name;
-                    } elseif    ($key == 'admin_user_id') {
+                    } elseif    (in_array($key, ['admin_user_id', 'bd_id', 'creator'])) {
                         $old = $value ? AdminUser::find($value)->name : '';
                         $new = $this->new_values[$key] ? AdminUser::find($this->new_values[$key])->name : '';
                     } elseif    (preg_match('/[sp]bind_id/', $key)) {
