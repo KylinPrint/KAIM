@@ -82,7 +82,7 @@ class PRequestController extends AdminController
             $grid->showColumnSelector();
 
             // 默认按创建时间倒序排列
-            $grid->model()->orderBy('created_at', 'desc');
+            $grid->model()->orderBy('updated_at', 'desc');
             
             $grid->column('source');
             $grid->column('manufactor');
@@ -114,6 +114,7 @@ class PRequestController extends AdminController
             $grid->column('bd.name');
             $grid->column('comment');
             $grid->column('created_at');
+            $grid->column('updated_at')->sortable();
 
             $grid->scrollbarX();
             $grid->showColumnSelector();
