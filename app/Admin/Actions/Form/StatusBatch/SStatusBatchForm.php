@@ -39,7 +39,7 @@ class SStatusBatchForm extends Form implements LazyRenderable
             $sbind = Sbind::find($id);
 
             // 改责任人
-            if ($input['change_user']) { $sbind->user_name = $input['user_name']; }
+            if ($input['change_user']) { $sbind->admin_user_id = $input['admin_user_id']; }
 
             // 状态的改
             if ($input['statuses_id']) { $sbind->statuses_id = $input['statuses_id']; }
@@ -59,7 +59,7 @@ class SStatusBatchForm extends Form implements LazyRenderable
         $this->radio('change_user', '是否修改当前责任人')
             ->options([0 => '否', 1 => '是'])->default(0)
             ->when(1, function (Form $form) {
-                $form->select('user_name')->options(AdminUser::all()->pluck('name', 'id'))->rules('required_if:change_user,1', ['required_if' => '请填写此字段'])
+                $form->select('admin_user_id')->options(AdminUser::all()->pluck('name', 'id'))->rules('required_if:change_user,1', ['required_if' => '请填写此字段'])
                     ->setLabelClass('asterisk');
             });
         $this->radio('change_status', '是否修改当前适配状态')
