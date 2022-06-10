@@ -23,21 +23,12 @@ use Dcat\Admin\Widgets\Dropdown;
 
 class PeripheralController extends AdminController
 {
-    public $url_query = array();
     public $type_id;
 
     public function __construct()
     {
-        // 处理URL参数
-        parse_str(parse_url(URL::full())['query'] ?? null, $this->url_query);
-
         // type_id设置默认值防止不带参数访问外设页面
-        $this->type_id = $this->urlQuery('type') ? $this->urlQuery('type') : Type::where('parent' , '!=', 0)->orderBy('order')->pluck('id')->first();
-    }
-
-    public function urlQuery($key)
-    {
-        return $this->url_query[$key] ?? null;
+        $this->type_id = request('type') ? request('type') : Type::where('parent' , '!=', 0)->orderBy('order')->pluck('id')->first();
     }
 
     public function index(Content $content)
@@ -91,7 +82,6 @@ class PeripheralController extends AdminController
             // 默认按创建时间倒序排列
             $grid->model()->orderBy('created_at', 'desc');
 
-            // $grid->column('id')->sortable();
             $grid->column('manufactors.name',__('厂商'));
             $grid->column('brands_id', __('品牌'))->display(function ($brands_id) {
                 $brand = Brand::find($brands_id);
@@ -100,7 +90,6 @@ class PeripheralController extends AdminController
                 else { return $brand->name . '(' . $brand->name_en . ')'; }
             });
             $grid->column('name');
-            $grid->column('types.name', __('类型'));
             $grid->column('industries')->badge();
             $grid->column('vid');
             $grid->column('pid');
@@ -230,7 +219,7 @@ class PeripheralController extends AdminController
                 });
             } else {
                 $form->hidden('types_id')->default($this->type_id);
-                $form->title(Type::where('id', $this->urlQuery('type'))->pluck('name')->first());
+                $form->title(Type::where('id', request('type'))->pluck('name')->first());
             }
             
             $form->select('manufactors_id', __('厂商'))->options(Manufactor::all()->pluck('name','id'));
