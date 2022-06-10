@@ -91,27 +91,27 @@ class SRequestImport implements ToCollection, WithHeadingRow, WithValidation
             
             $a = SRequest::updateOrCreate($sRequestInsertUnique,$SRequestInsert);
             
-            $curSRequestId = $a->id;
-            $b = $a->wasRecentlyCreated;
-            $c = $a->wasChanged();
+            // $curSRequestId = $a->id;
+            // $b = $a->wasRecentlyCreated;
+            // $c = $a->wasChanged();
 
-            $curtime = date('Y-m-d H:i:s');
+            // $curtime = date('Y-m-d H:i:s');
      
-            //新增数据
-            if($b)
-            {
-                $sRequesthistory = 
-                [
-                    's_request_id' => $curSRequestId,
-                    'status_old' => null,
-                    'status_new' => '已提交',
-                    'user_name' => Admin::user()->name,
-                    'comment' => null,
-                    'created_at' => $curtime,
-                    'updated_at' => $curtime,
-                ];
-                DB::table('s_request_histories')->insert($sRequesthistory);
-            }
+            // //新增数据
+            // if($b)
+            // {
+            //     $sRequesthistory = 
+            //     [
+            //         's_request_id' => $curSRequestId,
+            //         'status_old' => null,
+            //         'status_new' => '已提交',
+            //         'user_name' => Admin::user()->name,
+            //         'comment' => null,
+            //         'created_at' => $curtime,
+            //         'updated_at' => $curtime,
+            //     ];
+            //     DB::table('s_request_histories')->insert($sRequesthistory);
+            // }
         }
         
     }

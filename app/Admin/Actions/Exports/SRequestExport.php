@@ -11,6 +11,7 @@ use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
+use OwenIt\Auditing\Models\Audit;
 
 class SRequestExport extends BaseExport implements WithMapping, WithHeadings, FromCollection
 {
@@ -84,21 +85,29 @@ class SRequestExport extends BaseExport implements WithMapping, WithHeadings, Fr
         $i = 0;
 
         $curSRquest = SRequest::with('stype', 'release', 'chip', 'bd','sbinds')->find($row['id']);
-        $curHistoryArr = SRequestHistory::where('s_request_id',$row['id'])->get()->toArray();
+        
+        // $curHistoryArr = SRequestHistory::where('s_request_id',$row['id'])->get()->toArray();
+        
+        $curAudit = Audit::where([['auditable_type' , 'App\Models\SRequest'],['auditable_id' , $row['id']]])
+                    ->whereJsonLength('new_values->status' , '>' , 0)
+                    ->get()->toArray();
 
-        if($curHistoryArr){
-            $curHistoryStr = '处理人 修改前状态 修改后状态 变更时间            状态变更说明';
-            foreach($curHistoryArr as $curHistory){
+        if($curAudit){
+            $curHistoryStr = '处理人 修改前状态 修改后状态 变更时间    状态变更说明';
+            foreach($curAudit as $curHistory){
                 
+                $user_name = AdminUser::where('id' , $curHistory['admin_user_id'])->pluck('name')->first();
+
                 if($i == 1){
-                    if(!$curHistory['status_old']){
+                    if(!isset($curHistory['old_values']['status'])){
                         $status_old = '      ';
                     }else{
-                        $status_old = $curHistory['status_old'];
+                        $status_old = $curHistory['old_values']['status'];
                     }
-                    $curHistoryStr = $curHistoryStr.chr(10).$curHistory['user_name'].' '.$status_old.'     '.$curHistory['status_new'].'    '.$curHistory['updated_at'].' '.$curHistory['comment'];
+                    
+                    $curHistoryStr = $curHistoryStr.chr(10).$user_name.' '.$status_old.'     '.$curHistory['new_values']['status'].'    '.substr($curHistory['created_at'],0,10).' '.$curHistory['new_values']['status_comment'];
                 }else{
-                    $curHistoryStr = $curHistoryStr.chr(10).$curHistory['user_name'].' '.$curHistory['status_old'].'     '.$curHistory['status_new'].'    '.$curHistory['updated_at'].' '.$curHistory['comment'];
+                    $curHistoryStr = $curHistoryStr.chr(10).$user_name.' '.$curHistory['old_values']['status'].'     '.$curHistory['new_values']['status'].'    '.substr($curHistory['created_at'],0,10).' '.$curHistory['new_values']['status_comment'];
                 }
                 $i ++;
             } 

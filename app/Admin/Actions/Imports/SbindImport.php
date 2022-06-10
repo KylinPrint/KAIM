@@ -110,7 +110,7 @@ class SbindImport implements ToCollection, WithHeadingRow, WithValidation
                 'adapt_source' => $row['引入来源'],
                 'adapted_before' => $this->bools($row['是否适配过国产CPU']),
                 'statuses_id' => Status::where('name',trim($row['当前细分适配状态']))->pluck('id')->first(),
-                'user_name' =>$row['当前适配状态责任人'],
+                'admin_user_id' => AdminUser::where('name',trim($row['当前适配状态责任人']))->pluck('id')->first() ,
                 'solution_name' => $row['安装包名称'],
                 'solution' => $row['安装包下载地址'],
                 'class' => $row['兼容等级'],
@@ -140,43 +140,43 @@ class SbindImport implements ToCollection, WithHeadingRow, WithValidation
 
             $a = Sbind::updateOrCreate($sbindInsertUnique,$sbindInsert);
 
-            $curSbindId = $a->id;
-            $b = $a->wasRecentlyCreated;
-            $c = $a->wasChanged();
+            // $curSbindId = $a->id;
+            // $b = $a->wasRecentlyCreated;
+            // $c = $a->wasChanged();
 
-            if($b)
-            {
-                $sbindhistory = 
-                [
-                    'sbind_id' => $curSbindId,
-                    'status_old' => null,
-                    'status_new' => $sbindInsert['statuses_id'],
-                    'user_name' => Admin::user()->name,
-                    'comment' => null,
-                    'created_at' => $curtime,
-                    'updated_at' => $curtime,
-                ];
+            // if($b)
+            // {
+            //     $sbindhistory = 
+            //     [
+            //         'sbind_id' => $curSbindId,
+            //         'status_old' => null,
+            //         'status_new' => $sbindInsert['statuses_id'],
+            //         'user_name' => Admin::user()->name,
+            //         'comment' => null,
+            //         'created_at' => $curtime,
+            //         'updated_at' => $curtime,
+            //     ];
 
-                DB::table('sbind_histories')->insert($sbindhistory);
-            }
+            //     DB::table('sbind_histories')->insert($sbindhistory);
+            // }
 
-            if(!$b && $c)
-            {
-                $curHistoryId = SbindHistory::where('sbind_id',$curSbindId)->orderBy('id','DESC')->pluck('status_new')->first();
+            // if(!$b && $c)
+            // {
+            //     $curHistoryId = SbindHistory::where('sbind_id',$curSbindId)->orderBy('id','DESC')->pluck('status_new')->first();
                 
-                $sbindhistory = 
-                [
-                    'sbind_id' => $curSbindId,
-                    'status_old' => $curHistoryId,
-                    'status_new' => $sbindInsert['statuses_id'],
-                    'user_name' => Admin::user()->name,
-                    'comment' => null,
-                    'created_at' => $curtime,
-                    'updated_at' => $curtime,
-                ];
-                DB::table('sbind_histories')->insert($sbindhistory);
+            //     $sbindhistory = 
+            //     [
+            //         'sbind_id' => $curSbindId,
+            //         'status_old' => $curHistoryId,
+            //         'status_new' => $sbindInsert['statuses_id'],
+            //         'user_name' => Admin::user()->name,
+            //         'comment' => null,
+            //         'created_at' => $curtime,
+            //         'updated_at' => $curtime,
+            //     ];
+            //     DB::table('sbind_histories')->insert($sbindhistory);
                 
-            }
+            // }
             
         }
         

@@ -96,27 +96,27 @@ class PRequestImport implements ToCollection, WithHeadingRow, WithValidation
             
 
             $a = PRequest::updateOrCreate($pRequestInsertUnique,$PRequestInsert);
-            $curPrequestId = $a->id;
-            $b = $a->wasRecentlyCreated;
-            $c = $a->wasChanged();
+            // $curPrequestId = $a->id;
+            // $b = $a->wasRecentlyCreated;
+            // $c = $a->wasChanged();
 
-            $curtime = date('Y-m-d H:i:s');
+            // $curtime = date('Y-m-d H:i:s');
      
-            //新增数据
-            if($b)
-            {
-                $pRequesthistory = 
-                [
-                    'p_request_id' => $curPrequestId,
-                    'status_old' => null,
-                    'status_new' => '已提交',
-                    'user_name' => Admin::user()->name,
-                    'comment' => null,
-                    'created_at' => $curtime,
-                    'updated_at' => $curtime,
-                ];
-                DB::table('p_request_histories')->insert($pRequesthistory);
-            }
+            // //新增数据
+            // if($b)
+            // {
+            //     $pRequesthistory = 
+            //     [
+            //         'p_request_id' => $curPrequestId,
+            //         'status_old' => null,
+            //         'status_new' => '已提交',
+            //         'user_name' => Admin::user()->name,
+            //         'comment' => null,
+            //         'created_at' => $curtime,
+            //         'updated_at' => $curtime,
+            //     ];
+            //     DB::table('p_request_histories')->insert($pRequesthistory);
+            // }
   
         }
         

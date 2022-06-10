@@ -2,6 +2,7 @@
 
 namespace App\Admin\Actions\Imports;
 
+use App\Models\AdminUser;
 use App\Models\Chip;
 use App\Models\Manufactor;
 use App\Models\Oem;
@@ -83,7 +84,7 @@ class OemImport implements ToCollection, WithHeadingRow
                 'details' => $row['产品描述'],
                 'os_subversion' => $row['操作系统小版本'],
                 'status_id' => Status::where('name',trim($row['当前细分适配状态']))->pluck('id')->first()?:Status::where('name',trim($row['当前适配状态']))->pluck('id')->first(),
-                'user_name' => $row['当前适配状态责任人'],
+                'admin_user_id' => AdminUser::where('name',trim($row['当前适配状态责任人']))->pluck('id')->first() ,
                 'class' => $row['兼容等级'],
                 'test_type' => $row['测试方式'],
                 'industries' => $row['涉及行业'],
@@ -123,45 +124,45 @@ class OemImport implements ToCollection, WithHeadingRow
             
             $a = Oem::updateOrCreate($oemInsertUnique,$oemInsert);
      
-            $curOemId = $a->id;
-            $b = $a->wasRecentlyCreated;
-            $c = $a->wasChanged();
+            // $curOemId = $a->id;
+            // $b = $a->wasRecentlyCreated;
+            // $c = $a->wasChanged();
 
-            //新增数据
-            if($b)
-            {
-                $oemhistory = 
-                [
-                    'oem_id' => $curOemId,
-                    'status_old' => null,
-                    'status_new' => $oemInsert['status_id'],
-                    'user_name' => $oemInsert['user_name'],
-                    'comment' => null,
-                    'created_at' => $curtime,
-                    'updated_at' => $curtime,
-                ];
-                DB::table('oem_histories')->insert($oemhistory);
-            }
+            // //新增数据
+            // if($b)
+            // {
+            //     $oemhistory = 
+            //     [
+            //         'oem_id' => $curOemId,
+            //         'status_old' => null,
+            //         'status_new' => $oemInsert['status_id'],
+            //         'user_name' => $oemInsert['user_name'],
+            //         'comment' => null,
+            //         'created_at' => $curtime,
+            //         'updated_at' => $curtime,
+            //     ];
+            //     DB::table('oem_histories')->insert($oemhistory);
+            // }
 
-            //更新数据
-            if(!$b && $c)
-            {
-                $curHistoryId = OemHistory::where('oem_id',$curOemId)->orderBy('id','DESC')->pluck('status_new')->first();
+            // //更新数据
+            // if(!$b && $c)
+            // {
+            //     $curHistoryId = OemHistory::where('oem_id',$curOemId)->orderBy('id','DESC')->pluck('status_new')->first();
                 
-                $oemhistory = 
-                [
-                'oem_id' => $curOemId,
-                'status_old' => $curHistoryId,
-                'status_new' => $oemInsert['status_id'],
-                'user_name' => $oemInsert['user_name'],
-                'comment' => null,
-                'created_at' => $curtime,
-                'updated_at' => $curtime,
-                ];
+            //     $oemhistory = 
+            //     [
+            //     'oem_id' => $curOemId,
+            //     'status_old' => $curHistoryId,
+            //     'status_new' => $oemInsert['status_id'],
+            //     'user_name' => $oemInsert['user_name'],
+            //     'comment' => null,
+            //     'created_at' => $curtime,
+            //     'updated_at' => $curtime,
+            //     ];
 
-                DB::table('oem_histories')->insert($oemhistory);
+            //     DB::table('oem_histories')->insert($oemhistory);
                 
-            }
+            // }
            
         }
         

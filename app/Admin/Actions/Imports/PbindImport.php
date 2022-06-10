@@ -2,6 +2,7 @@
 
 namespace App\Admin\Actions\Imports;
 
+use App\Models\AdminUser;
 use App\Models\Brand;
 use App\Models\Chip;
 use App\Models\Manufactor;
@@ -226,7 +227,7 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
                 'comment' => $row['备注'],
                 'adapt_source' => $row['引入来源'],
                 'adapted_before' => $this->bools($row['是否适配过国产CPU']),
-                'user_name' => $row['当前适配状态责任人'],
+                'admin_user_id' => AdminUser::where('name',trim($row['当前适配状态责任人']))->pluck('id')->first() ,
                 'adaption_type' => $row['适配类型'],
                 'test_type' => $row['测试方式'],
                 'kylineco' => $this->bools($row['是否上传生态网站']),
@@ -253,45 +254,46 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
             
             $a = Pbind::updateOrCreate($pbindInsertUnique,$pbindInsert);
      
-            $curPbindId = $a->id;
-            $b = $a->wasRecentlyCreated;
-            $c = $a->wasChanged();
+            // $curPbindId = $a->id;
+            // $cc = $a->solution;
+            // $b = $a->wasRecentlyCreated;
+            // $c = $a->wasChanged();
 
-            //新增数据
-            if($b)
-            {
-                $pbindhistory = 
-                [
-                    'pbind_id' => $curPbindId,
-                    'status_old' => null,
-                    'status_new' => $pbindInsert['statuses_id'],
-                    'user_name' => Admin::user()->name,
-                    'comment' => null,
-                    'created_at' => $curtime,
-                    'updated_at' => $curtime,
-                ];
-                DB::table('pbind_histories')->insert($pbindhistory);
-            }
+            // //新增数据
+            // if($b)
+            // {
+            //     $pbindhistory = 
+            //     [
+            //         'pbind_id' => $curPbindId,
+            //         'status_old' => null,
+            //         'status_new' => $pbindInsert['statuses_id'],
+            //         'user_name' => Admin::user()->name,
+            //         'comment' => null,
+            //         'created_at' => $curtime,
+            //         'updated_at' => $curtime,
+            //     ];
+            //     DB::table('pbind_histories')->insert($pbindhistory);
+            // }
 
-            //更新数据
-            if(!$b && $c)
-            {
-                $curHistoryId = PbindHistory::where('pbind_id',$curPbindId)->orderBy('id','DESC')->pluck('status_new')->first();
+            // //更新数据
+            // if(!$b && $c)
+            // {
+            //     $curHistoryId = PbindHistory::where('pbind_id',$curPbindId)->orderBy('id','DESC')->pluck('status_new')->first();
                 
-                $pbindhistory = 
-                [
-                'pbind_id' => $curPbindId,
-                'status_old' => $curHistoryId,
-                'status_new' => $pbindInsert['statuses_id'],
-                'user_name' => Admin::user()->name,
-                'comment' => null,
-                'created_at' => $curtime,
-                'updated_at' => $curtime,
-                ];
+            //     $pbindhistory = 
+            //     [
+            //     'pbind_id' => $curPbindId,
+            //     'status_old' => $curHistoryId,
+            //     'status_new' => $pbindInsert['statuses_id']??$curHistoryId,
+            //     'user_name' => Admin::user()->name,
+            //     'comment' => null,
+            //     'created_at' => $curtime,
+            //     'updated_at' => $curtime,
+            //     ];
 
-                DB::table('pbind_histories')->insert($pbindhistory);
+            //     DB::table('pbind_histories')->insert($pbindhistory);
                 
-            }
+            // }
            
         }
         
