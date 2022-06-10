@@ -69,9 +69,29 @@ class HomeController extends Controller
     {
         $data = [];
 
-        // 对于SBind和PBind,展示当前适配状态责任人为登录用户的数据
-        $sbinds = Sbind::select('id', 'softwares_id',   'releases_id', 'chips_id', 'statuses_id', 'updated_at')->where('admin_user_id', Admin::user()->id)->get()->toarray();
-        $pbinds = Pbind::select('id', 'peripherals_id', 'releases_id', 'chips_id', 'statuses_id', 'updated_at')->where('admin_user_id', Admin::user()->id)->get()->toarray();
+        // 对于SBind和PBind
+        $sbinds = Sbind::select('id', 'softwares_id',   'releases_id', 'chips_id', 'statuses_id', 'updated_at')
+            // 当前适配状态责任人为当前登录用户的
+            ->where('admin_user_id', Admin::user()->id)
+            // 过滤掉状态为"证书已归档",且"是否上架软件商店"为"否"的
+            ->where([
+                ['statuses_id', '!=', Status::where('name', '证书已归档')->pluck('id')->first()],
+                ['appstore', 0],
+            ])
+            // 过滤掉状态为"适配成果已上架至软件商店",且"是否上架软件商店"为"是"的
+            ->where([
+                ['statuses_id', '!=', Status::where('name', '适配成果已上架至软件商店')->pluck('id')->first()],
+                ['appstore', 1]
+            ])
+            // 过滤掉状态为"适配成果数据已更新至生态网站",且"是否互认证"为"否"的
+            ->where([
+                ['statuses_id', '!=', Status::where('name', '适配成果数据已更新至生态网站')->pluck('id')->first()],
+                ['iscert', 0]
+            ])
+            ->get()->toarray();
+        $pbinds = Pbind::select('id', 'peripherals_id', 'releases_id', 'chips_id', 'statuses_id', 'updated_at')
+            ->where('admin_user_id', Admin::user()->id)
+            ->get()->toarray();
 
         // 对于SRequest和PRequest
         $srequests = SRequest::select('id', 'manufactor', 'name', 'release_id', 'chip_id', 'status', 'updated_at')
