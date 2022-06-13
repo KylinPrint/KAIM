@@ -5,7 +5,7 @@ namespace App\Admin\Actions\Exports;
 use App\Admin\Actions\Exports\BaseExport;
 use App\Models\Sbind;
 use App\Models\Software;
-use App\Models\Type;
+use App\Models\Stype;
 use Illuminate\Support\Fluent;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromCollection;
@@ -80,7 +80,7 @@ class SbindExport extends BaseExport implements WithMapping, WithHeadings, FromC
         $curSbindsArr = Sbind::with('releases','chips','softwares','statuses')->find($row['id']);
         $curSoftwareArr = Software::with('manufactors','stypes')->find($row['softwares_id']);
 
-        $curParentTypeName = Type::where('id',$curSoftwareArr->stypes->parent)->pluck('name')->first();
+        $curParentTypeName = Stype::where('id',$curSoftwareArr->stypes->parent)->pluck('name')->first();
 
         $ExportArr['产品ID'] = '';
         $ExportArr['厂商名称'] = $curSoftwareArr->manufactors->name;
