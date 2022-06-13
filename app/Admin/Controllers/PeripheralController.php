@@ -16,9 +16,7 @@ use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
 use Dcat\Admin\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\URL;
 use Dcat\Admin\Layout\Content;
-use Dcat\Admin\Layout\Row;
 use Dcat\Admin\Widgets\Dropdown;
 
 class PeripheralController extends AdminController

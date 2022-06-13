@@ -5,7 +5,6 @@ namespace App\Admin\Controllers;
 use App\Admin\Utils\ContextMenuWash;
 use App\Models\Manufactor;
 use App\Models\Software;
-use App\Models\Stype;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
