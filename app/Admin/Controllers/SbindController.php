@@ -89,7 +89,14 @@ class SbindController extends AdminController
             });
             $grid->column('softwares.name',__('软件名'));
             $grid->column('softwares.stypes_id',__('软件类型'))->display(function ($stypes_id) {
-                return Stype::where('id',$stypes_id)->pluck('name')->first();
+                $curStype = Stype::where('id',$stypes_id)->first();
+                $curParentStypeName = Stype::where('id',$curStype->parent)->pluck('name')->first();
+                if($curParentStypeName){
+                    $print = '软件/'.$curParentStypeName.'/'.$curStype->name;
+                }else{
+                    $print = '软件/' .$curStype->name.'/';
+                }
+                return $print;
             });
             $grid->column('releases.name',__('操作系统版本'));
             $grid->column('os_subversion')->hide();

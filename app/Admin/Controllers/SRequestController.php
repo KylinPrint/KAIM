@@ -15,6 +15,7 @@ use App\Models\Sbind;
 use App\Models\Software;
 use App\Models\SRequest;
 use App\Models\Status;
+use App\Models\Stype;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
@@ -88,7 +89,17 @@ class SRequestController extends AdminController
             $grid->column('source');
             $grid->column('manufactor');
             $grid->column('name');
-            $grid->column('stype.name');
+            $grid->column('stype_id')->display(function ($stypes_id) {
+                $curStype = Stype::where('id',$stypes_id)->first();
+                $curParentStypeName = Stype::where('id',$curStype->parent)->pluck('name')->first();
+                if($curParentStypeName){
+                    $print = '软件/'.$curParentStypeName.'/'.$curStype->name;
+                }else{
+                    $print = '软件/' .$curStype->name.'/';
+                }
+                return $print;
+                
+            });
             $grid->column('industry')->badge();
             $grid->column('release.name');
             $grid->column('os_subversion');

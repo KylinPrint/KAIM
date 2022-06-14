@@ -11,6 +11,7 @@ use App\Admin\Utils\ContextMenuWash;
 use App\Models\AdminUser;
 use App\Models\Chip;
 use App\Models\Oem;
+use App\Models\Otype;
 use App\Models\Release;
 use App\Models\Status;
 use Dcat\Admin\Admin;
@@ -56,7 +57,16 @@ class OemController extends AdminController
             $grid->column('id')->sortable()->hide();
             $grid->column('manufactors.name',__('厂商'));
             $grid->column('name');
-            $grid->column('otypes.name', __('类型'));
+            $grid->column('otypes_id', __('类型'))->display(function ($type) {
+                $curType = Otype::where('id',$type)->first();
+                $curParentTypeName = Otype::where('id',$curType->parent)->pluck('name')->first();
+                if($curParentTypeName){
+                    $print = '整机/'.$curParentTypeName.'/'.$curType->name;
+                }else{
+                    $print = '整机/' .$curType->name.'/';
+                }
+                return $print;
+            });
             $grid->column('source');
             $grid->column('details')->display('查看') ->modal(function ($modal) {
                 $modal->title('产品描述');
@@ -120,6 +130,7 @@ class OemController extends AdminController
             $grid->column('updated_at')->hide();
 
             //各种设置
+            $grid->scrollbarX();
             $grid->showColumnSelector();
             $grid->disableEditButton();
             $grid->disableCreateButton();
