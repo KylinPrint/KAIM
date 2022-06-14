@@ -360,7 +360,9 @@ class SbindController extends AdminController
                     }
                     $b = $arr;
                     return $b;
-                });
+                })
+                ->required()
+                ->default($template->softwares_id ?? null);
 
             $form->select('releases_id',__('版本'))
                 ->options(Release::all()->pluck('name','id'))
