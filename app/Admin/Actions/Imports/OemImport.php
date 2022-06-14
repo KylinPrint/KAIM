@@ -6,7 +6,6 @@ use App\Models\AdminUser;
 use App\Models\Chip;
 use App\Models\Manufactor;
 use App\Models\Oem;
-use App\Models\OemHistory;
 use App\Models\Otype;
 use App\Models\Release;
 use App\Models\Status;
@@ -25,13 +24,14 @@ class OemImport implements ToCollection, WithHeadingRow
      *
      * @return \Illuminate\Database\Eloquent\Model|null
      */
-
+    
     public function collection(Collection $rows)
     {
         set_time_limit(0);
 
         // unset($rows[0]);  //去掉表头
 
+        
 
         foreach($rows as $key => $row)
         {
@@ -122,47 +122,7 @@ class OemImport implements ToCollection, WithHeadingRow
                 'chips_id' => Chip::where('name','like','%'.trim($row['芯片']).'%')->pluck('id')->first(),
             ];
             
-            $a = Oem::updateOrCreate($oemInsertUnique,$oemInsert);
-     
-            // $curOemId = $a->id;
-            // $b = $a->wasRecentlyCreated;
-            // $c = $a->wasChanged();
-
-            // //新增数据
-            // if($b)
-            // {
-            //     $oemhistory = 
-            //     [
-            //         'oem_id' => $curOemId,
-            //         'status_old' => null,
-            //         'status_new' => $oemInsert['status_id'],
-            //         'user_name' => $oemInsert['user_name'],
-            //         'comment' => null,
-            //         'created_at' => $curtime,
-            //         'updated_at' => $curtime,
-            //     ];
-            //     DB::table('oem_histories')->insert($oemhistory);
-            // }
-
-            // //更新数据
-            // if(!$b && $c)
-            // {
-            //     $curHistoryId = OemHistory::where('oem_id',$curOemId)->orderBy('id','DESC')->pluck('status_new')->first();
-                
-            //     $oemhistory = 
-            //     [
-            //     'oem_id' => $curOemId,
-            //     'status_old' => $curHistoryId,
-            //     'status_new' => $oemInsert['status_id'],
-            //     'user_name' => $oemInsert['user_name'],
-            //     'comment' => null,
-            //     'created_at' => $curtime,
-            //     'updated_at' => $curtime,
-            //     ];
-
-            //     DB::table('oem_histories')->insert($oemhistory);
-                
-            // }
+            Oem::updateOrCreate($oemInsertUnique,$oemInsert);
            
         }
         

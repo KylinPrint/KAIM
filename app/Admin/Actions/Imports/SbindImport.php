@@ -80,7 +80,10 @@ class SbindImport implements ToCollection, WithHeadingRow, WithValidation
             }
             
 
-            $curSoftwareId = Software::where('name',trim($row['软件名称']))->pluck('id')->first();
+            $curSoftwareId = Software::where(
+                ['name',trim($row['软件名称']),
+                ['manufactors_id',$curManufactorId],
+                ['version',trim($row['软件版本号'])]])->pluck('id')->first();
             if(empty($curSoftwareId))
             {   
                 $parentID = Stype::where('name',trim($row['软件分类一']))->pluck('id')->first();

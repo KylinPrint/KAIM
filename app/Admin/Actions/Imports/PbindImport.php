@@ -144,7 +144,12 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
             }
 
             // 外设
-            $curPeripheralId = Peripheral::where('name',trim($row['外设型号']))->pluck('id')->first();
+            $curPeripheralId = Peripheral::where([
+                ['name' , trim($row['外设型号'])],
+                ['brands_id' , $curBrandId],
+                ['manufactors_id' , $curManufactorId]])
+            ->pluck('id')->first();
+
             if(empty($curPeripheralId))
             {
                 $parentID = Type::where('name',$row['外设类型一'])->pluck('id')->first();

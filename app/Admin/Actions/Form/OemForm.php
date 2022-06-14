@@ -2,6 +2,7 @@
 
 namespace App\Admin\Actions\Form;
 
+use App\Admin\Actions\Imports\BaseImport;
 use App\Admin\Actions\Imports\OemImport;
 use Dcat\Admin\Widgets\Form;
 use Illuminate\Support\Facades\Storage;
@@ -17,7 +18,7 @@ class OemForm extends Form
         try {
             $file = storage_path('app/public/' . $input['file']);
 
-            Excel::import(new OemImport(),$file);
+            Excel::import(new BaseImport('oem'),$file);
 
             $disk = Storage::disk('public');
             $disk -> delete($input['file']);
