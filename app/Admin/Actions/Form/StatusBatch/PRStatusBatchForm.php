@@ -46,6 +46,11 @@ class PRStatusBatchForm extends Form implements LazyRenderable
                 return $this->response()->error('不同状态的需求不能批量编辑状态')->refresh();
             }
 
+            // 二选一必填
+            if (!($input['status'] || $input['status_comment'])) {
+                return $this->response()->info('请在"需求处理状态"和"需求状态变更说明"中至少选择一项填写');
+            }
+
             // 已提交改处理中不能只填备注
             if ($status_current[0] == '已提交' && $input['comment_only']) {
                 return $this->response()->warning('已提交状态的需求变更为处理中时,不允许仅添加需求状态变更说明');
@@ -64,10 +69,8 @@ class PRStatusBatchForm extends Form implements LazyRenderable
                     return $this->response()->error('"' . $status_current[0] . '"' . '的需求不能修改为' . '"' . $input['status'] . '"');
                 }
             }
-        }
-        
-        // 啥也不干你点它干啥
-        if (!($input['change_bd'] || $input['change_status'])) {
+        } elseif (! $input['change_bd']) {
+            // 啥也不干你点它干啥
             return $this->response()->info('未修改');
         }
         
@@ -211,10 +214,8 @@ class PRStatusBatchForm extends Form implements LazyRenderable
                                     ->setLabelClass(['asterisk']);
                             });
                     })
-                    ->options(config('kaim.request_status'))
-                    ->rules('required_without:status_comment',['required_without' => '请填写要修改的内容']);
-                $form->textarea('status_comment', admin_trans('p-request.fields.status_comment'))
-                    ->rules('required_without:status',['required_without' => '请填写要修改的内容']);
+                    ->options(config('kaim.request_status'));
+                $form->textarea('status_comment', admin_trans('p-request.fields.status_comment'));
             });
         //批量选择的行的值传递
         $this->hidden('id')->attribute('id', 'batch-status-id'); //批量选择的行的id通过隐藏元素 提交时一并传递过去
