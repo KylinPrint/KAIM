@@ -4,7 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Admin\Actions\Exports\PbindExport;
 use App\Admin\Actions\Grid\ShowAudit;
-use App\Admin\Actions\Modal\PbindModal;
+use App\Admin\Actions\Modal\ImportModal;
 use App\Admin\Actions\Others\StatusBatch;
 use App\Models\Chip;
 use App\Models\Pbind;
@@ -46,7 +46,7 @@ class PbindController extends AdminController
             $grid->tools(function (Grid\Tools $tools) {
                 // 导入
                 if(Admin::user()->can('pbinds-import')) {
-                    $tools->append(new PbindModal()); 
+                    $tools->append(new ImportModal('pbinds','p_import')); 
                 }
                 
                 // 批量操作

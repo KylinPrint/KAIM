@@ -4,6 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Admin\Actions\Exports\SbindExport;
 use App\Admin\Actions\Grid\ShowAudit;
+use App\Admin\Actions\Modal\ImportModal;
 use App\Admin\Actions\Modal\SbindModal;
 use App\Admin\Actions\Others\StatusBatch;
 use App\Admin\Renderable\ChipTable;
@@ -47,7 +48,7 @@ class SbindController extends AdminController
             $grid->tools(function (Grid\Tools $tools)  {
                 // 导入
                 if(Admin::user()->can('sbinds-import')) {
-                    $tools->append(new SbindModal()); 
+                    $tools->append(new ImportModal('sbinds','s_import')); 
                 }         
 
                 // 批量操作
@@ -341,16 +342,16 @@ class SbindController extends AdminController
             // 获取要复制的行的ID
             $template = Sbind::find(request('template'));
 
-            // $form->select('softwares_id')
-            // ->options(function ($id) {
-            //     $software = Software::find($id);
-            //     if ($software) {
-            //         return [$software->id => $software->name.' '.$software->version];
-            //     }
-            // })
-            // ->ajax('api/softwares')
-            // ->required()
-            // ->default($template->softwares_id ?? null);
+            $form->select('softwares_id')
+            ->options(function ($id) {
+                $software = Software::find($id);
+                if ($software) {
+                    return [$software->id => $software->name.' '.$software->version];
+                }
+            })
+            ->ajax('api/softwares')
+            ->required()
+            ->default($template->softwares_id ?? null);
 
             // TODO  根据文档写的,ajax直接进行渲染了,不进options方法里,已在作者git上提issue,
             // 先倒个车
@@ -482,7 +483,6 @@ class SbindController extends AdminController
     public function sPaginate(Request $request)
     {
         $q = $request->get('q');
-        $a = Software::where('name', 'like', "%$q%")->paginate(null, ['id', 'name as text']);
-        return $a;
+        return Software::where('name', 'like', "%$q%")->paginate(null, ['id', 'name as text']);
     }
 }

@@ -4,6 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Admin\Actions\Exports\SRequestExport;
 use App\Admin\Actions\Grid\ShowAudit;
+use App\Admin\Actions\Modal\ImportModal;
 use App\Admin\Actions\Modal\SRequestModal;
 use App\Admin\Actions\Others\StatusBatch;
 use App\Admin\Utils\ContextMenuWash;
@@ -45,7 +46,7 @@ class SRequestController extends AdminController
             $grid->tools(function (Grid\Tools $tools) {
                 // 导入
                 if(Admin::user()->can('srequests-edit')) {
-                    $tools->append(new SRequestModal());
+                    $tools->append(new ImportModal('s_requests','sr_import'));
                 }
                 
                 // 批量操作
@@ -277,8 +278,8 @@ class SRequestController extends AdminController
                     ->default($template->name ?? null);
                 $form->text('version')->required()
                     ->default($template->version ?? null);
-                $form->select('stype_id')
-                    ->options($stypeModel::selectOptions())
+                $form->select('stype_id')->options($stypeModel::selectOptions())
+                    ->rules('required|numeric|min:9',['min' => '软件分类  请选择子分类,例如:即时通讯,浏览器等'])
                     ->required()
                     ->default($template->stype_id ?? null);
                 $form->tags('industry')

@@ -4,7 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Admin\Actions\Exports\OemExport;
 use App\Admin\Actions\Grid\ShowAudit;
-use App\Admin\Actions\Modal\OemModal;
+use App\Admin\Actions\Modal\ImportModal;
 use App\Admin\Renderable\ChipTable;
 use App\Admin\Renderable\ReleaseTable;
 use App\Admin\Utils\ContextMenuWash;
@@ -39,7 +39,7 @@ class OemController extends AdminController
             $grid->tools(function (Grid\Tools $tools) { 
                 // 导入
                 if(Admin::user()->can('oems-import')) {
-                    $tools->append(new OemModal()); 
+                    $tools->append(new ImportModal('oems','o_import')); 
                 }
             });
 

@@ -4,6 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Admin\Actions\Exports\PRequestExport;
 use App\Admin\Actions\Grid\ShowAudit;
+use App\Admin\Actions\Modal\ImportModal;
 use App\Admin\Actions\Modal\PRequestModal;
 use App\Admin\Actions\Others\StatusBatch;
 use App\Admin\Utils\ContextMenuWash;
@@ -46,7 +47,7 @@ class PRequestController extends AdminController
             $grid->tools(function (Grid\Tools  $tools) { 
                 // 导入
                 if(Admin::user()->can('prequests-edit')) {
-                    $tools->append(new PRequestModal());
+                    $tools->append(new ImportModal('p_requests','pr_import'));
                 }
                 
                 // 批量操作

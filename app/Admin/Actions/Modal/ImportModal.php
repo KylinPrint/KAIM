@@ -2,7 +2,7 @@
 
 namespace App\Admin\Actions\Modal;
 
-use App\Admin\Actions\Form\SbindForm;
+use App\Admin\Actions\Form\ImportForm;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Grid\Tools\AbstractTool;
 use Dcat\Admin\Traits\HasPermissions;
@@ -10,12 +10,22 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 
 
-class SbindModal extends AbstractTool
+class ImportModal extends AbstractTool
 {
     /**
      * @return string
      */
     protected $title = 'Title';
+
+    protected $type;
+
+    protected $filename;
+
+    public function __construct($type, $filename)
+    {
+        $this->type = $type;
+        $this->filename = $filename;
+    }
 
     public function render()
     {
@@ -33,7 +43,7 @@ HTML;
 
     protected function modal($id)
     {
-        $form = new SbindForm();
+        $form = ImportForm::make()->payload(['filename' => $this->filename,'type' => $this->type]);
 
         Admin::script('Dcat.onPjaxComplete(function () {
             $(".modal-backdrop").remove();
