@@ -16,6 +16,7 @@ use App\Models\Pbind;
 use App\Models\Peripheral;
 use App\Models\PRequest;
 use App\Models\Status;
+use App\Models\Type;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
@@ -88,7 +89,16 @@ class PRequestController extends AdminController
             $grid->column('manufactor');
             $grid->column('brand');
             $grid->column('name');
-            $grid->column('type.name');
+            $grid->column('type_id')->display(function ($type) {
+                $curType = Type::where('id',$type)->first();
+                $curParentTypeName = Type::where('id',$curType->parent)->pluck('name')->first();
+                if($curParentTypeName){
+                    $print = '外设/'.$curParentTypeName.'/'.$curType->name;
+                }else{
+                    $print = '外设/' .$curType->name.'/';
+                }
+                return $print;
+            });
             $grid->column('industry')->badge();
             $grid->column('release.name');
             $grid->column('os_subversion');

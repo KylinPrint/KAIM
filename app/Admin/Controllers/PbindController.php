@@ -99,7 +99,14 @@ class PbindController extends AdminController
             $grid->column('peripherals.name',__('外设型号'));
             // 脑瘫代码
             $grid->column('peripherals.types_id',__('外设类型'))->display(function ($type) {
-                return Type::where('id', $type)->pluck('name')->first();
+                $curType = Type::where('id',$type)->first();
+                $curParentTypeName = Type::where('id',$curType->parent)->pluck('name')->first();
+                if($curParentTypeName){
+                    $print = '外设/'.$curParentTypeName.'/'.$curType->name;
+                }else{
+                    $print = '外设/' .$curType->name.'/';
+                }
+                return $print;
             });
             $grid->column('releases.name',__('操作系统版本'));
             $grid->column('os_subversion')->hide();

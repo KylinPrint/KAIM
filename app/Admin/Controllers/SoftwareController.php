@@ -5,6 +5,7 @@ namespace App\Admin\Controllers;
 use App\Admin\Utils\ContextMenuWash;
 use App\Models\Manufactor;
 use App\Models\Software;
+use App\Models\Stype;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
@@ -32,7 +33,17 @@ class SoftwareController extends AdminController
             $grid->column('manufactors.name',__('厂商'));
             $grid->column('version');
 
-            $grid->column('stypes.name',__('类型'));
+            $grid->column('stypes_id')->display(function ($stypes_id) {
+                $curStype = Stype::where('id',$stypes_id)->first();
+                $curParentStypeName = Stype::where('id',$curStype->parent)->pluck('name')->first();
+                if($curParentStypeName){
+                    $print = '软件/'.$curParentStypeName.'/'.$curStype->name;
+                }else{
+                    $print = '软件/' .$curStype->name.'/';
+                }
+                return $print;
+                
+            });
             $grid->column('industries')->badge();
             $grid->column('appstore_soft')->display(function ($value) {
                 if ($value == '1') { return '是'; }
