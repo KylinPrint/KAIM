@@ -28,10 +28,16 @@ class SStatusBatchForm extends Form implements LazyRenderable
         // 接收弹窗提交过来的数据，进行处理
         $ids = explode(',', $input['id'] ?? null); //处理提交过来的批量选择的行的id
         
-        // 啥也不干你点它干啥
-        if (!($input['change_user'] || $input['change_status'])) {
+        if ($input['change_status']) {
+            // 二选一必填
+            if (!($input['statuses_id'] || $input['statuses_comment'])) {
+                return $this->response()->info('请在"当前适配状态"和"适配状态变更说明"中至少选择一项填写');
+            } 
+        } elseif (! $input['change_user']) {
+            // 啥也不干你点它干啥
             return $this->response()->info('未修改');
         }
+
 
         // 处理逻辑
         foreach ($ids as $id) 
@@ -65,9 +71,8 @@ class SStatusBatchForm extends Form implements LazyRenderable
         $this->radio('change_status', '是否修改当前适配状态')
             ->options([0 => '否', 1 => '是'])->default(0)
             ->when(1, function (Form $form) {
-                $form->select('statuses_id')->options(Status::where('parent', '!=', null)->pluck('name','id'))
-                    ->rules('required_without:statuses_comment',['required_without' => '请填写要修改的内容']);
-                $form->textarea('statuses_comment')->rules('required_without:statuses_id',['required_without' => '请填写要修改的内容']);
+                $form->select('statuses_id')->options(Status::where('parent', '!=', null)->pluck('name','id'));
+                $form->textarea('statuses_comment');
             });
         
         //批量选择的行的值传递
