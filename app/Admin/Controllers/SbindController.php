@@ -342,32 +342,26 @@ class SbindController extends AdminController
             // 获取要复制的行的ID
             $template = Sbind::find(request('template'));
 
-            $form->select('softwares_id')
-            ->options(function ($id) {
-                $software = Software::find($id);
-                if ($software) {
-                    return [$software->id => $software->name.' '.$software->version];
-                }
-            })
-            ->ajax('api/softwares')
-            ->required()
-            ->default($template->softwares_id ?? null);
+            // $form->select('softwares_id')
+            // ->options(function ($id) {
+            //     $software = Software::find($id);
+            //     if ($software) {
+            //         return [$software->id => $software->name.' '.$software->version];
+            //     }
+            // })
+            // ->ajax('api/softwares')
+            // ->required()
+            // ->default($template->softwares_id ?? null);
 
             // TODO  根据文档写的,ajax直接进行渲染了,不进options方法里,已在作者git上提issue,
             // 先倒个车
             $form->select('softwares_id')
                 ->options(function (){
-                    $softwares = Software::where('name','!=',null)->get();
-
+                    $softwares = Software::all();
                     foreach($softwares as $software){
-                        if(!isset($arr)){
-                            $arr = [$software->id => $software->name.' '.$software->version];
-                        }else{
-                            $arr[$software->id] = $software->name.' '.$software->version;
-                        }           
+                        $arr[$software->id] = $software->name.' '.$software->version;            
                     }
-                    $b = $arr;
-                    return $b;
+                    return $arr;
                 })
                 ->required()
                 ->default($template->softwares_id ?? null);
