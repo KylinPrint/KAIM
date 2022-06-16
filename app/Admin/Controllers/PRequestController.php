@@ -222,7 +222,16 @@ class PRequestController extends AdminController
             $show->field('manufactor');
             $show->field('brand');
             $show->field('name');
-            $show->field('type.name');
+            $show->field('type_id')->as(function ($type) {
+                $curType = Type::where('id',$type)->first();
+                $curParentTypeName = Type::where('id',$curType->parent)->pluck('name')->first();
+                if($curParentTypeName){
+                    $print = '外设/'.$curParentTypeName.'/'.$curType->name;
+                }else{
+                    $print = '外设/' .$curType->name.'/';
+                }
+                return $print;
+            });
             $show->field('industry');
             $show->field('release.name');
             $show->field('os_subversion');

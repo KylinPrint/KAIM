@@ -300,8 +300,15 @@ class PbindController extends AdminController
             $show->field('peripherals',__('型号'))->as(function ($peripherals) {
                 return "<a href=" . admin_url('peripherals/' . $peripherals["id"]) . ">" . $peripherals["name"] . "</a>";
             })->link();
-            $show->field('peripherals.types_id', __('外设类型'))->as(function ($type) {
-                return Type::where('id', $type)->pluck('name')->first();
+            $show->field('peripherals.types_id',__('外设类型'))->as(function ($type) {
+                $curType = Type::where('id',$type)->first();
+                $curParentTypeName = Type::where('id',$curType->parent)->pluck('name')->first();
+                if($curParentTypeName){
+                    $print = '外设/'.$curParentTypeName.'/'.$curType->name;
+                }else{
+                    $print = '外设/' .$curType->name.'/';
+                }
+                return $print;
             });
             $show->field('releases.name',__('操作系统版本'));
             $show->field('os_subversion');

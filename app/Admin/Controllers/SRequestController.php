@@ -222,7 +222,17 @@ class SRequestController extends AdminController
             $show->field('manufactor');
             $show->field('name');
             $show->field('version');
-            $show->field('stype.name');
+            $show->field('stype_id')->as(function ($stypes_id) {
+                $curStype = Stype::where('id',$stypes_id)->first();
+                $curParentStypeName = Stype::where('id',$curStype->parent)->pluck('name')->first();
+                if($curParentStypeName){
+                    $print = '软件/'.$curParentStypeName.'/'.$curStype->name;
+                }else{
+                    $print = '软件/' .$curStype->name.'/';
+                }
+                return $print;
+                
+            });
             $show->field('industry');
             $show->field('release.name');
             $show->field('os_subversion');

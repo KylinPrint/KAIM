@@ -276,8 +276,15 @@ class SbindController extends AdminController
             $show->field('softwares', __('软件名'))->as(function ($softwares) {
                 return "<a href=" . admin_url('softwares/' . $softwares["id"]) . ">" . $softwares["name"] . "</a>";
             })->link();
-            $show->field('softwares.stypes_id', __('软件类型'))->as(function ($stypes_id) {
-                return Stype::where('id', $stypes_id)->pluck('name')->first();
+            $show->field('softwares.stypes_id',__('软件类型'))->as(function ($stypes_id) {
+                $curStype = Stype::where('id',$stypes_id)->first();
+                $curParentStypeName = Stype::where('id',$curStype->parent)->pluck('name')->first();
+                if($curParentStypeName){
+                    $print = '软件/'.$curParentStypeName.'/'.$curStype->name;
+                }else{
+                    $print = '软件/' .$curStype->name.'/';
+                }
+                return $print;
             });
             $show->field('releases.name', __('操作系统版本'));
             $show->field('os_subversion');

@@ -197,9 +197,18 @@ class OemController extends AdminController
 
             $show->field('manufactors.name', __('厂商'));
             $show->field('name');
-            $show->field('otypes.name', __('类型'));
+            $show->field('otypes_id', __('类型'))->as(function ($type) {
+                $curType = Otype::where('id',$type)->first();
+                $curParentTypeName = Otype::where('id',$curType->parent)->pluck('name')->first();
+                if($curParentTypeName){
+                    $print = '整机/'.$curParentTypeName.'/'.$curType->name;
+                }else{
+                    $print = '整机/' .$curType->name.'/';
+                }
+                return $print;
+            });
             $show->field('source');
-            $show->text('details');
+            $show->field('details');
             $show->field('releases.name',__('操作系统版本'));
             $show->field('os_subversion');
             $show->field('chips.name',__('芯片'));
