@@ -9,6 +9,8 @@ use App\Models\Oem;
 use App\Models\Otype;
 use App\Models\Release;
 use App\Models\Status;
+use Dcat\Admin\Http\JsonResponse;
+use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\ToCollection;
@@ -17,7 +19,7 @@ use Maatwebsite\Excel\Imports\HeadingRowFormatter;
 
 
 HeadingRowFormatter::default('none');
-class OemImport implements ToCollection, WithHeadingRow
+class OemImport implements ToCollection, WithHeadingRow 
 {
     /**
      * @param array $row
@@ -31,55 +33,32 @@ class OemImport implements ToCollection, WithHeadingRow
 
         // unset($rows[0]);  //去掉表头
 
-        
-
         foreach($rows as $key => $row)
         {
-            // if
-            // ( 
-            //     !($row['厂商']&&
-            //     $row['品牌']&&
-            //     $row['外设型号']&&
-            //     $row['外设类型一']&&
-            //     $row['外设类型二']&&
-            //     $row['行业分类']&&
-            //     $row['操作系统版本']&&
-            //     $row['芯片']&&
-            //     $row['架构']&&
-            //     $row['引入来源']&&
-            //     $row['当前适配状态']&&
-            //     $row['当前细分适配状态']&&
-            //     $row['当前适配状态责任人']&&
-            //     $row['是否上传生态网站']&&
-            //     $row['是否上架软件商店']&&
-            //     $row['是否互认证'])
-            // ){
-            //     throw new RequiredNotFoundException($key);
-            // }
-
-            if(!$row['整机型号']){continue;}  //TODO 上边写的异常抛出后不继续执行，待检查
-
             $curtime = date('Y-m-d H:i:s');
             
-            if($row['厂商'] != '')
+            $curManufactorId = Manufactor::where('name',trim($row['厂商']))->pluck('id')->first();
+            if(!$curManufactorId)
             {
-                $curManufactorId = Manufactor::where('name',trim($row['厂商']))->pluck('id')->first();
-                if(!$curManufactorId)
-                {
-                    $manufactorInsert = 
-                    [
-                        'name' => $row['厂商'],
-                        'isconnected' => '0',
-                        'created_at' => $curtime,
-                        'updated_at' => $curtime,
-                    ];
+                $manufactorInsert = 
+                [
+                    'name' => $row['厂商'],
+                    'isconnected' => '0',
+                    'created_at' => $curtime,
+                    'updated_at' => $curtime,
+                ];
                     $curManufactorId = DB::table('manufactors')->insertGetId($manufactorInsert);
-                }
             }
             
+            if(Otype::where('name',trim($row['整机类型二']))->pluck('id')->first()){
+                $OtypeParentID = Otype::where('name',trim($row['整机类型一']))->pluck('id')->first();
+                $OtypeID = Otype::where([['parent',$OtypeParentID],['name',trim($row['整机类型二'])]])->pluck('id')->first();
+            }else{
+                $OtypeID = Otype::where('name',trim($row['整机类型一']))->pluck('id')->first();
+            }
             $oemInsert =
             [
-                'otypes_id' => Otype::where('name',trim($row['整机类型二']))->pluck('id')->first(),
+                'otypes_id' => $OtypeID,
                 'source' => $row['引入来源'],
                 'details' => $row['产品描述'],
                 'os_subversion' => $row['操作系统小版本'],
