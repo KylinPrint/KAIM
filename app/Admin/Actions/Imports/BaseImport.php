@@ -24,19 +24,19 @@ class BaseImport implements WithMultipleSheets
     {
         $sheets = [];
 
-        if($this->type == 'oem'){
+        if($this->type == 'oems'){
             $sheets[] = new OemImport();
         }
-        elseif($this->type == 'pbind'){
+        elseif($this->type == 'pbinds'){
             $sheets[] = new PbindImport();
         }
-        elseif($this->type == 'sbind'){
+        elseif($this->type == 'sbinds'){
             $sheets[] = new SbindImport();
         }
-        elseif($this->type == 'prequest'){
+        elseif($this->type == 'p_requests'){
             $sheets[] = new PRequestImport();
         }
-        elseif($this->type == 'srequest'){
+        elseif($this->type == 's_requests'){
             $sheets[] = new SRequestImport();
         }
 
