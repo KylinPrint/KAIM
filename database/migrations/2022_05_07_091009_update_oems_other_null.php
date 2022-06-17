@@ -15,7 +15,7 @@ class UpdateOemsOtherNull extends Migration
     {
         //
         Schema::table('oems', function (Blueprint $table) {
-            $table->string('otypes_id')->nullable()->comment('分类')->change();
+            $table->string('otypes_id')->comment('分类')->change();
             $table->string('source')->nullable()->comment('引入来源')->change();
             $table->foreignId('status_id')->nullable()->comment('当前适配状态')->change();
             $table->string('user_name')->nullable()->comment('当前适配状态责任人')->change();
