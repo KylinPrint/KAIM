@@ -68,11 +68,20 @@ class SStatusBatchForm extends Form implements LazyRenderable
                 $form->select('admin_user_id')->options(AdminUser::all()->pluck('name', 'id'))->rules('required_if:change_user,1', ['required_if' => '请填写此字段'])
                     ->setLabelClass('asterisk');
             });
-        $this->radio('change_status', '是否修改当前适配状态')
+            $this->radio('change_status', '是否修改当前适配状态')
             ->options([0 => '否', 1 => '是'])->default(0)
             ->when(1, function (Form $form) {
-                $form->select('statuses_id')->options(Status::where('parent', '!=', null)->pluck('name','id'));
-                $form->textarea('statuses_comment');
+                $form->select('statuses_id')->options(Status::where('parent', '!=', null)->pluck('name','id'))
+                    ->rules(function (){
+                        if(request()->change_status == 1){
+                            return 'required_without:statuses_comment';
+                        }
+                    },['required_without' => '请填写要修改的内容']);
+                $form->textarea('statuses_comment')->rules(function (){
+                    if(request()->change_status == 1){
+                        return 'required_without:statuses_id';
+                    }
+                },['required_without' => '请填写要修改的内容']);
             });
         
         //批量选择的行的值传递

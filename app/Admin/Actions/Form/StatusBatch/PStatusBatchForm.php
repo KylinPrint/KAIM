@@ -72,8 +72,16 @@ class PStatusBatchForm extends Form implements LazyRenderable
             ->options([0 => '否', 1 => '是'])->default(0)
             ->when(1, function (Form $form) {
                 $form->select('statuses_id')->options(Status::where('parent', '!=', null)->pluck('name','id'))
-                    ->rules('required_without:statuses_comment',['required_without' => '请填写要修改的内容']);
-                $form->textarea('statuses_comment')->rules('required_without:statuses_id',['required_without' => '请填写要修改的内容']);
+                    ->rules(function (){
+                        if(request()->change_status == 1){
+                            return 'required_without:statuses_comment';
+                        }
+                    },['required_without' => '请填写要修改的内容']);
+                $form->textarea('statuses_comment')->rules(function (){
+                    if(request()->change_status == 1){
+                        return 'required_without:statuses_id';
+                    }
+                },['required_without' => '请填写要修改的内容']);
             });
         //批量选择的行的值传递
         $this->hidden('id')->attribute('id', 'batch-status-id'); //批量选择的行的id通过隐藏元素 提交时一并传递过去
