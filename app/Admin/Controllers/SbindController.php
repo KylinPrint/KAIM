@@ -88,7 +88,8 @@ class SbindController extends AdminController
             $grid->column('softwares.manufactors_id',__('厂商名称'))->display(function ($manufactors) {
                 return Manufactor::where('id',$manufactors)->pluck('name')->first();
             });
-            $grid->column('softwares.name',__('软件名'));
+            $grid->column('softwares.name', '软件名');
+            $grid->column('softwares.version', '软件版本号');
             $grid->column('softwares.stypes_id',__('软件类型'))->display(function ($stypes_id) {
                 $curStype = Stype::where('id',$stypes_id)->first();
                 $curParentStypeName = Stype::where('id',$curStype->parent)->pluck('name')->first();
@@ -276,6 +277,7 @@ class SbindController extends AdminController
             $show->field('softwares', __('软件名'))->as(function ($softwares) {
                 return "<a href=" . admin_url('softwares/' . $softwares["id"]) . ">" . $softwares["name"] . "</a>";
             })->link();
+            $show->field('softwares.version', '软件版本号');
             $show->field('softwares.stypes_id',__('软件类型'))->as(function ($stypes_id) {
                 $curStype = Stype::where('id',$stypes_id)->first();
                 $curParentStypeName = Stype::where('id',$curStype->parent)->pluck('name')->first();
