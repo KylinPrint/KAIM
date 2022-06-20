@@ -149,7 +149,7 @@ class SoftwareController extends AdminController
         return Form::make(Software::with('manufactors','stypes'), function (Form $form) {
             $id = $form->model()->id;
             // $form->display('id');
-            $form->text('name')->required()->rules("unique:softwares,name,$id", [ 'unique' => '该外设名已存在' ]);
+            $form->text('name')->required()->rules("unique:softwares,name,$id", [ 'unique' => '该软件已存在' ]);
             $form->select('manufactors_id')->options(function () {
                 $manufactors = Manufactor::all()->pluck('name','id');
                 $options = [ 0 => '自定义' ];
