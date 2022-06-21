@@ -4,6 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Admin\Metrics\DataCount;
 use App\Admin\Metrics\DataOverView;
+use App\Admin\Metrics\NewBind;
 use App\Admin\Metrics\ODataAdd;
 use App\Admin\Metrics\PVShow;
 use App\Admin\Metrics\UVShow;
@@ -31,7 +32,10 @@ class StatisticsController extends Controller
             ->body(function (Row $row) {
                 $row->column(4, new UVShow());
                 $row->column(4, new PVShow());
+            })
+            ->body(function (Row $row) {
                 $row->column(4, new NewData());
+                $row->column(4, new NewBind());
             });
     }
 }

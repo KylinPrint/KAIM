@@ -2,13 +2,13 @@
 
 namespace App\Admin\Metrics;
 
-use App\Models\Peripheral;
-use App\Models\Software;
+use App\Models\Pbind;
+use App\Models\Sbind;
 use Dcat\Admin\Support\JavaScript;
 use Dcat\Admin\Widgets\Metrics\Line;
 use Illuminate\Http\Request;
 
-class NewData extends Line
+class NewBind extends Line
 {
     protected $labels = ['外设','软件'];
     /**
@@ -20,7 +20,7 @@ class NewData extends Line
     {
         parent::init();
 
-        $this->title('新增产品数据');
+        $this->title('新增适配数据');
         $this->dropdown([
             '7' => '7天内',
             '30' => '30天内',
@@ -38,7 +38,7 @@ class NewData extends Line
     public function P_query(int $range) {
         // 按时间从远到进
         for ($offset = $range - 1; $offset >= 0; $offset--) {
-            $array[] = Peripheral::whereDate('created_at', today()->subDays($offset))->count();
+            $array[] = Pbind::whereDate('created_at', today()->subDays($offset))->count();
         }
         return $array;
     }
@@ -46,7 +46,7 @@ class NewData extends Line
     public function S_query(int $range) {
         // 按时间从远到进
         for ($offset = $range - 1; $offset >= 0; $offset--) {
-            $array[] = Software::whereDate('created_at', today()->subDays($offset))->count();
+            $array[] = Sbind::whereDate('created_at', today()->subDays($offset))->count();
         }
         return $array;
     }
@@ -86,11 +86,11 @@ class NewData extends Line
         return $this->chart([
             'series' => [
                 [
-                    'name' => '外设产品新增',
+                    'name' => '外设适配新增',
                     'data' => $pdata,    
                 ],
                 [
-                    'name' => '软件产品新增',
+                    'name' => '外设适配新增',
                     'data' => $sdata, 
                 ]
             ],
