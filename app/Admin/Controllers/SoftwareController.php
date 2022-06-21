@@ -147,9 +147,16 @@ class SoftwareController extends AdminController
     protected function form()
     {
         return Form::make(Software::with('manufactors','stypes'), function (Form $form) {
-            $id = $form->model()->id;
-            // $form->display('id');
-            $form->text('name')->required();
+
+            $version = isset(request()->all()['version']) ? request()->all()['version'] : '';
+            $manufactors_id = isset(request()->all()['manufactors_id']) ? request()->all()['manufactors_id'] : '';
+            $id = isset(request()->route()->parameters['software']) ? request()->route()->parameters['software'] : '';
+
+            $form->text('name')
+            ->creationRules(['required', "unique:softwares,name,NULL,id,version,{$version},manufactors_id,{$manufactors_id}"], ['unique' => '数据已存在'])
+            ->updateRules(['required', "unique:softwares,name,{$id},id,version,{$version},manufactors_id,{$manufactors_id}"], ['unique' => '数据已存在'])
+            ->required();
+            
             $form->select('manufactors_id')->options(function () {
                 $manufactors = Manufactor::all()->pluck('name','id');
                 $options = [ 0 => '自定义' ];
@@ -165,7 +172,8 @@ class SoftwareController extends AdminController
                 $form->select('isconnected', __('是否建联'))->options([0 => '否', 1 => '是']);
             })
             ->required();
-            $form->text('version');
+            //TODO null会破坏唯一校验,比如两条同样数据 (微信,腾讯,null) 均可以通过当前唯一校验
+            $form->text('version')->default(' ');
             
             $TypeModel = config('admin.database.stypes_model');
             $form->select('stypes_id', __('类型'))->options($TypeModel::selectOptions())->required();    
