@@ -42,7 +42,6 @@ class NewData extends Line
         for ($offset = $range - 1; $offset >= 0; $offset--) {
             $array[] = Peripheral::whereDate('created_at', today()->subDays($offset))->count();
         }
-        $a = $array;
         return $array;
     }
 
@@ -51,7 +50,6 @@ class NewData extends Line
         for ($offset = $range - 1; $offset >= 0; $offset--) {
             $array[] = Software::whereDate('created_at', today()->subDays($offset))->count();
         }
-        $a = $array;
         return $array;
     }
 
