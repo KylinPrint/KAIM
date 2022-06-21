@@ -34,7 +34,8 @@ class DataOverView extends Card
      */
     public function query() {
         $peripheral_count = Peripheral::count();
-        $software_count = Software::count();
+        // 软件产品数按照软件名去重
+        $software_count = Software::distinct('name')->count();
         $product_count = $peripheral_count + $software_count;
 
         $pbind_count = Pbind::count();
