@@ -107,9 +107,9 @@ class PRequestExport extends BaseExport implements WithMapping, WithHeadings, Fr
                         $status_old = $curHistory['old_values']['status'];
                     }
                     
-                    $curHistoryStr = $curHistoryStr.chr(10).$user_name.' '.$status_old.'     '.$curHistory['new_values']['status'].'    '.substr($curHistory['created_at'],0,10).' '.$curHistory['new_values']['status_comment'];
+                    $curHistoryStr = $curHistoryStr.chr(10).$user_name.' '.$status_old.'     '.$curHistory['new_values']['status']??'      '.'    '.substr($curHistory['created_at'],0,10).' '.$curHistory['new_values']['status_comment']??'';
                 }else{
-                    $curHistoryStr = $curHistoryStr.chr(10).$user_name.' '.$curHistory['old_values']['status'].'     '.$curHistory['new_values']['status'].'    '.substr($curHistory['created_at'],0,10).' '.$curHistory['new_values']['status_comment'];
+                    $curHistoryStr = $curHistoryStr.chr(10).$user_name.' '.$curHistory['old_values']['status'].'     '.$curHistory['new_values']['status']??'      '.'    '.substr($curHistory['created_at'],0,10).' '.$curHistory['new_values']['status_comment']??'';
                 }
                 $i ++;
             } 
