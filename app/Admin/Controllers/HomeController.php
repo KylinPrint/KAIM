@@ -86,6 +86,11 @@ class HomeController extends Controller
                 $query->where('statuses_id', Status::where('name', '麒麟自研适配方案，内部已验证通过')->pluck('id')->first())
                     ->orWhere('statuses_id', Status::where('name', '麒麟自研适配方案，待内部验证')->pluck('id')->first());
             })
+            ->whereNot(function ($query) {
+                // 过滤掉状态为"适配成果已提交下架软件商店"和"适配成果已下架软件商店"的
+                $query->where('statuses_id', Status::where('name', '适配成果已提交下架软件商店')->pluck('id')->first())
+                    ->orWhere('statuses_id', Status::where('name', '适配成果已下架软件商店')->pluck('id')->first());
+            })
             ->get()->toarray();
 
         $pbinds = Pbind::select('id', 'peripherals_id', 'releases_id', 'chips_id', 'statuses_id', 'updated_at')
@@ -102,6 +107,16 @@ class HomeController extends Controller
             ->whereNot(function ($query) {
                 // 过滤掉状态为"适配成果数据已更新至生态网站",且"是否互认证"为"否"的
                 $query->where('statuses_id', Status::where('name', '适配成果数据已更新至生态网站')->pluck('id')->first())->where('iscert', 0);
+            })
+            ->whereNot(function ($query) {
+                // 过滤掉状态为自研适配方案新增或导入的
+                $query->where('statuses_id', Status::where('name', '麒麟自研适配方案，内部已验证通过')->pluck('id')->first())
+                    ->orWhere('statuses_id', Status::where('name', '麒麟自研适配方案，待内部验证')->pluck('id')->first());
+            })
+            ->whereNot(function ($query) {
+                // 过滤掉状态为"适配成果已提交下架软件商店"和"适配成果已下架软件商店"的
+                $query->where('statuses_id', Status::where('name', '适配成果已提交下架软件商店')->pluck('id')->first())
+                    ->orWhere('statuses_id', Status::where('name', '适配成果已下架软件商店')->pluck('id')->first());
             })
             ->get()->toarray();
 
