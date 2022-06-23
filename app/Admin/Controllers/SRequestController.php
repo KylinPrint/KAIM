@@ -356,16 +356,17 @@ class SRequestController extends AdminController
                         ->saving(function ($value) { return implode(',', $value); })->required();
                     $form->select('release_id')
                         ->options(Release::all()->pluck('name', 'id'))->required();
-                    $form->text('os_subversion')->help('例如:V10SP1-Build01-0326');
+                    $form->text('os_subversion')->help('例如:V10SP1-Build01-0326')->required();
                     $form->select('chip_id')
                         ->options(Chip::all()->pluck('name', 'id'))->required();
-                    $form->text('project_name');
-                    $form->text('amount');
+                    $form->text('project_name')->required();
+                    $form->text('amount')->required();
                     $form->select('project_status')
+                        ->required()
                         ->options(config('kaim.project_status'));
                     $form->select('level')
                         ->options(config('kaim.project_level'))->required();
-                    $form->text('manufactor_contact');
+                    $form->text('manufactor_contact')->required();
                     $form->date('et')->required();
                     $form->text('requester_name')->default(Admin::user()->name)->required();
                     $form->text('requester_contact')->required();
