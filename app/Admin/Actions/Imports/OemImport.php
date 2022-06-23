@@ -9,17 +9,17 @@ use App\Models\Oem;
 use App\Models\Otype;
 use App\Models\Release;
 use App\Models\Status;
-use Dcat\Admin\Http\JsonResponse;
-use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Imports\HeadingRowFormatter;
 
 
 HeadingRowFormatter::default('none');
-class OemImport implements ToCollection, WithHeadingRow 
+class OemImport implements ToCollection, WithHeadingRow
 {
     /**
      * @param array $row
@@ -31,13 +31,74 @@ class OemImport implements ToCollection, WithHeadingRow
     {
         set_time_limit(0);
 
-        // unset($rows[0]);  //去掉表头
+        $a = $rows->toArray();
+        $b = [];
+        array_walk(
+            $a, 
+            function ($value,$key) use (&$b)
+            {
+                $b['第'. $key+2 .'行'] = $value;
+            }
+        );
+
+        $validator = Validator::make($b,
+            [
+                '*.厂商'        => [
+                    'required'
+                ],
+                '*.整机型号'    => [
+                    'required'
+                ],
+                '*.操作系统版本' => [
+                    'required',
+                    Rule::in(array_column(Release::select('name')->get()->toArray(),'name')),
+                ],
+                '*.芯片'        => [
+                    'required',
+                    Rule::in(array_column(Chip::select('name')->get()->toArray(),'name')),
+                ],
+                '*.整机类型一'  => [
+                    'required',
+                    Rule::in(Otype::where('id','<',8)->pluck('name')->toArray()),
+                ],
+                '*.整机类型二'  => [
+                    'required',
+                    Rule::in(Otype::where('id','>',7)->pluck('name')->toArray()),
+                ],
+                '*.当前适配状态'=> [
+                    'required',
+                    Rule::in(Status::where('id','<',6)->pluck('name')->toArray()),
+                ],
+                '*.当前细分适配状态'=> [
+                    'nullable',
+                    Rule::in(Status::where('id','>',7)->pluck('name')->toArray()),
+                ],
+
+            ],
+        );  
+        
+        $validator->errors()->first();
+        $validator->validate();
 
         foreach($rows as $key => $row)
         {
             $curtime = date('Y-m-d H:i:s');
-            
+
+            //搜当前行厂商ID
             $curManufactorId = Manufactor::where('name',trim($row['厂商']))->pluck('id')->first();
+            //获取当前行操作系统ID
+            $curReleaseID = Release::where('name',trim($row['操作系统版本']))->pluck('id')->first();
+            //获取当前行芯片ID
+            $curChipID = Chip::where('name','like','%'.trim($row['芯片']).'%')->pluck('id')->first();
+            //获取当前行类型ID
+            if(Otype::where('name',trim($row['整机类型二']))->pluck('id')->first()){
+                $OtypeParentID = Otype::where('name',trim($row['整机类型一']))->pluck('id')->first();
+                $OtypeID = Otype::where([['parent',$OtypeParentID],['name',trim($row['整机类型二'])]])->pluck('id')->first();
+            }else{
+                $OtypeID = Otype::where('name',trim($row['整机类型一']))->pluck('id')->first();
+            }
+       
+            //如果没搜到,新建厂商信息
             if(!$curManufactorId)
             {
                 $manufactorInsert = 
@@ -49,13 +110,7 @@ class OemImport implements ToCollection, WithHeadingRow
                 ];
                     $curManufactorId = DB::table('manufactors')->insertGetId($manufactorInsert);
             }
-            
-            if(Otype::where('name',trim($row['整机类型二']))->pluck('id')->first()){
-                $OtypeParentID = Otype::where('name',trim($row['整机类型一']))->pluck('id')->first();
-                $OtypeID = Otype::where([['parent',$OtypeParentID],['name',trim($row['整机类型二'])]])->pluck('id')->first();
-            }else{
-                $OtypeID = Otype::where('name',trim($row['整机类型一']))->pluck('id')->first();
-            }
+               
             $oemInsert =
             [
                 'otypes_id' => $OtypeID,
@@ -97,8 +152,8 @@ class OemImport implements ToCollection, WithHeadingRow
             [
                 'manufactors_id' => $curManufactorId,
                 'name' => $row['整机型号'],
-                'releases_id' => Release::where('name',trim($row['操作系统版本']))->pluck('id')->first(),
-                'chips_id' => Chip::where('name','like','%'.trim($row['芯片']).'%')->pluck('id')->first(),
+                'releases_id' => $curReleaseID,
+                'chips_id' => $curChipID,
             ];
             
             Oem::updateOrCreate($oemInsertUnique,$oemInsert);
@@ -107,9 +162,9 @@ class OemImport implements ToCollection, WithHeadingRow
         
     }
 
-    public function bools($value)
-    {
-        return $value =='是' ? 1 : 0;
+    public function bools($value){
+        if($value == '是'){return 1;}
+        elseif($value == '否'){return 0;}
     }
 
 }

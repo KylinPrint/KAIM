@@ -8,12 +8,11 @@ use App\Models\Chip;
 use App\Models\Manufactor;
 use App\Models\Release;
 use App\Models\Sbind;
-use App\Models\SbindHistory;
 use App\Models\Software;
 use App\Models\Status;
 use App\Models\Stype;
 use App\Models\Type;
-use Dcat\Admin\Admin;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
@@ -36,34 +35,110 @@ class SbindImport implements ToCollection, WithHeadingRow, WithValidation
     {
         set_time_limit(0);
 
-        // unset($row[0]);  //去掉表头
+        $a = $rows->toArray();
+        $b = [];
+        array_walk(
+            $a, 
+            function ($value,$key) use (&$b)
+            {
+                $b['第'. $key+2 .'行'] = $value;
+            }
+        );
+
+        $validator = Validator::make($b,
+            [
+                '*.厂商'        => [
+                    'required'
+                ],
+                '*.软件名称'    => [
+                    'required'
+                ],
+                '*.行业分类'    => [
+                    'required'
+                ],
+                '*.操作系统版本' => [
+                    'bail',
+                    'required',
+                    Rule::in(array_column(Release::select('name')->get()->toArray(),'name')),
+                ],
+                '*.芯片'        => [
+                    'bail',
+                    'required',
+                    Rule::in(array_column(Chip::select('name')->get()->toArray(),'name')),
+                ],
+                '*.引入来源'    => [
+                    'bail',
+                    'required',
+                    Rule::in(config('kaim.adapt_source'))
+                ],
+                '*.软件分类一'  => [
+                    'bail',
+                    'required',
+                    Rule::in(Stype::where('id','<',8)->pluck('name')->toArray()),
+                ],
+                '*.软件分类二'  => [
+                    'bail',
+                    'required',
+                    Rule::in(Stype::where('id','>',7)->pluck('name')->toArray()),
+                ],
+                '*.当前适配状态'=> [
+                    'bail',
+                    'required',
+                    Rule::in(Status::where('id','<',6)->pluck('name')->toArray()),
+                ],
+                '*.当前细分适配状态'=> [
+                    'bail',
+                    'required',
+                    Rule::in(Status::where('id','>',7)->pluck('name')->toArray()),
+                ],
+                '*.生态负责人'=> [
+                    'bail',
+                    'required',
+                    Rule::in(array_column(AdminUser::select('name')->get()->toArray(),'name')),
+                ],
+                '*.当前适配状态责任人'=> [
+                    'bail',
+                    'required',
+                    Rule::in(array_column(AdminUser::select('name')->get()->toArray(),'name')),
+                ],
+                '*.是否适配过国产CPU'=> [
+                    'bail',
+                    'nullable',
+                    Rule::in(['是','否'])
+                ],
+                '*.是否上传生态网站'=> [
+                    'bail',
+                    'required',
+                    Rule::in(['是','否'])
+                ],
+                '*.是否上架软件商店'=> [
+                    'bail',
+                    'required',
+                    Rule::in(['是','否'])
+                ],
+                '*.是否互认证'=> [
+                    'bail',
+                    'required',
+                    Rule::in(['是','否'])
+                ],
+                '*.是否有测试报告'=> [
+                    'bail',
+                    'nullable',
+                    Rule::in(['是','否'])
+                ],
+
+            ],
+            [
+                '*.生态负责人.in' => ':attribute 的用户未注册.',
+                '*.当前适配状态责任人.in' => ':attribute 的用户未注册.',
+            ]
+        ); 
+
+        $validator->errors()->first();
+        $validator->validate();
 
         foreach($rows as $key => $row)
         {
-            // if
-            // ( 
-            //     !($row['厂商']&&
-            //     $row['品牌']&&
-            //     $row['软件名称']&&
-            //     $row['软件分类一']&&
-            //     $row['软件分类二']&&
-            //     $row['行业分类']&&
-            //     $row['操作系统版本']&&
-            //     $row['芯片']&&
-            //     $row['架构']&&
-            //     $row['引入来源']&&
-            //     $row['当前适配状态']&&
-            //     $row['当前细分适配状态']&&
-            //     $row['当前适配状态责任人']&&
-            //     $row['是否上传生态网站']&&
-            //     $row['是否上架软件商店']&&
-            //     $row['是否互认证'])
-            // ){
-            //     throw new RequiredNotFoundException($key);
-            // }
-
-            if(!$row['软件名称']){continue;}  //TODO 上边写的异常抛出后不继续执行，待检查
-
             $curtime = date('Y-m-d H:i:s');
 
             $curManufactorId = Manufactor::where('name',trim($row['厂商']))->pluck('id')->first();
@@ -141,45 +216,7 @@ class SbindImport implements ToCollection, WithHeadingRow, WithValidation
                 'releases_id' => Release::where('name',$row['操作系统版本'])->pluck('id')->first(),
             ];
 
-            $a = Sbind::updateOrCreate($sbindInsertUnique,$sbindInsert);
-
-            // $curSbindId = $a->id;
-            // $b = $a->wasRecentlyCreated;
-            // $c = $a->wasChanged();
-
-            // if($b)
-            // {
-            //     $sbindhistory = 
-            //     [
-            //         'sbind_id' => $curSbindId,
-            //         'status_old' => null,
-            //         'status_new' => $sbindInsert['statuses_id'],
-            //         'user_name' => Admin::user()->name,
-            //         'comment' => null,
-            //         'created_at' => $curtime,
-            //         'updated_at' => $curtime,
-            //     ];
-
-            //     DB::table('sbind_histories')->insert($sbindhistory);
-            // }
-
-            // if(!$b && $c)
-            // {
-            //     $curHistoryId = SbindHistory::where('sbind_id',$curSbindId)->orderBy('id','DESC')->pluck('status_new')->first();
-                
-            //     $sbindhistory = 
-            //     [
-            //         'sbind_id' => $curSbindId,
-            //         'status_old' => $curHistoryId,
-            //         'status_new' => $sbindInsert['statuses_id'],
-            //         'user_name' => Admin::user()->name,
-            //         'comment' => null,
-            //         'created_at' => $curtime,
-            //         'updated_at' => $curtime,
-            //     ];
-            //     DB::table('sbind_histories')->insert($sbindhistory);
-                
-            // }
+            Sbind::updateOrCreate($sbindInsertUnique,$sbindInsert);
             
         }
         

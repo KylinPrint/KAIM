@@ -300,23 +300,29 @@ class SRequestController extends AdminController
                     ->options(Release::all()->pluck('name', 'id'))
                     ->required()
                     ->default($template->release_id ?? null);
-                $form->text('os_subversion')->help('例如:V10SP1-Build01-0326')
+                $form->text('os_subversion')
+                    ->help('例如:V10SP1-Build01-0326')
+                    ->required()
                     ->default($template->os_subversion ?? null);
                 $form->multipleSelect('chip_id')
                     ->options(Chip::all()->pluck('name', 'id'))
                     ->required()
                     ->default($template->chip_id ?? null);
                 $form->text('project_name')
+                    ->required()
                     ->default($template->project_name ?? null);
                 $form->text('amount')
+                    ->required()
                     ->default($template->amount ?? null);
                 $form->select('project_status')
+                    ->required()
                     ->options(config('kaim.project_status'))
                     ->default($template->project_status ?? null);
                 $form->select('level')
                     ->options(config('kaim.project_level'))->required()
                     ->default($template->level ?? null);
                 $form->text('manufactor_contact')
+                    ->required()
                     ->default($template->manufactor_contact ?? null);
                 $form->date('et')->required()
                     ->default($template->et ?? null);
