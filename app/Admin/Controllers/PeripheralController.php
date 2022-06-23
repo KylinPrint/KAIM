@@ -73,12 +73,8 @@ class PeripheralController extends AdminController
 
             $grid->paginate(10);
 
-            $grid->model()->setConstraints([
-                'type' => $this->type_id,
-            ]);
-            $grid->model()->where('types_id', $this->type_id);
             // 默认按创建时间倒序排列
-            $grid->model()->orderBy('created_at', 'desc');
+            $grid->model()->where('types_id', $this->type_id)->orderBy('created_at', 'desc');
 
             $grid->column('manufactors.name',__('厂商'));
             $grid->column('brands_id', __('品牌'))->display(function ($brands_id) {
