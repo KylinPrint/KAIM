@@ -255,7 +255,8 @@ class PbindController extends AdminController
                             'auditable_type'    => 'App\Models\Pbind',
                         ])->pluck('auditable_id')->toarray();
                         $query->whereIn('id', $created);
-                    } else {
+                    } 
+                    elseif($this->input == 2) {
                         // 筛选PBind相关的审计
                         $audit_pbind = Audit::where('auditable_type', 'App\Models\Pbind');
 
@@ -270,9 +271,34 @@ class PbindController extends AdminController
 
                         $query->whereIn('id', $related);
                     }
+                    elseif($this->input == 3) {
+                        $query->where('admin_user_id', Admin::user()->id)
+                            ->whereNot(function ($query) {
+                                // 过滤掉状态为"证书已归档",且"是否上架软件商店"为"否"的
+                                $query->where('statuses_id', Status::where('name', '证书已归档')->pluck('id')->first())->where('appstore', 0);
+                            })
+                            ->whereNot(function ($query) {
+                                // 过滤掉状态为"适配成果已上架至软件商店",且"是否上架软件商店"为"是"的
+                                $query->where('statuses_id', Status::where('name', '适配成果已上架至软件商店')->pluck('id')->first())->where('appstore', 1);
+                            })
+                            ->whereNot(function ($query) {
+                                // 过滤掉状态为"适配成果数据已更新至生态网站",且"是否互认证"为"否"的
+                                $query->where('statuses_id', Status::where('name', '适配成果数据已更新至生态网站')->pluck('id')->first())->where('iscert', 0);
+                            })
+                            ->whereNot(function ($query) {
+                                // 过滤掉状态为自研适配方案新增或导入的
+                                $query->where('statuses_id', Status::where('name', '麒麟自研适配方案，内部已验证通过')->pluck('id')->first())
+                                    ->orWhere('statuses_id', Status::where('name', '麒麟自研适配方案，待内部验证')->pluck('id')->first());
+                            })
+                            ->whereNot(function ($query) {
+                                // 过滤掉状态为"适配成果已下架软件商店"的
+                                $query->where('statuses_id', Status::where('name', '适配成果已下架软件商店')->pluck('id')->first());
+                            });
+                    }
                 }, '与我有关')->select([
                     1 => '我创建的',
-                    2 => '我参与的'
+                    2 => '我参与的',
+                    3 => '我的待办'
                 ])->width(2);   
 
                 $filter->equal('appstore', __('是否上架'))->select(['1' => '是' , '0' => '否'])->width(2);

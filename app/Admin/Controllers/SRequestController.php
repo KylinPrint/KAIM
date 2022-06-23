@@ -185,7 +185,8 @@ class SRequestController extends AdminController
                     if($this->input == 1) {
                         // 我创建的
                         $query->where('creator', Admin::user()->id);
-                    } else {
+                    }
+                    elseif($this->input == 2){
                         // 我参与的
                         // 筛选SRequest相关的审计
                         $audit_srequest = Audit::where('auditable_type', 'App\Models\SRequest');
@@ -200,9 +201,22 @@ class SRequestController extends AdminController
                         ));
                         $query->whereIn('id', $related);
                     }
+                    elseif($this->input == 3){
+                        // 已提交/处理中/暂停处理的数据显示给BD
+                        $query->where(function ($query) {
+                            $query->where('bd_id', Admin::user()->id)
+                                ->whereIn('status', ['已提交', '处理中', '暂停处理']);
+                        })
+                        // 已处理/已拒绝的数据显示给提出人
+                        ->orWhere(function ($query) {
+                            $query->where('creator', Admin::user()->id)
+                                ->whereIn('status', ['已处理', '已拒绝']);
+                        });
+                    }
                 }, '与我有关')->select([
                     1 => '我创建的',
-                    2 => '我参与的'
+                    2 => '我参与的',
+                    3 => '我的待办'
                 ])->width(3);
             });
         });
