@@ -87,9 +87,8 @@ class HomeController extends Controller
                     ->orWhere('statuses_id', Status::where('name', '麒麟自研适配方案，待内部验证')->pluck('id')->first());
             })
             ->whereNot(function ($query) {
-                // 过滤掉状态为"适配成果已提交下架软件商店"和"适配成果已下架软件商店"的
-                $query->where('statuses_id', Status::where('name', '适配成果已提交下架软件商店')->pluck('id')->first())
-                    ->orWhere('statuses_id', Status::where('name', '适配成果已下架软件商店')->pluck('id')->first());
+                // 过滤掉状态为"适配成果已下架软件商店"的
+                $query->where('statuses_id', Status::where('name', '适配成果已下架软件商店')->pluck('id')->first());
             })
             ->get()->toarray();
 
@@ -114,9 +113,8 @@ class HomeController extends Controller
                     ->orWhere('statuses_id', Status::where('name', '麒麟自研适配方案，待内部验证')->pluck('id')->first());
             })
             ->whereNot(function ($query) {
-                // 过滤掉状态为"适配成果已提交下架软件商店"和"适配成果已下架软件商店"的
-                $query->where('statuses_id', Status::where('name', '适配成果已提交下架软件商店')->pluck('id')->first())
-                    ->orWhere('statuses_id', Status::where('name', '适配成果已下架软件商店')->pluck('id')->first());
+                // 过滤掉状态为"适配成果已下架软件商店"的
+                $query->where('statuses_id', Status::where('name', '适配成果已下架软件商店')->pluck('id')->first());
             })
             ->get()->toarray();
 
