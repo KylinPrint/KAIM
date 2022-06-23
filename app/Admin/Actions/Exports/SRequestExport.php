@@ -97,20 +97,24 @@ class SRequestExport extends BaseExport implements WithMapping, WithHeadings, Fr
             foreach($curAudit as $curHistory){
                 
                 $user_name = AdminUser::where('id' , $curHistory['admin_user_id'])->pluck('name')->first();
-
+                $created_at = substr($curHistory['created_at'],0,10);
+                if(!isset($curHistory['new_values']['status_comment'])){
+                    $status_comment = '';
+                }else{
+                    $status_comment = $curHistory['new_values']['status_comment'];
+                }
                 if($i == 1){
                     if(!isset($curHistory['old_values']['status'])){
                         $status_old = '      ';
                     }else{
                         $status_old = $curHistory['old_values']['status'];
                     }
-                    
-                    $curHistoryStr = $curHistoryStr.chr(10).$user_name.' '.$status_old.'     '.$curHistory['new_values']['status']??'      '.'    '.substr($curHistory['created_at'],0,10).' '.$curHistory['new_values']['status_comment']??'';
+                    $curHistoryStr = $curHistoryStr.chr(10).$user_name.' '.$status_old.'     '.$curHistory['new_values']['status'].'    '.$created_at.' '.$status_comment;
                 }else{
-                    $curHistoryStr = $curHistoryStr.chr(10).$user_name.' '.$curHistory['old_values']['status'].'     '.$curHistory['new_values']['status']??'      '.'    '.substr($curHistory['created_at'],0,10).' '.$curHistory['new_values']['status_comment']??'';
+                    $curHistoryStr = $curHistoryStr.chr(10).$user_name.' '.$curHistory['old_values']['status'].'     '.$curHistory['new_values']['status'].'    '.$created_at.' '.$status_comment;
                 }
                 $i ++;
-            } 
+            }
         }
 
         $CacheArr['需求来源'] = $curSRquest->source;
