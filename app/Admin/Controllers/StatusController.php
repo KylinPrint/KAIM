@@ -8,33 +8,25 @@ use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
 use Dcat\Admin\Http\Controllers\AdminController;
-use Illuminate\Http\Request;
+use Dcat\Admin\Layout\Row;
+use Dcat\Admin\Layout\Content;
+use Dcat\Admin\Tree;
 
 class StatusController extends AdminController
 {
-    /**
-     * Make a grid builder.
-     *
-     * @return Grid
-     */
-    protected function grid()
+    
+    public function index(Content $content)
     {
-        // 恶人还需恶人磨
-        ContextMenuWash::wash();
+        return $content->header('适配状态分类管理')
+            ->body(function (Row $row) {
+                $tree = new Tree(new Status());
 
-        return Grid::make(new Status(), function (Grid $grid) {
-            // $grid->column('id')->sortable();
-            $grid->column('name');
-            $grid->column('parent')->display(function($parent){
-                return Status::where('id',$parent)->pluck('name')->first();
+                $tree->branch(function ($branch) {
+                    return "{$branch['name']}";
+                });
+
+                $row->column(12, $tree);
             });
-            $grid->column('created_at');
-            $grid->column('updated_at')->sortable();
-
-            $grid->setActionClass(Grid\Displayers\ContextMenuActions::class);
-        
-            $grid->quickSearch('name');
-        });
     }
 
     /**
@@ -63,7 +55,7 @@ class StatusController extends AdminController
         return Form::make(new Status(), function (Form $form) {
             // $form->display('id');
             $form->select('parent')
-            ->options(Status::where('parent','=',null)
+            ->options(Status::where('parent',0)
             ->pluck('name','id'))
             #->load('name','/api/status')
             ;

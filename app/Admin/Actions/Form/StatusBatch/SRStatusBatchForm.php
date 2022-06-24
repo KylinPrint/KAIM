@@ -162,7 +162,7 @@ class SRStatusBatchForm extends Form implements LazyRenderable
                             ->setLabelClass(['asterisk'])
                             ->options([0 => '否', 1 => '是'])->default(0)
                             ->when(0, function (Form $form) {
-                                $form->select('statuses_id')->options(Status::where('parent', '!=', null)->pluck('name', 'id'))
+                                $form->select('statuses_id')->options(Status::where('parent', '!=', 0)->pluck('name', 'id'))
                                     ->rules('required_if:comment_only,0',['required_if' => '请填写' . admin_trans('sbind.fields.statuses_id')])
                                     ->setLabelClass(['asterisk']);
                                 $form->text('statuses_comment');

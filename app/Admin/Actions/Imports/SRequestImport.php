@@ -44,7 +44,7 @@ class SRequestImport implements ToCollection, WithHeadingRow, WithValidation
 
         $validator = Validator::make($b,
             [
-                '*.厂商'        => [
+                '*.厂商名称'        => [
                     'required'
                 ],
                 '*.产品名称'    => [
@@ -74,12 +74,12 @@ class SRequestImport implements ToCollection, WithHeadingRow, WithValidation
                 '*.分类二'  => [
                     'bail',
                     'required',
-                    Rule::in(Stype::where('id','<',8)->pluck('name')->toArray()),
+                    Rule::in(Stype::where('parent',0)->pluck('name')->toArray()),
                 ],
                 '*.分类三'  => [
                     'bail',
                     'required',
-                    Rule::in(Stype::where('id','>',7)->pluck('name')->toArray()),
+                    Rule::in(Stype::whereNot('parent',0)->pluck('name')->toArray()),
                 ],
                 '*.紧急程度'=> [
                     'required',

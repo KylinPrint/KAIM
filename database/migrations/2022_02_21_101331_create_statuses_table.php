@@ -15,9 +15,9 @@ class CreateStatusesTable extends Migration
     {
         Schema::create('statuses', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->comment('适配状态');
-            
-            $table->unsignedBigInteger('parent')->nullable()->comment('父级ID');
+            $table->string('name')->comment('适配状态');  
+            $table->unsignedBigInteger('parent')->comment('父级ID')->default(0);
+            $table->unsignedBigInteger('order')->comment('父级ID')->default(0);
             $table->timestamps();
         });
     }

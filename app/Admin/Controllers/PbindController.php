@@ -228,12 +228,16 @@ class PbindController extends AdminController
                     ->model(Chip::class, 'id', 'name')
                     ->width(3);
 
-                $filter->in('statuses.parent', '适配状态')
-                    ->multipleSelectTable(StatusTable::make(['id' => 'name']))
-                    ->title('适配状态')
-                    ->dialogWidth('50%')
-                    ->model(Status::class, 'id', 'name')
-                    ->width(3);
+                $filter->where('status',function ($query){
+                    $query->whereHas('statuses', function ($query){
+                        if($this->input>5){$query->where('id', $this->input);}
+                        elseif($this->input == 0){}
+                        else{$query->where('parent', $this->input);}
+                    });
+                    
+                },'适配状态')->select(config('admin.database.statuses_model')::selectOptions())
+                ->width(3);
+
 
                 $filter->equal('adaption_type',__('适配类型'))->select(config('kaim.adaption_type'))->width(3);
 
@@ -436,9 +440,13 @@ class PbindController extends AdminController
             $form->select('adapted_before')
                 ->options([0 => '否',1 => '是'])
                 ->default($template->adapted_before ?? null);
-            $form->select('statuses_id',__('状态'))
-                ->options(Status::where('parent','!=',null)->pluck('name','id'))
+            $form->select('statuses_id',__('适配状态'))
+                ->options(config('admin.database.statuses_model')::selectOptions())
                 ->required()
+                ->rules(function (){
+                    $min = Status::where('parent','!=',0)->pluck('id')->first();
+                    return 'min:'.$min;
+                },['min' => '请选择详细状态'])
                 ->default($template->statuses_id ?? null);
             $form->text('statuses_comment_temp', admin_trans('pbind.fields.statuses_comment'))
                 ->default($template->statuses_comment ?? null);

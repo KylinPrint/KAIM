@@ -71,7 +71,7 @@ class PStatusBatchForm extends Form implements LazyRenderable
         $this->radio('change_status', '是否修改当前适配状态')
             ->options([0 => '否', 1 => '是'])->default(0)
             ->when(1, function (Form $form) {
-                $form->select('statuses_id')->options(Status::where('parent', '!=', null)->pluck('name','id'))
+                $form->select('statuses_id')->options(Status::where('parent', '!=', 0)->pluck('name','id'))
                     ->rules(function (){
                         if(request()->change_status == 1){
                             return 'required_without:statuses_comment';

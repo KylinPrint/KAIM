@@ -164,7 +164,7 @@ class OemController extends AdminController
                     $query->whereHas('status', function ($query){
                        $query->where('parent', $this->input)->orWhere('id', $this->input);
                     });
-                },__('适配状态'))->select(Status::where('parent',null)
+                },__('适配状态'))->select(Status::where('parent',0)
                 ->pluck('name','id'))
                 ->width(3);
 
