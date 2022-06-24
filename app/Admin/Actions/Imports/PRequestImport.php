@@ -56,9 +56,6 @@ class PRequestImport implements ToCollection, WithHeadingRow, WithValidation
                 '*.产品名称'    => [
                     'required'
                 ],
-                '*.产品版本'    => [
-                    'required'
-                ],
                 '*.涉及行业'    => [
                     'required'
                 ],
