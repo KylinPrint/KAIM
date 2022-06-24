@@ -114,7 +114,9 @@ class PRequestImport implements ToCollection, WithHeadingRow, WithValidation
                     'required',
                 ],
                 '*.项目状态'=> [
+                    'bail',
                     'required',
+                    Rule::in(['招投标','实施阶段','运维阶段'])
                 ],
                 '*.厂商联系方式'=> [
                     'required',
