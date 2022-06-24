@@ -87,7 +87,7 @@ class PDataAdd extends Donut
         $curTimeBefor = now()->subDays($curOption)->toDateTimeString();
 
         $data = array();
-        foreach (Status::select('id')->where('parent', null)->get()->toarray() as $id) {
+        foreach (Status::select('id')->where('parent', 0)->get()->toarray() as $id) {
             $data[] = Pbind::whereHas('statuses', function (Builder $query) use ($id) { $query->where('parent', $id)->orWhere('id', $id); })
             ->whereBetween('created_at', [$curTimeBefor,$curTime])
             ->count();
