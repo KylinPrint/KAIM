@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use Dcat\Admin\Admin;
 use Dcat\Admin\Traits\HasDateTimeFormatter;
 
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
+use OwenIt\Auditing\Models\Audit;
 
 class PRequest extends Model implements Auditable
 {
@@ -38,6 +40,49 @@ class PRequest extends Model implements Auditable
 		'pbind_id',
 		'comment',
 	];
+
+	// 我创建的
+	public function scopeCreated($query)
+	{
+		return $query->where('creator', Admin::user()->id);
+	}
+
+	// 我参与的
+	public function scopeRelated($query)
+	{
+		// 筛选PRequest相关的审计
+		$audit_prequest = Audit::where('auditable_type', 'App\Models\PRequest');
+
+		$related = array_unique(array_merge(
+			// 当前用户编辑过的
+			$audit_prequest->where('admin_user_id', Admin::user()->id)->pluck('auditable_id')->toarray(),
+			PRequest::where('bd_id', Admin::user()->id)->pluck('id')->toArray(),
+			// 当前用户曾经是BD的
+			$audit_prequest->whereJsonContains('old_values->bd_id', Admin::user()->id)->pluck('auditable_id')->toarray(),
+		));
+
+		return $query
+			// 当前用户是BD的
+			->where('bd_id', Admin::user()->id)
+			->orWhereIn('id', $related);
+	}
+
+	// 我的待办
+	public function scopeTodo($query)
+	{
+		return $query
+			// 已提交/处理中/暂停处理的数据显示给BD
+			->where(function ($query) {
+				$query->where('bd_id', Admin::user()->id)
+					->whereIn('status', ['已提交', '处理中', '暂停处理']);
+			})
+			// 已处理/已拒绝的数据显示给提出人
+			->orWhere(function ($query) {
+				$query->where('creator', Admin::user()->id)
+					->whereIn('status', ['已处理', '已拒绝']);
+			});
+	}
+
 
 	public function type() { return $this->belongsTo(Type::class); }
 
