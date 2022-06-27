@@ -70,76 +70,14 @@ class HomeController extends Controller
         $data = [];
 
         // 对于SBind和PBind
-        $sbinds = Sbind::select('id', 'softwares_id',   'releases_id', 'chips_id', 'statuses_id', 'updated_at')
-            // 当前适配状态责任人为当前登录用户的
-            ->where('admin_user_id', Admin::user()->id)
-            ->whereNot(function ($query) {
-                // 过滤掉状态为"证书已归档",且"是否互认证"为"是"的
-                $query->where('statuses_id', Status::where('name', '证书已归档')->pluck('id')->first())->where('iscert', 1);
-            })
-            ->whereNot(function ($query) {
-                // 过滤掉状态为"适配成果已上架至软件商店",且"是否上架软件商店"为"是"的
-                $query->where('statuses_id', Status::where('name', '适配成果已上架至软件商店')->pluck('id')->first())->where('appstore', 1)->where('iscert', 0);
-            })
-            ->whereNot(function ($query) {
-                // 过滤掉状态为自研适配方案新增或导入的
-                $query->where('statuses_id', Status::where('name', '麒麟自研适配方案，内部已验证通过')->pluck('id')->first())
-                    ->orWhere('statuses_id', Status::where('name', '麒麟自研适配方案，待内部验证')->pluck('id')->first());
-            })
-            ->whereNot(function ($query) {
-                // 过滤掉状态为"适配成果已下架软件商店"的
-                $query->where('statuses_id', Status::where('name', '适配成果已下架软件商店')->pluck('id')->first());
-            })
-            ->get()->toarray();
+        $sbinds = Sbind::todo()->select('id', 'softwares_id',   'releases_id', 'chips_id', 'statuses_id', 'updated_at')->get()->toarray();
 
-        $pbinds = Pbind::select('id', 'peripherals_id', 'releases_id', 'chips_id', 'statuses_id', 'updated_at')
-            // 当前适配状态责任人为当前登录用户的
-            ->where('admin_user_id', Admin::user()->id)
-            ->whereNot(function ($query) {
-                // 过滤掉状态为"证书已归档",且"是否互认证"为"是"的
-                $query->where('statuses_id', Status::where('name', '证书已归档')->pluck('id')->first())->where('iscert', 1);
-            })
-            ->whereNot(function ($query) {
-                // 过滤掉状态为"适配成果已上架至软件商店",且"是否互认证"为"否","是否上架软件商店"为"是"的
-                $query->where('statuses_id', Status::where('name', '适配成果已上架至软件商店')->pluck('id')->first())->where('iscert', 0)->where('appstore', 1);
-            })
-            ->whereNot(function ($query) {
-                // 过滤掉状态为自研适配方案新增或导入的
-                $query->where('statuses_id', Status::where('name', '麒麟自研适配方案，内部已验证通过')->pluck('id')->first())
-                    ->orWhere('statuses_id', Status::where('name', '麒麟自研适配方案，待内部验证')->pluck('id')->first());
-            })
-            ->whereNot(function ($query) {
-                // 过滤掉状态为"适配成果已下架软件商店"的
-                $query->where('statuses_id', Status::where('name', '适配成果已下架软件商店')->pluck('id')->first());
-            })
-            ->get()->toarray();
+        $pbinds = Pbind::todo()->select('id', 'peripherals_id', 'releases_id', 'chips_id', 'statuses_id', 'updated_at')->get()->toarray();
 
         // 对于SRequest和PRequest
-        $srequests = SRequest::select('id', 'manufactor', 'name', 'release_id', 'chip_id', 'status', 'updated_at')
-            // 已提交/处理中/暂停处理的数据显示给BD
-            ->where(function ($query) {
-                $query->where('bd_id', Admin::user()->id)
-                      ->whereIn('status', ['已提交', '处理中', '暂停处理']);
-            })
-            // 已处理/已拒绝的数据显示给提出人
-            ->orWhere(function ($query) {
-                $query->where('creator', Admin::user()->id)
-                      ->whereIn('status', ['已处理', '已拒绝']);
-            })
-            ->get()->toarray();
+        $srequests = SRequest::todo()->select('id', 'manufactor', 'name', 'release_id', 'chip_id', 'status', 'updated_at')->get()->toarray();
             
-        $prequests = PRequest::select('id', 'manufactor', 'name', 'release_id', 'chip_id', 'status', 'updated_at')
-            // 已提交/处理中/暂停处理的数据显示给BD
-            ->where(function ($query) {
-                $query->where('bd_id', Admin::user()->id)
-                      ->whereIn('status', ['已提交', '处理中', '暂停处理']);
-            })
-            // 已处理/已拒绝的数据显示给提出人
-            ->orWhere(function ($query) {
-                $query->where('creator', Admin::user()->id)
-                      ->whereIn('status', ['已处理', '已拒绝']);
-            })
-            ->get()->toarray();
+        $prequests = PRequest::todo()->select('id', 'manufactor', 'name', 'release_id', 'chip_id', 'status', 'updated_at')->get()->toarray();
 
         foreach ($sbinds as $sbind) {
             $software = Software::find($sbind['softwares_id']);
