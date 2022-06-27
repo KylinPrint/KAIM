@@ -170,7 +170,7 @@ class OemController extends AdminController
 
                 $filter->where('oem',function ($query){      
                     $query->whereHas('otypes', function ($query){
-                        if($this->input>7){$query->where('id', $this->input);}
+                        if(Otype::where('id',$this->input)->pluck('parent')->first() != 0){$query->where('id', $this->input);}
                         elseif($this->input == 0){}
                         else{$query->where('parent', $this->input);}
                     });                 
