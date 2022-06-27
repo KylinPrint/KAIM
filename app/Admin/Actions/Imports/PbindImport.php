@@ -79,22 +79,22 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
                 '*.外设类型一'  => [
                     'bail',
                     'required',
-                    Rule::in(Type::where('id','<',8)->pluck('name')->toArray()),
+                    Rule::in(Type::where('parent',0)->pluck('name')->toArray()),
                 ],
                 '*.外设类型二'  => [
                     'bail',
                     'required',
-                    Rule::in(Type::where('id','>',7)->pluck('name')->toArray()),
+                    Rule::in(Type::whereNot('parent',0)->pluck('name')->toArray()),
                 ],
                 '*.当前适配状态'=> [
                     'bail',
                     'required',
-                    Rule::in(Status::where('id','<',6)->pluck('name')->toArray()),
+                    Rule::in(Status::where('parent',0)->pluck('name')->toArray()),
                 ],
                 '*.当前细分适配状态'=> [
                     'bail',
                     'required',
-                    Rule::in(Status::where('id','>',7)->pluck('name')->toArray()),
+                    Rule::in(Status::whereNot('parent',0)->pluck('name')->toArray()),
                 ],
                 '*.当前适配状态责任人'=> [
                     'bail',

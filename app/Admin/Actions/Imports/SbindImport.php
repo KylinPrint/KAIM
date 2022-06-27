@@ -74,22 +74,22 @@ class SbindImport implements ToCollection, WithHeadingRow, WithValidation
                 '*.软件分类一'  => [
                     'bail',
                     'required',
-                    Rule::in(Stype::where('id','<',8)->pluck('name')->toArray()),
+                    Rule::in(Stype::where('parent',0)->pluck('name')->toArray()),
                 ],
                 '*.软件分类二'  => [
                     'bail',
                     'required',
-                    Rule::in(Stype::where('id','>',7)->pluck('name')->toArray()),
+                    Rule::in(Stype::whereNot('parent',0)->pluck('name')->toArray()),
                 ],
                 '*.当前适配状态'=> [
                     'bail',
                     'required',
-                    Rule::in(Status::where('id','<',6)->pluck('name')->toArray()),
+                    Rule::in(Status::where('parent',0)->pluck('name')->toArray()),
                 ],
                 '*.当前细分适配状态'=> [
                     'bail',
                     'required',
-                    Rule::in(Status::where('id','>',7)->pluck('name')->toArray()),
+                    Rule::in(Status::whereNot('parent',0)->pluck('name')->toArray()),
                 ],
                 '*.生态负责人'=> [
                     'bail',

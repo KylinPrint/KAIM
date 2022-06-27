@@ -59,19 +59,19 @@ class OemImport implements ToCollection, WithHeadingRow
                 ],
                 '*.整机类型一'  => [
                     'required',
-                    Rule::in(Otype::where('id','<',8)->pluck('name')->toArray()),
+                    Rule::in(Otype::where('parent',0)->pluck('name')->toArray()),
                 ],
                 '*.整机类型二'  => [
                     'required',
-                    Rule::in(Otype::where('id','>',7)->pluck('name')->toArray()),
+                    Rule::in(Otype::whereNot('parent',0)->pluck('name')->toArray()),
                 ],
                 '*.当前适配状态'=> [
                     'required',
-                    Rule::in(Status::where('id','<',6)->pluck('name')->toArray()),
+                    Rule::in(Status::where('parent',0)->pluck('name')->toArray()),
                 ],
                 '*.当前细分适配状态'=> [
                     'nullable',
-                    Rule::in(Status::where('id','>',7)->pluck('name')->toArray()),
+                    Rule::in(Status::whereNot('parent',0)->pluck('name')->toArray()),
                 ],
 
             ],
