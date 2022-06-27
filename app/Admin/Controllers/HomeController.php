@@ -96,16 +96,12 @@ class HomeController extends Controller
             // 当前适配状态责任人为当前登录用户的
             ->where('admin_user_id', Admin::user()->id)
             ->whereNot(function ($query) {
-                // 过滤掉状态为"证书已归档",且"是否上架软件商店"为"否"的
-                $query->where('statuses_id', Status::where('name', '证书已归档')->pluck('id')->first())->where('appstore', 0);
+                // 过滤掉状态为"证书已归档",且"是否互认证"为"是"的
+                $query->where('statuses_id', Status::where('name', '证书已归档')->pluck('id')->first())->where('iscert', 1);
             })
             ->whereNot(function ($query) {
-                // 过滤掉状态为"适配成果已上架至软件商店",且"是否上架软件商店"为"是"的
-                $query->where('statuses_id', Status::where('name', '适配成果已上架至软件商店')->pluck('id')->first())->where('appstore', 1);
-            })
-            ->whereNot(function ($query) {
-                // 过滤掉状态为"适配成果数据已更新至生态网站",且"是否互认证"为"否"的
-                $query->where('statuses_id', Status::where('name', '适配成果数据已更新至生态网站')->pluck('id')->first())->where('iscert', 0);
+                // 过滤掉状态为"适配成果已上架至软件商店",且"是否互认证"为"否","是否上架软件商店"为"是"的
+                $query->where('statuses_id', Status::where('name', '适配成果已上架至软件商店')->pluck('id')->first())->where('iscert', 0)->where('appstore', 1);
             })
             ->whereNot(function ($query) {
                 // 过滤掉状态为自研适配方案新增或导入的
