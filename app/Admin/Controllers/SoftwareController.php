@@ -77,7 +77,7 @@ class SoftwareController extends AdminController
                 $TypeModel = config('admin.database.stypes_model');
                 $filter->where('software',function ($query){
                     $query->whereHas('stypes', function ($query){
-                        if($this->input > 8){$query->where('id', $this->input);}
+                        if(Stype::where('id',$this->input)->pluck('parent')->first() != 0){$query->where('id', $this->input);}
                         elseif($this->input == 0){}
                         else{$query->where('parent', $this->input);}
                     });
@@ -176,7 +176,15 @@ class SoftwareController extends AdminController
             $form->text('version')->default(' ');
             
             $TypeModel = config('admin.database.stypes_model');
-            $form->select('stypes_id', __('类型'))->options($TypeModel::selectOptions())->required();    
+            $form->select('stypes_id', __('类型'))
+                ->options($TypeModel::selectOptions())
+                ->required()
+                ->rules(function (){
+                    $curparent = Stype::where('id',request()->stypes_id)->pluck('parent')->first();
+                    if($curparent == 0){  //TODO  有点蠢
+                        return 'max:0';
+                    }
+                },['max' => '请选择详细类别']);    
             $form->tags('industries')->options(config('kaim.industry'))->saving(function ($value) { return implode(',', $value); })->required();
             $form->select('appstore_soft')->options([0 => '否',1 => '是']);
             $form->text('kernel_version');

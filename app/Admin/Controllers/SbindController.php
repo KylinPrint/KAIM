@@ -185,7 +185,7 @@ class SbindController extends AdminController
                 $filter->where('sbind',function ($query){
                     $query->whereHas('softwares', function ($query){
                         $query->whereHas('stypes', function ($query){
-                            if($this->input>8){$query->where('id', $this->input);}
+                            if(Stype::where('id',$this->input)->pluck('parent')->first() != 0){$query->where('id', $this->input);}
                             elseif($this->input == 0){}
                             else{$query->where('parent', $this->input);}
                         });
@@ -209,7 +209,7 @@ class SbindController extends AdminController
 
                 $filter->where('status',function ($query){
                     $query->whereHas('statuses', function ($query){
-                        if($this->input>5){$query->where('id', $this->input);}
+                        if(Status::where('id',$this->input)->pluck('parent')->first() != 0){$query->where('id', $this->input);}
                         elseif($this->input == 0){}
                         else{$query->where('parent', $this->input);}
                     });           
