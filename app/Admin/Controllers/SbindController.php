@@ -432,9 +432,9 @@ class SbindController extends AdminController
                 ->rules(function (){
                     $curparent = Status::where('id',request()->statuses_id)->pluck('parent')->first();
                     if($curparent == 0){  //TODO  有点蠢
-                        return 'min:0';
+                        return 'max:0';
                     }
-                },['min' => '请选择详细状态'])
+                },['max' => '请选择详细状态'])
                 ->default($template->statuses_id ?? null);
             $form->text('statuses_comment_temp', admin_trans('sbind.fields.statuses_comment'))
                 ->default($template->statuses_comment ?? null);
