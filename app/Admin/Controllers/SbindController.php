@@ -223,10 +223,20 @@ class SbindController extends AdminController
                         $start = $this->input['start'] ?? null;
                         $end = $this->input['end'] ?? null; 
 
-                        if ($start !== null) {$query->where('created_at', '>=', $start);}
+                        if ($start !== null) {$query->whereDate('created_at', '>=', $start);}
                 
-                        if ($end !== null) {$query->where('created_at', '<=', $end);}
+                        if ($end !== null) {$query->whereDate('created_at', '<=', $end);}
 
+                })->date()->width(3);
+
+                $filter->whereBetween('updated_at', function ($query) {
+                    $start = $this->input['start'] ?? null;
+                    $end = $this->input['end'] ?? null;
+                
+                    if ($start !== null) { $query->whereDate('updated_at', '>=', $start);}
+            
+                    if ($end !== null) {$query->whereDate('updated_at', '<=', $end);}
+            
                 })->date()->width(3);
 
                 $filter->where('related', function ($query) {

@@ -245,9 +245,19 @@ class PbindController extends AdminController
                     $start = $this->input['start'] ?? null;
                     $end = $this->input['end'] ?? null;
                 
-                    if ($start !== null) { $query->where('created_at', '>=', $start);}
+                    if ($start !== null) { $query->whereDate('created_at', '>=', $start);}
             
-                    if ($end !== null) {$query->where('created_at', '<=', $end);}
+                    if ($end !== null) {$query->whereDate('created_at', '<=', $end);}
+            
+                })->date()->width(3);
+
+                $filter->whereBetween('updated_at', function ($query) {
+                    $start = $this->input['start'] ?? null;
+                    $end = $this->input['end'] ?? null;
+                
+                    if ($start !== null) { $query->whereDate('updated_at', '>=', $start);}
+            
+                    if ($end !== null) {$query->whereDate('updated_at', '<=', $end);}
             
                 })->date()->width(3);
 
@@ -265,10 +275,10 @@ class PbindController extends AdminController
                     1 => '我创建的',
                     2 => '我参与的',
                     3 => '我的待办'
-                ])->width(2);   
+                ])->width(3);   
 
-                $filter->equal('appstore', __('是否上架'))->select(['1' => '是' , '0' => '否'])->width(2);
-                $filter->equal('iscert')->select(['1' => '是' , '0' => '否'])->width(2);
+                $filter->equal('appstore', __('是否上架'))->select(['1' => '是' , '0' => '否'])->width(3);
+                $filter->equal('iscert')->select(['1' => '是' , '0' => '否'])->width(3);
             });
         });
     }
