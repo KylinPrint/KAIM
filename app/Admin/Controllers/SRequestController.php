@@ -292,11 +292,10 @@ class SRequestController extends AdminController
                 $form->text('version')->required()
                     ->default($template->version ?? null);
                 $form->select('stype_id')->options($stypeModel::selectOptions())
+                    ->required()
                     ->rules(function (){
                         if (Stype::where('id',request()->stype_id)->pluck('parent')->first() == 0) {
                             return 'max:0';
-                        } else {
-                            return 'required';
                         }
                     },['max' => '软件分类  请选择子分类,例如:即时通讯,浏览器等'])
                     ->default($template->stype_id ?? null);
@@ -360,11 +359,10 @@ class SRequestController extends AdminController
                     $form->text('version')->required();
                     $form->select('stype_id')
                         ->options($stypeModel::selectOptions())
+                        ->required()
                         ->rules(function (){
                             if (Stype::where('id',request()->stype_id)->pluck('parent')->first() == 0) {
                                 return 'max:0';
-                            } else {
-                                return 'required';
                             }
                         },['max' => '软件分类  请选择子分类,例如:即时通讯,浏览器等']);
                     $form->tags('industry')
