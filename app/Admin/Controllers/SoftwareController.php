@@ -178,11 +178,12 @@ class SoftwareController extends AdminController
             $TypeModel = config('admin.database.stypes_model');
             $form->select('stypes_id', __('类型'))
                 ->options($TypeModel::selectOptions())
-                ->required()
                 ->rules(function (){
                     $curparent = Stype::where('id',request()->stypes_id)->pluck('parent')->first();
-                    if($curparent == 0){  //TODO  有点蠢
+                    if ($curparent == 0) {  //TODO  有点蠢
                         return 'max:0';
+                    } else {
+                        return 'required';
                     }
                 },['max' => '请选择详细类别']);    
             $form->tags('industries')->options(config('kaim.industry'))->saving(function ($value) { return implode(',', $value); })->required();

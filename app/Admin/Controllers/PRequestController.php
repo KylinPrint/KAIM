@@ -291,8 +291,10 @@ class PRequestController extends AdminController
                 $form->select('type_id')
                     ->options($typeModel::selectOptions())
                     ->rules(function (){
-                        if(Type::where('id',request()->type_id)->pluck('parent')->first() == 0){
+                        if (Type::where('id',request()->type_id)->pluck('parent')->first() == 0) {
                             return 'max:0';
+                        } else {
+                            return 'required';
                         }
                     },['max' => '外设分类  请选择子分类,例如:激光打印机,扫描仪等'])
                     ->required()
@@ -357,10 +359,11 @@ class PRequestController extends AdminController
                     $form->text('name')->required();
                     $form->select('type_id')
                         ->options($typeModel::selectOptions())
-                        ->required()
                         ->rules(function (){
-                            if(Type::where('id',request()->type_id)->pluck('parent')->first() == 0){
+                            if (Type::where('id',request()->type_id)->pluck('parent')->first() == 0) {
                                 return 'max:0';
+                            } else {
+                                return 'required';
                             }
                         },['max' => '外设分类  请选择子分类,例如:激光打印机,扫描仪等']);
                     $form->tags('industry')

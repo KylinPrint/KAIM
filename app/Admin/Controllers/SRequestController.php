@@ -293,11 +293,12 @@ class SRequestController extends AdminController
                     ->default($template->version ?? null);
                 $form->select('stype_id')->options($stypeModel::selectOptions())
                     ->rules(function (){
-                        if(Stype::where('id',request()->stype_id)->pluck('parent')->first() == 0){
+                        if (Stype::where('id',request()->stype_id)->pluck('parent')->first() == 0) {
                             return 'max:0';
+                        } else {
+                            return 'required';
                         }
                     },['max' => '软件分类  请选择子分类,例如:即时通讯,浏览器等'])
-                    ->required()
                     ->default($template->stype_id ?? null);
                 $form->tags('industry')
                     ->options(config('kaim.industry'))
@@ -360,11 +361,12 @@ class SRequestController extends AdminController
                     $form->select('stype_id')
                         ->options($stypeModel::selectOptions())
                         ->rules(function (){
-                            if(Stype::where('id',request()->stype_id)->pluck('parent')->first() == 0){
+                            if (Stype::where('id',request()->stype_id)->pluck('parent')->first() == 0) {
                                 return 'max:0';
+                            } else {
+                                return 'required';
                             }
-                        },['max' => '软件分类  请选择子分类,例如:即时通讯,浏览器等'])
-                        ->required();
+                        },['max' => '软件分类  请选择子分类,例如:即时通讯,浏览器等']);
                     $form->tags('industry')
                         ->options(config('kaim.industry'))
                         ->saving(function ($value) { return implode(',', $value); })->required();
