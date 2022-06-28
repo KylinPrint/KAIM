@@ -103,15 +103,21 @@ class SRequestExport extends BaseExport implements WithMapping, WithHeadings, Fr
                 }else{
                     $status_comment = $curHistory['new_values']['status_comment'];
                 }
-                if($i == 1){
-                    if(!isset($curHistory['old_values']['status'])){
-                        $status_old = '      ';
-                    }else{
-                        $status_old = $curHistory['old_values']['status'];
-                    }
-                    $curHistoryStr = $curHistoryStr.chr(10).$user_name.' '.$status_old.'     '.$curHistory['new_values']['status'].'    '.$created_at.' '.$status_comment;
+                if(!isset($curHistory['old_values']['status'])){
+                    $status_old = '      ';
                 }else{
-                    $curHistoryStr = $curHistoryStr.chr(10).$user_name.' '.$curHistory['old_values']['status'].'     '.$curHistory['new_values']['status'].'    '.$created_at.' '.$status_comment;
+                    $status_old = $curHistory['old_values']['status'];
+                }
+                if(!isset($curHistory['new_values']['status'])){
+                    $status_new = '      ';
+                }else{
+                    $status_new = $curHistory['new_values']['status'];
+                }
+                if($i == 1){
+                    
+                    $curHistoryStr = $curHistoryStr.chr(10).$user_name.' '.$status_old.'     '.$status_new.'    '.$created_at.' '.$status_comment;
+                }else{
+                    $curHistoryStr = $curHistoryStr.chr(10).$user_name.' '.$curHistory['old_values']['status'].'     '.$status_new.'    '.$created_at.' '.$status_comment;
                 }
                 $i ++;
             }
