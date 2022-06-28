@@ -5,9 +5,9 @@ namespace App\Admin\Controllers;
 use App\Admin\Actions\Exports\PRequestExport;
 use App\Admin\Actions\Grid\ShowAudit;
 use App\Admin\Actions\Modal\ImportModal;
-use App\Admin\Actions\Modal\PRequestModal;
 use App\Admin\Actions\Others\StatusBatch;
 use App\Admin\Utils\ContextMenuWash;
+use App\Admin\Utils\RequestStatusGraph;
 use App\Models\AdminUser;
 use App\Models\Brand;
 use App\Models\Chip;
@@ -25,7 +25,6 @@ use Dcat\Admin\Show;
 use Dcat\Admin\Http\Controllers\AdminController;
 use Dcat\Admin\Layout\Content;
 use Dcat\Admin\Widgets\Alert;
-use OwenIt\Auditing\Models\Audit;
 
 class PRequestController extends AdminController
 {
@@ -336,6 +335,9 @@ class PRequestController extends AdminController
             }
             // 编辑需求
             else {
+                // 获取当前状态的图
+                $request_status_graph = RequestStatusGraph::make()->getVertex($form->model()->status);
+
                 // 已提交的需求
                 if ($form->model()->status == '已提交') {
                     $form->select('source')
@@ -375,8 +377,8 @@ class PRequestController extends AdminController
                     $form->text('comment');
                 }
                 else {
-                    // 已关闭的需求不允许编辑
-                    if ($form->model()->status == '已关闭') {
+                    // 终态需求不允许编辑
+                    if (! $request_status_graph->getEdgesOut()) {
                         admin_exit(
                             Content::make()
                                 ->body(Alert::make('已关闭的需求不允许编辑')->info())
@@ -441,15 +443,15 @@ class PRequestController extends AdminController
                             $form->hidden('pbind_id');
                         }
                     })
-                    ->options(function () use ($form) {
-                        $status_option = config('kaim.request_status');
-                        // 脑瘫代码，极致享受
-                        if (in_array($form->model()->status, ['处理中', '已处理', '暂停处理', '已拒绝'])) { unset($status_option['已提交']); }
-                        if (in_array($form->model()->status, ['已处理', '已拒绝'])) { unset($status_option['处理中']); }
-                        if (in_array($form->model()->status, ['已提交', '已拒绝'])) { unset($status_option['已处理']); }
-                        if (in_array($form->model()->status, ['已提交', '已处理', '已拒绝'])) { unset($status_option['暂停处理']); }
-                        if (in_array($form->model()->status, ['处理中', '已处理', '暂停处理'])) { unset($status_option['已拒绝']); }
-                        return $status_option;
+                    ->options(function () use ($request_status_graph) {
+                        // 加上自己
+                        $option[$request_status_graph->getId()] = $request_status_graph->getId();
+
+                        foreach ($request_status_graph->getEdgesOut() as $edge) {
+                            $option[$edge->getVertexEnd()->getId()] = $edge->getVertexEnd()->getId();
+                        }
+
+                        return $option;
                     })->required();
                 $form->text('status_comment');
             }
