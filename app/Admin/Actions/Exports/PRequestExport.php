@@ -98,7 +98,7 @@ class PRequestExport extends BaseExport implements WithMapping, WithHeadings, Fr
             $curHistoryStr = '处理人 修改前状态 修改后状态 变更时间    状态变更说明';
             foreach($curAudit as $curHistory){
                 
-                $user_name = AdminUser::where('id' , $curHistory['admin_user_id'])->pluck('name')->first()??'     ';
+                $user_name = AdminUser::where('id' , $curHistory['admin_user_id'])->pluck('name')->first()??'      ';
                 $created_at = substr($curHistory['created_at'],0,10);
                 if(!isset($curHistory['new_values']['status_comment'])){
                     $status_comment = '';
@@ -115,12 +115,9 @@ class PRequestExport extends BaseExport implements WithMapping, WithHeadings, Fr
                 }else{
                     $status_new = $curHistory['new_values']['status'];
                 }
-                if($i == 1){
-                    $curHistoryStr = $curHistoryStr.chr(10).$user_name.' '.$status_old.'     '.$status_new.'    '.$created_at.' '.$status_comment;
-                }else{
-                    $curHistoryStr = $curHistoryStr.chr(10).$user_name.' '.$status_old.'     '.$status_new.'    '.$created_at.' '.$status_comment;
-                }
-                $i ++;
+                
+                $curHistoryStr = $curHistoryStr.chr(10).$user_name.' '.$status_old.'     '.$status_new.'    '.$created_at.' '.$status_comment;
+                
             } 
         }
 
