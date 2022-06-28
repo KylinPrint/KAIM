@@ -28,6 +28,7 @@ class PbindExport extends BaseExport implements WithMapping, WithHeadings, FromC
         [   
             '产品ID',
             '厂商名称',
+            '品牌',
             '产品名称',
             '分类1',
             '分类2',
