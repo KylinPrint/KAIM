@@ -20,12 +20,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Imports\HeadingRowFormatter;
 
 
 HeadingRowFormatter::default('none');
-class PbindImport implements ToCollection, WithHeadingRow, WithValidation
+class PbindImport implements ToCollection, WithHeadingRow
 {
     /**
      * @param array $row
@@ -294,8 +293,8 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
                 'os_subversion' => $row['操作系统小版本'],
                 'statuses_id' => Status::where('name',$row['当前细分适配状态'])->pluck('id')->first(),
                 'class' => $row['兼容等级'],
-                'solution_name' => $row['方案名称'],
-                'solution' => $row['方案下载地址'],
+                // 'solution_name' => $row['方案名称'],
+                // 'solution' => $row['方案下载地址'],
                 'comment' => $row['备注'],
                 'adapt_source' => $row['引入来源'],
                 'adapted_before' => $this->bools($row['是否适配过国产CPU']),
@@ -325,7 +324,26 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
             ];
             
             $a = Pbind::updateOrCreate($pbindInsertUnique,$pbindInsert);
-     
+            
+            $curPbind = Pbind::find($a->id);
+            $b = $a->wasRecentlyCreated;
+            $c = $a->wasChanged();
+
+            //新增数据
+            if($b)
+            {
+               $curPbind->solution_name = $row['方案名称'];
+               $curPbind->solution = $row['方案下载地址'];
+               $curPbind->save();
+            }
+
+            //更新数据
+            if(!$b && $c)
+            {
+                $curPbind->solution_name = $curPbind->solution_name.';'.$row['方案名称'];
+                $curPbind->solution = $curPbind->solution.';'.$row['方案下载地址'];
+                $curPbind->save();
+            }
            
         }
         
@@ -336,18 +354,4 @@ class PbindImport implements ToCollection, WithHeadingRow, WithValidation
         elseif($value == '否'){return 0;}
     }
 
-
-    public function rules(): array
-    {
-        return [
-            'pbindid' => Rule::unique('pbinds', 'pbindid'), 
-        ];
-    }
-
-    public function customValidationMessages()
-    {
-        return [
-            'pbindid.unique' => '导入存在重复数据',
-        ];
-    }
 }
