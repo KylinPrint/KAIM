@@ -294,7 +294,6 @@ class PRequestController extends AdminController
                             return 'max:0';
                         }
                     },['max' => '外设分类  请选择子分类,例如:激光打印机,扫描仪等'])
-                    ->required()
                     ->default($template->type_id ?? null);
                 $form->tags('industry')
                     ->options(config('kaim.industry'))
