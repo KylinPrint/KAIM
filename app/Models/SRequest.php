@@ -76,10 +76,10 @@ class SRequest extends Model implements Auditable
 				$query->where('bd_id', Admin::user()->id)
 					->whereIn('status', ['已提交', '处理中', '验证未通过', '重新处理中']);
 			})
-			// 已提交/处理中/已处理/验证未通过/重新处理中/无法处理/已拒绝 的数据显示给创建人
+			// 已提交/处理中/已处理/验证未通过/重新处理中/已拒绝 的数据显示给创建人
 			->orWhere(function ($query) {
 				$query->where('creator', Admin::user()->id)
-					->whereIn('status', ['已提交', '处理中', '已处理', '验证未通过', '重新处理中', '无法处理', '已拒绝']);
+					->whereIn('status', ['已提交', '处理中', '已处理', '验证未通过', '重新处理中', '已拒绝']);
 			});
 	}
 
