@@ -348,8 +348,8 @@ class SRequestController extends AdminController
                 // 获取当前状态的图
                 $request_status_graph = RequestStatusGraph::make()->getVertex($form->model()->status);
 
-                // 已提交的需求
-                if ($form->model()->status == '已提交') {
+                // 已提交/已拒绝的需求
+                if (in_array($form->model()->status, ['已提交', '已拒绝'])) {
                     $form->select('source')
                         ->options(config('kaim.adapt_source'))->required();
                     $form->text('manufactor')->required();
@@ -400,7 +400,7 @@ class SRequestController extends AdminController
                         );
                     }
 
-                    // 除已提交状态外不可编辑的区域
+                    // 除已提交/已拒绝外不可编辑的区域
                     $form->display('source');
                     $form->display('manufactor');
                     $form->display('name');
