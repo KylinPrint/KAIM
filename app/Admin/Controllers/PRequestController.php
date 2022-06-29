@@ -293,7 +293,7 @@ class PRequestController extends AdminController
                         if (Type::where('id',request()->type_id)->pluck('parent')->first() == 0) {
                             return 'max:0';
                         }
-                    },['max' => '外设分类  请选择子分类,例如:激光打印机,扫描仪等'])
+                    },['max' => '请选择外设子分类,例如:激光打印机,扫描仪等'])
                     ->default($template->type_id ?? null);
                 $form->tags('industry')
                     ->options(config('kaim.industry'))
