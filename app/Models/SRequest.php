@@ -71,15 +71,15 @@ class SRequest extends Model implements Auditable
 	public function scopeTodo($query)
 	{
 		return $query
-			// 已提交/处理中/暂停处理的数据显示给BD
+			// 已提交/处理中/验证未通过/重新处理中 的数据显示给BD
 			->where(function ($query) {
 				$query->where('bd_id', Admin::user()->id)
-					->whereIn('status', ['已提交', '处理中', '暂停处理']);
+					->whereIn('status', ['已提交', '处理中', '验证未通过', '重新处理中']);
 			})
-			// 已处理/已拒绝的数据显示给提出人
+			// 已提交/处理中/已处理/验证未通过/重新处理中/无法处理/已拒绝 的数据显示给创建人
 			->orWhere(function ($query) {
 				$query->where('creator', Admin::user()->id)
-					->whereIn('status', ['已处理', '已拒绝']);
+					->whereIn('status', ['已提交', '处理中', '已处理', '验证未通过', '重新处理中', '无法处理', '已拒绝']);
 			});
 	}
 
