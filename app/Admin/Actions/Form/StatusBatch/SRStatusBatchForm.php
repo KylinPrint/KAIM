@@ -171,6 +171,12 @@ class SRStatusBatchForm extends Form implements LazyRenderable
                                         }
                                     }, ['required_if' => '请填写' . admin_trans('sbind.fields.statuses_id'), 'max' => '请选择子分类'])
                                     ->setLabelClass(['asterisk']);
+                                $form->text('statuses_comment');
+                                $form->select('admin_user_id')->options(AdminUser::all()->pluck('name', 'id'))
+                                    ->rules(function (){ if(request()->status == '处理中') { return 'required_if:comment_only,0'; } },
+                                        ['required_if' => '请填写' . admin_trans('sbind.fields.statuses_id')]
+                                    )
+                                    ->setLabelClass(['asterisk']);
                                 $form->select('class', admin_trans('sbind.fields.class'))
                                     ->options(config('kaim.class'));
                                 $form->select('adaption_type', admin_trans('sbind.fields.adaption_type'))
