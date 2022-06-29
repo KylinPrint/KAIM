@@ -144,14 +144,12 @@ class PRequestController extends AdminController
                 })->width(3);
                 
                 $filter->in('status','处理状态')
-                ->multipleSelect([
-                    '已提交' => '已提交',
-                    '处理中' => '处理中',
-                    '已处理' => '已处理',
-                    '暂停处理' => '暂停处理',
-                    '已拒绝' => '已拒绝',
-                    '已关闭' => '已关闭',
-                ])->width(3);
+                ->multipleSelect(function () {
+                    foreach (RequestStatusGraph::make()->getVertices() as $vertex) {
+                        $options[$vertex->getId()] = $vertex->getId();
+                    }
+                    return $options;
+                })->width(3);
 
                 $filter->where('pbind_id',function ($query){
                     $query->whereHas('pbinds', function ($query){

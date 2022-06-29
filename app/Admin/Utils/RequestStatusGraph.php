@@ -6,6 +6,11 @@ use Fhaculty\Graph\Graph;
 
 class RequestStatusGraph
 {
+    public static function options()
+    {
+        // TODO 返回 '状态' => '状态' 的关联数组或状态的一维数组
+    }
+
     public static function make()
     {
         $graph = new Graph;
