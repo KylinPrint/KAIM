@@ -414,12 +414,11 @@ class PbindController extends AdminController
                 ->default($template->adapted_before ?? null);
             $form->select('statuses_id',__('适配状态'))
                 ->options(config('admin.database.statuses_model')::selectOptions())
+                ->required()
                 ->rules(function (){
                     $curparent = Status::where('id',request()->statuses_id)->pluck('parent')->first();
                     if ($curparent == 0) {  //TODO  有点蠢
                         return 'max:0';
-                    } else {
-                        return 'required';
                     }
                 },['max' => '请选择详细状态'])
                 ->default($template->statuses_id ?? null);
