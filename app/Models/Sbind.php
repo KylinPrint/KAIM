@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Dcat\Admin\Admin;
 use Dcat\Admin\Traits\HasDateTimeFormatter;
-
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 use OwenIt\Auditing\Models\Audit;
@@ -87,13 +87,10 @@ class Sbind extends Model implements Auditable
 				$query->where('statuses_id', Status::where('name', '适配成果已上架至软件商店')->pluck('id')->first())->where('iscert', 0)->where('appstore', 1);
 			})
 			->whereNot(function ($query) {
-				// 过滤掉状态为自研适配方案新增或导入的
-				$query->where('statuses_id', Status::where('name', '麒麟自研适配方案，内部已验证通过')->pluck('id')->first())
-					->orWhere('statuses_id', Status::where('name', '麒麟自研适配方案，待内部验证')->pluck('id')->first());
-			})
-			->whereNot(function ($query) {
-				// 过滤掉状态为"适配成果已下架软件商店"的
-				$query->where('statuses_id', Status::where('name', '适配成果已下架软件商店')->pluck('id')->first());
+				// 过滤掉状态为"厂商暂无适配计划" "适配成果已下架软件商店" "自研适配方案新增或导入" 的
+				$query->whereHas('statuses', function (Builder $query) {
+					$query->whereIn('name', ['厂商暂无适配计划', '麒麟自研适配方案，内部已验证通过', '麒麟自研适配方案，待内部验证', '适配成果已下架软件商店']);
+				});
 			});
 	}
 

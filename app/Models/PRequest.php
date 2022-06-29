@@ -83,7 +83,6 @@ class PRequest extends Model implements Auditable
 			});
 	}
 
-
 	public function type() { return $this->belongsTo(Type::class); }
 
 	public function release() { return $this->belongsTo(Release::class); }
