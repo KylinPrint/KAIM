@@ -28,6 +28,7 @@ class RequestStatusGraph
         $submitted->createEdgeTo($denied);
 
         $processing->createEdgeTo($processed);
+        $processing->createEdgeTo($helpless);
 
         $processed->createEdgeTo($test_passed);
         $processed->createEdgeTo($test_failed);
