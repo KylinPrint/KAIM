@@ -42,6 +42,7 @@ class PRequestExport extends BaseExport implements WithMapping, WithHeadings, Fr
             '紧急程度' ,
             '厂商联系方式' ,
             '期望完成日期' ,
+            '需求创建人',
             '需求提出人' ,
             '需求提出人联系方式' ,
             '处理状态' ,
@@ -138,6 +139,7 @@ class PRequestExport extends BaseExport implements WithMapping, WithHeadings, Fr
         $CacheArr['紧急程度'] = $curPRquest->level;      
         $CacheArr['厂商联系方式'] = $curPRquest->manufactor_contact;
         $CacheArr['期望完成日期'] = $curPRquest->et;
+        $CacheArr['需求创建人'] = AdminUser::where('id', $curPRquest->creator)->pluck('name')->first();
         $CacheArr['需求提出人'] = $curPRquest->requester_name;
         $CacheArr['需求提出人联系方式'] = $curPRquest->requester_contact;
         $CacheArr['处理状态'] = $curPRquest->status;
