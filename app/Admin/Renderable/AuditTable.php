@@ -84,7 +84,7 @@ class AuditTable extends LazyRenderable
                 }
                 return '<table class="table table-bordered table-condensed"> <thead> <tr> <th width="30%">名称</th> <th width="35%">修改前</th> <th width="35%">修改后</th> </tr> </thead> <tbody>' . $tbody . '</tbody> </table>';
             });
-            $grid->column('updated_at')->date()->sortable();
+            $grid->column('updated_at', '操作时间')->date()->sortable();
         });
     }
 }

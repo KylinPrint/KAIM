@@ -20,6 +20,6 @@ class ShowAudit extends RowAction
             ->xl()
             ->title('查看变更历史')
             ->body($grid)   
-            ->button('<a><i class="fa fa-history"></i> 历史</a>');
+            ->button('<a><i class="fa fa-history"></i> 查看变更历史</a>');
     }
 }
