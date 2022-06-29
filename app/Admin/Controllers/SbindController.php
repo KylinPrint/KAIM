@@ -389,7 +389,7 @@ class SbindController extends AdminController
                     ->saving(function ($value) { return implode(',', $value); })
                     ->required()
                     ->default($template->chips_id ?? null);
-            } else {
+            } elseif ($form->isEditing()) {
                 $form->select('chips_id',__('芯片'))
                     ->options(Chip::all()->pluck('name','id'))
                     ->required()

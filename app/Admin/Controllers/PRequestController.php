@@ -343,7 +343,7 @@ class PRequestController extends AdminController
                     ->default($template->comment ?? null);
             }
             // 编辑需求
-            else {
+            elseif ($form->isEditing()) {
                 // 获取当前状态的图
                 $request_status_graph = RequestStatusGraph::make()->getVertex($form->model()->status);
 
