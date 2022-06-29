@@ -389,16 +389,15 @@ class PRequestController extends AdminController
                 }
                 else {
                     // 终态需求不允许编辑
-                    if (! $request_status_graph->getEdgesOut()) {
-                        admin_exit(
-                            Content::make()
-                                ->body(Alert::make('已关闭的需求不允许编辑')->info())
-                                ->body('
-                                    <button onclick="history.back()" class="btn btn-primary btn-mini btn-outline" style="margin-right:3px">
-                                        <i class="feather icon-corner-up-left"></i>
-                                        <span class="d-none d-sm-inline">&nbsp; 返回</span>
-                                    </button>
-                                ')
+                    if (! $request_status_graph->getEdgesOut()->count()) {
+                        admin_exit(Content::make()
+                            ->body(Alert::make($form->model()->status.'状态的需求不允许编辑')->info())
+                            ->body('
+                                <button onclick="history.back()" class="btn btn-primary btn-mini btn-outline" style="margin-right:3px">
+                                    <i class="feather icon-corner-up-left"></i>
+                                    <span class="d-none d-sm-inline">&nbsp; 返回</span>
+                                </button>
+                            ')
                         );
                     }
 
