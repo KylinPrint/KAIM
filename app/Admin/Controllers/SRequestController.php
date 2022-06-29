@@ -427,8 +427,14 @@ class SRequestController extends AdminController
                     ->when('处理中', function (Form $form) {
                         // 由处理中修改为处理中时不显示以下字段
                         if ($form->model()->status != '处理中') {
-                            $form->select('statuses_id')->options(Status::where('parent', '!=', null)->pluck('name','id'))
-                                ->rules('required_if:status,处理中',['required_if' => '请填写此字段'])
+                            $form->select('statuses_id')->options(config('admin.database.statuses_model')::selectOptions())
+                                ->rules(function () {
+                                    if (! Status::where('id', request()->statuses_id)->pluck('parent')->first()) {
+                                        return 'max:0|required_if:status,处理中';
+                                    } else {
+                                        return 'required_if:status,处理中';
+                                    }
+                                }, ['required_if' => '请填写此字段', 'max' => '请选择子分类'])
                                 ->setLabelClass(['asterisk']);
                             $form->text('statuses_comment');
                             $form->select('admin_user_id')->options(AdminUser::all()->pluck('name', 'id'))
