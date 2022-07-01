@@ -78,6 +78,7 @@ class PbindTemplateExport implements FromCollection, ShouldAutoSize
             '备注',
         ];
         $dataProces = [];
+        $dataArr = [];
 
         $data = $this->szb($this->cururl)->with('releases','chips','statuses')->get();
         

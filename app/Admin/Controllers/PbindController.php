@@ -60,7 +60,7 @@ class PbindController extends AdminController
                     }
                 });
                 
-                $tools->append(new PbindTemplateExportTool('生态模板外设数据', '导出生态模板外设数据'));
+                $tools->append(new PbindTemplateExportTool('生态模板外设数据', '按导入模板导出数据'));
             });
 
             // 行操作
