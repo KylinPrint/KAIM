@@ -225,16 +225,16 @@ class SbindImport implements ToCollection, WithHeadingRow, WithValidation
             //新增数据
             if($b)
             {
-               $curSbind->solution_name = $row['方案名称'];
-               $curSbind->solution = $row['方案下载地址'];
+               $curSbind->solution_name = $row['安装包名称'];
+               $curSbind->solution = $row['安装包下载地址'];
                $curSbind->save();
             }
 
             //更新数据
             if(!$b && $c)
             {
-                $curSbind->solution_name = $curSbind->solution_name.';'.$row['方案名称'];
-                $curSbind->solution = $curSbind->solution.';'.$row['方案下载地址'];
+                $curSbind->solution_name = $curSbind->solution_name.';'.$row['安装包名称'];
+                $curSbind->solution = $curSbind->solution.';'.$row['安装包下载地址'];
                 $curSbind->save();
             }
             
