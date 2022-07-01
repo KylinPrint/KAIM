@@ -3,6 +3,8 @@
 namespace App\Admin\Controllers;
 
 use App\Admin\Actions\Exports\PbindExport;
+use App\Admin\Actions\Exports\PbindTemplateExport;
+use App\Admin\Actions\Grid\PbindTemplateExportTool;
 use App\Admin\Actions\Grid\ShowAudit;
 use App\Admin\Actions\Modal\ImportModal;
 use App\Admin\Actions\Others\StatusBatch;
@@ -26,6 +28,7 @@ use App\Models\Manufactor;
 use App\Models\Type;
 use Dcat\Admin\Admin;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use OwenIt\Auditing\Models\Audit;
 
 class PbindController extends AdminController
@@ -57,6 +60,7 @@ class PbindController extends AdminController
                     }
                 });
                 
+                $tools->append(new PbindTemplateExportTool('生态模板外设数据', '导出生态模板外设数据'));
             });
 
             // 行操作
@@ -506,6 +510,15 @@ class PbindController extends AdminController
         $q = $request->get('q');
 
         return Peripheral::where('name', 'like', "%$q%")->paginate(null, ['id', 'name as text']);
+    }
+
+    public function export(Request $request)
+    {
+        $filename = $request->get('filename');
+        $cururl = $request->get('cururl');
+        ob_end_clean();
+        
+        return Excel::download(new PbindTemplateExport($cururl), $filename.'.xlsx');
     }
 
 }
