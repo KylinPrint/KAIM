@@ -90,7 +90,7 @@ class NewBind extends Line
                     'data' => $pdata,    
                 ],
                 [
-                    'name' => '外设适配新增',
+                    'name' => '软件适配新增',
                     'data' => $sdata, 
                 ]
             ],
