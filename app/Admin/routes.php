@@ -20,6 +20,8 @@ Route::group([
     $router->get('/api/status',[App\Admin\Controllers\StatusController::class,'getName']);
     $router->get('/api/peripherals',[App\Admin\Controllers\PbindController::class,'pPaginate']);
     $router->get('/api/softwares',[App\Admin\Controllers\SbindController::class,'sPaginate']);
+    $router->get('pbind-template/export', 'PbindController@export')->name('pbind-template.export');
+
 
     // 软件
     $router->resource('softwares', SoftwareController::class);
