@@ -146,7 +146,7 @@ class SbindImport implements ToCollection, WithHeadingRow, WithValidation
             {
                 $manufactorInsert = 
                 [
-                    'name' => $row['厂商'],
+                    'name' => trim($row['厂商']),
                     'isconnected' => 0,
                     'created_at' => $curtime,
                     'updated_at' => $curtime,
@@ -164,14 +164,14 @@ class SbindImport implements ToCollection, WithHeadingRow, WithValidation
                 $parentID = Stype::where('name',trim($row['软件分类一']))->pluck('id')->first();
                 $softwareInsert = 
                 [
-                    'name' => $row['软件名称'],
+                    'name' => trim($row['软件名称']),
                     'manufactors_id' => $curManufactorId,
-                    'version' => $row['软件版本号'],
-                    'stypes_id' => Stype::where([['parent',$parentID],['name',$row['软件分类二']]])->pluck('id')->first(),
-                    'kernel_version' => $row['引用版本'],
-                    'crossover_version' => $row['Crossover版本'],
-                    'box86_version' => $row['Box86版本'],
-                    'bd' => $row['生态负责人'],
+                    'version' => trim($row['软件版本号']),
+                    'stypes_id' => Stype::where([['parent',$parentID],['name',trim($row['软件分类二'])]])->pluck('id')->first(),
+                    'kernel_version' => trim($row['引用版本']),
+                    'crossover_version' => trim($row['Crossover版本']),
+                    'box86_version' => trim($row['Box86版本']),
+                    'bd' => trim($row['生态负责人']),
                     'am' => $row['适配负责人'],
                     'tsm' => $row['技术支撑负责人'],
                     'comment' => $row['软件描述'],
@@ -184,9 +184,9 @@ class SbindImport implements ToCollection, WithHeadingRow, WithValidation
 
             $sbindInsertCache =
             [
-                'os_subversion' => $row['操作系统小版本'],
-                'adapt_source' => $row['引入来源'],
-                'adapted_before' => $this->bools($row['是否适配过国产CPU']),
+                'os_subversion' => trim($row['操作系统小版本']),
+                'adapt_source' => trim($row['引入来源']),
+                'adapted_before' => $this->bools(trim($row['是否适配过国产CPU'])),
                 'statuses_id' => Status::where('name',trim($row['当前细分适配状态']))->pluck('id')->first(),
                 'admin_user_id' => AdminUser::where('name',trim($row['当前适配状态责任人']))->pluck('id')->first() ,
                 // 'solution_name' => $row['安装包名称'],
@@ -212,8 +212,8 @@ class SbindImport implements ToCollection, WithHeadingRow, WithValidation
             $sbindInsertUnique = 
             [
                 'softwares_id' => $curSoftwareId,
-                'chips_id' => Chip::where('name','like','%'.$row['芯片'].'%')->pluck('id')->first(),
-                'releases_id' => Release::where('name',$row['操作系统版本'])->pluck('id')->first(),
+                'chips_id' => Chip::where('name','like','%'.trim($row['芯片']).'%')->pluck('id')->first(),
+                'releases_id' => Release::where('name',trim($row['操作系统版本']))->pluck('id')->first(),
             ];
 
             $a = Sbind::updateOrCreate($sbindInsertUnique,$sbindInsert);
