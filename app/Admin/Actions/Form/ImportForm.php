@@ -22,7 +22,7 @@ class ImportForm extends Form implements LazyRenderable
         try {
             $file = storage_path('app/public/' . $input['file']);
 
-            // Excel::import(new BaseImport($this->payload['type']),$file);
+            Excel::import(new BaseImport($this->payload['type']),$file);
             if($input['mode'] == 1){
                 $import = new BaseImport($this->payload['type']);
                 $import->import($file);
@@ -48,7 +48,7 @@ class ImportForm extends Form implements LazyRenderable
         if($filename == 's_import' || $filename == 'p_import' || $filename == 'o_import'){
             $this->radio('mode', '上传模式')->options([1 => '新增', 2=> '更新'])->default(1);
         }else{
-            $this->radio('mode', '上传模式')->options([1 => '新增', 2=> '更新'])->default(1)->hidden();
+            $this->hidden('mode', '上传模式')->default(1);
         }
         
         $this->file('file', '上传数据(Excel)')
