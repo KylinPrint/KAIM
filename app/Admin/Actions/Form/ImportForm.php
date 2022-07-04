@@ -3,6 +3,7 @@
 namespace App\Admin\Actions\Form;
 
 use App\Admin\Actions\Imports\BaseImport;
+use App\Admin\Actions\Imports\BaseUpdate;
 use Dcat\Admin\Traits\LazyWidget;
 use Dcat\Admin\Contracts\LazyRenderable;
 use Dcat\Admin\Widgets\Form;
@@ -22,10 +23,14 @@ class ImportForm extends Form implements LazyRenderable
             $file = storage_path('app/public/' . $input['file']);
 
             // Excel::import(new BaseImport($this->payload['type']),$file);
-
-            $import = new BaseImport($this->payload['type']);
-            $import->import($file);
-
+            if($input['mode'] == 1){
+                $import = new BaseImport($this->payload['type']);
+                $import->import($file);
+            }elseif($input['mode'] == 2){
+                $import = new BaseUpdate($this->payload['type']);
+                $import->import($file);
+            }
+            
             $disk = Storage::disk('public');
             $disk -> delete($input['file']);
             
@@ -39,6 +44,13 @@ class ImportForm extends Form implements LazyRenderable
     {
         if(isset($this->payload['filename'])){$filename = $this->payload['filename'];}
         else{$filename = null;}
+        
+        if($filename == 's_import' || $filename == 'p_import' || $filename == 'o_import'){
+            $this->radio('mode', '上传模式')->options([1 => '新增', 2=> '更新'])->default(1);
+        }else{
+            $this->radio('mode', '上传模式')->options([1 => '新增', 2=> '更新'])->default(1)->hidden();
+        }
+        
         $this->file('file', '上传数据(Excel)')
             ->autoUpload()
             ->rules('required', ['required' => '文件不能为空'])
