@@ -143,7 +143,7 @@ class PbindImport implements ToCollection, WithHeadingRow
                 {
                     $manufactorInsert = 
                     [
-                        'name' => $row['厂商'],
+                        'name' => trim($row['厂商']),
                         'isconnected' => '0',
                         'created_at' => $curtime,
                         'updated_at' => $curtime,
@@ -159,8 +159,8 @@ class PbindImport implements ToCollection, WithHeadingRow
                 preg_match('/(.+(?=\(|\（))/',trim($row['品牌']),$input_brand_name);
                 preg_match('/(?<=\(|\（).+?(?=\)|\）)/',trim($row['品牌']),$input_brand_name_en);
 
-                $brand_name = $input_brand_name[0];
-                $brand_name_en = $input_brand_name_en[0];
+                $brand_name = trim($input_brand_name[0]);
+                $brand_name_en = trim($input_brand_name_en[0]);
                 $curBrandId = Brand::where('name','like','%'.$brand_name.'%')
                 ->orWhere('name_en','like','%'.$brand_name_en.'%')
                 ->pluck('id')->first();
@@ -183,7 +183,7 @@ class PbindImport implements ToCollection, WithHeadingRow
                     if(!$curBrandId){
                         $brandInsert = 
                         [
-                            'name' => $row['品牌'],
+                            'name' => trim($row['品牌']),
                             'name_en' => null,
                             'alias' => null,
                             'created_at' => $curtime,
@@ -199,7 +199,7 @@ class PbindImport implements ToCollection, WithHeadingRow
                         $brandInsert = 
                         [
                             'name' => null,
-                            'name_en' => $row['品牌'],
+                            'name_en' => trim($row['品牌']),
                             'alias' => null,
                             'created_at' => $curtime,
                             'updated_at' => $curtime,
@@ -221,7 +221,7 @@ class PbindImport implements ToCollection, WithHeadingRow
                 $parentID = Type::where('name',$row['外设类型一'])->pluck('id')->first();
                 $peripheralInsert = 
                 [
-                    'name' => $row['外设型号'],
+                    'name' => trim($row['外设型号']),
                     'manufactors_id' => isset($curManufactorId) ? $curManufactorId : null,
                     'brands_id' => $curBrandId,
                     'types_id' => Type::where([['parent',$parentID],['name',trim($row['外设类型二'])]])->pluck('id')->first(),
@@ -290,22 +290,22 @@ class PbindImport implements ToCollection, WithHeadingRow
 
             $pbindInsertCache =
             [
-                'os_subversion' => $row['操作系统小版本'],
-                'statuses_id' => Status::where('name',$row['当前细分适配状态'])->pluck('id')->first(),
-                'class' => $row['兼容等级'],
+                'os_subversion' => trim($row['操作系统小版本']),
+                'statuses_id' => Status::where('name',trim($row['当前细分适配状态']))->pluck('id')->first(),
+                'class' => trim($row['兼容等级']),
                 // 'solution_name' => $row['方案名称'],
                 // 'solution' => $row['方案下载地址'],
-                'comment' => $row['备注'],
-                'adapt_source' => $row['引入来源'],
-                'adapted_before' => $this->bools($row['是否适配过国产CPU']),
+                'comment' => trim($row['备注']),
+                'adapt_source' => trim($row['引入来源']),
+                'adapted_before' => $this->bools(trim($row['是否适配过国产CPU'])),
                 'admin_user_id' => AdminUser::where('name',trim($row['当前适配状态责任人']))->pluck('id')->first() ,
-                'adaption_type' => $row['适配类型'],
-                'test_type' => $row['测试方式'],
-                'kylineco' => $this->bools($row['是否上传生态网站']),
-                'appstore' => $this->bools($row['是否上架软件商店']),
-                'iscert' => $this->bools($row['是否互认证']),
-                'test_report' => $this->bools($row['是否有测试报告']),
-                'certificate_NO' => $row['证书编号'],
+                'adaption_type' => trim($row['适配类型']),
+                'test_type' => trim($row['测试方式']),
+                'kylineco' => $this->bools(trim($row['是否上传生态网站'])),
+                'appstore' => $this->bools(trim($row['是否上架软件商店'])),
+                'iscert' => $this->bools(trim($row['是否互认证'])),
+                'test_report' => $this->bools(trim($row['是否有测试报告'])),
+                'certificate_NO' => trim($row['证书编号']),
                 'start_time' => $row['适配开始时间'] ? date('Y-m-d',($row['适配开始时间']-25569)*24*3600):null,
                 'complete_time' => $row['适配完成时间'] ? date('Y-m-d',($row['适配完成时间']-25569)*24*3600):null,
             ];
