@@ -11,6 +11,8 @@ use App\Admin\Metrics\UVShow;
 use App\Admin\Metrics\PDataAdd;
 use App\Admin\Metrics\SDataAdd;
 use App\Admin\Metrics\NewData;
+use App\Admin\Metrics\NewRequest;
+use App\Admin\Metrics\NewUsers;
 use App\Http\Controllers\Controller;
 use Dcat\Admin\Layout\Content;
 use Dcat\Admin\Layout\Row;
@@ -32,10 +34,12 @@ class StatisticsController extends Controller
             ->body(function (Row $row) {
                 $row->column(4, new UVShow());
                 $row->column(4, new PVShow());
+                $row->column(4, new NewUsers());
             })
             ->body(function (Row $row) {
                 $row->column(4, new NewData());
                 $row->column(4, new NewBind());
+                $row->column(4, new NewRequest());
             });
     }
 }
