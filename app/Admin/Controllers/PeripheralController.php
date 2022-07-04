@@ -207,11 +207,11 @@ class PeripheralController extends AdminController
         return Form::make(Peripheral::with(['manufactors', 'brands', 'types', 'values']), function (Form $form) {
             $id = $form->model()->id;
             // TODO 参数的新增和修改好像哪里有问题
-            if ($form->isCreating()) {
+            if ($form->isEditing()) {
                 $form->display('types_id', __('类型'))->with(function ($types_id) {
                     return Type::where('id', $types_id)->pluck('name')->first();
                 });
-            } elseif ($form->isEditing()) {
+            } elseif ($form->isCreating()) {
                 $form->hidden('types_id')->default($this->type_id);
                 $form->title(Type::where('id', request('type'))->pluck('name')->first());
             }
