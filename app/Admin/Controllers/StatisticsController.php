@@ -34,7 +34,7 @@ class StatisticsController extends Controller
             ->body(function (Row $row) {
                 $row->column(4, new UVShow());
                 $row->column(4, new PVShow());
-                $row->column(4, new NewUsers());
+                // $row->column(4, new NewUsers());
             })
             ->body(function (Row $row) {
                 $row->column(4, new NewData());
