@@ -124,8 +124,8 @@ class SbindUpdate implements ToCollection, WithHeadingRow, WithValidation
                 'adapted_before' => $this->bools(trim($row['是否适配过国产CPU'])),
                 'statuses_id' => Status::where('name',trim($row['当前细分适配状态']))->pluck('id')->first(),
                 'admin_user_id' => AdminUser::where('name',trim($row['当前适配状态责任人']))->pluck('id')->first() ,
-                // 'solution_name' => $row['安装包名称'],
-                // 'solution' => $row['安装包下载地址'],
+                'solution_name' => $row['安装包名称'],
+                'solution' => $row['安装包下载地址'],
                 'class' => $row['兼容等级'],
                 'adaption_type' => $row['适配类型'],
                 'test_type' => $row['测试方式'],
@@ -153,25 +153,25 @@ class SbindUpdate implements ToCollection, WithHeadingRow, WithValidation
 
             $a = Sbind::updateOrCreate($sbindInsertUnique,$sbindInsert);
 
-            $curSbind = Sbind::find($a->id);
-            $b = $a->wasRecentlyCreated;
-            $c = $a->wasChanged();
+            // $curSbind = Sbind::find($a->id);
+            // $b = $a->wasRecentlyCreated;
+            // $c = $a->wasChanged();
 
-            //新增数据
-            if($b)
-            {
-               $curSbind->solution_name = $row['安装包名称'];
-               $curSbind->solution = $row['安装包下载地址'];
-               $curSbind->save();
-            }
+            // //新增数据
+            // if($b)
+            // {
+            //    $curSbind->solution_name = $row['安装包名称'];
+            //    $curSbind->solution = $row['安装包下载地址'];
+            //    $curSbind->save();
+            // }
 
-            //更新数据
-            if(!$b && $c)
-            {
-                $curSbind->solution_name = $curSbind->solution_name.';'.$row['安装包名称'];
-                $curSbind->solution = $curSbind->solution.';'.$row['安装包下载地址'];
-                $curSbind->save();
-            }
+            // //更新数据
+            // if(!$b && $c)
+            // {
+            //     $curSbind->solution_name = $curSbind->solution_name.';'.$row['安装包名称'];
+            //     $curSbind->solution = $curSbind->solution.';'.$row['安装包下载地址'];
+            //     $curSbind->save();
+            // }
             
         }
         

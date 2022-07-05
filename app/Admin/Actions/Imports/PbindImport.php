@@ -293,8 +293,8 @@ class PbindImport implements ToCollection, WithHeadingRow
                 'os_subversion' => trim($row['操作系统小版本']),
                 'statuses_id' => Status::where('name',trim($row['当前细分适配状态']))->pluck('id')->first(),
                 'class' => trim($row['兼容等级']),
-                // 'solution_name' => $row['方案名称'],
-                // 'solution' => $row['方案下载地址'],
+                'solution_name' => $row['方案名称'],
+                'solution' => $row['方案下载地址'],
                 'comment' => trim($row['备注']),
                 'adapt_source' => trim($row['引入来源']),
                 'adapted_before' => $this->bools(trim($row['是否适配过国产CPU'])),
@@ -325,25 +325,25 @@ class PbindImport implements ToCollection, WithHeadingRow
             
             $a = Pbind::updateOrCreate($pbindInsertUnique,$pbindInsert);
             
-            $curPbind = Pbind::find($a->id);
-            $b = $a->wasRecentlyCreated;
-            $c = $a->wasChanged();
+            // $curPbind = Pbind::find($a->id);
+            // $b = $a->wasRecentlyCreated;
+            // $c = $a->wasChanged();
 
-            //新增数据
-            if($b)
-            {
-               $curPbind->solution_name = $row['方案名称'];
-               $curPbind->solution = $row['方案下载地址'];
-               $curPbind->save();
-            }
+            // //新增数据
+            // if($b)
+            // {
+            //    $curPbind->solution_name = $row['方案名称'];
+            //    $curPbind->solution = $row['方案下载地址'];
+            //    $curPbind->save();
+            // }
 
-            //更新数据
-            if(!$b && $c)
-            {
-                $curPbind->solution_name = $curPbind->solution_name.';'.$row['方案名称'];
-                $curPbind->solution = $curPbind->solution.';'.$row['方案下载地址'];
-                $curPbind->save();
-            }
+            // //更新数据
+            // if(!$b && $c)
+            // {
+            //     $curPbind->solution_name = $curPbind->solution_name.';'.$row['方案名称'];
+            //     $curPbind->solution = $curPbind->solution.';'.$row['方案下载地址'];
+            //     $curPbind->save();
+            // }
            
         }
         
