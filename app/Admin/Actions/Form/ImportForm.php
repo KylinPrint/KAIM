@@ -22,7 +22,7 @@ class ImportForm extends Form implements LazyRenderable
         try {
             $file = storage_path('app/public/' . $input['file']);
 
-            Excel::import(new BaseImport($this->payload['type']),$file);
+            // Excel::import(new BaseImport($this->payload['type']),$file);
             if($input['mode'] == 1){
                 $import = new BaseImport($this->payload['type']);
                 $import->import($file);
