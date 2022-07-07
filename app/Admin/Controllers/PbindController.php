@@ -22,6 +22,7 @@ use App\Admin\Renderable\ChipTable;
 use App\Admin\Renderable\SolutionTable;
 use App\Admin\Renderable\StatusTable;
 use App\Admin\Utils\ContextMenuWash;
+use App\Jobs\TemplateExport;
 use App\Models\AdminUser;
 use App\Models\Brand;
 use App\Models\Manufactor;
@@ -514,11 +515,9 @@ class PbindController extends AdminController
 
     public function export(Request $request)
     {
-        $filename = $request->get('filename');
-        $cururl = $request->get('cururl');
-        ob_end_clean();
-        
-        return Excel::download(new PbindTemplateExport($cururl), $filename.'.xlsx');
+        // $data['url'] = $request->get('cururl');
+        // $data['filename'] = $request->get('filename');
+        TemplateExport::dispatch($request->get('cururl'));
     }
 
 }
