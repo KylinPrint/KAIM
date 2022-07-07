@@ -134,6 +134,9 @@ class PbindImport implements ToCollection, WithHeadingRow
         {
 
             $curtime = date('Y-m-d H:i:s');
+            if(empty($row['外设型号'])){
+                continue;
+            }
             
             // 厂商
             if($row['厂商'] != '')
