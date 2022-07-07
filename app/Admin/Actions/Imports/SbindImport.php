@@ -166,6 +166,7 @@ class SbindImport implements ToCollection, WithHeadingRow, WithValidation
                 [
                     'name' => trim($row['软件名称']),
                     'manufactors_id' => $curManufactorId,
+                    'package_name' => trim($row['包名']),
                     'version' => trim($row['软件版本号']),
                     'stypes_id' => Stype::where([['parent',$parentID],['name',trim($row['软件分类二'])]])->pluck('id')->first(),
                     'kernel_version' => trim($row['引用版本']),
