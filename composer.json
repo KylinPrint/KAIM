@@ -7,7 +7,7 @@
     "require": {
         "php": "^8.0",
         "clue/graph": "^0.9.3",
-        "dcat/laravel-admin": "2.2.0-beta",
+        "dcat/laravel-admin": "2.2.2-beta",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "7.4.5",
         "laravel/framework": "^9.0",
