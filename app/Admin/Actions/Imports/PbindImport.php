@@ -240,49 +240,53 @@ class PbindImport implements ToCollection, WithHeadingRow
                 //定位到固定列最后一列
                 if($k == '备注'){
                     $tag = 0;
+                    continue;
                 }
                 if(isset($tag)){
                     //进入非固定列          
-                    if($tag != 0){
-                        if(empty($v)){continue;}
-                        //找有没有这个参数名,没有就加
+                    if(empty($v)){continue;}
+                    //找有没有这个参数名,没有就加
 
-                        $parentID = Type::where('name',$row['外设类型一'])->pluck('id')->first();
-                        $types_id = Type::where([['parent',$parentID],['name',trim($row['外设类型二'])]])->pluck('id')->first();
+                    $parentID = Type::where('name',$row['外设类型一'])->pluck('id')->first();
+                    $types_id = Type::where([['parent',$parentID],['name',trim($row['外设类型二'])]])->pluck('id')->first();
 
-                        $specificationId = Specification::where([['name',str_replace('*','',$k)],['types_id',$types_id]])->pluck('id')->first();
+                    $specificationId = Specification::where([['name',str_replace('*','',$k)],['types_id',$types_id]])->pluck('id')->first();
 
-                        if(empty($specificationId)){
+                    if(empty($specificationId)){
 
-                            
-                            $isrequired = strpos($k,'*')?0:1;
-
-                            // 导入的默认都是文本类型  开摆
-                            $specificationInsert = 
-                            [
-                                'name'       => str_replace('*','',$k),
-                                'types_id'   => $types_id,
-                                'isrequired' => $isrequired,
-                                'field'      => 0,
-                                'created_at' => $curtime,
-                                'updated_at' => $curtime,
-                            ];
-
-                            $specificationId = DB::table('specifications')->insertGetId($specificationInsert);
-                        }
                         
-                        $valueInsertCache = [
-                            'value' => $v,
-                        ];
-                        $valueInsertUnique = [
-                            'peripherals_id'    => $curPeripheralId,
-                            'specifications_id' => $specificationId,
+                        $isrequired = strpos($k,'*')?0:1;
+
+                        // 导入的默认都是文本类型  开摆
+                        $specificationInsert = 
+                        [
+                            'name'       => str_replace('*','',$k),
+                            'types_id'   => $types_id,
+                            'isrequired' => $isrequired,
+                            'field'      => 0,
+                            'created_at' => $curtime,
+                            'updated_at' => $curtime,
                         ];
 
-                        Value::updateOrCreate($valueInsertUnique,$valueInsertCache);
+                        $specificationId = DB::table('specifications')->insertGetId($specificationInsert);
                     }
-                    //准备进入非固定列
-                    elseif($tag == 0){$tag ++ ;}
+                    
+                    if(Specification::where('id',$specificationId)->pluck('field')->first() == 2){
+                        $curV = $this->bools($v);
+                    }else{
+                        $curV = $v;
+                    }
+                    
+                    $valueInsertCache = [
+                        'value' => $curV,
+                    ];
+                    $valueInsertUnique = [
+                        'peripherals_id'    => $curPeripheralId,
+                        'specifications_id' => $specificationId,
+                    ];
+
+                    $a = Value::updateOrCreate($valueInsertUnique,$valueInsertCache);
+
                 }
             }
             // 循环结束没有释放  怪
