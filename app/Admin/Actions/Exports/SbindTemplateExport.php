@@ -3,17 +3,16 @@
 namespace App\Admin\Actions\Exports;
 
 use App\Models\AdminUser;
-use App\Models\Pbind;
-use App\Models\Peripheral;
+use App\Models\Sbind;
+use App\Models\Software;
 use App\Models\Status;
-use App\Models\Type;
+use App\Models\Stype;
 use Dcat\Admin\Admin;
-use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use OwenIt\Auditing\Models\Audit;
 
-class PbindTemplateExport implements FromCollection, ShouldAutoSize
+class SbindTemplateExport implements FromCollection, ShouldAutoSize
 {
 
     private $data;
@@ -46,14 +45,20 @@ class PbindTemplateExport implements FromCollection, ShouldAutoSize
     {
         $headTitle = [
             '厂商',
-            '品牌',
-            '外设型号',
-            '外设类型一',
-            '外设类型二',
+            '软件名称',
+            '软件版本号',
+            '包名',
+            '软件分类一',
+            '软件分类二',
             '行业分类',
-            '发布日期',
-            '服务终止日期',
-            '外设描述',
+            '内核引用',
+            '引用版本',
+            'Crossover版本',
+            'Box86版本',
+            '生态负责人',
+            '适配负责人',
+            '技术支撑负责人',
+            '软件描述',
             '操作系统版本',
             '操作系统小版本',
             '芯片',
@@ -63,8 +68,8 @@ class PbindTemplateExport implements FromCollection, ShouldAutoSize
             '当前适配状态',
             '当前细分适配状态',
             '当前适配状态责任人',
-            '方案名称',
-            '方案下载地址',
+            '安装包名称',
+            '安装包下载地址',
             '兼容等级',
             '适配类型',
             '测试方式',
@@ -88,33 +93,34 @@ class PbindTemplateExport implements FromCollection, ShouldAutoSize
         
         // 数据循环
         foreach ($data as $k => $v) {
-            $curPeripheralArr = Peripheral::with('brands','types','manufactors')->find($v->peripherals_id);
-            if($curPeripheralArr->brands->name && $curPeripheralArr->brands->name_en){
-                $brand_name = $curPeripheralArr->brands->name.'('.$curPeripheralArr->brands->name_en.')';
-            }else{
-                $brand_name = $curPeripheralArr->brands->name?:$curPeripheralArr->brands->name_en;
-            }
+            $curSoftwareArr = Software::with('stypes','manufactors')->find($v->softwares_id);
 
-            $dataProces['厂商'] = $curPeripheralArr->manufactors->name;;
-            $dataProces['品牌'] = $brand_name;
-            $dataProces['外设型号'] = $curPeripheralArr->name;
-            $dataProces['外设类型一']   = Type::where('id',$curPeripheralArr->types->parent)->pluck('name')->first();;
-            $dataProces['外设类型二']   = $curPeripheralArr->types->name;
-            $dataProces['行业分类'] = $curPeripheralArr->industries;
-            $dataProces['发布日期'] = $curPeripheralArr->release_date;
-            $dataProces['服务终止日期'] = $curPeripheralArr->eosl_date;
-            $dataProces['外设描述'] = $curPeripheralArr->comment;
+            $dataProces['厂商'] = $curSoftwareArr->manufactors->name;
+            $dataProces['软件名称'] = $curSoftwareArr->name;
+            $dataProces['软件版本号'] = $curSoftwareArr->version;
+            $dataProces['包名'] = $curSoftwareArr->package_name;
+            $dataProces['软件分类一'] = Stype::where('id',$curSoftwareArr->stypes->parent)->pluck('name')->first();
+            $dataProces['软件分类二'] = $curSoftwareArr->stypes->name;
+            $dataProces['行业分类'] = $curSoftwareArr->industries;;
+            $dataProces['内核引用'] = $curSoftwareArr->kernel_version ? '是' : '否';
+            $dataProces['引用版本'] = $curSoftwareArr->kernel_version;
+            $dataProces['Crossover版本'] = $curSoftwareArr->crossover_version;
+            $dataProces['Box86版本'] = $curSoftwareArr->box86_version;
+            $dataProces['生态负责人'] = $curSoftwareArr->bd;
+            $dataProces['适配负责人'] = $curSoftwareArr->am;
+            $dataProces['技术支撑负责人'] = $curSoftwareArr->tsm;
+            $dataProces['软件描述'] = $curSoftwareArr->comment;
             $dataProces['操作系统版本'] = $v->releases->name;
             $dataProces['操作系统小版本'] = $v->os_subversion;
             $dataProces['芯片'] = $v->chips->name;
             $dataProces['架构'] = $v->chips->arch;
             $dataProces['引入来源'] = $v->adapt_source;
             $dataProces['是否适配过国产CPU'] = $this->bools($v->adapted_before);
-            $dataProces['当前适配状态'] = $this->getParent($v->statuses->parent);;
+            $dataProces['当前适配状态'] =  $this->getParent($v->statuses->parent);
             $dataProces['当前细分适配状态'] = $v->statuses->name;
             $dataProces['当前适配状态责任人'] = AdminUser::where('id',$v->admin_user_id)->pluck('name')->first();
-            $dataProces['方案名称'] = $v->solution_name;
-            $dataProces['方案下载地址'] = $v->solution;
+            $dataProces['安装包名称'] = $v->solution_name;
+            $dataProces['安装包下载地址'] = $v->solution;
             $dataProces['兼容等级'] = $v->class;
             $dataProces['适配类型'] = $v->adaption_type;
             $dataProces['测试方式'] = $v->test_type;
@@ -153,22 +159,12 @@ class PbindTemplateExport implements FromCollection, ShouldAutoSize
             }
         }
 
-        $data = Pbind::with('chips');
+        $data = Sbind::with('chips');
 
-        if(isset($curFilter['pname'])){
-            $a = $curFilter['pname'];
-            $data = $data->whereHas('peripherals', function ($query) use ($a){
+        if(isset($curFilter['sname'])){
+            $a = $curFilter['sname'];
+            $data = $data->whereHas('softwares', function ($query) use ($a){
                 $query->where('name', 'like','%'.$a.'%');
-            });
-        }
-
-        if(isset($curFilter['brand'])){
-            $a = $curFilter['brand'];
-            $data = $data->whereHas('peripherals', function ($query) use ($a){
-                $query->whereHas('brands', function ($query) use ($a){
-                    $query->where('name', 'like',"%{$a}%")
-                        ->orWhere('name_en','like',"%{$a}%");
-                });
             });
         }
 
@@ -186,11 +182,11 @@ class PbindTemplateExport implements FromCollection, ShouldAutoSize
             $data = $data->where('solution','like','%'.$curFilter['solution'].'%');
         }
 
-        if(isset($curFilter['pbind'])){
-            $a = $curFilter['pbind'];
-            $data = $data->whereHas('peripherals', function ($query) use ($a){
-                $query->whereHas('types', function ($query) use ($a){
-                    if(Type::where('id',$a)->pluck('parent')->first() != 0){$query->where('id', $a);}
+        if(isset($curFilter['sbind'])){
+            $a = $curFilter['sbind'];
+            $data = $data->whereHas('softwares', function ($query) use ($a){
+                $query->whereHas('stypes', function ($query) use ($a){
+                    if(Stype::where('id',$a)->pluck('parent')->first() != 0){$query->where('id', $a);}
                     elseif($a == 0){}
                     else{$query->where('parent', $a);}
                 });

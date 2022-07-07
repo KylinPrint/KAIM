@@ -21,6 +21,7 @@ class CreateSoftwaresTable extends Migration
             $table->foreignId('manufactors_id')
                   ->comment('厂商名称')
                   ->constrained();
+            $table->string('package_name')->nullable()->comment('包名');
             $table->string('version')->nullable()->comment('软件版本号');
             $table->foreignId('stypes_id')
                   ->comment('软件分类')

@@ -21,7 +21,7 @@ Route::group([
     $router->get('/api/peripherals',[App\Admin\Controllers\PbindController::class,'pPaginate']);
     $router->get('/api/softwares',[App\Admin\Controllers\SbindController::class,'sPaginate']);
     $router->get('pbinds/template-export', 'PbindController@export')->name('pbind-template.export');
-
+    $router->get('sbinds/template-export', 'SbindController@export')->name('sbind-template.export');
 
     // 软件
     $router->resource('softwares', SoftwareController::class);

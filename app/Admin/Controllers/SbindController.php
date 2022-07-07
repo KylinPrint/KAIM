@@ -3,6 +3,8 @@
 namespace App\Admin\Controllers;
 
 use App\Admin\Actions\Exports\SbindExport;
+use App\Admin\Actions\Exports\SbindTemplateExport;
+use App\Admin\Actions\Grid\SbindTemplateExportTool;
 use App\Admin\Actions\Grid\ShowAudit;
 use App\Admin\Actions\Modal\ImportModal;
 use App\Admin\Actions\Modal\SbindModal;
@@ -26,6 +28,7 @@ use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
 use Dcat\Admin\Http\Controllers\AdminController;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use OwenIt\Auditing\Models\Audit;
 
 class SbindController extends AdminController
@@ -58,6 +61,8 @@ class SbindController extends AdminController
                         $batch->add(new StatusBatch('sbind'));
                     }
                 });
+
+                if(Admin::user()->can('sbinds-export')) { $tools->append(new SbindTemplateExportTool('生态模板软件数据导出测试', '按导入模板导出数据')); }
             });
 
             // 行操作
@@ -494,5 +499,14 @@ class SbindController extends AdminController
     {
         $q = $request->get('q');
         return Software::where('name', 'like', "%$q%")->paginate(null, ['id', 'name as text']);
+    }
+
+    public function export(Request $request)
+    {
+        $filename = $request->get('filename');
+        $cururl = $request->get('cururl');
+        ob_end_clean();
+        
+        return Excel::download(new SbindTemplateExport($cururl), $filename.'.xlsx');
     }
 }
