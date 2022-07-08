@@ -119,6 +119,15 @@ class PbindImport implements ToCollection, WithHeadingRow
                     'bail',
                     'required',
                     Rule::in(['是','否'])
+                ],'*.适配开始时间' => [
+                    'bail',
+                    'numeric',
+                    'between:40000,50000'
+                ],
+                '*.适配完成时间' => [
+                    'bail',
+                    'numeric',
+                    'between:40000,50000'
                 ],
 
             ],

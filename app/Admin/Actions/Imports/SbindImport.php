@@ -159,10 +159,20 @@ class SbindImport implements ToCollection, WithHeadingRow, WithValidation
             }
             
 
-            $curSoftwareId = Software::where([
-                ['name',trim($row['软件名称'])],
-                ['manufactors_id',$curManufactorId],
-                ['version',trim($row['软件版本号'])]])->pluck('id')->first();
+            if(empty($row['软件版本号'])){
+                $curSoftwareId = Software::where([
+                    ['name',trim($row['软件名称'])],
+                    ['manufactors_id',$curManufactorId],
+                    ['version',null]
+                ])->pluck('id')->first();
+            }else{
+                $curSoftwareId = Software::where([
+                    ['name',trim($row['软件名称'])],
+                    ['manufactors_id',$curManufactorId],
+                    ['version',trim($row['软件版本号'])]
+                ])->pluck('id')->first();
+            }
+
             if(empty($curSoftwareId))
             {   
                 $parentID = Stype::where('name',trim($row['软件分类一']))->pluck('id')->first();
@@ -222,26 +232,6 @@ class SbindImport implements ToCollection, WithHeadingRow, WithValidation
             ];
 
             $a = Sbind::updateOrCreate($sbindInsertUnique,$sbindInsert);
-
-            // $curSbind = Sbind::find($a->id);
-            // $b = $a->wasRecentlyCreated;
-            // $c = $a->wasChanged();
-
-            // //新增数据
-            // if($b)
-            // {
-            //    $curSbind->solution_name = $row['安装包名称'];
-            //    $curSbind->solution = $row['安装包下载地址'];
-            //    $curSbind->save();
-            // }
-
-            // //更新数据
-            // if(!$b && $c)
-            // {
-            //     $curSbind->solution_name = $curSbind->solution_name.';'.$row['安装包名称'];
-            //     $curSbind->solution = $curSbind->solution.';'.$row['安装包下载地址'];
-            //     $curSbind->save();
-            // }
             
         }
         

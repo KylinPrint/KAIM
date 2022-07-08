@@ -75,47 +75,20 @@ class SbindUpdate implements ToCollection, WithHeadingRow, WithValidation
             $curtime = date('Y-m-d H:i:s');
 
             $curManufactorId = Manufactor::where('name',trim($row['厂商']))->pluck('id')->first();
-            if(empty($curManufactorId))
-            {
-                $manufactorInsert = 
-                [
-                    'name' => trim($row['厂商']),
-                    'isconnected' => 0,
-                    'created_at' => $curtime,
-                    'updated_at' => $curtime,
-                ];
-                $curManufactorId = DB::table('manufactors')->insertGetId($manufactorInsert);
-            }
-            
 
-            $curSoftwareId = Software::where([
-                ['name',trim($row['软件名称'])],
-                ['manufactors_id',$curManufactorId],
-                ['version',trim($row['软件版本号'])]
-            ])->pluck('id')->first();
-            
-            // if(empty($curSoftwareId))
-            // {   
-            //     $parentID = Stype::where('name',trim($row['软件分类一']))->pluck('id')->first();
-            //     $softwareInsert = 
-            //     [
-            //         'name' => trim($row['软件名称']),
-            //         'manufactors_id' => $curManufactorId,
-            //         'version' => trim($row['软件版本号']),
-            //         'stypes_id' => Stype::where([['parent',$parentID],['name',trim($row['软件分类二'])]])->pluck('id')->first(),
-            //         'kernel_version' => trim($row['引用版本']),
-            //         'crossover_version' => trim($row['Crossover版本']),
-            //         'box86_version' => trim($row['Box86版本']),
-            //         'bd' => trim($row['生态负责人']),
-            //         'am' => $row['适配负责人'],
-            //         'tsm' => $row['技术支撑负责人'],
-            //         'comment' => $row['软件描述'],
-            //         'industries' => $row['行业分类'],
-            //         'created_at' => $curtime,
-            //         'updated_at' => $curtime,
-            //     ];
-            //     $curSoftwareId = DB::table('softwares')->insertGetId($softwareInsert);
-            // }
+            if(empty($row['软件版本号'])){
+                $curSoftwareId = Software::where([
+                    ['name',trim($row['软件名称'])],
+                    ['manufactors_id',$curManufactorId],
+                    ['version',null]
+                ])->pluck('id')->first();
+            }else{
+                $curSoftwareId = Software::where([
+                    ['name',trim($row['软件名称'])],
+                    ['manufactors_id',$curManufactorId],
+                    ['version',trim($row['软件版本号'])]
+                ])->pluck('id')->first();
+            }
 
             $sbindInsertCache =
             [

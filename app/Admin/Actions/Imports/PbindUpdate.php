@@ -68,6 +68,16 @@ class PbindUpdate implements ToCollection, WithHeadingRow
                     'required',
                     Rule::in(array_column(Chip::select('name')->get()->toArray(),'name')),
                 ],
+                '*.适配开始时间' => [
+                    'bail',
+                    'numeric',
+                    'between:40000,50000'
+                ],
+                '*.适配完成时间' => [
+                    'bail',
+                    'numeric',
+                    'between:40000,50000'
+                ],
             ],
         );  
         
@@ -83,17 +93,17 @@ class PbindUpdate implements ToCollection, WithHeadingRow
             if($row['厂商'] != '')
             {
                 $curManufactorId = Manufactor::where('name',trim($row['厂商']))->pluck('id')->first();
-                if(empty($curManufactorId))
-                {
-                    $manufactorInsert = 
-                    [
-                        'name' => trim($row['厂商']),
-                        'isconnected' => '0',
-                        'created_at' => $curtime,
-                        'updated_at' => $curtime,
-                    ];
-                    $curManufactorId = DB::table('manufactors')->insertGetId($manufactorInsert);
-                }
+                // if(empty($curManufactorId))
+                // {
+                //     $manufactorInsert = 
+                //     [
+                //         'name' => trim($row['厂商']),
+                //         'isconnected' => '0',
+                //         'created_at' => $curtime,
+                //         'updated_at' => $curtime,
+                //     ];
+                //     $curManufactorId = DB::table('manufactors')->insertGetId($manufactorInsert);
+                // }
             }
 
             // 品牌  如果抓到括号,默认中英文都有,且括号外中文,括号内英文
@@ -109,47 +119,47 @@ class PbindUpdate implements ToCollection, WithHeadingRow
                 ->orWhere('name_en','like','%'.$brand_name_en.'%')
                 ->pluck('id')->first();
 
-                if(!$curBrandId){
-                    $brandInsert = 
-                    [
-                        'name' => $brand_name,
-                        'name_en' => $brand_name_en,
-                        'alias' => null,
-                        'created_at' => $curtime,
-                        'updated_at' => $curtime,
-                    ];
-                    $curBrandId = DB::table('brands')->insertGetId($brandInsert);
-                }
+                // if(!$curBrandId){
+                //     $brandInsert = 
+                //     [
+                //         'name' => $brand_name,
+                //         'name_en' => $brand_name_en,
+                //         'alias' => null,
+                //         'created_at' => $curtime,
+                //         'updated_at' => $curtime,
+                //     ];
+                //     $curBrandId = DB::table('brands')->insertGetId($brandInsert);
+                // }
             }else{
                 if(preg_match('/[\x7f-\xff]/',$row['品牌'])){
                     $curBrandId = Brand::where('name','like','%'.trim($row['品牌']).'%')->pluck('id')->first();
 
-                    if(!$curBrandId){
-                        $brandInsert = 
-                        [
-                            'name' => trim($row['品牌']),
-                            'name_en' => null,
-                            'alias' => null,
-                            'created_at' => $curtime,
-                            'updated_at' => $curtime,
-                        ];
-                        $curBrandId = DB::table('brands')->insertGetId($brandInsert);
-                    }
+                    // if(!$curBrandId){
+                    //     $brandInsert = 
+                    //     [
+                    //         'name' => trim($row['品牌']),
+                    //         'name_en' => null,
+                    //         'alias' => null,
+                    //         'created_at' => $curtime,
+                    //         'updated_at' => $curtime,
+                    //     ];
+                    //     $curBrandId = DB::table('brands')->insertGetId($brandInsert);
+                    // }
                 }else{
                    
                     $curBrandId = Brand::where('name_en','like','%'.trim($row['品牌']).'%')->pluck('id')->first();
 
-                    if(!$curBrandId){
-                        $brandInsert = 
-                        [
-                            'name' => null,
-                            'name_en' => trim($row['品牌']),
-                            'alias' => null,
-                            'created_at' => $curtime,
-                            'updated_at' => $curtime,
-                        ];
-                        $curBrandId = DB::table('brands')->insertGetId($brandInsert);
-                    }
+                    // if(!$curBrandId){
+                    //     $brandInsert = 
+                    //     [
+                    //         'name' => null,
+                    //         'name_en' => trim($row['品牌']),
+                    //         'alias' => null,
+                    //         'created_at' => $curtime,
+                    //         'updated_at' => $curtime,
+                    //     ];
+                    //     $curBrandId = DB::table('brands')->insertGetId($brandInsert);
+                    // }
                 }
             }
 
