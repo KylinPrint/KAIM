@@ -70,11 +70,13 @@ class PbindUpdate implements ToCollection, WithHeadingRow
                 ],
                 '*.适配开始时间' => [
                     'bail',
+                    'nullable',
                     'numeric',
                     'between:40000,50000'
                 ],
                 '*.适配完成时间' => [
                     'bail',
+                    'nullable',
                     'numeric',
                     'between:40000,50000'
                 ],
