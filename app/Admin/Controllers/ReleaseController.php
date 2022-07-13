@@ -62,8 +62,8 @@ class ReleaseController extends AdminController
     protected function form()
     {
         return Form::make(new Release(), function (Form $form) {
-            // $form->display('id');
-            $form->text('name')->required();
+            $id = $form->model()->id;
+            $form->text('name')->required()->rules("unique:peripherals,name,$id", [ 'unique' => '该系统名已存在' ]);
             $form->text('abbr');
             $form->date('release_date')->format('YYYY-MM-DD');
             $form->date('eosl_date')->format('YYYY-MM-DD');

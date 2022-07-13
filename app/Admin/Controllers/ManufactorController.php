@@ -69,8 +69,8 @@ class ManufactorController extends AdminController
     protected function form()
     {
         return Form::make(new Manufactor(), function (Form $form) {
-            // $form->display('id');
-            $form->text('name')->required();
+            $id = $form->model()->id;
+            $form->text('name')->required()->rules("unique:peripherals,name,$id", [ 'unique' => '该厂商名已存在' ]);
             $form->select('isconnected')->options([0 => '否',1 => '是']);
         });
     }

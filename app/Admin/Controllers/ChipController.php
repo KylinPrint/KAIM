@@ -58,8 +58,8 @@ class ChipController extends AdminController
     protected function form()
     {
         return Form::make(new Chip(), function (Form $form) {
-            // $form->display('id');
-            $form->text('name')->required();
+            $id = $form->model()->id;
+            $form->text('name')->required()->rules("unique:peripherals,name,$id", [ 'unique' => '该芯片名已存在' ]);
             $form->select('arch')
             ->options([
                 'amd64'         => 'amd64',
