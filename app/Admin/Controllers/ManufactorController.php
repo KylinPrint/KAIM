@@ -70,7 +70,7 @@ class ManufactorController extends AdminController
     {
         return Form::make(new Manufactor(), function (Form $form) {
             $id = $form->model()->id;
-            $form->text('name')->required()->rules("unique:peripherals,name,$id", [ 'unique' => '该厂商名已存在' ]);
+            $form->text('name')->required()->rules("unique:manufactors,name,$id", [ 'unique' => '该厂商名已存在' ]);
             $form->select('isconnected')->options([0 => '否',1 => '是']);
         });
     }
