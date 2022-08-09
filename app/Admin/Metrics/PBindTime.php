@@ -2,6 +2,7 @@
 
 namespace App\Admin\Metrics;
 
+use App\Admin\Job\TimeAVG;
 use App\Models\Pbind;
 use App\Models\PRequest;
 use App\Models\Sbind;
@@ -25,6 +26,9 @@ class PBindTime extends Bar
         parent::init();
 
         $color = Admin::color();
+
+        $ccc = new TimeAVG;
+        $ccc();
 
         $dark35 = $color->dark35();
 
