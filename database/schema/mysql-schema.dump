@@ -1,0 +1,875 @@
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+DROP TABLE IF EXISTS `admin_extension_histories`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `admin_extension_histories` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `type` tinyint(4) NOT NULL DEFAULT 1,
+  `version` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '0',
+  `detail` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `admin_extension_histories_name_index` (`name`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `admin_extensions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `admin_extensions` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `version` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `is_enabled` tinyint(4) NOT NULL DEFAULT 0,
+  `options` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `admin_extensions_name_unique` (`name`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `admin_menu`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `admin_menu` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `parent_id` bigint(20) NOT NULL DEFAULT 0,
+  `order` int(11) NOT NULL DEFAULT 0,
+  `title` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `icon` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `uri` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `extension` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `show` tinyint(4) NOT NULL DEFAULT 1,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `admin_operation_log`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `admin_operation_log` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) NOT NULL,
+  `path` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `method` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `ip` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `input` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `admin_operation_log_user_id_index` (`user_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `admin_permission_menu`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `admin_permission_menu` (
+  `permission_id` bigint(20) NOT NULL,
+  `menu_id` bigint(20) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  UNIQUE KEY `admin_permission_menu_permission_id_menu_id_unique` (`permission_id`,`menu_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `admin_permissions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `admin_permissions` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `slug` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `http_method` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `http_path` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `order` int(11) NOT NULL DEFAULT 0,
+  `parent_id` bigint(20) NOT NULL DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `admin_permissions_slug_unique` (`slug`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `admin_role_menu`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `admin_role_menu` (
+  `role_id` bigint(20) NOT NULL,
+  `menu_id` bigint(20) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  UNIQUE KEY `admin_role_menu_role_id_menu_id_unique` (`role_id`,`menu_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `admin_role_permissions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `admin_role_permissions` (
+  `role_id` bigint(20) NOT NULL,
+  `permission_id` bigint(20) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  UNIQUE KEY `admin_role_permissions_role_id_permission_id_unique` (`role_id`,`permission_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `admin_role_users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `admin_role_users` (
+  `role_id` bigint(20) NOT NULL,
+  `user_id` bigint(20) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  UNIQUE KEY `admin_role_users_role_id_user_id_unique` (`role_id`,`user_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `admin_roles`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `admin_roles` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `slug` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `admin_roles_slug_unique` (`slug`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `admin_settings`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `admin_settings` (
+  `slug` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `value` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`slug`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `admin_users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `admin_users` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `username` varchar(120) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(80) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `avatar` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `admin_users_username_unique` (`username`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `audits`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `audits` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `user_type` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `user_id` bigint(20) unsigned DEFAULT NULL,
+  `admin_user_id` bigint(20) unsigned DEFAULT NULL,
+  `event` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `auditable_type` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `auditable_id` bigint(20) unsigned NOT NULL,
+  `old_values` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `new_values` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `url` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ip_address` varchar(45) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `user_agent` varchar(1023) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `tags` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `audits_auditable_type_auditable_id_index` (`auditable_type`,`auditable_id`) USING BTREE,
+  KEY `audits_user_id_user_type_index` (`user_id`,`user_type`) USING BTREE,
+  KEY `audits_admin_user_id_index` (`admin_user_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `brands`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `brands` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT '' COMMENT '品牌名称',
+  `name_en` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT '' COMMENT '品牌英文名',
+  `alias` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '品牌别名',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `brands_name_zh_en_unique` (`name`,`name_en`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `chips`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `chips` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '芯片名称',
+  `arch` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `failed_jobs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `failed_jobs` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uuid` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `connection` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `queue` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `exception` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `failed_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `jobs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `jobs` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `queue` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `attempts` tinyint(3) unsigned NOT NULL,
+  `reserved_at` int(10) unsigned DEFAULT NULL,
+  `available_at` int(10) unsigned NOT NULL,
+  `created_at` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `jobs_queue_index` (`queue`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `manufactors`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `manufactors` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '厂商名称',
+  `isconnected` tinyint(1) DEFAULT NULL COMMENT '是否建联',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `manufactors_name_unique` (`name`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `migrations`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `migrations` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `batch` int(11) NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `oem_histories`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `oem_histories` (
+  `oem_id` bigint(20) unsigned NOT NULL,
+  `status_old` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '修改前状态',
+  `status_new` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '修改后状态',
+  `user_name` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '当前适配状态责任人',
+  `comment` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '状态变更说明',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `oem_histories_oem_id_foreign` (`oem_id`) USING BTREE,
+  CONSTRAINT `oem_histories_oem_id_foreign` FOREIGN KEY (`oem_id`) REFERENCES `oems` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `oems`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `oems` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `manufactors_id` bigint(20) unsigned NOT NULL COMMENT '厂商名称',
+  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '型号',
+  `otypes_id` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '分类',
+  `source` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '引入来源',
+  `details` text COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '产品描述',
+  `releases_id` bigint(20) unsigned NOT NULL COMMENT '操作系统版本号',
+  `os_subversion` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '操作系统小版本号',
+  `chips_id` bigint(20) unsigned NOT NULL COMMENT '芯片ID',
+  `status_id` bigint(20) unsigned DEFAULT NULL COMMENT '当前适配状态',
+  `admin_user_id` bigint(20) unsigned DEFAULT NULL COMMENT '当前适配状态责任人',
+  `class` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '兼容等级',
+  `test_type` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '测试方式',
+  `kylineco` tinyint(1) DEFAULT NULL COMMENT '是否上传生态网站',
+  `iscert` tinyint(1) DEFAULT NULL COMMENT '是否互认证',
+  `certificate_NO` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '证书编号',
+  `adaption_type` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '适配类型',
+  `industries` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '行业',
+  `test_report` int(11) DEFAULT NULL COMMENT '是否有测试报告',
+  `patch` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '补丁包连接',
+  `start_time` date DEFAULT NULL COMMENT '适配开始时间',
+  `complete_time` date DEFAULT NULL COMMENT '适配完成时间',
+  `motherboard` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '主板品牌及型号',
+  `gpu` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'gpu品牌及型号',
+  `graphic_card` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '显卡品牌及型号',
+  `ai_card` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Ai加速卡品牌及型号',
+  `network` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '网卡品牌及型号',
+  `memory` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '内存品牌及型号',
+  `raid` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'RAID卡品牌及型号',
+  `hba` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'HBA卡品牌及型号',
+  `hard_disk` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '硬盘品牌及型号',
+  `firmware` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '固件品牌及型号',
+  `sound_card` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '声卡品牌及型号',
+  `parallel` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '并口卡品牌及型号',
+  `serial` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '串口卡品牌及型号',
+  `isolation_card` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '隔离卡品牌及型号',
+  `other_card` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '其它板卡品牌及型号',
+  `comment` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '备注',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `oems_manufactor_id_name_release_id_chip_id_unique` (`manufactors_id`,`name`,`releases_id`,`chips_id`) USING BTREE,
+  KEY `oems_release_id_foreign` (`releases_id`) USING BTREE,
+  KEY `oems_chip_id_foreign` (`chips_id`) USING BTREE,
+  KEY `oems_status_id_foreign` (`status_id`) USING BTREE,
+  CONSTRAINT `oems_chip_id_foreign` FOREIGN KEY (`chips_id`) REFERENCES `chips` (`id`),
+  CONSTRAINT `oems_manufactor_id_foreign` FOREIGN KEY (`manufactors_id`) REFERENCES `manufactors` (`id`),
+  CONSTRAINT `oems_release_id_foreign` FOREIGN KEY (`releases_id`) REFERENCES `releases` (`id`),
+  CONSTRAINT `oems_status_id_foreign` FOREIGN KEY (`status_id`) REFERENCES `statuses` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `otypes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `otypes` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '类型名称',
+  `parent` int(11) NOT NULL COMMENT '父级',
+  `order` bigint(20) unsigned NOT NULL DEFAULT 0 COMMENT '排序',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `p_request_histories`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `p_request_histories` (
+  `p_request_id` bigint(20) unsigned NOT NULL COMMENT 'PBind表ID',
+  `status_old` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '修改前适配状态',
+  `status_new` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '修改后状态',
+  `user_name` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '当前适配状态责任人',
+  `comment` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '状态变更说明',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `p_request_histories_p_request_id_foreign` (`p_request_id`) USING BTREE,
+  CONSTRAINT `p_request_histories_p_request_id_foreign` FOREIGN KEY (`p_request_id`) REFERENCES `p_requests` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `p_requests`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `p_requests` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `source` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '需求来源',
+  `manufactor` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '厂商名称',
+  `brand` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '品牌名称',
+  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '外设名称',
+  `type_id` bigint(20) unsigned NOT NULL COMMENT '软件分类',
+  `industry` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '涉及行业',
+  `release_id` bigint(20) unsigned NOT NULL COMMENT '操作系统版本ID',
+  `os_subversion` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '操作系统小版本号',
+  `chip_id` bigint(20) unsigned NOT NULL COMMENT '芯片ID',
+  `project_name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '项目名称',
+  `amount` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '涉及数量',
+  `project_status` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '项目状态',
+  `level` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '紧急程度',
+  `manufactor_contact` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '厂商联系方式',
+  `et` date NOT NULL COMMENT '期望完成日期',
+  `creator` bigint(20) unsigned DEFAULT NULL COMMENT '需求创建人',
+  `requester_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '需求提出人',
+  `requester_contact` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '需求提出人联系方式',
+  `status` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '处理状态[已提交,处理中,已处理,暂停处理,已拒绝,已关闭]',
+  `status_comment` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `bd_id` bigint(20) unsigned NOT NULL COMMENT '生态负责人',
+  `pbind_id` bigint(20) unsigned DEFAULT NULL COMMENT '外设关联信息',
+  `comment` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '备注',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `p_requests_unique` (`manufactor`,`brand`,`name`,`release_id`,`chip_id`) USING BTREE,
+  KEY `p_requests_type_id_foreign` (`type_id`) USING BTREE,
+  KEY `p_requests_release_id_foreign` (`release_id`) USING BTREE,
+  KEY `p_requests_chip_id_foreign` (`chip_id`) USING BTREE,
+  KEY `p_requests_pbind_id_foreign` (`pbind_id`) USING BTREE,
+  CONSTRAINT `p_requests_chip_id_foreign` FOREIGN KEY (`chip_id`) REFERENCES `chips` (`id`),
+  CONSTRAINT `p_requests_pbind_id_foreign` FOREIGN KEY (`pbind_id`) REFERENCES `pbinds` (`id`),
+  CONSTRAINT `p_requests_release_id_foreign` FOREIGN KEY (`release_id`) REFERENCES `releases` (`id`),
+  CONSTRAINT `p_requests_type_id_foreign` FOREIGN KEY (`type_id`) REFERENCES `types` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `password_resets`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `password_resets` (
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  KEY `password_resets_email_index` (`email`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `pbind_histories`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pbind_histories` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `pbind_id` bigint(20) unsigned NOT NULL COMMENT 'PBind表ID',
+  `status_old` bigint(20) unsigned DEFAULT NULL COMMENT '修改前适配状态',
+  `status_new` bigint(20) unsigned NOT NULL COMMENT '修改后适配状态',
+  `user_name` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '当前适配状态责任人',
+  `comment` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '状态变更说明',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `pbind_histories_status_old_foreign` (`status_old`) USING BTREE,
+  KEY `pbind_histories_status_new_foreign` (`status_new`) USING BTREE,
+  CONSTRAINT `pbind_histories_status_new_foreign` FOREIGN KEY (`status_new`) REFERENCES `statuses` (`id`),
+  CONSTRAINT `pbind_histories_status_old_foreign` FOREIGN KEY (`status_old`) REFERENCES `statuses` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `pbinds`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pbinds` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `peripherals_id` bigint(20) unsigned NOT NULL COMMENT '外设ID',
+  `releases_id` bigint(20) unsigned NOT NULL COMMENT '操作系统版本ID',
+  `os_subversion` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '操作系统小版本号',
+  `chips_id` bigint(20) unsigned NOT NULL COMMENT '芯片ID',
+  `adapt_source` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '引入来源[厂商主动申请,BD主动拓展,行业营销中心引入,区域营销中心引入,最终客户反馈,产品经理引入,厂商合作事业本部引入,渠道部引入,相关机构反馈,其他方式引入]',
+  `adapted_before` tinyint(1) DEFAULT NULL COMMENT '是否适配过国产CPU',
+  `statuses_id` bigint(20) unsigned NOT NULL COMMENT '当前适配状态',
+  `statuses_comment` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `admin_user_id` bigint(20) unsigned DEFAULT NULL COMMENT '当前适配状态责任人',
+  `solution_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '安装包名称',
+  `solution` varchar(1530) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '适配方案',
+  `class` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '兼容等级[READY,CERTIFICATION,VALIDATION,PROJECT]',
+  `adaption_type` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '适配类型[原生适配,自研适配,开源适配,项目适配]',
+  `test_type` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '测试方式[厂商自测,视频复测,远程测试,麒麟适配测试]',
+  `kylineco` tinyint(1) DEFAULT NULL COMMENT '是否上传生态网站',
+  `appstore` tinyint(1) DEFAULT NULL COMMENT '是否上架软件商店',
+  `iscert` tinyint(1) DEFAULT NULL COMMENT '是否互认证',
+  `certificate_NO` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '证书编号',
+  `test_report` int(11) DEFAULT NULL COMMENT '是否有测试报告',
+  `start_time` date DEFAULT NULL COMMENT '适配开始时间',
+  `complete_time` date DEFAULT NULL COMMENT '适配完成时间',
+  `comment` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '备注',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `pbinds_peripherals_id_releases_id_chips_id_unique` (`peripherals_id`,`releases_id`,`chips_id`) USING BTREE,
+  KEY `pbinds_releases_id_foreign` (`releases_id`) USING BTREE,
+  KEY `pbinds_chips_id_foreign` (`chips_id`) USING BTREE,
+  KEY `pbinds_statuses_id_foreign` (`statuses_id`) USING BTREE,
+  CONSTRAINT `pbinds_chips_id_foreign` FOREIGN KEY (`chips_id`) REFERENCES `chips` (`id`),
+  CONSTRAINT `pbinds_peripherals_id_foreign` FOREIGN KEY (`peripherals_id`) REFERENCES `peripherals` (`id`),
+  CONSTRAINT `pbinds_releases_id_foreign` FOREIGN KEY (`releases_id`) REFERENCES `releases` (`id`),
+  CONSTRAINT `pbinds_statuses_id_foreign` FOREIGN KEY (`statuses_id`) REFERENCES `statuses` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `peripherals`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `peripherals` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '外设型号',
+  `manufactors_id` bigint(20) unsigned DEFAULT NULL COMMENT '外设厂商',
+  `brands_id` bigint(20) unsigned NOT NULL COMMENT '外设品牌',
+  `types_id` bigint(20) unsigned NOT NULL COMMENT '外设类型',
+  `industries` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '行业',
+  `vid` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'VID',
+  `pid` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'PID',
+  `model` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '系统识别型号',
+  `release_date` date DEFAULT NULL COMMENT '发布日期',
+  `eosl_date` date DEFAULT NULL COMMENT '服务终止日期',
+  `bd` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Business Development, 生态负责人',
+  `am` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Adaption Manager, 适配负责人',
+  `tsm` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Technical Support Manager, 技术支撑负责人',
+  `comment` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '外设描述',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `peripherals_brands_id_name_manufactors_id_unique` (`brands_id`,`name`,`manufactors_id`) USING BTREE,
+  KEY `peripherals_manufactors_id_foreign` (`manufactors_id`) USING BTREE,
+  KEY `peripherals_types_id_foreign` (`types_id`) USING BTREE,
+  CONSTRAINT `peripherals_brands_id_foreign` FOREIGN KEY (`brands_id`) REFERENCES `brands` (`id`),
+  CONSTRAINT `peripherals_manufactors_id_foreign` FOREIGN KEY (`manufactors_id`) REFERENCES `manufactors` (`id`),
+  CONSTRAINT `peripherals_types_id_foreign` FOREIGN KEY (`types_id`) REFERENCES `types` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `personal_access_tokens`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `personal_access_tokens` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `tokenable_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tokenable_id` bigint(20) unsigned NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `abilities` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `last_used_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `personal_access_tokens_token_unique` (`token`) USING BTREE,
+  KEY `personal_access_tokens_tokenable_type_tokenable_id_index` (`tokenable_type`,`tokenable_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `releases`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `releases` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '操作系统版本',
+  `abbr` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '操作系统版本缩写',
+  `release_date` date DEFAULT NULL COMMENT '发布日期',
+  `eosl_date` date DEFAULT NULL COMMENT '服务终止日期',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `s_request_histories`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `s_request_histories` (
+  `s_request_id` bigint(20) unsigned NOT NULL COMMENT 'SBind表ID',
+  `status_old` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '修改前适配状态',
+  `status_new` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '修改后状态',
+  `user_name` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '当前适配状态责任人',
+  `comment` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '状态变更说明',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `s_request_histories_s_request_id_foreign` (`s_request_id`) USING BTREE,
+  CONSTRAINT `s_request_histories_s_request_id_foreign` FOREIGN KEY (`s_request_id`) REFERENCES `s_requests` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `s_requests`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `s_requests` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `source` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '需求来源',
+  `manufactor` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '厂商名称',
+  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '软件名称',
+  `version` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '软件版本',
+  `stype_id` bigint(20) unsigned NOT NULL COMMENT '软件分类',
+  `industry` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '涉及行业',
+  `release_id` bigint(20) unsigned NOT NULL COMMENT '操作系统版本ID',
+  `os_subversion` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '操作系统小版本号',
+  `chip_id` bigint(20) unsigned NOT NULL COMMENT '芯片ID',
+  `project_name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '项目名称',
+  `amount` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '涉及数量',
+  `project_status` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '项目状态',
+  `level` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '紧急程度',
+  `manufactor_contact` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '厂商联系方式',
+  `et` date NOT NULL COMMENT '期望完成日期',
+  `creator` bigint(20) unsigned DEFAULT NULL COMMENT '需求创建人',
+  `requester_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '需求提出人',
+  `requester_contact` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '需求提出人联系方式',
+  `status` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '处理状态[已提交,处理中,已处理,暂停处理,已拒绝,已关闭]',
+  `status_comment` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `bd_id` bigint(20) unsigned NOT NULL COMMENT '生态负责人',
+  `sbind_id` bigint(20) unsigned DEFAULT NULL COMMENT '软件关联信息',
+  `comment` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '备注',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `s_requests_unique` (`manufactor`,`version`,`name`,`release_id`,`chip_id`) USING BTREE,
+  KEY `s_requests_stype_id_foreign` (`stype_id`) USING BTREE,
+  KEY `s_requests_release_id_foreign` (`release_id`) USING BTREE,
+  KEY `s_requests_chip_id_foreign` (`chip_id`) USING BTREE,
+  KEY `s_requests_sbind_id_foreign` (`sbind_id`) USING BTREE,
+  CONSTRAINT `s_requests_chip_id_foreign` FOREIGN KEY (`chip_id`) REFERENCES `chips` (`id`),
+  CONSTRAINT `s_requests_release_id_foreign` FOREIGN KEY (`release_id`) REFERENCES `releases` (`id`),
+  CONSTRAINT `s_requests_sbind_id_foreign` FOREIGN KEY (`sbind_id`) REFERENCES `sbinds` (`id`),
+  CONSTRAINT `s_requests_stype_id_foreign` FOREIGN KEY (`stype_id`) REFERENCES `stypes` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sbind_histories`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `sbind_histories` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `sbind_id` bigint(20) unsigned NOT NULL COMMENT 'PBind表ID',
+  `status_old` bigint(20) unsigned DEFAULT NULL COMMENT '修改前适配状态',
+  `status_new` bigint(20) unsigned NOT NULL COMMENT '修改后适配状态',
+  `user_name` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '当前适配状态责任人',
+  `comment` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '状态变更说明',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `sbind_histories_sbind_id_foreign` (`sbind_id`) USING BTREE,
+  KEY `sbind_histories_status_old_foreign` (`status_old`) USING BTREE,
+  KEY `sbind_histories_status_new_foreign` (`status_new`) USING BTREE,
+  CONSTRAINT `sbind_histories_status_new_foreign` FOREIGN KEY (`status_new`) REFERENCES `statuses` (`id`),
+  CONSTRAINT `sbind_histories_status_old_foreign` FOREIGN KEY (`status_old`) REFERENCES `statuses` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sbinds`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `sbinds` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `softwares_id` bigint(20) unsigned NOT NULL COMMENT '软件ID',
+  `releases_id` bigint(20) unsigned NOT NULL COMMENT '操作系统版本ID',
+  `os_subversion` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '操作系统小版本号',
+  `chips_id` bigint(20) unsigned NOT NULL COMMENT '芯片ID',
+  `adapt_source` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '引入来源[厂商主动申请,BD主动拓展,行业营销中心引入,区域营销中心引入,最终客户反馈,产品经理引入,厂商合作事业本部引入,渠道部引入,相关机构反馈,其他方式引入]',
+  `adapted_before` tinyint(1) DEFAULT NULL COMMENT '是否适配过国产CPU',
+  `statuses_id` bigint(20) unsigned NOT NULL COMMENT '当前适配状态',
+  `statuses_comment` varchar(192) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `admin_user_id` bigint(20) unsigned DEFAULT NULL COMMENT '当前适配状态责任人',
+  `solution_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '安装包名称',
+  `solution` varchar(511) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '适配方案',
+  `class` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '兼容等级[READY,CERTIFICATION,VALIDATION,PROJECT]',
+  `adaption_type` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '适配类型[原生适配,自研适配,开源适配,项目适配]',
+  `test_type` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '测试方式[厂商自测,视频复测,远程测试,麒麟适配测试]',
+  `kylineco` tinyint(1) DEFAULT NULL COMMENT '是否上传生态网站',
+  `appstore` tinyint(1) DEFAULT NULL COMMENT '是否上架软件商店',
+  `iscert` tinyint(1) DEFAULT NULL COMMENT '是否互认证',
+  `certificate_NO` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '证书编号',
+  `test_report` int(11) DEFAULT NULL COMMENT '是否有测试报告',
+  `start_time` timestamp NULL DEFAULT NULL COMMENT '适配开始时间',
+  `complete_time` timestamp NULL DEFAULT NULL COMMENT '适配完成时间',
+  `comment` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '备注',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `sbinds_softwares_id_releases_id_chips_id_unique` (`softwares_id`,`releases_id`,`chips_id`) USING BTREE,
+  KEY `sbinds_releases_id_foreign` (`releases_id`) USING BTREE,
+  KEY `sbinds_chips_id_foreign` (`chips_id`) USING BTREE,
+  KEY `sbinds_statuses_id_foreign` (`statuses_id`) USING BTREE,
+  CONSTRAINT `sbinds_chips_id_foreign` FOREIGN KEY (`chips_id`) REFERENCES `chips` (`id`),
+  CONSTRAINT `sbinds_releases_id_foreign` FOREIGN KEY (`releases_id`) REFERENCES `releases` (`id`),
+  CONSTRAINT `sbinds_softwares_id_foreign` FOREIGN KEY (`softwares_id`) REFERENCES `softwares` (`id`),
+  CONSTRAINT `sbinds_statuses_id_foreign` FOREIGN KEY (`statuses_id`) REFERENCES `statuses` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `softwares`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `softwares` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '软件名',
+  `manufactors_id` bigint(20) unsigned NOT NULL COMMENT '厂商名称',
+  `package_name` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '包名',
+  `version` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '软件版本号',
+  `stypes_id` bigint(20) unsigned NOT NULL COMMENT '软件分类',
+  `industries` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '行业',
+  `appstore_soft` tinyint(1) DEFAULT NULL COMMENT '是否为软件商店应用',
+  `kernel_version` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '内核引用版本',
+  `crossover_version` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Crossover版本',
+  `box86_version` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Box86版本',
+  `bd` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Business Development, 生态负责人',
+  `am` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Adaption Manager, 适配负责人',
+  `tsm` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Technical Support Manager, 技术支撑负责人',
+  `comment` varchar(1530) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '软件描述',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `softwares_manufactors_id_name_version_unique` (`manufactors_id`,`name`,`version`) USING BTREE,
+  KEY `softwares_stypes_id_foreign` (`stypes_id`) USING BTREE,
+  CONSTRAINT `softwares_manufactors_id_foreign` FOREIGN KEY (`manufactors_id`) REFERENCES `manufactors` (`id`),
+  CONSTRAINT `softwares_stypes_id_foreign` FOREIGN KEY (`stypes_id`) REFERENCES `stypes` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `solution_matches`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `solution_matches` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '文件名',
+  `path` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '文件路径',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `specifications`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `specifications` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '参数名称',
+  `types_id` bigint(20) unsigned NOT NULL COMMENT '所属分类',
+  `isrequired` tinyint(1) NOT NULL COMMENT '是否必填',
+  `field` smallint(5) unsigned NOT NULL COMMENT '参数类型[0=>文本,1=>数字,2=>布尔]',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `specifications_unique` (`name`,`types_id`) USING BTREE,
+  KEY `specifications_types_id_foreign` (`types_id`) USING BTREE,
+  CONSTRAINT `specifications_types_id_foreign` FOREIGN KEY (`types_id`) REFERENCES `types` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `statuses`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `statuses` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '适配状态',
+  `parent` bigint(20) unsigned NOT NULL DEFAULT 0 COMMENT '父级ID',
+  `order` bigint(20) NOT NULL DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `stypes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `stypes` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '类型名称',
+  `parent` bigint(20) unsigned DEFAULT NULL COMMENT '父级ID',
+  `order` bigint(20) unsigned NOT NULL DEFAULT 0 COMMENT '排序',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `types`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `types` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '分类名称',
+  `parent` bigint(20) unsigned DEFAULT NULL COMMENT '父级ID',
+  `order` bigint(20) unsigned NOT NULL DEFAULT 0 COMMENT '排序',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `users` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email_verified_at` timestamp NULL DEFAULT NULL,
+  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `users_email_unique` (`email`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `values`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `values` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `peripherals_id` bigint(20) unsigned NOT NULL COMMENT '外设ID',
+  `specifications_id` bigint(20) unsigned NOT NULL COMMENT '参数ID',
+  `value` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '值',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `values_unique` (`peripherals_id`,`specifications_id`) USING BTREE,
+  KEY `values_specifications_id_foreign` (`specifications_id`) USING BTREE,
+  CONSTRAINT `values_specifications_id_foreign` FOREIGN KEY (`specifications_id`) REFERENCES `specifications` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+INSERT INTO `migrations` VALUES (1,'2014_10_12_000000_create_users_table',1);
+INSERT INTO `migrations` VALUES (2,'2014_10_12_100000_create_password_resets_table',1);
+INSERT INTO `migrations` VALUES (3,'2016_01_04_173148_create_admin_tables',1);
+INSERT INTO `migrations` VALUES (4,'2019_08_19_000000_create_failed_jobs_table',1);
+INSERT INTO `migrations` VALUES (5,'2019_12_14_000001_create_personal_access_tokens_table',1);
+INSERT INTO `migrations` VALUES (6,'2020_09_07_090635_create_admin_settings_table',1);
+INSERT INTO `migrations` VALUES (7,'2020_09_22_015815_create_admin_extensions_table',1);
+INSERT INTO `migrations` VALUES (8,'2020_11_01_083237_update_admin_menu_table',1);
+INSERT INTO `migrations` VALUES (9,'2022_02_21_094031_create_manufactors_table',1);
+INSERT INTO `migrations` VALUES (10,'2022_02_21_094246_create_brands_table',1);
+INSERT INTO `migrations` VALUES (11,'2022_02_21_094618_create_chips_table',1);
+INSERT INTO `migrations` VALUES (12,'2022_02_21_095050_create_releases_table',1);
+INSERT INTO `migrations` VALUES (13,'2022_02_21_095814_create_types_table',1);
+INSERT INTO `migrations` VALUES (14,'2022_02_21_095824_create_stypes_table',1);
+INSERT INTO `migrations` VALUES (15,'2022_02_21_100036_create_specifications_table',1);
+INSERT INTO `migrations` VALUES (16,'2022_02_21_101331_create_statuses_table',1);
+INSERT INTO `migrations` VALUES (17,'2022_02_21_101608_create_peripherals_table',1);
+INSERT INTO `migrations` VALUES (18,'2022_02_21_101836_create_values_table',1);
+INSERT INTO `migrations` VALUES (19,'2022_02_21_103316_create_pbinds_table',1);
+INSERT INTO `migrations` VALUES (20,'2022_03_01_173212_create_solution_matches_table',1);
+INSERT INTO `migrations` VALUES (21,'2022_03_03_103308_create_softwares_table',1);
+INSERT INTO `migrations` VALUES (22,'2022_03_03_103437_create_sbinds_table',1);
+INSERT INTO `migrations` VALUES (23,'2022_03_09_150632_create_pbind_histories_table',1);
+INSERT INTO `migrations` VALUES (24,'2022_03_09_152636_create_sbind_histories_table',1);
+INSERT INTO `migrations` VALUES (25,'2022_03_25_102548_create_srequests_table',1);
+INSERT INTO `migrations` VALUES (26,'2022_03_25_102650_create_srequests_histories_table',1);
+INSERT INTO `migrations` VALUES (27,'2022_03_25_102748_create_prequests_table',1);
+INSERT INTO `migrations` VALUES (28,'2022_03_25_102750_create_prequests_histories_table',1);
+INSERT INTO `migrations` VALUES (29,'2022_04_08_103251_update_srequests_table',2);
+INSERT INTO `migrations` VALUES (30,'2022_04_08_103314_update_prequests_table',2);
+INSERT INTO `migrations` VALUES (31,'2022_04_14_152145_update_prequests_os_subversion',2);
+INSERT INTO `migrations` VALUES (32,'2022_04_14_152154_update_srequests_os_subversion',2);
+INSERT INTO `migrations` VALUES (33,'2022_04_18_142523_update_prequests_unique',3);
+INSERT INTO `migrations` VALUES (34,'2022_04_18_152249_update_srequests_unique',3);
+INSERT INTO `migrations` VALUES (35,'2022_04_22_112440_update_brands_unique',4);
+INSERT INTO `migrations` VALUES (36,'2022_04_24_162839_update_pbindshitories_add_user_name',4);
+INSERT INTO `migrations` VALUES (37,'2022_04_24_170934_update_sbindshitories_add_user_name',4);
+INSERT INTO `migrations` VALUES (38,'2022_04_24_173051_update_pbind_add_user_name',4);
+INSERT INTO `migrations` VALUES (39,'2022_04_24_173059_update_sbind_add_user_name',4);
+INSERT INTO `migrations` VALUES (40,'2022_04_25_154005_update_prh_p_request_id_foreign',5);
+INSERT INTO `migrations` VALUES (41,'2022_04_25_154813_update_srh_s_request_id_foreign',5);
+INSERT INTO `migrations` VALUES (42,'2022_04_25_134014_create_oems_table',6);
+INSERT INTO `migrations` VALUES (44,'2022_04_25_164146_create_oem_histories_table',7);
+INSERT INTO `migrations` VALUES (47,'2022_04_27_105122_update_brands_name_en',8);
+INSERT INTO `migrations` VALUES (48,'2022_04_27_093456_update_srequests_histories_stutas_old_notnull',9);
+INSERT INTO `migrations` VALUES (49,'2022_04_27_093511_update_prequests_histories_stutas_old_notnull',9);
+INSERT INTO `migrations` VALUES (50,'2022_04_27_095454_update_prequests_histories_add_user_name',9);
+INSERT INTO `migrations` VALUES (51,'2022_04_27_095500_update_srequests_histories_add_user_name',9);
+INSERT INTO `migrations` VALUES (52,'2022_04_27_095516_update_oem_histories_add_user_name',9);
+INSERT INTO `migrations` VALUES (53,'2022_04_28_175143_update_oem_add_test_report',10);
+INSERT INTO `migrations` VALUES (54,'2022_04_29_145411_update_oem_add_industries',10);
+INSERT INTO `migrations` VALUES (55,'2022_05_05_145106_create_otypes_table',10);
+INSERT INTO `migrations` VALUES (56,'2022_05_05_164115_update_pbind_sbind_add_test_report',10);
+INSERT INTO `migrations` VALUES (57,'2022_05_06_104245_update_oems_path_unnull',10);
+INSERT INTO `migrations` VALUES (58,'2022_05_06_104954_update_oems_histories_status_old_unnull',10);
+INSERT INTO `migrations` VALUES (59,'2022_05_07_091009_update_oems_other_null',11);
+INSERT INTO `migrations` VALUES (60,'2022_05_07_104626_update_histories_add_id',12);
+INSERT INTO `migrations` VALUES (61,'2022_05_12_095203_update_s_request_add_creator',13);
+INSERT INTO `migrations` VALUES (62,'2022_05_12_095222_update_p_request_add_creator',13);
+INSERT INTO `migrations` VALUES (64,'2022_05_12_152752_update_types_add_order',14);
+INSERT INTO `migrations` VALUES (65,'2022_05_16_110553_update_omes_details',15);
+INSERT INTO `migrations` VALUES (66,'2022_05_16_134531_create_jobs_table',16);
+INSERT INTO `migrations` VALUES (68,'2022_06_07_094003_create_audits_table',17);
+INSERT INTO `migrations` VALUES (69,'2022_06_07_155041_update_for_audit',17);
+INSERT INTO `migrations` VALUES (70,'2022_06_09_144012_update_admin_user_id',18);
+INSERT INTO `migrations` VALUES (71,'2022_06_06_162914_update_value_unique',19);
+INSERT INTO `migrations` VALUES (72,'2022_06_06_175116_update_specifications_unique',19);
+INSERT INTO `migrations` VALUES (73,'2022_06_10_134612_update_oem_admin_user_id',19);
+INSERT INTO `migrations` VALUES (74,'2022_06_13_121636_update_histories_for_audit',20);
+INSERT INTO `migrations` VALUES (75,'2022_06_15_101908_update_create_histories_for_audit',21);
+INSERT INTO `migrations` VALUES (76,'2022_06_23_102908_update_requests_required',22);
+INSERT INTO `migrations` VALUES (77,'2022_07_14_165556_update_brands_zh_en_name_unique',23);
