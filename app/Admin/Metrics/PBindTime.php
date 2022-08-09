@@ -27,9 +27,6 @@ class PBindTime extends Bar
 
         $color = Admin::color();
 
-        $ccc = new TimeAVG;
-        $ccc();
-
         $dark35 = $color->dark35();
 
         // $this->chartLabels($this->labels);
