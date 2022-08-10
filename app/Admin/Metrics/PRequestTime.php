@@ -16,7 +16,7 @@ use PhpOffice\PhpSpreadsheet\Calculation\Statistical\Averages;
 
 class PRequestTime extends Bar
 {
-    protected $labels = ['解决耗时','接收耗时','无法处理耗时'];
+    protected $labels = ['接收耗时','解决耗时','无法处理耗时'];
     /**
      * 初始化卡片内容
      */
@@ -110,19 +110,19 @@ class PRequestTime extends Bar
     <div style="width: {$labelWidth}px">
         <i class="fa fa-circle" style="color: $colors[0]"></i> {$this->labels[0]}
     </div>
-    <div>{$data[0]}</div>
+    <div>{$data[0]} h</div>
 </div>
 <div class="d-flex pl-1 pr-1 pt-1" style="{$style}">
     <div style="width: {$labelWidth}px">
         <i class="fa fa-circle" style="color: $colors[1]"></i> {$this->labels[1]}
     </div>
-    <div>{$data[1]}</div>
+    <div>{$data[1]} h</div>
 </div>
 <div class="d-flex pl-1 pr-1 pt-1" style="{$style}">
     <div style="width: {$labelWidth}px">
         <i class="fa fa-circle" style="color: $colors[2]"></i> {$this->labels[2]}
     </div>
-    <div>{$data[2]}</div>
+    <div>{$data[2]} h</div>
 </div>
 HTML
         );

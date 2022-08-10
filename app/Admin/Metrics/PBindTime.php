@@ -116,31 +116,31 @@ class PBindTime extends Bar
     <div style="width: {$labelWidth}px">
         <i class="fa fa-circle" style="color: $colors[0]"></i> {$this->labels[0]}
     </div>
-    <div>{$data[0]}</div>
+    <div>{$data[0]} h</div>
 </div>
 <div class="d-flex pl-1 pr-1 pt-1" style="{$style}">
     <div style="width: {$labelWidth}px">
         <i class="fa fa-circle" style="color: $colors[1]"></i> {$this->labels[1]}
     </div>
-    <div>{$data[1]}</div>
+    <div>{$data[1]} h</div>
 </div>
 <div class="d-flex pl-1 pr-1 pt-1" style="{$style}">
     <div style="width: {$labelWidth}px">
         <i class="fa fa-circle" style="color: $colors[2]"></i> {$this->labels[2]}
     </div>
-    <div>{$data[2]}</div>
+    <div>{$data[2]} h</div>
 </div>
 <div class="d-flex pl-1 pr-1 pt-1" style="{$style}">
     <div style="width: {$labelWidth}px">
         <i class="fa fa-circle" style="color: $colors[3]"></i> {$this->labels[3]}
     </div>
-    <div>{$data[3]}</div>
+    <div>{$data[3]} h</div>
 </div>
 <div class="d-flex pl-1 pr-1 pt-1" style="{$style}">
     <div style="width: {$labelWidth}px">
         <i class="fa fa-circle" style="color: $colors[4]"></i> {$this->labels[4]}
     </div>
-    <div>{$data[4]}</div>
+    <div>{$data[4]} h</div>
 </div>
 HTML
         );
