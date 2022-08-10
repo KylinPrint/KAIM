@@ -46,11 +46,13 @@ class TimeAVG {
                 }
                 //算时间  各个状态耗时
                 if(count($arr) > 1){
+                    //把这条数据的第一条状态数据拿出来,按道理即是创建时的数据
                     $cur_status = [
                         'status'     => $arr[0]['new_value_status_id'],
                         'updated_at' => $arr[0]['updated_at']
                     ];
                     for($i = 0; $i <= count($arr) - 1; $i++){
+                        //如果这条状态数据的旧状态和当前数据的新状态一直,且自身新旧状态有变化,判断为发生了状态变化
                         if( 
                             $cur_status['status'] == $arr[$i]['old_value_status_id'] &&
                             $arr[$i]['old_value_status_id'] != $arr[$i]['new_value_status_id']
@@ -66,7 +68,7 @@ class TimeAVG {
 
                         }
                     }
-                }   
+                }
             }
         }
         return $time_statistics_arr;
