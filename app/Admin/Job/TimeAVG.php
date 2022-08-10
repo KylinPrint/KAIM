@@ -45,7 +45,7 @@ class TimeAVG {
  
                 }
                 //算时间  各个状态耗时
-                if(count($arr) > 1){
+                if(isset($arr) && count($arr) > 1){
                     //把这条数据的第一条状态数据拿出来,按道理即是创建时的数据
                     $cur_status = [
                         'status'     => $arr[0]['new_value_status_id'],
@@ -214,7 +214,7 @@ class TimeAVG {
                 }
                 //算时间  三个流程耗时
                 //TODO 有数据存在第一条审计状态不是'已提交',mgj
-                if(count($arr) > 1 && $arr[0]['new_value_status'] == '已提交'){
+                if(isset($arr) && count($arr) > 1 && $arr[0]['new_value_status'] == '已提交'){
                     $cur_start = $arr[0]['updated_at'];
                     $processing = 1;$processed = 1;$fail_process = 1;
                     foreach($arr as $v){
