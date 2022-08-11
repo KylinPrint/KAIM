@@ -100,9 +100,9 @@ class PbindController extends AdminController
                 elseif (!$brand->name_en) { return $brand->name; }
                 else { return $brand->name . '(' . $brand->name_en . ')'; }
             });
-            $grid->column('peripherals.name',__('外设型号'));
+            $grid->column('peripherals.name',__('产品名称'));
             // 脑瘫代码
-            $grid->column('peripherals.types_id',__('外设类型'))->display(function ($type) {
+            $grid->column('peripherals.types_id',__('产品名称'))->display(function ($type) {
                 $curType = Type::where('id',$type)->first();
                 $curParentTypeName = Type::where('id',$curType->parent)->pluck('name')->first();
                 if($curParentTypeName){
@@ -303,7 +303,7 @@ class PbindController extends AdminController
                 elseif (!$brand->name_en) { return $brand->name; }
                 else { return $brand->name . '(' . $brand->name_en . ')'; }
             });
-            $show->field('peripherals',__('型号'))->as(function ($peripherals) {
+            $show->field('peripherals',__('产品名称'))->as(function ($peripherals) {
                 return "<a href=" . admin_url('peripherals/' . $peripherals["id"]) . ">" . $peripherals["name"] . "</a>";
             })->link();
             $show->field('peripherals.types_id',__('外设类型'))->as(function ($type) {
@@ -379,7 +379,7 @@ class PbindController extends AdminController
             // 获取要复制的行的ID
             $template = Pbind::find(request('template'));
 
-            $form->select('peripherals_id',__('型号'))
+            $form->select('peripherals_id',__('产品名称'))
                 ->options(function ($id) {
                     $peripheral = Peripheral::find($id);
                 
