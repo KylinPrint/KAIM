@@ -240,8 +240,8 @@ class TimeAVG {
                 }
                 //算时间  三个流程耗时
                 //TODO 有数据存在第一条审计状态不是'已提交',mgj
-                if(isset($audit) && count($audit) > 1 && array_key_first($audit) == '已提交'){
-                    $cur_start = current($audit);
+                if(isset($audit) && count($audit) > 1 && isset($audit['已提交'])){
+                    $cur_start = $audit['已提交'];
                     $processing = 1;$processed = 1;$fail_process = 1;
                     foreach($audit as $k => $v){
                         if($k == '已提交'){continue;} //这句有点蠢,看怎么优化
@@ -293,7 +293,7 @@ class TimeAVG {
         }
         $time_statistics_avg = ['processing_avg' => 0 , 'processed_avg' => 0 ,'fail_process_avg' => 0];
         if($time_statistics['processing_count']){
-            $time_statistics_avg['processing_avg'] = $time_statistics['processing_sum']   / $time_statistics['processing_count'];
+            $time_statistics_avg['processing_avg'] = $time_statistics['processing_sum']  / $time_statistics['processing_count'];
         }
         if($time_statistics['processed_count']){
             $time_statistics_avg['processed_avg'] = $time_statistics['processed_sum']    / $time_statistics['processed_count'];
