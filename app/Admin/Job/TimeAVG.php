@@ -25,50 +25,32 @@ class TimeAVG {
             //审计是否为空
             if ($p_bind_audit_cur_arr->count()) {
                 //每条审计处理
-                $arr = [];
+                $creat_stake = 0;
+                $audit = [];
                 foreach($p_bind_audit_cur_arr as $p_bind_audit_cur){
                     //过滤不带状态审计数据
-                    if(isset(($p_bind_audit_cur->new_values)['statuses_id']) && isset(($p_bind_audit_cur->old_values)['statuses_id'])){
-                        $audit['new_value_status_id'] = ($p_bind_audit_cur->new_values)['statuses_id'];
-                        $audit['old_value_status_id'] = ($p_bind_audit_cur->old_values)['statuses_id'];
-                        $audit['updated_at'] = $p_bind_audit_cur->updated_at;
+                    //TODO 怎么能不跑只有创建数据的?
 
-                        $arr[] = $audit;
+                    //判断状态变更数据
+                    if( isset(($p_bind_audit_cur->new_values)['statuses_id']) && 
+                        isset(($p_bind_audit_cur->old_values)['statuses_id']) &&
+                        ($p_bind_audit_cur->new_values)['statuses_id'] != ($p_bind_audit_cur->old_values)['statuses_id']
+                      ){
+                        $audit[($p_bind_audit_cur->new_values)['statuses_id']] = $p_bind_audit_cur->updated_at;
+
                     }
-                    elseif(isset(($p_bind_audit_cur->new_values)['statuses_id']) && !isset(($p_bind_audit_cur->old_values)['statuses_id'])){
-                        $audit['new_value_status_id'] = ($p_bind_audit_cur->new_values)['statuses_id'];
-                        $audit['old_value_status_id'] = '';
-                        $audit['updated_at'] = $p_bind_audit_cur->updated_at;
-
-                        $arr[] = $audit;
-                    }
- 
-                }
-                //算时间  各个状态耗时
-                if(isset($arr) && count($arr) > 1){
-                    //把这条数据的第一条状态数据拿出来,按道理即是创建时的数据
-                    $cur_status = [
-                        'status'     => $arr[0]['new_value_status_id'],
-                        'updated_at' => $arr[0]['updated_at']
-                    ];
-                    for($i = 0; $i <= count($arr) - 1; $i++){
-                        //如果这条状态数据的旧状态和当前数据的新状态一直,且自身新旧状态有变化,判断为发生了状态变化
-                        if( 
-                            $cur_status['status'] == $arr[$i]['old_value_status_id'] &&
-                            $arr[$i]['old_value_status_id'] != $arr[$i]['new_value_status_id']
-                        ){
-                            $cur_time_statistics['status_id'] = $cur_status['status'];
-                            $cur_time_statistics['time'] = $arr[$i]['updated_at']->diffInHours($cur_status['updated_at'], true);
-                            $cur_status = [
-                                'status'     => $arr[$i]['new_value_status_id'],
-                                'updated_at' => $arr[$i]['updated_at']
-                            ];  
-                            //TODO 内存溢出点,看多重循环怎么用yeild                     
-                            $time_statistics_arr[$p_bind_id][] = $cur_time_statistics;   
-
-                        }
+                    //判断创建数据
+                    if(isset(($p_bind_audit_cur->new_values)['statuses_id']) && 
+                        !isset(($p_bind_audit_cur->old_values)['statuses_id']) &&
+                        $creat_stake == 0
+                    ){
+                        $audit[($p_bind_audit_cur->new_values)['statuses_id']] = $p_bind_audit_cur->updated_at;
+                        
+                        $creat_stake ++;
                     }
                 }
+                if(count($audit) > 1){$time_statistics_arr[$p_bind_id] = $audit;}
+                unset($audit);
             }
         }
         return $time_statistics_arr;
@@ -87,8 +69,8 @@ class TimeAVG {
         $status_id_2_6 = Status::where('name','问题复测中')->pluck('id')->first();
         $status_id_2_end = Status::where('name','测试报告确认中')->pluck('id')->first();
         $status_id_3 = Status::where('name','问题修复中—系统问题')->pluck('id')->first();
-        $status_id_4_1_end = Status::where('name','适配成果已提交上架软件商店')->pluck('id')->first();
-        $status_id_4_2_end = Status::where('name','适配成果已上架至软件商店')->pluck('id')->first();
+        $status_id_4_1 = Status::where('name','适配成果已提交上架软件商店')->pluck('id')->first();
+        $status_id_4_end = Status::where('name','适配成果已上架至软件商店')->pluck('id')->first();
         $status_id_5_1 = Status::where('name','互认证证书制作中')->pluck('id')->first();
         $status_id_5_2 = Status::where('name','证书邮寄中（后期）')->pluck('id')->first();
         $status_id_5_3 = Status::where('name','证书归档中（后期）')->pluck('id')->first();
@@ -103,59 +85,112 @@ class TimeAVG {
             'status_5_sum'    => 0 ,'status_5_count'   => 0,
         ];
         //TODO 这个双层循环待优化
-        foreach($time_statistics_arr as $vv){
-            //判断该数据是否存在情况2或5的终态
-            $status_2_end_exist = in_array($status_id_2_end,array_column($vv,'status_id'))?1:0;
-            $status_5_end_exist = in_array($status_id_5_end,array_column($vv,'status_id'))?1:0;
-            foreach($vv as $v){
+        foreach($time_statistics_arr as $kk => $vv){
+            //判断该数据是否存在终态
+            $status_2_end_exist = array_key_exists($status_id_2_end,$vv) ?1:0;
+            $status_4_end_exist = array_key_exists($status_id_4_end,$vv) ?1:0;
+            $status_5_end_exist = array_key_exists($status_id_5_end,$vv) ?1:0;
+            
+            $i = 0;
+
+            $status_1_start_time = null;
+            $status_1_start_stake = 0;
+
+            $status_2_start_time = null;
+
+            $status_3_start_time = null;
+            $status_3_start_stake = 0;
+
+            $status_4_start_time = null;
+
+            $status_5_start_time = null;
+
+            foreach($vv as $k => $v){
                 //1.适配复测排期耗时
-                if($v['status_id'] == $status_id_1){
-                    $time_statistics['status_1_sum'] += $v['time'];
-                    ++ $time_statistics['status_1_count'];
+                if($status_1_start_time && $status_1_start_stake == 0){
+                    $time_statistics['status_1_sum'] += $v->diffInHours($status_1_start_time, true);
+                    $time_statistics['status_1_count'] ++;
+                    $status_1_start_stake ++;
                 }
-                //2.适配复测耗时
+                elseif(!$status_1_start_time && $k == $status_id_1 && $i < count($vv)-1){
+                    $status_1_start_time = $v;
+                }
+                //2.获取流程2中最小时间
                 if($status_2_end_exist){
                     if( 
-                        $v['status_id'] == $status_id_2_1 ||
-                        $v['status_id'] == $status_id_2_2 ||
-                        $v['status_id'] == $status_id_2_3 ||
-                        $v['status_id'] == $status_id_2_4 ||
-                        $v['status_id'] == $status_id_2_5 ||
-                        $v['status_id'] == $status_id_2_6 ||
-                        $v['status_id'] == $status_id_2_end 
+                        $k == $status_id_2_1 ||
+                        $k == $status_id_2_2 ||
+                        $k == $status_id_2_3 ||
+                        $k == $status_id_2_4 ||
+                        $k == $status_id_2_5 ||
+                        $k == $status_id_2_6  
                     ){
-                        $time_statistics['status_2_sum'] += $v['time'];
-                        if($v['status_id'] == $status_id_2_end){
-                            ++ $time_statistics['status_2_count'];
+                        if(is_null($status_2_start_time)){
+                            $status_2_start_time = $v;
+                        }
+                        elseif($status_2_start_time && $v->lt($status_2_start_time))
+                        {
+                            $status_2_start_time = $v;
                         }
                     } 
                 }
                 //3.系统问题处理耗时
-                if($v['status_id'] == $status_id_3){
-                    $time_statistics['status_3_sum'] += $v['time'];
-                    ++ $time_statistics['status_3_count'];
+                if($status_3_start_time && $status_3_start_stake == 0){
+                    $time_statistics['status_3_sum'] += $v->diffInHours($status_3_start_time, true);
+                    $time_statistics['status_3_count'] ++;
+                    $status_3_start_stake ++;
+                }
+                elseif(!$status_3_start_time && $k == $status_id_3 && $i < count($vv)-1){
+                    $status_3_start_time = $v;
                 }
                 //4.上架耗时
-                if($v['status_id'] == $status_id_4_1_end || $v['status_id'] == $status_id_4_2_end){
-                    $time_statistics['status_4_sum'] += $v['time'];
-                    ++ $time_statistics['status_4_count'];
+                if($status_4_end_exist){
+                    if( 
+                        $k == $status_id_4_1
+                    ){
+                        if(is_null($status_4_start_time)){
+                            $status_4_start_time = $v;
+                        }
+                        elseif($status_4_start_time && $v->lt($status_4_start_time))
+                        {
+                            $status_4_start_time = $v;
+                        }
+                    } 
                 }
-                //5.证书制作及归档耗时
+                //5.获取流程5中最小时间
                 if($status_5_end_exist){
                     if( 
-                        $v['status_id'] == $status_id_5_1 ||
-                        $v['status_id'] == $status_id_5_2 ||
-                        $v['status_id'] == $status_id_5_3 ||
-                        $v['status_id'] == $status_id_5_end
+                        $k == $status_id_5_1 ||
+                        $k == $status_id_5_2 ||
+                        $k == $status_id_5_3 ||
+                        $k == $status_id_5_end
                     ){
-                        $time_statistics['status_5_sum'] += $v['time'];
-                        if($v['status_id'] == $status_id_5_end){
-                            ++ $time_statistics['status_5_count'];
+                        if(is_null($status_5_start_time)){
+                            $status_5_start_time = $v;
+                        }
+                        elseif($status_5_start_time && $v->lt($status_5_start_time))
+                        {
+                            $status_5_start_time = $v;
                         }
                     } 
                 }
             }
-            unset($status_2_end_exist);unset($status_5_end_exist);
+            //适配复测耗时
+            if($status_2_end_exist && $status_2_start_time){
+                $time_statistics['status_2_sum'] += $vv[ $status_id_2_end]->diffInHours($status_2_start_time,true);
+                $time_statistics['status_2_count'] ++;
+            }
+            //
+            if($status_4_end_exist && $status_4_start_time){
+                $time_statistics['status_4_sum'] += $vv[ $status_id_4_end]->diffInHours($status_4_start_time,true);
+                $time_statistics['status_4_count'] ++;
+            }
+            //证书制作及归档耗时
+            if($status_5_end_exist && $status_5_start_time){
+                $time_statistics['status_5_sum'] += $vv[ $status_id_5_end]->diffInHours($status_5_start_time,true);
+                $time_statistics['status_5_count'] ++;
+            }
+            unset($status_2_end_exist);unset($status_4_end_exist);unset($status_5_end_exist);
         }
 
         //算平均耗时
@@ -196,47 +231,39 @@ class TimeAVG {
             if ($p_request_audit_cur_arr->count()) {
                 foreach($p_request_audit_cur_arr as $p_request_audit_cur){
                     //过滤不带状态审计数据
-                    if(isset(($p_request_audit_cur->new_values)['status']) && isset(($p_request_audit_cur->old_values)['status'])){
-                        $audit['new_value_status'] = ($p_request_audit_cur->new_values)['status'];
-                        $audit['old_value_status'] = ($p_request_audit_cur->old_values)['status'];
-                        $audit['updated_at'] = $p_request_audit_cur->updated_at;
-
-                        $arr[] = $audit;
-                    }
                     if(isset(($p_request_audit_cur->new_values)['status']) && !isset(($p_request_audit_cur->old_values)['status'])){
-                        $audit['new_value_status'] = ($p_request_audit_cur->new_values)['status'];
-                        $audit['old_value_status'] = '';
-                        $audit['updated_at'] = $p_request_audit_cur->updated_at;
-
-                        $arr[] = $audit;
+                        $audit[($p_request_audit_cur->new_values)['status']] =  $p_request_audit_cur->updated_at;
                     }
-
+                    if(isset(($p_request_audit_cur->new_values)['status']) && isset(($p_request_audit_cur->old_values)['status'])){
+                        $audit[($p_request_audit_cur->new_values)['status']] =  $p_request_audit_cur->updated_at;
+                    }   
                 }
                 //算时间  三个流程耗时
                 //TODO 有数据存在第一条审计状态不是'已提交',mgj
-                if(isset($arr) && count($arr) > 1 && $arr[0]['new_value_status'] == '已提交'){
-                    $cur_start = $arr[0]['updated_at'];
+                $aaa = array_key_first($audit);
+                if(isset($audit) && count($audit) > 1 && array_key_first($audit) == '已提交'){
+                    $cur_start = current($audit);
                     $processing = 1;$processed = 1;$fail_process = 1;
-                    foreach($arr as $v){
-                        if($v['new_value_status'] == '已提交'){continue;} //这句有点蠢,看怎么优化
+                    foreach($audit as $k => $v){
+                        if($k == '已提交'){continue;} //这句有点蠢,看怎么优化
 
-                        if($v['new_value_status'] == '处理中' && $processing == 1){
-                            $cur_time_statistics['processing_time'] = $v['updated_at']->diffInHours($cur_start, true);
+                        if($k == '处理中' && $processing == 1){
+                            $cur_time_statistics['processing_time'] = $v->diffInHours($cur_start, true);
                             $processing = 0;
                         }
-                        elseif($v['new_value_status'] == '已解决' && $processed == 1){
-                            $cur_time_statistics['processed_time'] = $v['updated_at']->diffInHours($cur_start, true);
+                        elseif($k == '已解决' && $processed == 1){
+                            $cur_time_statistics['processed_time'] = $v->diffInHours($cur_start, true);
                             $processed = 0;
                         }
-                        elseif($v['new_value_status'] == '无法处理' && $fail_process == 1){
-                            $cur_time_statistics['fail_process_time'] = $v['updated_at']->diffInHours($cur_start, true);
+                        elseif($k == '无法处理' && $fail_process == 1){
+                            $cur_time_statistics['fail_process_time'] = $v->diffInHours($cur_start, true);
                             $fail_process = 0;
                         }
                         //TODO 内存溢出点,看多重循环怎么用yeild
                         $time_statistics_arr[$p_request_id] = $cur_time_statistics; ;
                     }
                 }
-                unset($arr);
+                unset($audit);
             }
         }
         return $time_statistics_arr;
