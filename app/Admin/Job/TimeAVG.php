@@ -240,7 +240,6 @@ class TimeAVG {
                 }
                 //算时间  三个流程耗时
                 //TODO 有数据存在第一条审计状态不是'已提交',mgj
-                $aaa = array_key_first($audit);
                 if(isset($audit) && count($audit) > 1 && array_key_first($audit) == '已提交'){
                     $cur_start = current($audit);
                     $processing = 1;$processed = 1;$fail_process = 1;
