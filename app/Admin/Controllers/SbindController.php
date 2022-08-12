@@ -372,9 +372,9 @@ class SbindController extends AdminController
             // 先倒个车
             $form->select('softwares_id')
                 ->options(function (){
-                    $softwares = Software::all();
+                    $softwares = Software::select(['id','name','version'])->get();
                     foreach($softwares as $software){
-                        $arr[$software->id] = $software->name.' '.$software->version;            
+                        $arr[$software->id] = $software->name.' '.$software->version;
                     }
                     return $arr;
                 })
