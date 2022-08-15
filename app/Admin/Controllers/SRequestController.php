@@ -5,8 +5,8 @@ namespace App\Admin\Controllers;
 use App\Admin\Actions\Exports\SRequestExport;
 use App\Admin\Actions\Grid\ShowAudit;
 use App\Admin\Actions\Modal\ImportModal;
-use App\Admin\Actions\Modal\SRequestModal;
 use App\Admin\Actions\Others\StatusBatch;
+use App\Admin\Renderable\SbindTable;
 use App\Admin\Utils\ContextMenuWash;
 use App\Admin\Utils\RequestStatusGraph;
 use App\Models\AdminUser;
@@ -25,7 +25,6 @@ use Dcat\Admin\Show;
 use Dcat\Admin\Http\Controllers\AdminController;
 use Dcat\Admin\Layout\Content;
 use Dcat\Admin\Widgets\Alert;
-use OwenIt\Auditing\Models\Audit;
 
 class SRequestController extends AdminController
 {
@@ -457,6 +456,16 @@ class SRequestController extends AdminController
                                 ->setLabelClass(['asterisk']);
                             $form->hidden('sbind_id');
                         }
+                    })->when('已拒绝', function (Form $form) {
+                        $form->radio('is_exist', '是否关联适配数据')
+                            ->setLabelClass(['asterisk'])
+                            ->options([0 => '否', 1 => '是'])->default(0)
+                            ->when(1, function (Form $form) {
+                                $form->selectTable('sbind_id', '关联的适配数据')
+                                    ->from(SbindTable::make([ 'stype_id' => $form->model()->stype_id ]))
+                                    // 这里Dcat不支持关系,只能填俩ID
+                                    ->model(Sbind::class, 'id', 'id');
+                            });
                     })
                     ->options(function () use ($request_status_graph) {
                         // 加上自己
@@ -522,7 +531,7 @@ class SRequestController extends AdminController
                     }
                     
                     // 删除临时数据
-                    $form->deleteInput(['statuses_id', 'statuses_comment', 'admin_user_id', 'class', 'test_type', 'adaption_type', 'kylineco', 'appstore', 'iscert']);
+                    $form->deleteInput(['statuses_id', 'statuses_comment', 'admin_user_id', 'class', 'test_type', 'adaption_type', 'kylineco', 'appstore', 'iscert', 'is_exist']);
                 } else {
                     // 读取表单数据
                     $data = $form->input();
