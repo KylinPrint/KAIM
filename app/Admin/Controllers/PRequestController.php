@@ -6,6 +6,7 @@ use App\Admin\Actions\Exports\PRequestExport;
 use App\Admin\Actions\Grid\ShowAudit;
 use App\Admin\Actions\Modal\ImportModal;
 use App\Admin\Actions\Others\StatusBatch;
+use App\Admin\Renderable\PbindTable;
 use App\Admin\Utils\ContextMenuWash;
 use App\Admin\Utils\RequestStatusGraph;
 use App\Models\AdminUser;
@@ -455,6 +456,16 @@ class PRequestController extends AdminController
                                 ->setLabelClass(['asterisk']);
                             $form->hidden('pbind_id');
                         }
+                    })->when('已拒绝', function (Form $form) {
+                        $form->radio('is_exist', '是否关联适配数据')
+                            ->setLabelClass(['asterisk'])
+                            ->options([0 => '否', 1 => '是'])->default(0)
+                            ->when(1, function (Form $form) {
+                                $form->selectTable('pbind_id', '关联的适配数据')
+                                    ->from(PbindTable::make([ 'type_id' => $form->model()->type_id ]))
+                                    // 这里Dcat不支持关系,只能填俩ID
+                                    ->model(Pbind::class, 'id', 'id');
+                            });
                     })
                     ->options(function () use ($request_status_graph) {
                         // 加上自己
@@ -548,7 +559,7 @@ class PRequestController extends AdminController
                     }
                     
                     // 删除临时数据
-                    $form->deleteInput(['statuses_id', 'statuses_comment', 'admin_user_id', 'class', 'test_type', 'adaption_type', 'kylineco', 'appstore', 'iscert']);
+                    $form->deleteInput(['statuses_id', 'statuses_comment', 'admin_user_id', 'class', 'test_type', 'adaption_type', 'kylineco', 'appstore', 'iscert', 'is_exist']);
                 } else {
                     // 读取表单数据
                     $data = $form->input();

@@ -2,6 +2,7 @@
 
 namespace App\Admin\Actions\Form\StatusBatch;
 
+use App\Admin\Renderable\SbindTable;
 use App\Admin\Utils\RequestStatusGraph;
 use App\Models\AdminUser;
 use App\Models\Manufactor;
@@ -128,6 +129,10 @@ class SRStatusBatchForm extends Form implements LazyRenderable
                     $srequest->sbind_id = $sbind->id;
                 }
 
+                if ($input['status'] == '已拒绝' && $input['is_exist'] == 1) {
+                    $srequest->sbind_id = $input['sbind_id'];
+                }
+
                 // 状态的改
                 if ($input['status']) { $srequest->status = $input['status']; }
                 if ($input['status_comment']) { $srequest->status_comment = $input['status_comment']; }   
@@ -198,6 +203,17 @@ class SRStatusBatchForm extends Form implements LazyRenderable
                                         ['required_if' => '请填写' . admin_trans('sbind.fields.iscert')]
                                     )
                                     ->setLabelClass(['asterisk']);
+                            });
+                    })
+                    ->when('已拒绝', function (Form $form) {
+                        $form->radio('is_exist', '是否关联适配数据')
+                            ->setLabelClass(['asterisk'])
+                            ->options([0 => '否', 1 => '是'])->default(0)
+                            ->when(1, function (Form $form) {
+                                $form->selectTable('sbind_id', '关联的适配数据')
+                                    ->from(SbindTable::make())
+                                    // 这里Dcat不支持关系,只能填俩ID
+                                    ->model(Sbind::class, 'id', 'id');
                             });
                     })
                     ->options(function () {
