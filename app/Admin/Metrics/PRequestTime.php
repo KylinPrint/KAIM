@@ -34,7 +34,12 @@ class PRequestTime extends Bar
         $this->contentWidth(5, 7);
         // 标题
         $this->title('需求平均耗时');
-        // 设置下拉选项
+        $this->dropdown([
+            '7' => 'Last 7 Days',
+            '30' => 'Last Month',
+            '365' => 'Last Year',
+            '1' => 'All'
+        ]);
 
         // 设置图表颜色
         $this->chartColors([
@@ -51,18 +56,20 @@ class PRequestTime extends Bar
      *
      * @return mixed|void
      */
-    public function handle()
+    public function handle(Request $request)
     {
         $o = [
             'processing_sum'    => 0 ,'processing_count'   => 0,
             'processed_sum'     => 0 ,'processed_count'    => 0,
             'fail_process_sum'  => 0 ,'fail_process_count' => 0,
         ];
-        $a = Cache::get('p_request_time_avg')?:$o;
-        // $b = Cache::get('p_request_time_avg');
+        $cache_name = 'p_request_time_avg_'.$request->get('option');
+        $a = Cache::get($cache_name)?:$o;
+
         $color = Admin::color();
         $colors = [$color->yellow(), $color->green(),$color->blue(),$color->gray()];
         // 卡片内容
+
         $this->withContent(array_values($a), $colors);
 
         // 图表数据
@@ -98,7 +105,9 @@ class PRequestTime extends Bar
      */
     protected function withContent(array $data, $colors)
     {
-        // $content = parent::render();
+        $label = strtolower(
+            $this->dropdown[request()->option] ?? 'last 7 days'
+        );
 
 
         $style = 'margin-bottom: 8px';

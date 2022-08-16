@@ -36,7 +36,12 @@ class PBindTime extends Bar
         // 标题
         $this->title('适配平均耗时');
         // 设置下拉选项
-
+        $this->dropdown([
+            '7' => 'Last 7 Days',
+            '30' => 'Last Month',
+            '365' => 'Last Year',
+            '1' => 'All'
+        ]);
         // 设置图表颜色
         $this->chartColors([
             $dark35,
@@ -55,7 +60,7 @@ class PBindTime extends Bar
      *
      * @return mixed|void
      */
-    public function handle()
+    public function handle(Request $request)
     {
         $o = [
             'status_1_sum'    => 0 ,'status_1_count'   => 0,
@@ -64,8 +69,9 @@ class PBindTime extends Bar
             'status_4_sum'    => 0 ,'status_4_count'   => 0,
             'status_5_sum'    => 0 ,'status_5_count'   => 0,
         ];
-        $a = Cache::get('p_bind_time_avg')?:$o;
-        // $b = Cache::get('p_request_time_avg');
+        $cache_name = 'p_bind_time_avg_'.$request->get('option');
+        $a = Cache::get($cache_name)?:$o;
+
         $color = Admin::color();
         $colors = [$color->red(),$color->yellow(), $color->green(),$color->blue(),$color->gray()];
         // 卡片内容

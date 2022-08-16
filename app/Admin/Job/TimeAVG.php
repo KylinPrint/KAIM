@@ -8,57 +8,98 @@ use App\Models\Status;
 use Illuminate\Support\Facades\Cache;
 
 class TimeAVG {
+
+    protected $P_bind_time;
+    protected $p_request_time;
+
     function __invoke(){
-        $this->P_bind_status_time_avg();
-        $this->P_request_status_time_avg();
+        $this->P_bind_time = $this->P_bind_status_time_every_data();
+        $this->P_bind_status_time_avg(1);
+        $this->P_bind_status_time_avg(7);
+        $this->P_bind_status_time_avg(30);
+        $this->P_bind_status_time_avg(365);
+
+        $this->p_request_time = $this->P_request_status_time_every_data();
+        $this->P_request_status_time_avg(1);
+        $this->P_request_status_time_avg(7);
+        $this->P_request_status_time_avg(30);
+        $this->P_request_status_time_avg(365);
     }
 
     public function P_bind_status_time_every_data(){
 
         $p_bind_ids = Pbind::whereNot('statuses_id',null)->pluck('id');
+
+        $now      = now();
+        $WeekAgo  = now()->subWeek();
+        $MonthAgo = now()->subMonth();
+        $YearAgo  = now()->subYear();
         //所有适配数据id
         foreach($p_bind_ids as $p_bind_id){
             //单条适配数据审计
             //TODO 这一条消耗较大,看怎么搞到循环外去
             $p_bind_audit_cur_arr = Pbind::find($p_bind_id)->audits()->get();
 
-            //审计是否为空
-            if ($p_bind_audit_cur_arr->count()) {
+            //审计是否至少有两条
+            if ($p_bind_audit_cur_arr->count() > 1) {
                 //每条审计处理
                 $creat_stake = 0;
-                $audit = [];
+                $audit = [];$week_audit = [];$month_audit = [];$year_audit = [];
                 foreach($p_bind_audit_cur_arr as $p_bind_audit_cur){
                     //过滤不带状态审计数据
-                    //TODO 怎么能不跑只有创建数据的?
 
-                    //判断状态变更数据
+                    //判断'状态变更'数据
                     if( isset(($p_bind_audit_cur->new_values)['statuses_id']) && 
                         isset(($p_bind_audit_cur->old_values)['statuses_id']) &&
                         ($p_bind_audit_cur->new_values)['statuses_id'] != ($p_bind_audit_cur->old_values)['statuses_id']
                       ){
+                        //将数据放到各个时间段
+                        if(($p_bind_audit_cur->updated_at)->between($now,$WeekAgo)){
+                            $week_audit[($p_bind_audit_cur->new_values)['statuses_id']] = $p_bind_audit_cur->updated_at;
+                        }
+                        if(($p_bind_audit_cur->updated_at)->between($now,$MonthAgo)){
+                            $month_audit[($p_bind_audit_cur->new_values)['statuses_id']] = $p_bind_audit_cur->updated_at;
+                        }
+                        if(($p_bind_audit_cur->updated_at)->between($now,$YearAgo)){
+                            $year_audit[($p_bind_audit_cur->new_values)['statuses_id']] = $p_bind_audit_cur->updated_at;
+                        }
                         $audit[($p_bind_audit_cur->new_values)['statuses_id']] = $p_bind_audit_cur->updated_at;
 
                     }
-                    //判断创建数据
+                    //判断'创建'数据
                     if(isset(($p_bind_audit_cur->new_values)['statuses_id']) && 
                         !isset(($p_bind_audit_cur->old_values)['statuses_id']) &&
                         $creat_stake == 0
                     ){
+                        //将数据放到各个时间段
+                        if(($p_bind_audit_cur->updated_at)->between($now,$WeekAgo)){
+                            $week_audit[($p_bind_audit_cur->new_values)['statuses_id']] = $p_bind_audit_cur->updated_at;
+                        }
+                        if(($p_bind_audit_cur->updated_at)->between($now,$MonthAgo)){
+                            $month_audit[($p_bind_audit_cur->new_values)['statuses_id']] = $p_bind_audit_cur->updated_at;
+                        }
+                        if(($p_bind_audit_cur->updated_at)->between($now,$YearAgo)){
+                            $year_audit[($p_bind_audit_cur->new_values)['statuses_id']] = $p_bind_audit_cur->updated_at;
+                        }
                         $audit[($p_bind_audit_cur->new_values)['statuses_id']] = $p_bind_audit_cur->updated_at;
                         
                         $creat_stake ++;
                     }
                 }
-                if(count($audit) > 1){$time_statistics_arr[$p_bind_id] = $audit;}
-                unset($audit);
+                //数据的状态是否存在变更,
+                if(count($audit) > 1){$time_statistics_arr[1][$p_bind_id] = $audit;}
+                if(count($week_audit) > 1){$time_statistics_arr[7][$p_bind_id] = $audit;}
+                if(count($month_audit) > 1){$time_statistics_arr[30][$p_bind_id] = $audit;}
+                if(count($year_audit) > 1){$time_statistics_arr[365][$p_bind_id] = $audit;}
+                unset($audit);unset($week_audit);unset($month_audit);unset($year_audit);
             }
         }
         return $time_statistics_arr;
     }
 
-    public function P_bind_status_time_avg(){
+    public function P_bind_status_time_avg($limit){
         //涉及状态id
-        $time_statistics_arr = $this->P_bind_status_time_every_data();
+        $time_statistics_arr = $this->P_bind_time[$limit];
 
         $status_id_1 = Status::where('name','排期待适配测试')->pluck('id')->first();
         $status_id_2_1 = Status::where('name','适配测试中—远程测试')->pluck('id')->first();
@@ -107,6 +148,7 @@ class TimeAVG {
 
             foreach($vv as $k => $v){
                 //1.适配复测排期耗时
+                //如果存在情况1的开始状态数据,且是开始状态后的第一条数据,记录时间差
                 if($status_1_start_time && $status_1_start_stake == 0){
                     $time_statistics['status_1_sum'] += $v->diffInHours($status_1_start_time, true);
                     $time_statistics['status_1_count'] ++;
@@ -115,7 +157,7 @@ class TimeAVG {
                 elseif(!$status_1_start_time && $k == $status_id_1 && $i < count($vv)-1){
                     $status_1_start_time = $v;
                 }
-                //2.获取流程2中最小时间
+                //2.如果存在情况2的终态数据,获取流程2中最小时间,在该小循环结束后计算与终态的时间差
                 if($status_2_end_exist){
                     if( 
                         $k == $status_id_2_1 ||
@@ -134,7 +176,7 @@ class TimeAVG {
                         }
                     } 
                 }
-                //3.系统问题处理耗时
+                //3.系统问题处理耗时,处理同1
                 if($status_3_start_time && $status_3_start_stake == 0){
                     $time_statistics['status_3_sum'] += $v->diffInHours($status_3_start_time, true);
                     $time_statistics['status_3_count'] ++;
@@ -143,7 +185,7 @@ class TimeAVG {
                 elseif(!$status_3_start_time && $k == $status_id_3 && $i < count($vv)-1){
                     $status_3_start_time = $v;
                 }
-                //4.上架耗时
+                //4.上架耗时,处理同2
                 if($status_4_end_exist){
                     if( 
                         $k == $status_id_4_1
@@ -157,7 +199,7 @@ class TimeAVG {
                         }
                     } 
                 }
-                //5.获取流程5中最小时间
+                //5.获取流程5中最小时间,处理同2
                 if($status_5_end_exist){
                     if( 
                         $k == $status_id_5_1 ||
@@ -175,17 +217,17 @@ class TimeAVG {
                     } 
                 }
             }
-            //适配复测耗时
+            //适配复测耗时,2
             if($status_2_end_exist && $status_2_start_time){
                 $time_statistics['status_2_sum'] += $vv[ $status_id_2_end]->diffInHours($status_2_start_time,true);
                 $time_statistics['status_2_count'] ++;
             }
-            //
+            //4
             if($status_4_end_exist && $status_4_start_time){
                 $time_statistics['status_4_sum'] += $vv[ $status_id_4_end]->diffInHours($status_4_start_time,true);
                 $time_statistics['status_4_count'] ++;
             }
-            //证书制作及归档耗时
+            //证书制作及归档耗时,5
             if($status_5_end_exist && $status_5_start_time){
                 $time_statistics['status_5_sum'] += $vv[ $status_id_5_end]->diffInHours($status_5_start_time,true);
                 $time_statistics['status_5_count'] ++;
@@ -216,50 +258,97 @@ class TimeAVG {
         if($time_statistics['status_5_count']){
             $time_statistics_avg['status_5_avg'] = $time_statistics['status_5_sum']   / $time_statistics['status_5_count'];
         }
+        
+        $cache_name = 'p_bind_time_avg_'.$limit;
 
-        Cache::add('p_bind_time_avg',$time_statistics_avg,now()->addDays(1));
+        Cache::add($cache_name,$time_statistics_avg,now()->addDays(1));
     }
 
     public function P_request_status_time_every_data(){
         $p_request_ids = PRequest::whereNot('status',null)->pluck('id');
+
+        $now      = now();
+        $WeekAgo  = now()->subWeek();
+        $MonthAgo = now()->subMonth();
+        $YearAgo  = now()->subYear();
+
         //所有需求数据id
         foreach($p_request_ids as $p_request_id){
             //单条需求数据审计
             //TODO 这一条消耗较大,看怎么搞到循环外去
             $p_request_audit_cur_arr = PRequest::find($p_request_id)->audits()->get();
 
+            $audit = [];
             if ($p_request_audit_cur_arr->count()) {
                 foreach($p_request_audit_cur_arr as $p_request_audit_cur){
                     //过滤不带状态审计数据
                     if(isset(($p_request_audit_cur->new_values)['status']) && !isset(($p_request_audit_cur->old_values)['status'])){
+
                         $audit[($p_request_audit_cur->new_values)['status']] =  $p_request_audit_cur->updated_at;
                     }
                     if(isset(($p_request_audit_cur->new_values)['status']) && isset(($p_request_audit_cur->old_values)['status'])){
+
                         $audit[($p_request_audit_cur->new_values)['status']] =  $p_request_audit_cur->updated_at;
                     }   
                 }
                 //算时间  三个流程耗时
-                //TODO 有数据存在第一条审计状态不是'已提交',mgj
+
                 if(isset($audit) && count($audit) > 1 && isset($audit['已提交'])){
                     $cur_start = $audit['已提交'];
                     $processing = 1;$processed = 1;$fail_process = 1;
                     foreach($audit as $k => $v){
-                        if($k == '已提交'){continue;} //这句有点蠢,看怎么优化
+                        $cur_time_statistics = ['processing_time' => 0,'processed_time' => 0,'fail_process_time' => 0];
+                        $cur_week_statistics = ['processing_time' => 0,'processed_time' => 0,'fail_process_time' => 0];
+                        $cur_month_statistics = ['processing_time' => 0,'processed_time' => 0,'fail_process_time' => 0];
+                        $cur_year_statistics = ['processing_time' => 0,'processed_time' => 0,'fail_process_time' => 0];
+                        if($k == '已提交'){continue;} 
 
                         if($k == '处理中' && $processing == 1){
+                            if($cur_start->between($now,$WeekAgo)){
+                                $cur_week_statistics['processing_time'] = $v->diffInHours($cur_start, true);
+                            }
+                            if($cur_start->between($now,$MonthAgo)){
+                                $cur_month_statistics['processing_time'] = $v->diffInHours($cur_start, true);
+                            }
+                            if($cur_start->between($now,$YearAgo)){
+                                $cur_year_statistics['processing_time'] = $v->diffInHours($cur_start, true);
+                            }
                             $cur_time_statistics['processing_time'] = $v->diffInHours($cur_start, true);
                             $processing = 0;
                         }
                         elseif($k == '已解决' && $processed == 1){
+                            if($cur_start->between($now,$WeekAgo)){
+                                $cur_week_statistics['processed_time'] = $v->diffInHours($cur_start, true);
+                            }
+                            if($cur_start->between($now,$MonthAgo)){
+                                $cur_month_statistics['processed_time'] = $v->diffInHours($cur_start, true);
+                            }
+                            if($cur_start->between($now,$YearAgo)){
+                                $cur_year_statistics['processed_time'] = $v->diffInHours($cur_start, true);
+                            }
                             $cur_time_statistics['processed_time'] = $v->diffInHours($cur_start, true);
                             $processed = 0;
                         }
                         elseif($k == '无法处理' && $fail_process == 1){
+                            if($cur_start->between($now,$WeekAgo)){
+                                $cur_week_statistics['fail_process_time'] = $v->diffInHours($cur_start, true);
+                            }
+                            if($cur_start->between($now,$MonthAgo)){
+                                $cur_month_statistics['fail_process_time'] = $v->diffInHours($cur_start, true);
+                            }
+                            if($cur_start->between($now,$YearAgo)){
+                                $cur_year_statistics['fail_process_time'] = $v->diffInHours($cur_start, true);
+                            }
                             $cur_time_statistics['fail_process_time'] = $v->diffInHours($cur_start, true);
                             $fail_process = 0;
                         }
                         //TODO 内存溢出点,看多重循环怎么用yeild
-                        $time_statistics_arr[$p_request_id] = $cur_time_statistics; ;
+                        $time_statistics_arr[1][$p_request_id] = $cur_time_statistics;
+                        $time_statistics_arr[7][$p_request_id] = $cur_week_statistics;
+                        $time_statistics_arr[30][$p_request_id] = $cur_month_statistics;
+                        $time_statistics_arr[365][$p_request_id] = $cur_year_statistics;
+
+                        unset($cur_time_statistics);unset($cur_week_statistics);unset($cur_month_statistics);unset($cur_year_statistics);
                     }
                 }
                 unset($audit);
@@ -268,8 +357,8 @@ class TimeAVG {
         return $time_statistics_arr;
     }
 
-    public function P_request_status_time_avg(){
-        $time_statistics_arr = $this->P_request_status_time_every_data();
+    public function P_request_status_time_avg($limit){
+        $time_statistics_arr = ($this->p_request_time)[$limit];
         //求平均值
         $time_statistics = 
         [
@@ -302,7 +391,8 @@ class TimeAVG {
             $time_statistics_avg['fail_process_avg'] = $time_statistics['fail_process_sum'] / $time_statistics['fail_process_count'];
         }
 
-        Cache::add('p_request_time_avg',$time_statistics_avg,now()->addDays(1));
+        $cache_name = 'p_request_time_avg_'.$limit;
+        Cache::add($cache_name,$time_statistics_avg,now()->addDays(1));
     }
 
 }

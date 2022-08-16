@@ -12,6 +12,7 @@ use App\Models\AdminUser;
 use App\Models\Chip;
 use App\Models\Oem;
 use App\Models\Otype;
+use App\Models\Pbind;
 use App\Models\Release;
 use App\Models\Status;
 use Dcat\Admin\Admin;
@@ -178,6 +179,26 @@ class OemController extends AdminController
                 ->width(3);
 
                 $filter->equal('test_report',_('是否有测试报告'))->select([1 => '有',0 => '无'])->width(3);
+
+                $filter->whereBetween('created_at', function ($query) {
+                    $start = $this->input['start'] ?? null;
+                    $end = $this->input['end'] ?? null;
+                
+                    if ($start !== null) { $query->whereDate('created_at', '>=', $start);}
+            
+                    if ($end !== null) {$query->whereDate('created_at', '<=', $end);}
+            
+                })->date()->width(3);
+
+                $filter->whereBetween('updated_at', function ($query) {
+                    $start = $this->input['start'] ?? null;
+                    $end = $this->input['end'] ?? null;
+                
+                    if ($start !== null) { $query->whereDate('updated_at', '>=', $start);}
+            
+                    if ($end !== null) {$query->whereDate('updated_at', '<=', $end);}
+            
+                })->date()->width(3);
             });
         });
     }
