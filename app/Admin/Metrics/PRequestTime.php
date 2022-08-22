@@ -63,7 +63,8 @@ class PRequestTime extends Bar
             'processed_sum'     => 0 ,'processed_count'    => 0,
             'fail_process_sum'  => 0 ,'fail_process_count' => 0,
         ];
-        $cache_name = 'p_request_time_avg_'.$request->get('option');
+        $cur_option = $request->get('option')?:'7';
+        $cache_name = 'p_request_time_avg_'.$cur_option;
         $a = Cache::get($cache_name)?:$o;
 
         $color = Admin::color();

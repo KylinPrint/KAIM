@@ -2,18 +2,10 @@
 
 namespace App\Admin\Metrics;
 
-use App\Admin\Job\TimeAVG;
-use App\Models\Pbind;
-use App\Models\PRequest;
-use App\Models\Sbind;
-use App\Models\Status;
-use Carbon\Carbon;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Widgets\Metrics\Bar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use OwenIt\Auditing\Models\Audit;
-use PhpOffice\PhpSpreadsheet\Calculation\Statistical\Averages;
 
 class PBindTime extends Bar
 {
@@ -69,7 +61,8 @@ class PBindTime extends Bar
             'status_4_sum'    => 0 ,'status_4_count'   => 0,
             'status_5_sum'    => 0 ,'status_5_count'   => 0,
         ];
-        $cache_name = 'p_bind_time_avg_'.$request->get('option');
+        $cur_option = $request->get('option')?:'7';
+        $cache_name = 'p_bind_time_avg_'.$cur_option;
         $a = Cache::get($cache_name)?:$o;
 
         $color = Admin::color();
