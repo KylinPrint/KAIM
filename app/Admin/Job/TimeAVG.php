@@ -4,6 +4,7 @@ namespace App\Admin\Job;
 
 use App\Models\Pbind;
 use App\Models\PRequest;
+use App\Models\Sbind;
 use App\Models\Status;
 use Illuminate\Support\Facades\Cache;
 
@@ -245,29 +246,24 @@ class TimeAVG {
             'status_5_avg' => 0
         ];
         if($time_statistics['status_1_count']){
-            $avg = $time_statistics['status_1_sum']/$time_statistics['status_1_count'];
-            $time_statistics_avg['status_1_avg'] = ceil($avg);
+            $time_statistics_avg['status_1_avg'] = ceil($time_statistics['status_1_sum']/$time_statistics['status_1_count']);
         }
         if($time_statistics['status_2_count']){
-            $avg = $time_statistics['status_2_sum']/$time_statistics['status_2_count'];
-            $time_statistics_avg['status_2_avg'] = ceil($avg);
+            $time_statistics_avg['status_2_avg'] = ceil($time_statistics['status_2_sum']/$time_statistics['status_2_count']);
         }
         if($time_statistics['status_3_count']){
-            $avg = $time_statistics['status_3_sum']/$time_statistics['status_3_count'];
-            $time_statistics_avg['status_3_avg'] = ceil($avg);
+            $time_statistics_avg['status_3_avg'] = ceil($time_statistics['status_3_sum']/$time_statistics['status_3_count']);
         }
         if($time_statistics['status_4_count']){
-            $avg = $time_statistics['status_4_sum']/$time_statistics['status_4_count'];
-            $time_statistics_avg['status_4_avg'] = ceil($avg);
+            $time_statistics_avg['status_4_avg'] = ceil($time_statistics['status_4_sum']/$time_statistics['status_4_count']);
         }
         if($time_statistics['status_5_count']){
-            $avg = $time_statistics['status_5_sum']/$time_statistics['status_5_count'];
-            $time_statistics_avg['status_5_avg'] = ceil($avg);
+            $time_statistics_avg['status_5_avg'] = ceil($time_statistics['status_5_sum']/$time_statistics['status_5_count']);
         }
         
         $cache_name = 'p_bind_time_avg_'.$limit;
 
-        Cache::add($cache_name,$time_statistics_avg,now()->addDays(1));
+        Cache::add($cache_name,$time_statistics_avg,now()->addMinutes(10));
     }
 
     public function P_request_status_time_every_data(){
@@ -388,20 +384,17 @@ class TimeAVG {
         }
         $time_statistics_avg = ['processing_avg' => 0 , 'processed_avg' => 0 ,'fail_process_avg' => 0];
         if($time_statistics['processing_count']){
-            $avg = $time_statistics['processing_sum']/$time_statistics['processing_count'];
-            $time_statistics_avg['processing_avg'] = ceil($avg);
+            $time_statistics_avg['processing_avg'] = ceil($time_statistics['processing_sum']/$time_statistics['processing_count']);
         }
         if($time_statistics['processed_count']){
-            $avg = $time_statistics['processed_sum']/$time_statistics['processed_count'];
-            $time_statistics_avg['processed_avg'] = ceil($avg);
+            $time_statistics_avg['processed_avg'] = ceil($time_statistics['processed_sum']/$time_statistics['processed_count']);
         }
         if($time_statistics['fail_process_count']){
-            $avg = $time_statistics['fail_process_sum']/$time_statistics['fail_process_count'];
-            $time_statistics_avg['fail_process_avg'] = ceil($avg);
+            $time_statistics_avg['fail_process_avg'] = ceil($time_statistics['fail_process_sum']/$time_statistics['fail_process_count']);
         }
 
         $cache_name = 'p_request_time_avg_'.$limit;
-        Cache::add($cache_name,$time_statistics_avg,now()->addDays(1));
+        Cache::add($cache_name,$time_statistics_avg,now()->addMinutes(1));
     }
 
 }
