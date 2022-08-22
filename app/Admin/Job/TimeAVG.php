@@ -100,7 +100,8 @@ class TimeAVG {
 
     public function P_bind_status_time_avg($limit){
         //涉及状态id
-        $time_statistics_arr = $this->P_bind_time[$limit];
+        if(isset($this->P_bind_time[$limit])){$time_statistics_arr = $this->P_bind_time[$limit];}
+        else{return;}
 
         $status_id_1 = Status::where('name','排期待适配测试')->pluck('id')->first();
         $status_id_2_1 = Status::where('name','适配测试中—远程测试')->pluck('id')->first();
@@ -360,7 +361,8 @@ class TimeAVG {
     }
 
     public function P_request_status_time_avg($limit){
-        $time_statistics_arr = ($this->p_request_time)[$limit];
+        if(isset($this->p_request_time[$limit])){$time_statistics_arr = $this->p_request_time[$limit];}
+        else{return;}
         //求平均值
         $time_statistics = 
         [
