@@ -176,8 +176,7 @@ class PbindTemplateExport implements FromCollection, ShouldAutoSize
             $a = $curFilter['manufactor'];
             $data = $data->whereHas('peripherals', function ($query) use ($a){
                 $query->whereHas('manufactors', function ($query) use ($a){
-                    $query->where('name', 'like',"%{$a}%")
-                        ->orWhere('name_en','like',"%{$a}%");
+                    $query->where('name', 'like',"%{$a}%");
                 });
             });
         }
