@@ -14,11 +14,11 @@ class TimeAVG {
     protected $p_request_time;
 
     function __invoke(){
-        $this->P_bind_time = $this->P_bind_status_time_every_data();
-        $this->P_bind_status_time_avg(1);
-        $this->P_bind_status_time_avg(7);
-        $this->P_bind_status_time_avg(30);
-        $this->P_bind_status_time_avg(365);
+        // $this->P_bind_time = $this->P_bind_status_time_every_data();
+        // $this->P_bind_status_time_avg(1);
+        // $this->P_bind_status_time_avg(7);
+        // $this->P_bind_status_time_avg(30);
+        // $this->P_bind_status_time_avg(365);
 
         $this->p_request_time = $this->P_request_status_time_every_data();
         $this->P_request_status_time_avg(1);
@@ -48,6 +48,9 @@ class TimeAVG {
                 $audit = [];$week_audit = [];$month_audit = [];$year_audit = [];
                 foreach($p_bind_audit_cur_arr as $p_bind_audit_cur){
                     //过滤不带状态审计数据
+                    if($p_bind_audit_cur->auditable_id == 9427){
+                        $aaa = 0;
+                    }
 
                     //判断'状态变更'数据
                     if( isset(($p_bind_audit_cur->new_values)['statuses_id']) && 
@@ -297,13 +300,17 @@ class TimeAVG {
                 //算时间  三个流程耗时
 
                 if(isset($audit) && count($audit) > 1 && isset($audit['已提交'])){
+                    
                     $cur_start = $audit['已提交'];
                     $processing = 1;$processed = 1;$fail_process = 1;
+
+                    $cur_time_statistics = ['processing_time' => 0,'processed_time' => 0,'fail_process_time' => 0];
+                    $cur_week_statistics = ['processing_time' => 0,'processed_time' => 0,'fail_process_time' => 0];
+                    $cur_month_statistics = ['processing_time' => 0,'processed_time' => 0,'fail_process_time' => 0];
+                    $cur_year_statistics = ['processing_time' => 0,'processed_time' => 0,'fail_process_time' => 0];
+
                     foreach($audit as $k => $v){
-                        $cur_time_statistics = ['processing_time' => 0,'processed_time' => 0,'fail_process_time' => 0];
-                        $cur_week_statistics = ['processing_time' => 0,'processed_time' => 0,'fail_process_time' => 0];
-                        $cur_month_statistics = ['processing_time' => 0,'processed_time' => 0,'fail_process_time' => 0];
-                        $cur_year_statistics = ['processing_time' => 0,'processed_time' => 0,'fail_process_time' => 0];
+                        
                         if($k == '已提交'){continue;} 
 
                         if($k == '处理中' && $processing == 1){
@@ -345,14 +352,14 @@ class TimeAVG {
                             $cur_time_statistics['fail_process_time'] = $v->diffInHours($cur_start, true);
                             $fail_process = 0;
                         }
-                        //TODO 内存溢出点,看多重循环怎么用yeild
-                        $time_statistics_arr[1][$p_request_id] = $cur_time_statistics;
-                        $time_statistics_arr[7][$p_request_id] = $cur_week_statistics;
-                        $time_statistics_arr[30][$p_request_id] = $cur_month_statistics;
-                        $time_statistics_arr[365][$p_request_id] = $cur_year_statistics;
-
-                        unset($cur_time_statistics);unset($cur_week_statistics);unset($cur_month_statistics);unset($cur_year_statistics);
                     }
+                    //TODO 内存溢出点,看多重循环怎么用yeild
+                    $time_statistics_arr[1][$p_request_id] = $cur_time_statistics;
+                    $time_statistics_arr[7][$p_request_id] = $cur_week_statistics;
+                    $time_statistics_arr[30][$p_request_id] = $cur_month_statistics;
+                    $time_statistics_arr[365][$p_request_id] = $cur_year_statistics;
+
+                    unset($cur_time_statistics);unset($cur_week_statistics);unset($cur_month_statistics);unset($cur_year_statistics);
                 }
                 unset($audit);
             }
