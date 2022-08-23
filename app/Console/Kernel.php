@@ -17,8 +17,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
-        // $schedule->command('timeavg')->daily()->runInBackground();
-        $schedule->command('timeavg')->everyTenMinutes()->runInBackground();
+        $schedule->command('timeavg')->daily()->runInBackground();
     }
 
     /**

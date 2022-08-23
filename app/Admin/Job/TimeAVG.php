@@ -267,7 +267,7 @@ class TimeAVG {
         
         $cache_name = 'p_bind_time_avg_'.$limit;
 
-        Cache::add($cache_name,$time_statistics_avg,now()->addMinutes(10));
+        Cache::add($cache_name,$time_statistics_avg,now()->addDays(1));
     }
 
     public function P_request_status_time_every_data(){
@@ -403,7 +403,7 @@ class TimeAVG {
         }
 
         $cache_name = 'p_request_time_avg_'.$limit;
-        Cache::add($cache_name,$time_statistics_avg,now()->addMinutes(10));
+        Cache::add($cache_name,$time_statistics_avg,now()->addDays(1));
     }
 
 }
