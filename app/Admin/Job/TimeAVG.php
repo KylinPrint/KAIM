@@ -14,11 +14,11 @@ class TimeAVG {
     protected $p_request_time;
 
     function __invoke(){
-        // $this->P_bind_time = $this->P_bind_status_time_every_data();
-        // $this->P_bind_status_time_avg(1);
-        // $this->P_bind_status_time_avg(7);
-        // $this->P_bind_status_time_avg(30);
-        // $this->P_bind_status_time_avg(365);
+        $this->P_bind_time = $this->P_bind_status_time_every_data();
+        $this->P_bind_status_time_avg(1);
+        $this->P_bind_status_time_avg(7);
+        $this->P_bind_status_time_avg(30);
+        $this->P_bind_status_time_avg(365);
 
         $this->p_request_time = $this->P_request_status_time_every_data();
         $this->P_request_status_time_avg(1);
