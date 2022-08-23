@@ -403,7 +403,7 @@ class TimeAVG {
         }
 
         $cache_name = 'p_request_time_avg_'.$limit;
-        Cache::add($cache_name,$time_statistics_avg,now()->addMinutes(1));
+        Cache::add($cache_name,$time_statistics_avg,now()->addMinutes(10));
     }
 
 }
