@@ -102,7 +102,7 @@ class PbindController extends AdminController
             });
             $grid->column('peripherals.name',__('产品名称'));
             // 脑瘫代码
-            $grid->column('peripherals.types_id',__('产品名称'))->display(function ($type) {
+            $grid->column('peripherals.types_id',__('产品类型'))->display(function ($type) {
                 $curType = Type::where('id',$type)->first();
                 $curParentTypeName = Type::where('id',$curType->parent)->pluck('name')->first();
                 if($curParentTypeName){
@@ -185,7 +185,7 @@ class PbindController extends AdminController
                     $query->whereHas('peripherals', function ($query){
                         $query->where('name', 'like','%'.$this->input.'%');
                     });
-                },'产品型号')->width(3);
+                },'产品名称')->width(3);
 
                 $filter->where('brand', function ($query) {
                     $query->whereHas('peripherals', function ($query) {
@@ -215,7 +215,7 @@ class PbindController extends AdminController
                             else{$query->where('parent', $this->input);}
                         });
                     });
-                },'外设类型')->select(config('admin.database.types_model')::selectOptions())
+                },'产品类型')->select(config('admin.database.types_model')::selectOptions())
                 ->width(3);
 
                 $filter->in('releases.id', '操作系统版本')
