@@ -170,14 +170,12 @@ class SRequestController extends AdminController
                 $filter->whereBetween('created_at', function ($query) {
                     $start = $this->input['start'] ?? null;
                     $end = $this->input['end'] ?? null;
+                
+                    if ($start !== null) { $query->whereDate('created_at', '>=', $start);}
             
-                    if ($start !== null) {
-                        $query->whereDate('created_at', '>=', $start);
-                    }
-                    if ($end !== null) {
-                        $query->whereDate('created_at', '<=', $end);
-                    }
-                })->datetime()->width(3);
+                    if ($end !== null) {$query->whereDate('created_at', '<=', $end);}
+            
+                })->date()->width(3);
 
                 $filter->whereBetween('updated_at', function ($query) {
                     $start = $this->input['start'] ?? null;
