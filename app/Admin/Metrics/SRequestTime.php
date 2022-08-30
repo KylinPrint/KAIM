@@ -2,19 +2,12 @@
 
 namespace App\Admin\Metrics;
 
-use App\Models\Pbind;
-use App\Models\PRequest;
-use App\Models\Sbind;
-use App\Models\Status;
-use Carbon\Carbon;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Widgets\Metrics\Bar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use OwenIt\Auditing\Models\Audit;
-use PhpOffice\PhpSpreadsheet\Calculation\Statistical\Averages;
 
-class PRequestTime extends Bar
+class SRequestTime extends Bar
 {
     protected $labels = ['接收耗时','解决耗时','无法处理耗时'];
     /**
@@ -33,7 +26,7 @@ class PRequestTime extends Bar
         // 卡片内容宽度
         $this->contentWidth(5, 7);
         // 标题
-        $this->title('外设需求平均耗时');
+        $this->title('软件需求平均耗时');
         $this->dropdown([
             '7' => 'Last 7 Days',
             '30' => 'Last Month',
@@ -64,7 +57,7 @@ class PRequestTime extends Bar
             'fail_process_sum'  => 0 ,'fail_process_count' => 0,
         ];
         $cur_option = $request->get('option')?:'7';
-        $cache_name = 'p_request_time_avg_'.$cur_option;
+        $cache_name = 's_request_time_avg_'.$cur_option;
         $a = Cache::get($cache_name)?:$o;
 
         $color = Admin::color();

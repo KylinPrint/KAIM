@@ -26,7 +26,7 @@ class PBindTime extends Bar
         // 卡片内容宽度
         $this->contentWidth(5, 7);
         // 标题
-        $this->title('适配平均耗时');
+        $this->title('外设适配平均耗时');
         // 设置下拉选项
         $this->dropdown([
             '7' => 'Last 7 Days',

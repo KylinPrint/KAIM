@@ -2,21 +2,14 @@
 
 namespace App\Admin\Metrics;
 
-use App\Models\Pbind;
-use App\Models\PRequest;
-use App\Models\Sbind;
-use App\Models\Status;
-use Carbon\Carbon;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Widgets\Metrics\Bar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use OwenIt\Auditing\Models\Audit;
-use PhpOffice\PhpSpreadsheet\Calculation\Statistical\Averages;
 
-class PRequestTime extends Bar
+class SBindTime extends Bar
 {
-    protected $labels = ['接收耗时','解决耗时','无法处理耗时'];
+    protected $labels = ['适配复测排期','适配复测','系统问题处理','上架','证书制作及归档'];
     /**
      * 初始化卡片内容
      */
@@ -33,19 +26,22 @@ class PRequestTime extends Bar
         // 卡片内容宽度
         $this->contentWidth(5, 7);
         // 标题
-        $this->title('外设需求平均耗时');
+        $this->title('软件适配平均耗时');
+        // 设置下拉选项
         $this->dropdown([
             '7' => 'Last 7 Days',
             '30' => 'Last Month',
             '365' => 'Last Year',
             '1' => 'All'
         ]);
-
         // 设置图表颜色
         $this->chartColors([
             $dark35,
+            $dark35,
             $color->primary(),
             $dark35,
+            $dark35,
+            $dark35
         ]);
     }
 
@@ -59,18 +55,19 @@ class PRequestTime extends Bar
     public function handle(Request $request)
     {
         $o = [
-            'processing_sum'    => 0 ,'processing_count'   => 0,
-            'processed_sum'     => 0 ,'processed_count'    => 0,
-            'fail_process_sum'  => 0 ,'fail_process_count' => 0,
+            'status_1_sum'    => 0 ,'status_1_count'   => 0,
+            'status_2_sum'    => 0 ,'status_2_count'   => 0,
+            'status_3_sum'    => 0 ,'status_3_count'   => 0,
+            'status_4_sum'    => 0 ,'status_4_count'   => 0,
+            'status_5_sum'    => 0 ,'status_5_count'   => 0,
         ];
         $cur_option = $request->get('option')?:'7';
-        $cache_name = 'p_request_time_avg_'.$cur_option;
+        $cache_name = 's_bind_time_avg_'.$cur_option;
         $a = Cache::get($cache_name)?:$o;
 
         $color = Admin::color();
-        $colors = [$color->yellow(), $color->green(),$color->blue(),$color->gray()];
+        $colors = [$color->red(),$color->yellow(), $color->green(),$color->blue(),$color->gray()];
         // 卡片内容
-
         $this->withContent(array_values($a), $colors);
 
         // 图表数据
@@ -106,9 +103,7 @@ class PRequestTime extends Bar
      */
     protected function withContent(array $data, $colors)
     {
-        $label = strtolower(
-            $this->dropdown[request()->option] ?? 'last 7 days'
-        );
+        // $content = parent::render();
 
 
         $style = 'margin-bottom: 8px';
@@ -133,6 +128,18 @@ class PRequestTime extends Bar
         <i class="fa fa-circle" style="color: $colors[2]"></i> {$this->labels[2]}
     </div>
     <div>{$data[2]} h</div>
+</div>
+<div class="d-flex pl-1 pr-1 pt-1" style="{$style}">
+    <div style="width: {$labelWidth}px">
+        <i class="fa fa-circle" style="color: $colors[3]"></i> {$this->labels[3]}
+    </div>
+    <div>{$data[3]} h</div>
+</div>
+<div class="d-flex pl-1 pr-1 pt-1" style="{$style}">
+    <div style="width: {$labelWidth}px">
+        <i class="fa fa-circle" style="color: $colors[4]"></i> {$this->labels[4]}
+    </div>
+    <div>{$data[4]} h</div>
 </div>
 HTML
         );
