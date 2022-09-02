@@ -43,7 +43,7 @@ class ProjectTest extends Donut
      */
     public function handle(Request $request)
     {
-        $curOption = $request->get('option')?:0;
+        $curOption = $request->get('option')?:'暂无';
         if($curOption){
             $curProjectName = PRequest::where('project_name','like',"%{$curOption}%")->pluck('project_name')->first();
 
