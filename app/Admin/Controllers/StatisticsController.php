@@ -40,7 +40,7 @@ class StatisticsController extends Controller
             ->body(function (Row $row){
                 $row->column(4, new PBindTime());
                 $row->column(4, new PRequestTime());
-                // $row->column(4, new ProjectTest());
+                $row->column(4, new ProjectTest());
             })
             ->body(function (Row $row){
                 $row->column(4, new SBindTime());
