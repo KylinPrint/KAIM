@@ -22,7 +22,7 @@ class ProjectTest extends Donut
         parent::init();
 
         $color = Admin::color();
-        $colors = [$color->red(),$color->yellow(), $color->green(),$color->blue(),$color->gray()];
+        $colors = [$color->red(),$color->yellow(), $color->green(),$color->blue(),$color->gray(),$color->orange2(),$color->dark80(),$color->dark90()];
 
         $this->title('外设新增适配数据');
         
@@ -68,7 +68,7 @@ class ProjectTest extends Donut
         }
         
         $color = Admin::color();
-        $colors = [$color->red(),$color->yellow(), $color->green(),$color->blue(),$color->gray()];
+        $colors = [$color->red(),$color->yellow(), $color->green(),$color->blue(),$color->gray(),$color->orange2(),$color->dark80(),$color->dark90()];
  
 
         $this->withContent($a1,$a2,$a3,$a4,$a5,$a6,$a7,$a8,$colors);
@@ -140,19 +140,19 @@ class ProjectTest extends Donut
 </div>
 <div class="d-flex pl-1 pr-1 pt-1" style="{$style}">
     <div style="width: {$labelWidth}px">
-        <i class="fa fa-circle" style="color: $colors[4]"></i> {$this->labels[5]}
+        <i class="fa fa-circle" style="color: $colors[5]"></i> {$this->labels[5]}
     </div>
     <div>{$a6}</div>
 </div>
 <div class="d-flex pl-1 pr-1 pt-1" style="{$style}">
     <div style="width: {$labelWidth}px">
-        <i class="fa fa-circle" style="color: $colors[4]"></i> {$this->labels[6]}
+        <i class="fa fa-circle" style="color: $colors[6]"></i> {$this->labels[6]}
     </div>
     <div>{$a7}</div>
 </div>
 <div class="d-flex pl-1 pr-1 pt-1" style="{$style}">
     <div style="width: {$labelWidth}px">
-        <i class="fa fa-circle" style="color: $colors[4]"></i> {$this->labels[7]}
+        <i class="fa fa-circle" style="color: $colors[7]"></i> {$this->labels[7]}
     </div>
     <div>{$a8}</div>
 </div>
