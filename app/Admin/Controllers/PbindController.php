@@ -126,7 +126,7 @@ class PbindController extends AdminController
             $grid->column('statuses.name', __('当前细分适配状态'));
             $grid->column('statuses_comment');
             $grid->column('admin_user_id')->display(function ($admin_user_id) {
-                return $admin_user_id ? AdminUser::find($admin_user_id)->name : '';
+                return empty($admin_user_id) ? '' : AdminUser::find($admin_user_id)->name;
             });
             
             $grid->column('solution',__('适配方案'))
